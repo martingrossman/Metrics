@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -20,18 +21,31 @@
     .kpi div { border: 1px solid #eee; border-radius: 10px; padding: 10px; }
     .note { border-left: 4px solid #ddd; padding-left: 10px; margin-top: 10px; }
 
+    /* NEW layout helpers */
+    .rightCol { display: grid; grid-template-rows: auto auto; gap: 14px; }
+    .chartsGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .plot { border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
+
     .vizWrap { margin-top: 12px; }
     .legend { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
     .chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #eee; border-radius: 999px; padding: 4px 8px; }
     .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,0.15); }
-    .svgBox { width: 100%; height: 230px; border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: #fafafa; }
+    .svgBox { width: 100%; height: 360px; border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: #fafafa; }
     .caption { margin-top: 6px; }
+
+    /* Responsive: stack nicely on small screens */
+    @media (max-width: 980px){
+      .grid { grid-template-columns: 1fr; }
+      .chartsGrid { grid-template-columns: 1fr; }
+      .svgBox { height: 260px; }
+    }
   </style>
 </head>
 <body>
   <h2>Metrics Playground: N, imbalance, TPR, FPR → what changes?</h2>
 
   <div class="grid">
+    <!-- LEFT: Inputs only -->
     <div class="card">
       <h3>Inputs</h3>
 
@@ -51,7 +65,7 @@
         <label>Prevalence π = P(y=1)</label>
         <div class="mono" id="piVal"></div>
       </div>
-      <input id="pi" type="range" min="0.001" max="0.999" step="0.001" value="0.10"/>
+      <input id="pi" type="range" min="0.001" max="0.999" step="0.001" value="0.4"/>
 
       <div class="row">
         <label>TPR (Recall)</label>
@@ -63,7 +77,7 @@
         <label>FPR</label>
         <div class="mono" id="fprVal"></div>
       </div>
-      <input id="fpr" type="range" min="0" max="1" step="0.001" value="0.05"/>
+      <input id="fpr" type="range" min="0" max="1" step="0.001" value="0.4"/>
 
       <div class="kpi">
         <div><div class="small">Precision</div><div class="mono" id="precKpi">—</div></div>
@@ -78,9 +92,12 @@
       </div>
 
       <div class="note small" id="note"></div>
+    </div>
 
-      <div class="vizWrap">
-        <h3 style="margin: 14px 0 6px;">Rectangle view (areas = counts)</h3>
+    <!-- RIGHT: Mosaic on top, charts on bottom -->
+    <div class="card rightCol">
+      <div class="vizWrap" style="margin-top:0;">
+        <h3 style="margin: 0 0 6px;">Rectangle view (areas = counts)</h3>
         <div class="svgBox">
           <svg id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none" width="100%" height="100%"></svg>
         </div>
@@ -90,16 +107,17 @@
           <span class="chip"><span class="dot" style="background:#ff9aa2;"></span> FN</span>
           <span class="chip"><span class="dot" style="background:#ffd27d;"></span> FP</span>
           <span class="chip"><span class="dot" style="background:#b8c0ff;"></span> TN</span>
-          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Actual Positive = hatched</span>
+          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Actual Positive = hatch ↗</span>
+          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Actual Negative = hatch ↘</span>
         </div>
 
         <div class="caption small mono" id="mosaicCaption"></div>
       </div>
-    </div>
 
-    <div class="card">
-      <div id="counts" style="height: 320px;"></div>
-      <div id="metrics" style="height: 360px; margin-top: 14px;"></div>
+      <div class="chartsGrid">
+        <div id="counts" class="plot" style="height: 340px;"></div>
+        <div id="metrics" class="plot" style="height: 340px;"></div>
+      </div>
     </div>
   </div>
 
@@ -143,47 +161,63 @@
     return { P, Nn, TP, FP, TN, FN, prec, acc, f1, tnr, npv, bacc };
   }
 
-  // ---------- rectangle mosaic (with hatch for Actual Positives) ----------
+  // ---------- rectangle mosaic (top margin reserved so headers never overlap) ----------
   function drawMosaic(r){
     const svg = el("mosaic");
     svg.innerHTML = "";
 
     const W = 1000, H = 500;
+
+    const TOP = 44;
+    const innerY = TOP;
+    const innerH = H - TOP;
+
     const total = r.P + r.Nn;
 
     const wNeg = W * (r.Nn / (total + 1e-15));
     const wPos = W - wNeg;
 
-    const hTN = H * (r.TN / (r.Nn + 1e-15));
-    const hFP = H - hTN;
+    const hTN = innerH * (r.TN / (r.Nn + 1e-15));
+    const hFP = innerH - hTN;
 
-    const hFN = H * (r.FN / (r.P + 1e-15));
-    const hTP = H - hFN;
+    const hFN = innerH * (r.FN / (r.P + 1e-15));
+    const hTP = innerH - hFN;
 
-    // Colors
     const C_TP = "#8fd694";
     const C_FN = "#ff9aa2";
     const C_FP = "#ffd27d";
     const C_TN = "#b8c0ff";
 
-    // --- defs: hatch pattern for Actual Positives region ---
     const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
 
-    const pat = document.createElementNS("http://www.w3.org/2000/svg","pattern");
-    pat.setAttribute("id", "posHatch");
-    pat.setAttribute("patternUnits", "userSpaceOnUse");
-    pat.setAttribute("width", "18");
-    pat.setAttribute("height", "18");
-    pat.setAttribute("patternTransform", "rotate(45)");
+    const patPos = document.createElementNS("http://www.w3.org/2000/svg","pattern");
+    patPos.setAttribute("id", "posHatch");
+    patPos.setAttribute("patternUnits", "userSpaceOnUse");
+    patPos.setAttribute("width", "18");
+    patPos.setAttribute("height", "18");
+    patPos.setAttribute("patternTransform", "rotate(45)");
+    const linePos = document.createElementNS("http://www.w3.org/2000/svg","line");
+    linePos.setAttribute("x1", "0"); linePos.setAttribute("y1", "0");
+    linePos.setAttribute("x2", "0"); linePos.setAttribute("y2", "18");
+    linePos.setAttribute("stroke", "rgba(0,0,0,0.22)");
+    linePos.setAttribute("stroke-width", "4");
+    patPos.appendChild(linePos);
 
-    const line = document.createElementNS("http://www.w3.org/2000/svg","line");
-    line.setAttribute("x1", "0"); line.setAttribute("y1", "0");
-    line.setAttribute("x2", "0"); line.setAttribute("y2", "18");
-    line.setAttribute("stroke", "rgba(0,0,0,0.22)");
-    line.setAttribute("stroke-width", "4");
-    pat.appendChild(line);
+    const patNeg = document.createElementNS("http://www.w3.org/2000/svg","pattern");
+    patNeg.setAttribute("id", "negHatch");
+    patNeg.setAttribute("patternUnits", "userSpaceOnUse");
+    patNeg.setAttribute("width", "18");
+    patNeg.setAttribute("height", "18");
+    patNeg.setAttribute("patternTransform", "rotate(-45)");
+    const lineNeg = document.createElementNS("http://www.w3.org/2000/svg","line");
+    lineNeg.setAttribute("x1", "0"); lineNeg.setAttribute("y1", "0");
+    lineNeg.setAttribute("x2", "0"); lineNeg.setAttribute("y2", "18");
+    lineNeg.setAttribute("stroke", "rgba(0,0,0,0.18)");
+    lineNeg.setAttribute("stroke-width", "4");
+    patNeg.appendChild(lineNeg);
 
-    defs.appendChild(pat);
+    defs.appendChild(patPos);
+    defs.appendChild(patNeg);
     svg.appendChild(defs);
 
     function rect(x,y,w,h,fill,label){
@@ -195,10 +229,12 @@
       R.setAttribute("stroke-width", "1");
       svg.appendChild(R);
 
-      if (w > 120 && h > 55){
+      if (w > 140 && h > 65){
         const T = document.createElementNS("http://www.w3.org/2000/svg","text");
-        T.setAttribute("x", x + 10);
-        T.setAttribute("y", y + 30);
+        const tx = x + 10;
+        const ty = Math.min(y + h - 12, y + 34);
+        T.setAttribute("x", tx);
+        T.setAttribute("y", ty);
         T.setAttribute("font-size", "24");
         T.setAttribute("font-family", "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace");
         T.textContent = label;
@@ -206,42 +242,46 @@
       }
     }
 
-    // Base rectangles (cell colors)
-    // Left = Actual Negative
-    rect(0,     0,   wNeg, hTN, C_TN, `TN ${fmtInt(r.TN)}`);
-    rect(0,     hTN, wNeg, hFP, C_FP, `FP ${fmtInt(r.FP)}`);
+    rect(0,        innerY + 0,    wNeg, hTN, C_TN, `TN ${fmtInt(r.TN)}`);
+    rect(0,        innerY + hTN,  wNeg, hFP, C_FP, `FP ${fmtInt(r.FP)}`);
 
-    // Right = Actual Positive
-    rect(wNeg,  0,   wPos, hFN, C_FN, `FN ${fmtInt(r.FN)}`);
-    rect(wNeg,  hFN, wPos, hTP, C_TP, `TP ${fmtInt(r.TP)}`);
+    rect(wNeg,     innerY + 0,    wPos, hFN, C_FN, `FN ${fmtInt(r.FN)}`);
+    rect(wNeg,     innerY + hFN,  wPos, hTP, C_TP, `TP ${fmtInt(r.TP)}`);
 
-    // Hatch overlay ONLY on Actual Positives half (right side)
-    const overlay = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    overlay.setAttribute("x", wNeg);
-    overlay.setAttribute("y", 0);
-    overlay.setAttribute("width", wPos);
-    overlay.setAttribute("height", H);
-    overlay.setAttribute("fill", "url(#posHatch)");
-    overlay.setAttribute("pointer-events", "none");
-    svg.appendChild(overlay);
+    const overlayNeg = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    overlayNeg.setAttribute("x", 0);
+    overlayNeg.setAttribute("y", innerY);
+    overlayNeg.setAttribute("width", wNeg);
+    overlayNeg.setAttribute("height", innerH);
+    overlayNeg.setAttribute("fill", "url(#negHatch)");
+    overlayNeg.setAttribute("pointer-events", "none");
+    svg.appendChild(overlayNeg);
 
-    // Optional: add labels for halves (only if big enough)
-    if (wNeg > 140){
+    const overlayPos = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    overlayPos.setAttribute("x", wNeg);
+    overlayPos.setAttribute("y", innerY);
+    overlayPos.setAttribute("width", wPos);
+    overlayPos.setAttribute("height", innerH);
+    overlayPos.setAttribute("fill", "url(#posHatch)");
+    overlayPos.setAttribute("pointer-events", "none");
+    svg.appendChild(overlayPos);
+
+    if (wNeg > 160){
       const t0 = document.createElementNS("http://www.w3.org/2000/svg","text");
       t0.setAttribute("x", 12);
-      t0.setAttribute("y", 24);
-      t0.setAttribute("font-size", "18");
-      t0.setAttribute("font-weight", "600");
+      t0.setAttribute("y", 26);
+      t0.setAttribute("font-size", "24");
+      t0.setAttribute("font-weight", "800");
       t0.textContent = "Actual Negative";
       svg.appendChild(t0);
     }
-    if (wPos > 140){
+    if (wPos > 160){
       const t1 = document.createElementNS("http://www.w3.org/2000/svg","text");
       t1.setAttribute("x", wNeg + 12);
-      t1.setAttribute("y", 24);
-      t1.setAttribute("font-size", "18");
-      t1.setAttribute("font-weight", "600");
-      t1.textContent = "Actual Positive (hatched)";
+      t1.setAttribute("y", 26);
+      t1.setAttribute("font-size", "24");
+      t1.setAttribute("font-weight", "800");
+      t1.textContent = "Actual Positive";
       svg.appendChild(t1);
     }
 
@@ -249,7 +289,6 @@
       `P=${fmtInt(r.P)}  N=${fmtInt(r.Nn)}  |  TP=${fmtInt(r.TP)} FP=${fmtInt(r.FP)} TN=${fmtInt(r.TN)} FN=${fmtInt(r.FN)}`;
   }
 
-  // For the note: remember previous values to detect what changed
   let last = null;
 
   function render(){
@@ -269,7 +308,6 @@
     el("npvKpi").textContent  = fmt(r.npv);
     el("baccKpi").textContent = fmt(r.bacc);
 
-    // Note about dependencies
     let msg = "";
     if (last){
       const changedN   = p.N !== last.p.N;
@@ -292,7 +330,6 @@
     el("note").textContent = msg;
     last = { p: { ...p } };
 
-    // Draw mosaic rectangle
     drawMosaic(r);
 
     // Counts bar chart
@@ -325,3 +362,4 @@
 </script>
 </body>
 </html>
+```
