@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TPR / FPR / Precision / ROC — Interactive</title>
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 18px; }
+    .grid { display: grid; grid-template-columns: 460px 1fr; gap: 18px; align-items: start; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 14px; }
+    .row { display: grid; grid-template-columns: 1fr 130px; gap: 10px; align-items: center; margin: 10px 0; }
+    input[type="range"] { width: 100%; }
+    .kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+    .kpi2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+    .kpi div, .kpi2 div { border: 1px solid #eee; border-radius: 10px; padding: 10px; }
+    .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .small { color: #444; font-size: 13px; line-height: 1.35; }
+    .btns { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 2px; }
+    button { border: 1px solid #ccc; background: #fff; border-radius: 10px; padding: 6px 10px; cursor: pointer; }
+    button:hover { background: #f6f6f6; }
+    .cm { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .cm .cell { border: 1px solid #eee; border-radius: 10px; padding: 10px; }
+    .note { border-left: 4px solid #ddd; padding-left: 10px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Interactive: TPR / FPR / Precision / ROC (Balanced vs Imbalanced)</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Controls</h3>
+
+      <div class="row">
+        <label>Dataset size (N)</label>
+        <div class="mono" id="nVal"></div>
+      </div>
+      <input id="n" type="range" min="100" max="200000" step="100" value="10000"/>
+
+      <div class="btns">
+        <button id="bal">Balanced (π=0.5)</button>
+        <button id="imb">Imbalanced (π=0.1)</button>
+        <button id="vimb">Very imbalanced (π=0.01)</button>
+      </div>
+
+      <div class="row">
+        <label>Prevalence π = P(y=1)</label>
+        <div class="mono" id="prevVal"></div>
+      </div>
+      <input id="prev" type="range" min="0.001" max="0.999" step="0.001" value="0.10"/>
+
+      <div class="row">
+        <label>Negative mean (μ₀)</label>
+        <div class="mono" id="mu0Val"></div>
+      </div>
+      <input id="mu0" type="range" min="-4" max="4" step="0.01" value="0"/>
+
+      <div class="row">
+        <label>Positive mean (μ₁)</label>
+        <div class="mono" id="mu1Val"></div>
+      </div>
+      <input id="mu1" type="range" min="-4" max="4" step="0.01" value="1.5"/>
+
+      <div class="row">
+        <label>Shared std (σ)</label>
+        <div class="mono" id="sigmaVal"></div>
+      </div>
+      <input id="sigma" type="range" min="0.2" max="3.0" step="0.01" value="1.0"/>
+
+      <div class="row">
+        <label>Threshold (τ)</label>
+        <div class="mono" id="thrVal"></div>
+      </div>
+      <input id="thr" type="range" min="-6" max="6" step="0.01" value="0.75"/>
+
+      <div class="kpi">
+        <div><div class="small">TPR (Recall)</div><div class="mono" id="tprKpi">—</div></div>
+        <div><div class="small">FPR</div><div class="mono" id="fprKpi">—</div></div>
+        <div><div class="small">Precision</div><div class="mono" id="preKpi">—</div></div>
+      </div>
+
+      <div class="kpi2">
+        <div><div class="small">Accuracy</div><div class="mono" id="accKpi">—</div></div>
+        <div><div class="small">F1</div><div class="mono" id="f1Kpi">—</div></div>
+        <div><div class="small">Predicted + rate</div><div class="mono" id="pprKpi">—</div></div>
+      </div>
+
+      <div class="cm">
+        <div class="cell"><div class="small">TP</div><div class="mono" id="tpCnt">—</div></div>
+        <div class="cell"><div class="small">FP</div><div class="mono" id="fpCnt">—</div></div>
+        <div class="cell"><div class="small">FN</div><div class="mono" id="fnCnt">—</div></div>
+        <div class="cell"><div class="small">TN</div><div class="mono" id="tnCnt">—</div></div>
+      </div>
+
+      <div class="note small" id="note"></div>
+
+      <p class="small">
+        Model: score|y=0 ~ N(μ₀, σ²), score|y=1 ~ N(μ₁, σ²). Predict positive if score ≥ τ.
+        Changing π changes counts + precision, but (for a fixed score model) doesn’t change TPR/FPR.
+      </p>
+    </div>
+
+    <div class="card">
+      <div id="roc" style="height: 330px;"></div>
+      <div id="dist" style="height: 330px; margin-top: 14px;"></div>
+    </div>
+  </div>
+
+<script>
+  // --- math helpers ---
+  function erf(x) {
+    const sign = x >= 0 ? 1 : -1;
+    x = Math.abs(x);
+    const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+    const t = 1/(1+p*x);
+    const y = 1 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+    return sign*y;
+  }
+  function normCdf(x, mu, sigma) {
+    return 0.5 * (1 + erf((x - mu) / (sigma * Math.SQRT2)));
+  }
+  function normPdf(x, mu, sigma) {
+    const z = (x - mu)/sigma;
+    return Math.exp(-0.5*z*z) / (sigma * Math.sqrt(2*Math.PI));
+  }
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function fmt(x){ return (Math.round(x*10000)/10000).toFixed(4); }
+  function fmtInt(x){ return Math.round(x).toLocaleString("en-US"); }
+
+  const el = (id) => document.getElementById(id);
+  const sliders = ["n","prev","mu0","mu1","sigma","thr"].map(id => el(id));
+
+  // quick-set buttons
+  el("bal").onclick = () => { el("prev").value = "0.5"; render(); };
+  el("imb").onclick = () => { el("prev").value = "0.1"; render(); };
+  el("vimb").onclick = () => { el("prev").value = "0.01"; render(); };
+
+  function readParams() {
+    return {
+      n: parseInt(el("n").value, 10),
+      prev: parseFloat(el("prev").value),
+      mu0: parseFloat(el("mu0").value),
+      mu1: parseFloat(el("mu1").value),
+      sigma: parseFloat(el("sigma").value),
+      thr: parseFloat(el("thr").value)
+    };
+  }
+
+  function updateLabels(p) {
+    el("nVal").textContent = fmtInt(p.n);
+    el("prevVal").textContent = fmt(p.prev);
+    el("mu0Val").textContent  = fmt(p.mu0);
+    el("mu1Val").textContent  = fmt(p.mu1);
+    el("sigmaVal").textContent= fmt(p.sigma);
+    el("thrVal").textContent  = fmt(p.thr);
+  }
+
+  // rates given threshold
+  function rates(p) {
+    const tpr = 1 - normCdf(p.thr, p.mu1, p.sigma);
+    const fpr = 1 - normCdf(p.thr, p.mu0, p.sigma);
+    const ppr = p.prev * tpr + (1 - p.prev) * fpr; // predicted positive rate
+    const prec = (p.prev * tpr) / (ppr + 1e-15);
+    const acc = p.prev * tpr + (1 - p.prev) * (1 - fpr);
+    const f1 = (2 * prec * tpr) / (prec + tpr + 1e-15);
+    return {
+      tpr: clamp01(tpr),
+      fpr: clamp01(fpr),
+      ppr: clamp01(ppr),
+      prec: clamp01(prec),
+      acc: clamp01(acc),
+      f1: clamp01(f1)
+    };
+  }
+
+  function counts(p, r) {
+    const P = p.n * p.prev;
+    const N = p.n * (1 - p.prev);
+    const TP = P * r.tpr;
+    const FN = P - TP;
+    const FP = N * r.fpr;
+    const TN = N - FP;
+    return { TP, FP, TN, FN, P, N };
+  }
+
+  function rocCurve(p) {
+    const xs = [], ys = [];
+    for (let i=0;i<=220;i++){
+      const thr = -6 + (12*i/220);
+      const tpr = 1 - normCdf(thr, p.mu1, p.sigma);
+      const fpr = 1 - normCdf(thr, p.mu0, p.sigma);
+      xs.push(clamp01(fpr));
+      ys.push(clamp01(tpr));
+    }
+    return { xs, ys };
+  }
+
+  function distData(p) {
+    const x = [], y0 = [], y1 = [];
+    for (let i=0;i<=420;i++){
+      const xi = -6 + (12*i/420);
+      x.push(xi);
+      y0.push(normPdf(xi, p.mu0, p.sigma));
+      y1.push(normPdf(xi, p.mu1, p.sigma));
+    }
+    return { x, y0, y1 };
+  }
+
+  // Keep note showing invariance of TPR/FPR w.r.t prevalence
+  let lastNonPrev = null;   // {mu0,mu1,sigma,thr}
+  let tprAtLast = null, fprAtLast = null;
+
+  function render() {
+    const p = readParams();
+    updateLabels(p);
+
+    const r = rates(p);
+    const c = counts(p, r);
+
+    el("tprKpi").textContent = fmt(r.tpr);
+    el("fprKpi").textContent = fmt(r.fpr);
+    el("preKpi").textContent = fmt(r.prec);
+    el("accKpi").textContent = fmt(r.acc);
+    el("f1Kpi").textContent  = fmt(r.f1);
+    el("pprKpi").textContent = fmt(r.ppr);
+
+    el("tpCnt").textContent = fmtInt(c.TP);
+    el("fpCnt").textContent = fmtInt(c.FP);
+    el("fnCnt").textContent = fmtInt(c.FN);
+    el("tnCnt").textContent = fmtInt(c.TN);
+
+    // invariance note
+    const key = {mu0:p.mu0, mu1:p.mu1, sigma:p.sigma, thr:p.thr};
+    const sameAsLastNonPrev = lastNonPrev &&
+      Object.keys(key).every(k => Math.abs(key[k] - lastNonPrev[k]) < 1e-12);
+
+    if (!sameAsLastNonPrev) {
+      lastNonPrev = key;
+      tprAtLast = r.tpr;
+      fprAtLast = r.fpr;
+      el("note").innerHTML =
+        `If you now change only <span class="mono">π</span> (class balance), ` +
+        `the <b>TPR</b> and <b>FPR</b> will stay the same (they are conditional rates). ` +
+        `But <b>precision</b> and the counts (TP/FP/TN/FN) will move.`;
+    } else {
+      // if only prevalence changed, show deltas
+      const dtpr = r.tpr - tprAtLast;
+      const dfpr = r.fpr - fprAtLast;
+      el("note").innerHTML =
+        `Only <span class="mono">π</span> changed → ` +
+        `ΔTPR=${fmt(dtpr)} , ΔFPR=${fmt(dfpr)} (≈0), ` +
+        `but precision=${fmt(r.prec)} and FP count=${fmtInt(c.FP)} changed.`;
+    }
+
+    // ROC
+    const rc = rocCurve(p);
+    const rocTraces = [
+      { x: rc.xs, y: rc.ys, mode: "lines", name: "ROC" },
+      { x: [r.fpr], y: [r.tpr], mode: "markers", name: "Current threshold", marker: { size: 10 } },
+      { x: [0,1], y: [0,1], mode: "lines", name: "Random", line: { dash: "dot" } }
+    ];
+    Plotly.react("roc", rocTraces, {
+      title: "ROC (TPR vs FPR) — unaffected by class balance",
+      xaxis: { title: "FPR", range: [0,1] },
+      yaxis: { title: "TPR", range: [0,1] },
+      margin: { l: 55, r: 20, t: 45, b: 45 },
+      legend: { orientation: "h" }
+    }, {displayModeBar:false});
+
+    // Distributions
+    const dd = distData(p);
+    const ymax = Math.max(...dd.y0, ...dd.y1);
+    const distTraces = [
+      { x: dd.x, y: dd.y0, mode: "lines", name: "y=0 score pdf" },
+      { x: dd.x, y: dd.y1, mode: "lines", name: "y=1 score pdf" },
+      { x: [p.thr, p.thr], y: [0, ymax], mode: "lines", name: "threshold", line: { dash: "dot" } }
+    ];
+    Plotly.react("dist", distTraces, {
+      title: "Score distributions (model) — balance affects counts, not these curves",
+      xaxis: { title: "score" },
+      yaxis: { title: "density" },
+      margin: { l: 55, r: 20, t: 45, b: 45 },
+      legend: { orientation: "h" }
+    }, {displayModeBar:false});
+  }
+
+  sliders.forEach(s => s.addEventListener("input", render));
+  render();
+</script>
+</body>
+</html>
