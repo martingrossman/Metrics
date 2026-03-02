@@ -176,15 +176,98 @@
       <input id="fpr" type="range" min="0" max="1" step="0.001" value="0.3"/>
 
       <div class="kpi">
-        <div><div class="small">Precision</div><div class="mono" id="precKpi">—</div></div>
+        <div><div class="small">Precision (PPV)</div><div class="mono" id="precKpi">—</div></div>
         <div><div class="small">Accuracy</div><div class="mono" id="accKpi">—</div></div>
         <div><div class="small">F1</div><div class="mono" id="f1Kpi">—</div></div>
         <div><div class="small">Balanced Acc</div><div class="mono" id="baccKpi">—</div></div>
         <div><div class="small">Specificity (TNR)</div><div class="mono" id="tnrKpi">—</div></div>
-        <div><div class="small">NPV</div><div class="mono" id="npvKpi">—</div></div>
+        <div><div class="small">NPV (Negative Predictive Value)</div><div class="mono" id="npvKpi">—</div></div>
       </div>
 
       <div class="note small" id="note"></div>
+
+      <details class="note small" style="margin-top:10px;">
+        <summary><strong>Equations and what they mean</strong></summary>
+        <div style="margin-top:8px;">
+          <div><strong>Notation (symbols)</strong></div>
+          <div class="mono">D+ = actually positive, D- = actually negative</div>
+          <div class="mono">T+ = predicted/tested positive, T- = predicted/tested negative</div>
+          <div class="mono">P(A|B) = probability of A given B is true</div>
+          <div>Example: <span class="mono">P(D+|T+)</span> means "if test is positive, chance it is truly positive".</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Base quantities</strong></div>
+          <div class="mono">P = N * π</div>
+          <div>Actual positives in the dataset.</div>
+          <div class="mono">Nneg = N * (1 - π)</div>
+          <div>Actual negatives in the dataset.</div>
+          <div class="mono">TP = P * TPR</div>
+          <div>True positives (positive cases found correctly).</div>
+          <div class="mono">FN = P - TP</div>
+          <div>False negatives (positive cases missed).</div>
+          <div class="mono">FP = Nneg * FPR</div>
+          <div>False positives (negative cases predicted as positive).</div>
+          <div class="mono">TN = Nneg - FP</div>
+          <div>True negatives (negative cases correctly rejected).</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Rates and scores</strong></div>
+          <div class="mono">TPR (Recall) = TP / (TP + FN)</div>
+          <div>Among actual positives, how many you catch.</div>
+          <div class="mono">FPR = FP / (FP + TN)</div>
+          <div>Among actual negatives, how many false alarms you raise.</div>
+          <div class="mono">Precision (PPV) = TP / (TP + FP)</div>
+          <div>Among predicted positives, how many are truly positive.</div>
+          <div class="mono">Accuracy = (TP + TN) / N</div>
+          <div>Overall fraction of correct predictions.</div>
+          <div class="mono">F1 = 2 * (Precision(PPV) * Recall) / (Precision(PPV) + Recall)</div>
+          <div>Harmonic mean of Precision (PPV) and Recall.</div>
+          <div class="mono">Specificity (TNR) = TN / (TN + FP) = 1 - FPR</div>
+          <div>Among actual negatives, how many you correctly reject.</div>
+          <div class="mono">Balanced Accuracy = (TPR + TNR) / 2</div>
+          <div>Average of sensitivity and specificity.</div>
+          <div class="mono">NPV (Negative Predictive Value) = TN / (TN + FN)</div>
+          <div>Among predicted negatives, how many are truly negative.</div>
+        </div>
+      </details>
+
+      <details class="note small" style="margin-top:10px;">
+        <summary><strong>Bayesian view: why prevalence matters</strong></summary>
+        <div style="margin-top:8px;">
+          <div class="mono">D+ = true positive class, D- = true negative class</div>
+          <div class="mono">T+ = model/test predicts positive, T- = model/test predicts negative</div>
+          <div class="mono">P(A|B) reads as: probability of A, assuming B happened</div>
+          <div>Bayes links test quality (TPR/FPR) with prevalence (prior probability).</div>
+          <div class="mono">Prior: P(D+) = π,   P(D-) = 1 - π</div>
+          <div>Before seeing a test result, prevalence is your best guess of disease/class probability.</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Posterior after a positive test</strong></div>
+          <div class="mono">P(T+|D+) = TPR</div>
+          <div class="mono">P(T+|D-) = FPR</div>
+          <div class="mono">P(D+|T+) = (TPR * π) / ((TPR * π) + (FPR * (1 - π))) = PPV </div>
+          <div>This is Precision (PPV): probability of truly positive given a positive prediction.</div>
+          <div>In words: start from prior positives (<span class="mono">π</span>), then adjust by how often positives/negatives trigger a positive test.</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Posterior after a negative test</strong></div>
+          <div class="mono">P(T-|D-) = TNR = 1 - FPR</div>
+          <div class="mono">P(T-|D+) = FNR = 1 - TPR</div>
+          <div class="mono">P(D-|T-) = (TNR * (1 - π)) / ((TNR * (1 - π)) + (FNR * π))</div>
+          <div>This is NPV (Negative Predictive Value): probability of truly negative given a negative prediction.</div>
+          <div>In words: among negative test results, compare true negatives against missed positives.</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Practical takeaway</strong></div>
+          <div>When π is very small, even a modest FPR can create many false positives, lowering PPV.</div>
+          <div>That is why Precision (PPV) can drop sharply in imbalanced settings, even when TPR looks strong.</div>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -379,7 +462,7 @@
       if (changedN && !changedPi && !changedTpr && !changedFpr){
         msg = `Only N changed → all *rates* stay the same, rectangle areas scale up/down.`;
       } else if (changedPi && !changedTpr && !changedFpr){
-        msg = `Only π changed → TPR/FPR unchanged, but precision & FP/TP areas move a lot.`;
+        msg = `Only π changed → TPR/FPR unchanged, but Precision (PPV) and FP/TP areas move a lot.`;
       } else if (changedTpr || changedFpr){
         msg = `Changing TPR/FPR changes the *shape* inside each class block (FN↔TP, TN↔FP).`;
       } else {
@@ -407,7 +490,7 @@
     }, plotCfg);
 
     Plotly.react("metrics", [{
-      x: ["TPR","FPR","Precision","Accuracy","F1","BalancedAcc","NPV"],
+      x: ["TPR","FPR","Precision (PPV)","Accuracy","F1","BalancedAcc","NPV (Negative Predictive Value)"],
       y: [p.tpr, p.fpr, r.prec, r.acc, r.f1, r.bacc, r.npv],
       type: "bar",
       name: "Rates"
