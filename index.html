@@ -22,7 +22,7 @@
 
     h2{ font-size:18px; margin:6px 0 12px; }
 
-    /* Desktop default */
+    /* Base layout */
     .grid{ display:grid; grid-template-columns: 440px 1fr; gap:18px; align-items:start; }
 
     .card{
@@ -83,6 +83,14 @@
       background:#fafafa;
     }
     .caption{ margin-top:6px; }
+
+    /* Desktop: larger mosaic + two charts side-by-side */
+    @media (min-width: 1024px){
+      .grid{ grid-template-columns: 700px 1fr; gap:22px; }
+      .svgBox{ height:420px; }
+      .chartsGrid{ grid-template-columns: 1fr 1fr; }
+      .plot{ height:320px !important; }
+    }
 
     /* iPhone: single column + MOSAIC FIRST */
     @media (max-width: 520px){
