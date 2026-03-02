@@ -139,8 +139,8 @@
       </div>
 
       <div class="chartsGrid">
-        <div id="counts" class="plot" style="height: 280px;"></div>
-        <div id="metrics" class="plot" style="height: 280px;"></div>
+        <div id="counts" class="plot" style="height: 320px;"></div>
+        <div id="metrics" class="plot" style="height: 320px;"></div>
       </div>
     </div>
 
@@ -482,22 +482,33 @@
 
     const plotCfg = { displayModeBar: false, responsive: true };
 
+    const countsY = [r.TP, r.FP, r.TN, r.FN];
+    const maxCount = Math.max(...countsY);
+    const countsTextPositions = countsY.map(y => (y / (maxCount + 1e-9)) < 0.2 ? 'outside' : 'inside');
+
     Plotly.react("counts", [{
       x: ["TP","FP","TN","FN"],
-      y: [r.TP, r.FP, r.TN, r.FN],
+      y: countsY,
       type: "bar",
-      name: "Counts"
+      name: "Counts",
+      texttemplate: '%{y:,.0f}',
+      textposition: countsTextPositions
     }], {
       title: "Counts",
       yaxis: { title: "count" },
       margin: { l: 55, r: 20, t: 40, b: 45 }
     }, plotCfg);
 
+    const ratesY = [p.tpr*100, p.fpr*100, r.prec*100, r.acc*100, r.f1*100, r.bacc*100, r.npv*100];
+    const ratesTextPositions = ratesY.map(y => y < 20 ? 'outside' : 'inside');
+
     Plotly.react("metrics", [{
       x: ["TPR","FPR","Precision","Accuracy","F1","BalancedAcc","NPV"],
-      y: [p.tpr*100, p.fpr*100, r.prec*100, r.acc*100, r.f1*100, r.bacc*100, r.npv*100],
+      y: ratesY,
       type: "bar",
-      name: "Rates"
+      name: "Rates",
+      texttemplate: '%{y:.1f}',
+      textposition: ratesTextPositions
     }], {
       title: "Rates",
       yaxis: { title: "value (%)", range: [0,100] },
