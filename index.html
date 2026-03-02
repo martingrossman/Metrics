@@ -185,6 +185,45 @@
       </div>
 
       <div class="note small" id="note"></div>
+
+      <details class="note small" style="margin-top:10px;">
+        <summary><strong>Equations and what they mean</strong></summary>
+        <div style="margin-top:8px;">
+          <div><strong>Base quantities</strong></div>
+          <div class="mono">P = N * π</div>
+          <div>Actual positives in the dataset.</div>
+          <div class="mono">Nneg = N * (1 - π)</div>
+          <div>Actual negatives in the dataset.</div>
+          <div class="mono">TP = P * TPR</div>
+          <div>True positives (positive cases found correctly).</div>
+          <div class="mono">FN = P - TP</div>
+          <div>False negatives (positive cases missed).</div>
+          <div class="mono">FP = Nneg * FPR</div>
+          <div>False positives (negative cases predicted as positive).</div>
+          <div class="mono">TN = Nneg - FP</div>
+          <div>True negatives (negative cases correctly rejected).</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Rates and scores</strong></div>
+          <div class="mono">TPR (Recall) = TP / (TP + FN)</div>
+          <div>Among actual positives, how many you catch.</div>
+          <div class="mono">FPR = FP / (FP + TN)</div>
+          <div>Among actual negatives, how many false alarms you raise.</div>
+          <div class="mono">Precision = TP / (TP + FP)</div>
+          <div>Among predicted positives, how many are truly positive.</div>
+          <div class="mono">Accuracy = (TP + TN) / N</div>
+          <div>Overall fraction of correct predictions.</div>
+          <div class="mono">F1 = 2 * (Precision * Recall) / (Precision + Recall)</div>
+          <div>Harmonic mean of precision and recall.</div>
+          <div class="mono">Specificity (TNR) = TN / (TN + FP) = 1 - FPR</div>
+          <div>Among actual negatives, how many you correctly reject.</div>
+          <div class="mono">Balanced Accuracy = (TPR + TNR) / 2</div>
+          <div>Average of sensitivity and specificity.</div>
+          <div class="mono">NPV = TN / (TN + FN)</div>
+          <div>Among predicted negatives, how many are truly negative.</div>
+        </div>
+      </details>
     </div>
   </div>
 
