@@ -89,7 +89,7 @@
 
     /* Desktop: larger mosaic + two charts side-by-side */
     @media (min-width: 1024px){
-      .grid{ grid-template-columns: 700px 1fr; gap:22px; }
+      .grid{ grid-template-columns: 1000px 1fr; gap:22px; }
       .svgBox{ height:420px; }
       .chartsGrid{ grid-template-columns: 1fr 1fr; }
       .plot{ height:320px !important; }
@@ -150,33 +150,33 @@
 
       <div class="row">
         <label>Dataset size (N)</label>
-        <div class="mono" id="nVal"></div>
+        <input type="number" class="mono" id="nVal" />
       </div>
       <input id="n" type="range" min="100" max="500000" step="100" value="10000"/>
 
       <div class="btns">
-        <button id="bal">Balanced (π=0.5)</button>
-        <button id="imb">Imbalanced (π=0.1)</button>
-        <button id="vimb">Very imbalanced (π=0.01)</button>
+        <button id="bal">Balanced (π = 50%)</button>
+        <button id="imb">Imbalanced (π = 10%)</button>
+        <button id="vimb">Very imbalanced (π = 1%)</button>
       </div>
 
       <div class="row">
         <label>Prevalence π</label>
-        <div class="mono" id="piVal"></div>
+        <input type="number" class="mono" id="piVal" min="0.1" max="99.9" step="0.1" />
       </div>
-      <input id="pi" type="range" min="0.001" max="0.999" step="0.001" value="0.3"/>
+      <input id="pi" type="range" min="0.1" max="99.9" step="0.1" value="30"/>
 
       <div class="row">
         <label>TPR (Recall)</label>
-        <div class="mono" id="tprVal"></div>
+        <input type="number" class="mono" id="tprVal" min="0" max="100" step="0.1" />
       </div>
-      <input id="tpr" type="range" min="0" max="1" step="0.001" value="0.7"/>
+      <input id="tpr" type="range" min="0" max="100" step="0.1" value="70"/>
 
       <div class="row">
         <label>FPR</label>
-        <div class="mono" id="fprVal"></div>
+        <input type="number" class="mono" id="fprVal" min="0" max="100" step="0.1" />
       </div>
-      <input id="fpr" type="range" min="0" max="1" step="0.001" value="0.3"/>
+      <input id="fpr" type="range" min="0" max="100" step="0.1" value="30"/>
 
       <div class="kpi">
         <div><div class="small">Precision (PPV)</div><div class="mono" id="precKpi">—</div></div>
@@ -277,19 +277,20 @@
 <script>
   const el = (id) => document.getElementById(id);
 
-  el("bal").onclick  = () => { el("pi").value = "0.5";  render(); };
-  el("imb").onclick  = () => { el("pi").value = "0.1";  render(); };
-  el("vimb").onclick = () => { el("pi").value = "0.01"; render(); };
+  el("bal").onclick  = () => { el("pi").value = "50"; el("piVal").value = "50"; render(); };
+  el("imb").onclick  = () => { el("pi").value = "10"; el("piVal").value = "10"; render(); };
+  el("vimb").onclick = () => { el("pi").value = "1";  el("piVal").value = "1";  render(); };
 
-  function fmt(x){ return (Math.round(x*10000)/10000).toFixed(4); }
+  function fmtPct(x){ return (x * 100).toFixed(2) + "%"; }
   function fmtInt(x){ return Math.round(x).toLocaleString("en-US"); }
 
   function readParams(){
     return {
-      N: parseInt(el("n").value, 10),
-      pi: parseFloat(el("pi").value),
-      tpr: parseFloat(el("tpr").value),
-      fpr: parseFloat(el("fpr").value),
+      N:   parseInt(el("nVal").value, 10),
+      // Convert from 0-100 scale to 0-1 for calculations
+      pi:  parseFloat(el("piVal").value) / 100,
+      tpr: parseFloat(el("tprVal").value) / 100,
+      fpr: parseFloat(el("fprVal").value) / 100,
     };
   }
 
@@ -442,18 +443,18 @@
     const p = readParams();
     const r = compute(p);
 
-    el("nVal").textContent   = fmtInt(p.N);
-    el("piVal").textContent  = fmt(p.pi);
-    el("tprVal").textContent = fmt(p.tpr);
-    el("fprVal").textContent = fmt(p.fpr);
+    el("nVal").value   = p.N;
+    el("piVal").value  = (p.pi * 100).toFixed(1);
+    el("tprVal").value = (p.tpr * 100).toFixed(1);
+    el("fprVal").value = (p.fpr * 100).toFixed(1);
 
-    el("precKpi").textContent = fmt(r.prec);
-    el("accKpi").textContent  = fmt(r.acc);
-    el("f1Kpi").textContent   = fmt(r.f1);
+    el("precKpi").textContent = fmtPct(r.prec);
+    el("accKpi").textContent  = fmtPct(r.acc);
+    el("f1Kpi").textContent   = fmtPct(r.f1);
 
-    el("tnrKpi").textContent  = fmt(r.tnr);
-    el("npvKpi").textContent  = fmt(r.npv);
-    el("baccKpi").textContent = fmt(r.bacc);
+    el("tnrKpi").textContent  = fmtPct(r.tnr);
+    el("npvKpi").textContent  = fmtPct(r.npv);
+    el("baccKpi").textContent = fmtPct(r.bacc);
 
     let msg = "";
     if (last){
@@ -493,18 +494,44 @@
     }, plotCfg);
 
     Plotly.react("metrics", [{
-      x: ["TPR","FPR","Precision (PPV)","Accuracy","F1","BalancedAcc","NPV (Negative Predictive Value)"],
-      y: [p.tpr, p.fpr, r.prec, r.acc, r.f1, r.bacc, r.npv],
+      x: ["TPR","FPR","Precision","Accuracy","F1","BalancedAcc","NPV"],
+      y: [p.tpr*100, p.fpr*100, r.prec*100, r.acc*100, r.f1*100, r.bacc*100, r.npv*100],
       type: "bar",
       name: "Rates"
     }], {
       title: "Rates",
-      yaxis: { title: "value", range: [0,1] },
+      yaxis: { title: "value (%)", range: [0,100] },
       margin: { l: 55, r: 20, t: 40, b: 55 }
     }, plotCfg);
   }
 
-  ["n","pi","tpr","fpr"].forEach(id => el(id).addEventListener("input", render));
+  function setupTwoWayBinding(sliderId, inputId) {
+    const slider = el(sliderId);
+    const input = el(inputId);
+
+    slider.addEventListener("input", () => {
+      input.value = slider.value;
+      render();
+    });
+
+    input.addEventListener("change", () => {
+      slider.value = input.value;
+      render();
+    });
+  }
+
+  setupTwoWayBinding("n", "nVal");
+  setupTwoWayBinding("pi", "piVal");
+  setupTwoWayBinding("tpr", "tprVal");
+  setupTwoWayBinding("fpr", "fprVal");
+
+  // Initial sync: populate input boxes from slider default values
+  el("nVal").value = el("n").value;
+  el("piVal").value = el("pi").value;
+  el("tprVal").value = el("tpr").value;
+  el("fprVal").value = el("fpr").value;
+
+  // Initial render
   render();
 
   // Better resize on iPhone (address bar/orientation)
