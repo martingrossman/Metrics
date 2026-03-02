@@ -49,6 +49,8 @@
 
     .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
     .small{ color:#444; font-size:12.5px; line-height:1.35; }
+    .explain{ font-size:15.5px; line-height:1.5; }
+    .explain .mono{ font-size:16.5px; }
 
     .btns{ display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px; }
     button{
@@ -186,7 +188,7 @@
 
       <div class="note small" id="note"></div>
 
-      <details class="note small" style="margin-top:10px;">
+      <details class="note small explain" style="margin-top:10px;">
         <summary><strong>Equations and what they mean</strong></summary>
         <div style="margin-top:8px;">
           <div><strong>Notation (symbols)</strong></div>
@@ -233,7 +235,7 @@
         </div>
       </details>
 
-      <details class="note small" style="margin-top:10px;">
+      <details class="note small explain" style="margin-top:10px;">
         <summary><strong>Bayesian view: why prevalence matters</strong></summary>
         <div style="margin-top:8px;">
           <div class="mono">D+ = true positive class, D- = true negative class</div>
