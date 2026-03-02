@@ -152,7 +152,7 @@
         <label>Dataset size (N)</label>
         <input type="number" class="mono" id="nVal" />
       </div>
-      <input id="n" type="range" min="100" max="500000" step="100" value="10000"/>
+      <input id="n" type="range" min="0" max="1000" step="1" value="460"/>
 
       <div class="btns">
         <button id="bal">Balanced (π = 50%)</button>
@@ -162,21 +162,21 @@
 
       <div class="row">
         <label>Prevalence π</label>
-        <input type="number" class="mono" id="piVal" min="0.1" max="99.9" step="0.1" />
+        <input type="number" class="mono" id="piVal" min="0" max="100" step="0.1" />
       </div>
-      <input id="pi" type="range" min="0.1" max="99.9" step="0.1" value="30"/>
+      <input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
 
       <div class="row">
         <label>TPR (Recall)</label>
         <input type="number" class="mono" id="tprVal" min="0" max="100" step="0.1" />
       </div>
-      <input id="tpr" type="range" min="0" max="100" step="0.1" value="70"/>
+      <input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847"/>
 
       <div class="row">
         <label>FPR</label>
         <input type="number" class="mono" id="fprVal" min="0" max="100" step="0.1" />
       </div>
-      <input id="fpr" type="range" min="0" max="100" step="0.1" value="30"/>
+      <input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
 
       <div class="kpi">
         <div><div class="small">Precision (PPV)</div><div class="mono" id="precKpi">—</div></div>
@@ -277,21 +277,44 @@
 <script>
   const el = (id) => document.getElementById(id);
 
-  el("bal").onclick  = () => { el("pi").value = "50"; el("piVal").value = "50"; render(); };
-  el("imb").onclick  = () => { el("pi").value = "10"; el("piVal").value = "10"; render(); };
-  el("vimb").onclick = () => { el("pi").value = "1";  el("piVal").value = "1";  render(); };
+  // --- Non-linear scale transformations ---
+  const N_MIN = 100, N_MAX = 500000;
+  const LOG_N_MIN = Math.log(N_MIN), LOG_N_MAX = Math.log(N_MAX);
+  const sliderToN = (v) => Math.round(Math.exp(LOG_N_MIN + (v / 1000) * (LOG_N_MAX - LOG_N_MIN)));
+  const nToSlider = (v) => 1000 * (Math.log(v) - LOG_N_MIN) / (LOG_N_MAX - LOG_N_MIN);
+
+  const LOGIT_MIN = -7, LOGIT_MAX = 7; // Range for sliders
+  // Logit scale: gives high precision near 0 and 1
+  const sliderToPct = (v) => 100 / (1 + Math.exp(-v));
+  const pctToSlider = (v) => {
+    const p = Math.max(1e-6, Math.min(1 - 1e-6, v / 100)); // Clamp to avoid infinity
+    return Math.log(p / (1 - p));
+  };
 
   function fmtPct(x){ return (x * 100).toFixed(2) + "%"; }
   function fmtInt(x){ return Math.round(x).toLocaleString("en-US"); }
 
   function readParams(){
+    // Read from the text input boxes, which hold the "real" values
     return {
       N:   parseInt(el("nVal").value, 10),
-      // Convert from 0-100 scale to 0-1 for calculations
       pi:  parseFloat(el("piVal").value) / 100,
       tpr: parseFloat(el("tprVal").value) / 100,
       fpr: parseFloat(el("fprVal").value) / 100,
     };
+  }
+
+  const setPiAndRender = (pct) => {
+    el("pi").value = pctToSlider(pct);
+    el("piVal").value = pct.toFixed(2);
+    render();
+  };
+
+  function syncInputsToSliders() {
+    el("nVal").value   = sliderToN(el("n").value).toLocaleString("en-US", {useGrouping: false});
+    el("piVal").value  = sliderToPct(el("pi").value).toFixed(2);
+    el("tprVal").value = sliderToPct(el("tpr").value).toFixed(2);
+    el("fprVal").value = sliderToPct(el("fpr").value).toFixed(2);
   }
 
   function compute(p){
@@ -443,11 +466,6 @@
     const p = readParams();
     const r = compute(p);
 
-    el("nVal").value   = p.N;
-    el("piVal").value  = (p.pi * 100).toFixed(1);
-    el("tprVal").value = (p.tpr * 100).toFixed(1);
-    el("fprVal").value = (p.fpr * 100).toFixed(1);
-
     el("precKpi").textContent = fmtPct(r.prec);
     el("accKpi").textContent  = fmtPct(r.acc);
     el("f1Kpi").textContent   = fmtPct(r.f1);
@@ -520,13 +538,18 @@
     const slider = el(sliderId);
     const input = el(inputId);
 
+    const isN = sliderId === 'n';
+    const toDisplay = isN ? sliderToN : sliderToPct;
+    const toSlider = isN ? nToSlider : pctToSlider;
+
     slider.addEventListener("input", () => {
-      input.value = slider.value;
+      const val = toDisplay(slider.value);
+      input.value = isN ? Math.round(val) : val.toFixed(2);
       render();
     });
 
     input.addEventListener("change", () => {
-      slider.value = input.value;
+      slider.value = toSlider(input.value);
       render();
     });
   }
@@ -536,13 +559,12 @@
   setupTwoWayBinding("tpr", "tprVal");
   setupTwoWayBinding("fpr", "fprVal");
 
-  // Initial sync: populate input boxes from slider default values
-  el("nVal").value = el("n").value;
-  el("piVal").value = el("pi").value;
-  el("tprVal").value = el("tpr").value;
-  el("fprVal").value = el("fpr").value;
+  el("bal").onclick  = () => setPiAndRender(50);
+  el("imb").onclick  = () => setPiAndRender(10);
+  el("vimb").onclick = () => setPiAndRender(1);
 
   // Initial render
+  syncInputsToSliders();
   render();
 
   // Better resize on iPhone (address bar/orientation)
