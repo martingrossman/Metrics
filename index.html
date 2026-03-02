@@ -189,6 +189,14 @@
       <details class="note small" style="margin-top:10px;">
         <summary><strong>Equations and what they mean</strong></summary>
         <div style="margin-top:8px;">
+          <div><strong>Notation (symbols)</strong></div>
+          <div class="mono">D+ = actually positive, D- = actually negative</div>
+          <div class="mono">T+ = predicted/tested positive, T- = predicted/tested negative</div>
+          <div class="mono">P(A|B) = probability of A given B is true</div>
+          <div>Example: <span class="mono">P(D+|T+)</span> means "if test is positive, chance it is truly positive".</div>
+        </div>
+
+        <div style="margin-top:10px;">
           <div><strong>Base quantities</strong></div>
           <div class="mono">P = N * π</div>
           <div>Actual positives in the dataset.</div>
@@ -222,6 +230,42 @@
           <div>Average of sensitivity and specificity.</div>
           <div class="mono">NPV = TN / (TN + FN)</div>
           <div>Among predicted negatives, how many are truly negative.</div>
+        </div>
+      </details>
+
+      <details class="note small" style="margin-top:10px;">
+        <summary><strong>Bayesian view: why prevalence matters</strong></summary>
+        <div style="margin-top:8px;">
+          <div class="mono">D+ = true positive class, D- = true negative class</div>
+          <div class="mono">T+ = model/test predicts positive, T- = model/test predicts negative</div>
+          <div class="mono">P(A|B) reads as: probability of A, assuming B happened</div>
+          <div>Bayes links test quality (TPR/FPR) with prevalence (prior probability).</div>
+          <div class="mono">Prior: P(D+) = π,   P(D-) = 1 - π</div>
+          <div>Before seeing a test result, prevalence is your best guess of disease/class probability.</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Posterior after a positive test</strong></div>
+          <div class="mono">P(T+|D+) = TPR</div>
+          <div class="mono">P(T+|D-) = FPR</div>
+          <div class="mono">P(D+|T+) = (TPR * π) / ((TPR * π) + (FPR * (1 - π))) = PPV </div>
+          <div>This is Precision (PPV): probability of truly positive given a positive prediction.</div>
+          <div>In words: start from prior positives (<span class="mono">π</span>), then adjust by how often positives/negatives trigger a positive test.</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Posterior after a negative test</strong></div>
+          <div class="mono">P(T-|D-) = TNR = 1 - FPR</div>
+          <div class="mono">P(T-|D+) = FNR = 1 - TPR</div>
+          <div class="mono">P(D-|T-) = (TNR * (1 - π)) / ((TNR * (1 - π)) + (FNR * π))</div>
+          <div>This is NPV: probability of truly negative given a negative prediction.</div>
+          <div>In words: among negative test results, compare true negatives against missed positives.</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div><strong>Practical takeaway</strong></div>
+          <div>When π is very small, even a modest FPR can create many false positives, lowering PPV.</div>
+          <div>That is why precision can drop sharply in imbalanced settings, even when TPR looks strong.</div>
         </div>
       </details>
     </div>
