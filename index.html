@@ -193,10 +193,12 @@
         <summary><strong>Equations and what they mean</strong></summary>
         <div style="margin-top:8px;">
           <div><strong>Notation (symbols)</strong></div>
-          <div class="mono"><span class="eqLhs">D+</span> = actually positive, <span class="eqLhs">D-</span> = actually negative</div>
-          <div class="mono"><span class="eqLhs">T+</span> = predicted/tested positive, <span class="eqLhs">T-</span> = predicted/tested negative</div>
-          <div class="mono"><span class="eqLhs">P(A|B)</span> = probability of A given B is true</div>
-          <div>Example: <span class="mono">P(D+|T+)</span> means "if test is positive, chance it is truly positive".</div>
+          <div class="mono"><span class="eqLhs">D+</span> = actually positive </div>
+          <div class="mono"><span class="eqLhs">D-</span> = actually negative</div>
+          <div class="mono"><span class="eqLhs">T+</span> = predicted (tested) positive
+          <div class="mono"><span class="eqLhs">T-</span> = predicted (tested) negative</div>
+          <!--<div class="mono"><span class="eqLhs">P(A|B)</span> = probability of A given B is true</div>
+          <div>Example: <span class="mono">P(D+|T+)</span> means "if test is positive, chance it is truly positive".</div>-->
         </div>
 
         <div style="margin-top:10px;">
@@ -239,10 +241,14 @@
       <details class="note small explain" style="margin-top:10px;">
         <summary><strong>Bayesian view: why prevalence matters</strong></summary>
         <div style="margin-top:8px;">
-          <div class="mono"><span class="eqLhs">D+</span> = true positive class, <span class="eqLhs">D-</span> = true negative class</div>
-          <div class="mono"><span class="eqLhs">T+</span> = model/test predicts positive, <span class="eqLhs">T-</span> = model/test predicts negative</div>
-          <div class="mono"><span class="eqLhs">P(A|B)</span> reads as: probability of A, assuming B happened</div>
+          <div class="mono"><span class="eqLhs">D+</span> = true positive class</div>
+          <div class="mono"><span class="eqLhs">D-</span> = true negative class</div>
+          <div class="mono"><span class="eqLhs">T+</span> = model/test predicts positive</div>
+          <div class="mono"> <span class="eqLhs">T-</span> = model/test predicts negative</div>
+          <div class="mono"><span class="eqLhs">P(A|B)</span>: probability of A, assuming B happened</div>
+          <div class="mono"><span class="eqLhs">P(D+|T+)</span>: if test (model, prediction) is positive, chance it is truly positive class</div>
           <div>Bayes links test quality (TPR/FPR) with prevalence (prior probability).</div>
+          <!--TODO <div class="mono"><span class="eqLhs">P(D+)</span> = = π/div> -->
           <div class="mono">Prior: <span class="eqLhs">P(D+)</span> = π, <span class="eqLhs">P(D-)</span> = 1 - π</div>
           <div>Before seeing a test result, prevalence is your best guess of disease/class probability.</div>
         </div>
