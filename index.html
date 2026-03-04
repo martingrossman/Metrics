@@ -133,8 +133,8 @@
           <span class="chip"><span class="dot" style="background:#b8c0ff;"></span> TN</span>
           <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Pos = hatch ↗</span>
           <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Neg = hatch ↘</span>
+          <span class="chip"><span id="predPosDot" class="dot" style="background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.5);"></span> Predicted Positive</span>
         </div>
-
         <div class="caption small mono" id="mosaicCaption"></div>
       </div>
 
@@ -442,6 +442,29 @@
     overlayPos.setAttribute("fill", "url(#posHatch)");
     overlayPos.setAttribute("pointer-events", "none");
     svg.appendChild(overlayPos);
+
+    // Add a single border around the "Predicted Positive" (T+) group (the union of FP and TP).
+    // A <path> is used to draw a single continuous outline without an internal dividing line.
+    const predPosGroup = document.createElementNS("http://www.w3.org/2000/svg","path");
+    const pathData = [
+      `M 0, ${innerY + hTN}`,          // Move to top-left of FP
+      `L ${wNeg}, ${innerY + hTN}`,    // Line to top-right of FP
+      `L ${wNeg}, ${innerY + hFN}`,    // Line along the FP/TP boundary to top of TP
+      `L ${W}, ${innerY + hFN}`,       // Line to top-right of TP
+      `L ${W}, ${innerY + innerH}`,    // Line to bottom-right of TP
+      `L 0, ${innerY + innerH}`,       // Line to bottom-left of FP
+      'Z'                              // Close the path
+    ].join(' ');
+    predPosGroup.setAttribute("d", pathData);
+    predPosGroup.setAttribute("fill", "rgba(0,0,0,0.04)");
+    const predPosStroke = "rgba(0,0,0,0.5)";
+    const predPosStrokeWidth = "3";
+    predPosGroup.setAttribute("stroke", predPosStroke);
+    predPosGroup.setAttribute("stroke-width", predPosStrokeWidth);
+    predPosGroup.setAttribute("pointer-events", "none");
+    svg.appendChild(predPosGroup);
+    // Sync legend item style to match the path
+    el("predPosDot").style.borderWidth = predPosStrokeWidth + 'px';
 
     if (wNeg > 160){
       const t0 = document.createElementNS("http://www.w3.org/2000/svg","text");
