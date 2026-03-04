@@ -443,6 +443,25 @@
     overlayPos.setAttribute("pointer-events", "none");
     svg.appendChild(overlayPos);
 
+    // Add a single border around the "Predicted Positive" (T+) group (the union of FP and TP).
+    // A <path> is used to draw a single continuous outline without an internal dividing line.
+    const predPosGroup = document.createElementNS("http://www.w3.org/2000/svg","path");
+    const pathData = [
+      `M 0, ${innerY + hTN}`,          // Move to top-left of FP
+      `L ${wNeg}, ${innerY + hTN}`,    // Line to top-right of FP
+      `L ${wNeg}, ${innerY + hFN}`,    // Line along the FP/TP boundary to top of TP
+      `L ${W}, ${innerY + hFN}`,       // Line to top-right of TP
+      `L ${W}, ${innerY + innerH}`,    // Line to bottom-right of TP
+      `L 0, ${innerY + innerH}`,       // Line to bottom-left of FP
+      'Z'                              // Close the path
+    ].join(' ');
+    predPosGroup.setAttribute("d", pathData);
+    predPosGroup.setAttribute("fill", "rgba(0,0,0,0.04)");
+    predPosGroup.setAttribute("stroke", "rgba(0,0,0,0.5)");
+    predPosGroup.setAttribute("stroke-width", "3");
+    predPosGroup.setAttribute("pointer-events", "none");
+    svg.appendChild(predPosGroup);
+
     if (wNeg > 160){
       const t0 = document.createElementNS("http://www.w3.org/2000/svg","text");
       t0.setAttribute("x", 12);
