@@ -142,6 +142,20 @@
         <div id="counts" class="plot" style="height: 320px;"></div>
         <div id="metrics" class="plot" style="height: 320px;"></div>
       </div>
+
+      <div id="equations" class="note small explain" style="margin-top:12px; font-size:14px;">
+        <h4 style="margin:0 0 8px; font-size:16px;">Metric Equations</h4>
+        <div id="totalsEq" class="mono" style="margin-bottom:8px; padding-bottom: 8px; border-bottom: 1px solid #eee;"></div>
+
+        <div id="tprEq" class="mono"></div>
+        <div id="fprEq" class="mono"></div>
+        <div id="precEq" class="mono"></div>
+        <div id="accEq" class="mono"></div>
+        <div id="tnrEq" class="mono"></div>
+        <div id="npvEq" class="mono"></div>
+        <div id="baccEq" class="mono"></div>
+        <div id="f1Eq" class="mono"></div>
+      </div>
     </div>
 
     <!-- INPUTS (will appear second on iPhone) -->
@@ -333,15 +347,18 @@
     const FP = Nn * p.fpr;
     const TN = Nn - FP;
 
-    const prec = TP / (TP + FP + 1e-15);
+    const PredP = TP + FP;
+    const PredN = TN + FN;
+
+    const prec = TP / (PredP + 1e-15);
     const acc  = (TP + TN) / (p.N + 1e-15);
     const f1   = (2 * prec * p.tpr) / (prec + p.tpr + 1e-15);
 
     const tnr  = 1 - p.fpr;
-    const npv  = TN / (TN + FN + 1e-15);
+    const npv  = TN / (PredN + 1e-15);
     const bacc = 0.5 * (p.tpr + tnr);
 
-    return { P, Nn, TP, FP, TN, FN, prec, acc, f1, tnr, npv, bacc };
+    return { P, Nn, TP, FP, TN, FN, PredP, PredN, prec, acc, f1, tnr, npv, bacc };
   }
 
   function drawMosaic(r){
@@ -522,7 +539,7 @@
     } else {
       msg = `Try: keep TPR=0.85 and FPR=0.05, then switch π from 0.5 → 0.01 and watch FP dominate.`;
     }
-    el("note").textContent = msg;
+    el("note").innerHTML = `<b>${msg}</b>`;
     last = { p: { ...p } };
 
     drawMosaic(r);
@@ -561,6 +578,37 @@
       yaxis: { title: "value (%)", range: [0,100] },
       margin: { l: 55, r: 20, t: 40, b: 55 }
     }, plotCfg);
+  }
+
+  function updateEquations(p, r) {
+    const { P, Nn, TP, FP, TN, FN, PredP, PredN } = r;
+
+    const colorSpan = (type, value) => {
+      const colors = { TP: '#8fd694', FN: '#ff9aa2', FP: '#ffd27d', TN: '#b8c0ff' };
+      return `<span style="color:${colors[type]}; font-weight:bold;">${type}(${fmtInt(value)})</span>`;
+    };
+
+    const sTP = colorSpan('TP', r.TP);
+    const sFP = colorSpan('FP', r.FP);
+    const sTN = colorSpan('TN', r.TN);
+    const sFN = colorSpan('FN', r.FN);
+
+    el('totalsEq').innerHTML = `<b>N</b>=${fmtInt(p.N)} &nbsp; <b>P</b>=${fmtInt(P)} &nbsp; <b>N<sub>neg</sub></b>=${fmtInt(Nn)} &nbsp; | &nbsp; <b>T+</b>=${fmtInt(PredP)} &nbsp; <b>T-</b>=${fmtInt(PredN)}`;
+
+    el('tprEq').innerHTML  = `<b>TPR</b> = ${sTP} / (${sTP} + ${sFN}) = <span style="color:#8fd694; font-weight:bold;">TP</span> / P = ${fmtInt(r.TP)} / ${fmtInt(P)} = <b>${(p.tpr * 100).toFixed(2)}%</b>`;
+    el('fprEq').innerHTML  = `<b>FPR</b> = ${sFP} / (${sFP} + ${sTN}) = <span style="color:#ffd27d; font-weight:bold;">FP</span> / N<sub>neg</sub> = ${fmtInt(r.FP)} / ${fmtInt(Nn)} = <b>${(p.fpr * 100).toFixed(2)}%</b>`;
+    el('precEq').innerHTML = `<b>PPV</b> = ${sTP} / (${sTP} + ${sFP}) = <span style="color:#8fd694; font-weight:bold;">TP</span> / <b>T+</b> = ${fmtInt(r.TP)} / ${fmtInt(PredP)} = <b>${(r.prec * 100).toFixed(2)}%</b>`;
+    el('accEq').innerHTML  = `<b>Acc</b> = (${sTP} + ${sTN}) / N = (<span style="color:#8fd694; font-weight:bold;">TP</span>+<span style="color:#b8c0ff; font-weight:bold;">TN</span>) / N = ${fmtInt(r.TP + r.TN)} / ${fmtInt(p.N)} = <b>${(r.acc * 100).toFixed(2)}%</b>`;
+    el('tnrEq').innerHTML  = `<b>TNR</b> = ${sTN} / (${sTN} + ${sFP}) = <span style="color:#b8c0ff; font-weight:bold;">TN</span> / N<sub>neg</sub> = ${fmtInt(r.TN)} / ${fmtInt(Nn)} = <b>${(r.tnr * 100).toFixed(2)}%</b>`;
+    el('npvEq').innerHTML  = `<b>NPV</b> = ${sTN} / (${sTN} + ${sFN}) = <span style="color:#b8c0ff; font-weight:bold;">TN</span> / <b>T-</b> = ${fmtInt(r.TN)} / ${fmtInt(PredN)} = <b>${(r.npv * 100).toFixed(2)}%</b>`;
+    el('baccEq').innerHTML = `<b>B.Acc</b> = (TPR + TNR) / 2 = <b>${(r.bacc * 100).toFixed(2)}%</b>`;
+    el('f1Eq').innerHTML   = `<b>F1</b> = 2*(PPV*TPR)/(PPV+TPR) = <b>${(r.f1 * 100).toFixed(2)}%</b>`;
+  }
+
+  const originalRender = render;
+  render = function() {
+    originalRender();
+    updateEquations(readParams(), compute(readParams()));
   }
 
   function setupTwoWayBinding(sliderId, inputId) {
