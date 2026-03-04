@@ -142,6 +142,20 @@
         <div id="counts" class="plot" style="height: 320px;"></div>
         <div id="metrics" class="plot" style="height: 320px;"></div>
       </div>
+
+      <div id="equations" class="note small explain" style="margin-top:12px; font-size:14px;">
+        <h4 style="margin:0 0 8px; font-size:16px;">Metric Equations</h4>
+        <div id="totalsEq" class="mono" style="margin-bottom:8px; padding-bottom: 8px; border-bottom: 1px solid #eee;"></div>
+
+        <div id="tprEq" class="mono"></div>
+        <div id="fprEq" class="mono"></div>
+        <div id="precEq" class="mono"></div>
+        <div id="accEq" class="mono"></div>
+        <div id="tnrEq" class="mono"></div>
+        <div id="npvEq" class="mono"></div>
+        <div id="baccEq" class="mono"></div>
+        <div id="f1Eq" class="mono"></div>
+      </div>
     </div>
 
     <!-- INPUTS (will appear second on iPhone) -->
@@ -561,6 +575,44 @@
       yaxis: { title: "value (%)", range: [0,100] },
       margin: { l: 55, r: 20, t: 40, b: 55 }
     }, plotCfg);
+  }
+
+  function updateEquations(p, r) {
+    const { TP, FP, TN, FN } = r;
+    const { P, Nn, TP, FP, TN, FN } = r;
+
+    const colorSpan = (type, value) => {
+      const colors = { TP: '#8fd694', FN: '#ff9aa2', FP: '#ffd27d', TN: '#b8c0ff' };
+      return `<span style="color:${colors[type]}; font-weight:bold;">${type}(${fmtInt(value)})</span>`;
+    };
+
+    const sTP = colorSpan('TP', TP);
+    const sFP = colorSpan('FP', FP);
+    const sTN = colorSpan('TN', TN);
+    const sFN = colorSpan('FN', FN);
+
+    el('tprEq').innerHTML  = `<b>TPR</b> = ${sTP} / (${sTP} + ${sFN}) = <b>${(p.tpr * 100).toFixed(2)}%</b>`;
+    el('fprEq').innerHTML  = `<b>FPR</b> = ${sFP} / (${sFP} + ${sTN}) = <b>${(p.fpr * 100).toFixed(2)}%</b>`;
+    el('precEq').innerHTML = `<b>PPV</b> = ${sTP} / (${sTP} + ${sFP}) = <b>${(r.prec * 100).toFixed(2)}%</b>`;
+    el('accEq').innerHTML  = `<b>Acc</b> = (${sTP} + ${sTN}) / ${fmtInt(p.N)} = <b>${(r.acc * 100).toFixed(2)}%</b>`;
+    el('tnrEq').innerHTML  = `<b>TNR</b> = ${sTN} / (${sTN} + ${sFP}) = <b>${(r.tnr * 100).toFixed(2)}%</b>`;
+    el('npvEq').innerHTML  = `<b>NPV</b> = ${sTN} / (${sTN} + ${sFN}) = <b>${(r.npv * 100).toFixed(2)}%</b>`;
+    el('totalsEq').innerHTML = `<b>N</b>=${fmtInt(p.N)} &nbsp; <b>P</b>=${fmtInt(P)} &nbsp; <b>N<sub>neg</sub></b>=${fmtInt(Nn)}`;
+
+    el('tprEq').innerHTML  = `<b>TPR</b> = ${sTP} / (${sTP} + ${sFN}) = ${fmtInt(TP)} / ${fmtInt(P)} = <b>${(p.tpr * 100).toFixed(2)}%</b>`;
+    el('fprEq').innerHTML  = `<b>FPR</b> = ${sFP} / (${sFP} + ${sTN}) = ${fmtInt(FP)} / ${fmtInt(Nn)} = <b>${(p.fpr * 100).toFixed(2)}%</b>`;
+    el('precEq').innerHTML = `<b>PPV</b> = ${sTP} / (${sTP} + ${sFP}) = ${fmtInt(TP)} / ${fmtInt(TP + FP)} = <b>${(r.prec * 100).toFixed(2)}%</b>`;
+    el('accEq').innerHTML  = `<b>Acc</b> = (${sTP} + ${sTN}) / ${fmtInt(p.N)} = ${fmtInt(TP + TN)} / ${fmtInt(p.N)} = <b>${(r.acc * 100).toFixed(2)}%</b>`;
+    el('tnrEq').innerHTML  = `<b>TNR</b> = ${sTN} / (${sTN} + ${sFP}) = ${fmtInt(TN)} / ${fmtInt(Nn)} = <b>${(r.tnr * 100).toFixed(2)}%</b>`;
+    el('npvEq').innerHTML  = `<b>NPV</b> = ${sTN} / (${sTN} + ${sFN}) = ${fmtInt(TN)} / ${fmtInt(TN + FN)} = <b>${(r.npv * 100).toFixed(2)}%</b>`;
+    el('baccEq').innerHTML = `<b>B.Acc</b> = (TPR + TNR) / 2 = <b>${(r.bacc * 100).toFixed(2)}%</b>`;
+    el('f1Eq').innerHTML   = `<b>F1</b> = 2*(PPV*TPR)/(PPV+TPR) = <b>${(r.f1 * 100).toFixed(2)}%</b>`;
+  }
+
+  const originalRender = render;
+  render = function() {
+    originalRender();
+    updateEquations(readParams(), compute(readParams()));
   }
 
   function setupTwoWayBinding(sliderId, inputId) {
