@@ -133,8 +133,9 @@
           <span class="chip"><span class="dot" style="background:#b8c0ff;"></span> TN</span>
           <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Pos = hatch ↗</span>
           <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Neg = hatch ↘</span>
+          <span class="chip"><span class="dot" style="background:rgba(0,0,0,0.04); border:2px solid rgba(0,0,0,0.5);"></span> Predicted Positive</span>
         </div>
-
+       
         <div class="caption small mono" id="mosaicCaption"></div>
       </div>
 
@@ -458,7 +459,7 @@
     predPosGroup.setAttribute("d", pathData);
     predPosGroup.setAttribute("fill", "rgba(0,0,0,0.04)");
     predPosGroup.setAttribute("stroke", "rgba(0,0,0,0.5)");
-    predPosGroup.setAttribute("stroke-width", "3");
+    predPosGroup.setAttribute("stroke-width", "6");
     predPosGroup.setAttribute("pointer-events", "none");
     svg.appendChild(predPosGroup);
 
