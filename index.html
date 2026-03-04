@@ -133,9 +133,8 @@
           <span class="chip"><span class="dot" style="background:#b8c0ff;"></span> TN</span>
           <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Pos = hatch ↗</span>
           <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Neg = hatch ↘</span>
-          <span class="chip"><span class="dot" style="background:rgba(0,0,0,0.04); border:2px solid rgba(0,0,0,0.5);"></span> Predicted Positive</span>
+          <span class="chip"><span id="predPosDot" class="dot" style="background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.5);"></span> Predicted Positive</span>
         </div>
-       
         <div class="caption small mono" id="mosaicCaption"></div>
       </div>
 
@@ -458,10 +457,14 @@
     ].join(' ');
     predPosGroup.setAttribute("d", pathData);
     predPosGroup.setAttribute("fill", "rgba(0,0,0,0.04)");
-    predPosGroup.setAttribute("stroke", "rgba(0,0,0,0.5)");
-    predPosGroup.setAttribute("stroke-width", "6");
+    const predPosStroke = "rgba(0,0,0,0.5)";
+    const predPosStrokeWidth = "3";
+    predPosGroup.setAttribute("stroke", predPosStroke);
+    predPosGroup.setAttribute("stroke-width", predPosStrokeWidth);
     predPosGroup.setAttribute("pointer-events", "none");
     svg.appendChild(predPosGroup);
+    // Sync legend item style to match the path
+    el("predPosDot").style.borderWidth = predPosStrokeWidth + 'px';
 
     if (wNeg > 160){
       const t0 = document.createElementNS("http://www.w3.org/2000/svg","text");
