@@ -143,7 +143,7 @@ input[type=range]::-moz-range-thumb{
   font-family:var(--mono);font-size:10px;
   margin-bottom:3px;
   display:grid;
-  grid-template-columns:40px 10px 1fr 10px minmax(0,1.1fr) 10px 54px;
+  grid-template-columns:95px 10px 0.8fr 10px minmax(0,1fr) 10px 54px;
   align-items:center;
   gap:3px;
   line-height:1.5;
@@ -577,17 +577,22 @@ function render(){
     const col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];
     return`<span style="color:${col};font-weight:700">${type}</span>`;
   };
+  const ct2=(type)=>{
+    return`<span style="color:var(--accent);font-weight:700">${type}</span>`;
+  };
   const{P,Nn,TP,FP,TN,FN,PredP,PredN}=r;
   const div=(label)=>`__DIV__${label}`;
   // [label, symbolic formula, live numeric, result]
   const eqs=[
     div('Counts'),
-    ['N',    `${ct('TP')} + ${ct('FN')} + ${ct('FP')} + ${ct('TN')}`,  `${cv('TP',TP)} + ${cv('FN',FN)} + ${cv('FP',FP)} + ${cv('TN',TN)}`,  `${fmtInt(p.N)}`],
+    ['N (all)',    `${ct('TP')} + ${ct('FN')} + ${ct('FP')} + ${ct('TN')}`,  `${cv('TP',TP)} + ${cv('FN',FN)} + ${cv('FP',FP)} + ${cv('TN',TN)}`,  `${fmtInt(p.N)}`],
+    ['P (actual +)',      `${ct('TP')} + ${ct('FN')} `,  `${cv('TP',TP)} + ${cv('FN',FN)} `,  `${fmtInt(P)}`], // prettier-ignore
+    ['Nneg (actual -)',   `${ct('TN')} + ${ct('FP')} `,  `${cv('TN',TN)} + ${cv('FP',FP)} `,  `${fmtInt(Nn)}`],
     div('Rates · from actual class'),
-    ['TPR',  `${ct('TP')} / (${ct('TP')}+${ct('FN')})`,   `${cv('TP',TP)} / (${cv('TP',TP)}+${cv('FN',FN)})`,   `${(p.tpr*100).toFixed(2)}%`],
-    ['FNR',  `${ct('FN')} / (${ct('TP')}+${ct('FN')})`,   `${cv('FN',FN)} / (${cv('TP',TP)}+${cv('FN',FN)})`,   `${((1-p.tpr)*100).toFixed(2)}%`],
-    ['TNR',  `${ct('TN')} / (${ct('FP')}+${ct('TN')})`,   `${cv('TN',TN)} / (${cv('FP',FP)}+${cv('TN',TN)})`,   `${(r.tnr*100).toFixed(2)}%`],
-    ['FPR',  `${ct('FP')} / (${ct('FP')}+${ct('TN')})`,   `${cv('FP',FP)} / (${cv('FP',FP)}+${cv('TN',TN)})`,   `${(p.fpr*100).toFixed(2)}%`],
+    ['TPR',  `${ct('TP')} / ${ct2('P')} <span class="eq-sep">=</span> ${ct('TP')} / (${ct('TP')}+${ct('FN')})`,   `${cv('TP',TP)} / ${fmtInt(P)}`,   `${(p.tpr*100).toFixed(2)}%`],
+    ['FNR',  `${ct('FN')} / ${ct2('P')} <span class="eq-sep">=</span> ${ct('FN')} / (${ct('TP')}+${ct('FN')})`,   `${cv('FN',FN)} / ${fmtInt(P)}`,   `${((1-p.tpr)*100).toFixed(2)}%`],
+    ['TNR',  `${ct('TN')} / ${ct2('Nneg')} <span class="eq-sep">=</span> ${ct('TN')} / (${ct('TN')}+${ct('FP')})`,   `${cv('TN',TN)} / ${fmtInt(Nn)}`,   `${(r.tnr*100).toFixed(2)}%`],
+    ['FPR',  `${ct('FP')} / ${ct2('Nneg')} <span class="eq-sep">=</span> ${ct('FP')} / (${ct('TN')}+${ct('FP')})`,   `${cv('FP',FP)} / ${fmtInt(Nn)}`,   `${(p.fpr*100).toFixed(2)}%`],
     div('Scores · from predicted class'),
     ['Prec', `${ct('TP')} / (${ct('TP')}+${ct('FP')})`,   `${cv('TP',TP)} / (${cv('TP',TP)}+${cv('FP',FP)})`,   `${(r.prec*100).toFixed(2)}%`],
     ['NPV',  `${ct('TN')} / (${ct('TN')}+${ct('FN')})`,   `${cv('TN',TN)} / (${cv('TN',TN)}+${cv('FN',FN)})`,   `${(r.npv*100).toFixed(2)}%`],
