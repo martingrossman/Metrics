@@ -1,663 +1,568 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <!-- iPhone-friendly viewport -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Metrics Playground (N, prevalence, TPR, FPR)</title>
-  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
-  <style>
-    :root{ --pad: 12px; --card: 12px; }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Classifier Metrics Playground</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+<style>
+:root {
+  --bg:     #0d0f14;
+  --surf:   #161920;
+  --surf2:  #1e2230;
+  --border: #2a2f3e;
+  --text:   #e8eaf0;
+  --text2:  #7b8099;
+  --text3:  #4a5068;
+  --accent: #5b8cff;
+  --tp:#4ade80; --fn:#f87171; --fp:#fbbf24; --tn:#818cf8;
+  --r:10px;
+  --mono:'Space Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  height:100%;width:100%;
+  background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:13px;
+  overflow:hidden;
+}
 
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      margin: 0;
-      padding: var(--pad);
-      padding-left: calc(var(--pad) + env(safe-area-inset-left));
-      padding-right: calc(var(--pad) + env(safe-area-inset-right));
-      padding-top: calc(var(--pad) + env(safe-area-inset-top));
-      padding-bottom: calc(var(--pad) + env(safe-area-inset-bottom));
-      background:#fff;
-    }
+/* ── app shell ── */
+.app{
+  display:grid;
+  grid-template-rows:40px 1fr;
+  height:100vh;
+  padding:8px 10px;
+  gap:7px;
+}
 
-    h2{ font-size:18px; margin:6px 0 12px; }
+/* ── header ── */
+header{
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border);padding-bottom:5px;
+}
+header h1{font-size:16px;font-weight:800;letter-spacing:-.4px;}
+header p{font-size:11px;color:var(--text2);font-family:var(--mono);}
+#insight{
+  margin-left:auto;
+  font-size:11px;font-family:var(--mono);color:var(--text2);
+  background:var(--surf2);border-left:3px solid var(--accent);
+  border-radius:0 6px 6px 0;padding:3px 10px;
+  max-width:440px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 
-    /* Base layout */
-    .grid{ display:grid; grid-template-columns: 440px 1fr; gap:18px; align-items:start; }
+/* ── body: left | right ── */
+.body{
+  display:grid;
+  grid-template-columns:248px 1fr;
+  gap:7px;min-height:0;
+}
 
-    .card{
-      border:1px solid #ddd;
-      border-radius: var(--card);
-      padding: 12px;
-      background:#fff;
-    }
+/* ── left panel ── */
+.left{display:grid;grid-template-rows:1fr auto;gap:7px;min-height:0;}
+.panel{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:11px;overflow:hidden;
+}
+.ptitle{
+  font-size:10px;font-weight:700;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--text3);margin-bottom:9px;
+}
+.ctrl{margin-bottom:11px;}
+.ctrl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.ctrl-label{font-size:12px;font-weight:600;}
+.ctrl-val{
+  font-family:var(--mono);font-size:12px;color:var(--accent);
+  background:rgba(91,140,255,.1);border:1px solid rgba(91,140,255,.25);
+  border-radius:5px;padding:1px 7px;min-width:56px;
+  text-align:right;outline:none;transition:border-color .15s;
+}
+.ctrl-val:focus{border-color:var(--accent);}
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:3px;
+  background:var(--border);border-radius:2px;outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);
+  box-shadow:0 0 7px rgba(91,140,255,.5);
+}
+input[type=range]::-moz-range-thumb{
+  width:15px;height:15px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);cursor:pointer;
+}
+.hint{font-size:10px;color:var(--text3);margin-top:2px;}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.pbtn{
+  background:var(--surf2);border:1px solid var(--border);border-radius:7px;
+  color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:11px;
+  font-weight:600;cursor:pointer;text-align:left;
+  transition:background .15s,border-color .15s;
+}
+.pbtn:hover{background:#252840;border-color:var(--accent);}
+.pbtn .tag{display:block;font-family:var(--mono);font-size:9px;color:var(--text2);margin-top:2px;}
 
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 110px;
-      gap:10px;
-      align-items:center;
-      margin:10px 0;
-    }
+/* kpi strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.kpi{background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:7px 9px;}
+.kpi-name{font-size:9px;color:var(--text3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.kpi-val{font-family:var(--mono);font-size:15px;font-weight:700;margin-top:1px;}
+.good{color:var(--tp);}.warn{color:var(--fp);}.bad{color:var(--fn);}
 
-    input[type="range"]{ width:100%; height:34px; }
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance:none;
-      width:26px; height:26px; border-radius:13px;
-    }
-    input[type="range"]::-moz-range-thumb{ width:26px; height:26px; border-radius:13px; }
+/* ── right ── */
+.right{display:grid;grid-template-rows:1fr 1fr;gap:7px;min-height:0;}
 
-    .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    .small{ color:#444; font-size:12.5px; line-height:1.35; }
-    .explain{ font-size:15.5px; line-height:1.5; }
-    .explain .mono{ font-size:16.5px; }
-    .eqLhs{ font-weight:800; }
+/* top row: mosaic + equations */
+.top-row{display:grid;grid-template-columns:1.65fr 1fr;gap:7px;min-height:0;}
 
-    .btns{ display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px; }
-    button{
-      border:1px solid #ccc;
-      background:#fff;
-      border-radius:12px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-size:14px;
-    }
-    button:active{ transform: scale(0.98); }
+.mosaic-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:9px;
+  display:grid;grid-template-rows:auto 1fr auto;gap:5px;min-height:0;
+}
+.mos-hdr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;}
+.legend{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;font-family:var(--mono);color:var(--text2);}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.leg-dash{display:flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--text2);}
+.svgBox{width:100%;min-height:0;border-radius:7px;overflow:hidden;background:#0a0c10;}
+.svgBox svg{display:block;width:100%;height:100%;}
+.mos-cap{font-family:var(--mono);font-size:10px;color:var(--text3);text-align:center;}
 
-    .kpi{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
-    .kpi div{ border:1px solid #eee; border-radius:10px; padding:10px; }
-    .note{ border-left:4px solid #ddd; padding-left:10px; margin-top:10px; }
+/* equations */
+.eq-panel{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 11px;
+  overflow-y:auto;min-height:0;
+}
+.eq-card{
+  background:var(--surf2);border:1px solid var(--border);
+  border-radius:7px;padding:4px 8px;
+  font-family:var(--mono);font-size:10px;
+  margin-bottom:3px;
+  display:grid;
+  grid-template-columns:40px 10px 1fr 10px minmax(0,1.1fr) 10px 54px;
+  align-items:center;
+  gap:3px;
+  line-height:1.5;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.eq-card:last-child{margin-bottom:0;}
+.eq-lbl{color:var(--accent);font-weight:700;white-space:nowrap;}
+.eq-sep{color:var(--text3);font-weight:700;text-align:center;}
+.eq-formula{color:#c8cde0;}
+.eq-result{color:#fff;font-weight:700;text-align:right;white-space:nowrap;}
 
-    .rightCol{ display:grid; grid-template-rows: auto auto; gap:12px; }
-    .chartsGrid{ display:grid; grid-template-columns: 1fr; gap:12px; }
-    .plot{ border:1px solid #eee; border-radius:12px; overflow:hidden; }
+/* charts row */
+.charts-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:7px;min-height:0;
+}
+.chart-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:8px 9px;
+  display:grid;grid-template-rows:auto 1fr;gap:3px;min-height:0;
+}
+.chart-title{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--text3);}
+.plot-wrap{min-height:0;}
 
-    .vizWrap{ margin-top:0; }
-    .legend{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .chip{ display:inline-flex; align-items:center; gap:6px; border:1px solid #eee; border-radius:999px; padding:4px 8px; }
-    .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; border:1px solid rgba(0,0,0,0.15); }
-
-    .svgBox{
-      width:100%;
-      height:240px; /* iPhone 13 portrait */
-      border:1px solid #eee;
-      border-radius:12px;
-      overflow:hidden;
-      background:#fafafa;
-    }
-    .caption{ margin-top:6px; }
-
-    /* Desktop: larger mosaic + two charts side-by-side */
-    @media (min-width: 1024px){
-      .grid{ grid-template-columns: 1000px 1fr; gap:22px; }
-      .svgBox{ height:420px; }
-      .chartsGrid{ grid-template-columns: 1fr 1fr; }
-      .plot{ height:320px !important; }
-    }
-
-    /* iPhone: single column + MOSAIC FIRST */
-    @media (max-width: 520px){
-      .grid{
-        grid-template-columns: 1fr;
-        gap:12px;
-      }
-      /* reorder: mosaic card first, inputs second */
-      .card.rightCol{ order: 1; }
-      .card.inputsCard{ order: 2; }
-    }
-
-    /* iPhone 13 landscape: smaller mosaic, charts side-by-side */
-    @media (max-height: 450px) and (max-width: 932px){
-      .svgBox{ height:210px; }
-      .chartsGrid{ grid-template-columns: 1fr 1fr; }
-      .plot{ height:240px !important; }
-    }
-  </style>
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.js-plotly-plot .plotly .modebar{display:none!important;}
+</style>
 </head>
 <body>
-  <h2>Dataset imbalance (prevalence, π) doesn't influence TPR, FPR but does other metrics.</h2>
+<div class="app">
 
-  <div class="grid">
-    <!-- MOSAIC + CHARTS (will appear first on iPhone) -->
-    <div class="card rightCol">
-      <div class="vizWrap">
-        <h3 style="margin:0 0 6px;">Rectangle view (areas = counts)</h3>
-        <div class="svgBox">
-          <svg id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none" width="100%" height="100%"></svg>
+  <header>
+    <h1>Classifier Metrics Playground</h1>
+    <p>N · π · TPR · FPR → live</p>
+    <div id="insight">Move a slider to see what changes…</div>
+  </header>
+
+  <div class="body">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="panel">
+        <div class="ptitle">Parameters</div>
+
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span class="ctrl-label">Dataset size (N)</span>
+            <input type="number" class="ctrl-val" id="nVal"/>
+          </div>
+          <input id="n" type="range" min="0" max="1000" step="1" value="460"/>
+          <div class="hint">Log scale · 100 → 500 000</div>
         </div>
 
-        <div class="legend small">
-          <span class="chip"><span class="dot" style="background:#8fd694;"></span> TP</span>
-          <span class="chip"><span class="dot" style="background:#ff9aa2;"></span> FN</span>
-          <span class="chip"><span class="dot" style="background:#ffd27d;"></span> FP</span>
-          <span class="chip"><span class="dot" style="background:#b8c0ff;"></span> TN</span>
-          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Pos = hatch ↗</span>
-          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Neg = hatch ↘</span>
-          <span class="chip"><span id="predPosDot" class="dot" style="background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.5);"></span> Predicted Positive</span>
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span class="ctrl-label">Prevalence (π)</span>
+            <input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1"/>
+          </div>
+          <input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
+          <div class="hint">% of actual positives</div>
         </div>
-        <div class="caption small mono" id="mosaicCaption"></div>
+
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span class="ctrl-label">TPR (Sensitivity)</span>
+            <input type="number" class="ctrl-val" id="tprVal" min="0" max="100" step="0.1"/>
+          </div>
+          <input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847"/>
+          <div class="hint">True Positive Rate · Recall</div>
+        </div>
+
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span class="ctrl-label">FPR (1 − Specificity)</span>
+            <input type="number" class="ctrl-val" id="fprVal" min="0" max="100" step="0.1"/>
+          </div>
+          <input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
+          <div class="hint">False Positive Rate</div>
+        </div>
+
+        <div class="ptitle" style="margin-top:4px">Presets</div>
+        <div class="presets">
+          <button class="pbtn" id="bal">Balanced<span class="tag">π = 50%</span></button>
+          <button class="pbtn" id="imb">Imbalanced<span class="tag">π = 10%</span></button>
+          <button class="pbtn" id="vimb">Very imbalanced<span class="tag">π = 1%</span></button>
+          <button class="pbtn" id="perfect">Perfect<span class="tag">TPR=100 FPR=0</span></button>
+          <button class="pbtn" id="random">Random<span class="tag">TPR = FPR</span></button>
+          <button class="pbtn" id="resetBtn">Reset<span class="tag">defaults</span></button>
+        </div>
       </div>
 
-      <div class="chartsGrid">
-        <div id="counts" class="plot" style="height: 320px;"></div>
-        <div id="metrics" class="plot" style="height: 320px;"></div>
-      </div>
-
-      <div id="equations" class="note small explain" style="margin-top:12px; font-size:14px;">
-        <h4 style="margin:0 0 8px; font-size:16px;">Metric Equations</h4>
-        <div id="totalsEq" class="mono" style="margin-bottom:8px; padding-bottom: 8px; border-bottom: 1px solid #eee;"></div>
-
-        <div id="tprEq" class="mono"></div>
-        <div id="fprEq" class="mono"></div>
-        <div id="precEq" class="mono"></div>
-        <div id="accEq" class="mono"></div>
-        <div id="tnrEq" class="mono"></div>
-        <div id="npvEq" class="mono"></div>
-        <div id="baccEq" class="mono"></div>
-        <div id="f1Eq" class="mono"></div>
+      <!-- KPIs -->
+      <div class="panel" style="padding:10px">
+        <div class="ptitle">Derived Metrics</div>
+        <div class="kpi-strip">
+          <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">—</div></div>
+          <div class="kpi"><div class="kpi-name">F1</div><div class="kpi-val" id="f1Kpi">—</div></div>
+          <div class="kpi"><div class="kpi-name">Accuracy</div><div class="kpi-val" id="accKpi">—</div></div>
+          <div class="kpi"><div class="kpi-name">Bal Acc</div><div class="kpi-val" id="baccKpi">—</div></div>
+          <div class="kpi"><div class="kpi-name">TNR</div><div class="kpi-val" id="tnrKpi">—</div></div>
+          <div class="kpi"><div class="kpi-name">NPV</div><div class="kpi-val" id="npvKpi">—</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- INPUTS (will appear second on iPhone) -->
-    <div class="card inputsCard">
-      <h3 style="margin:0 0 8px;">Inputs</h3>
+    <!-- RIGHT -->
+    <div class="right">
 
-      <div class="row">
-        <label>Dataset size (N)</label>
-        <input type="number" class="mono" id="nVal" />
-      </div>
-      <input id="n" type="range" min="0" max="1000" step="1" value="460"/>
+      <!-- top: mosaic + equations -->
+      <div class="top-row">
+        <div class="mosaic-card">
+          <div class="mos-hdr">
+            <span style="font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--text3)">Confusion Matrix · area = counts</span>
+            <div class="legend">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--tp)"></div>TP</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--fn)"></div>FN</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--fp)"></div>FP</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--tn)"></div>TN</div>
+              <div class="leg-dash">
+                <svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="rgba(255,255,255,.75)" stroke-width="2.5" stroke-dasharray="5 3"/></svg>
+                Predicted Positive boundary — TP ∪ FP below line
+              </div>
+            </div>
+          </div>
+          <div class="svgBox">
+            <svg id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="mos-cap" id="mosaicCaption"></div>
+        </div>
 
-      <div class="btns">
-        <button id="bal">Balanced (π = 50%)</button>
-        <button id="imb">Imbalanced (π = 10%)</button>
-        <button id="vimb">Very imbalanced (π = 1%)</button>
-      </div>
-
-      <div class="row">
-        <label>Prevalence π</label>
-        <input type="number" class="mono" id="piVal" min="0" max="100" step="0.1" />
-      </div>
-      <input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
-
-      <div class="row">
-        <label>TPR (Recall)</label>
-        <input type="number" class="mono" id="tprVal" min="0" max="100" step="0.1" />
-      </div>
-      <input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847"/>
-
-      <div class="row">
-        <label>FPR</label>
-        <input type="number" class="mono" id="fprVal" min="0" max="100" step="0.1" />
-      </div>
-      <input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
-
-      <div class="kpi">
-        <div><div class="small">Precision (PPV)</div><div class="mono" id="precKpi">—</div></div>
-        <div><div class="small">Accuracy</div><div class="mono" id="accKpi">—</div></div>
-        <div><div class="small">F1</div><div class="mono" id="f1Kpi">—</div></div>
-        <div><div class="small">Balanced Acc</div><div class="mono" id="baccKpi">—</div></div>
-        <div><div class="small">Specificity (TNR)</div><div class="mono" id="tnrKpi">—</div></div>
-        <div><div class="small">NPV (Negative Predictive Value)</div><div class="mono" id="npvKpi">—</div></div>
+        <div class="eq-panel">
+          <div class="ptitle">Live Equations</div>
+          <div id="liveEq"></div>
+        </div>
       </div>
 
-      <div class="note small" id="note"></div>
-
-      <details class="note small explain" style="margin-top:10px;">
-        <summary><strong>Equations and what they mean</strong></summary>
-        <div style="margin-top:8px;">
-          <div><strong>Notation (symbols)</strong></div>
-          <div class="mono"><span class="eqLhs">D+</span> = actually positive </div>
-          <div class="mono"><span class="eqLhs">D-</span> = actually negative</div>
-          <div class="mono"><span class="eqLhs">T+</span> = predicted (tested) positive
-          <div class="mono"><span class="eqLhs">T-</span> = predicted (tested) negative</div>
-          <!--<div class="mono"><span class="eqLhs">P(A|B)</span> = probability of A given B is true</div>
-          <div>Example: <span class="mono">P(D+|T+)</span> means "if test is positive, chance it is truly positive".</div>-->
+      <!-- bottom: 4 charts -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">Counts</div>
+          <div class="plot-wrap" id="counts"></div>
         </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Base quantities</strong></div>
-          <div class="mono"><span class="eqLhs">P</span> = N * π</div>
-          <div>Actual positives in the dataset.</div>
-          <div class="mono"><span class="eqLhs">Nneg</span> = N * (1 - π)</div>
-          <div>Actual negatives in the dataset.</div>
-          <div class="mono"><span class="eqLhs">TP</span> = P * TPR</div>
-          <div>True positives (positive cases found correctly).</div>
-          <div class="mono"><span class="eqLhs">FN</span> = P - TP</div>
-          <div>False negatives (positive cases missed).</div>
-          <div class="mono"><span class="eqLhs">FP</span> = Nneg * FPR</div>
-          <div>False positives (negative cases predicted as positive).</div>
-          <div class="mono"><span class="eqLhs">TN</span> = Nneg - FP</div>
-          <div>True negatives (negative cases correctly rejected).</div>
+        <div class="chart-card">
+          <div class="chart-title">Rates</div>
+          <div class="plot-wrap" id="metrics"></div>
         </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Rates and scores</strong></div>
-          <div class="mono"><span class="eqLhs">TPR (Recall)</span> = TP / (TP + FN)</div>
-          <div>Among actual positives, how many you catch.</div>
-          <div class="mono"><span class="eqLhs">FPR</span> = FP / (FP + TN)</div>
-          <div>Among actual negatives, how many false alarms you raise.</div>
-          <div class="mono"><span class="eqLhs">Precision (PPV)</span> = TP / (TP + FP)</div>
-          <div>Among predicted positives, how many are truly positive.</div>
-          <div class="mono"><span class="eqLhs">Accuracy</span> = (TP + TN) / N</div>
-          <div>Overall fraction of correct predictions.</div>
-          <div class="mono"><span class="eqLhs">F1</span> = 2 * (Precision(PPV) * Recall) / (Precision(PPV) + Recall)</div>
-          <div>Harmonic mean of Precision (PPV) and Recall.</div>
-          <div class="mono"><span class="eqLhs">Specificity (TNR)</span> = TN / (TN + FP) = 1 - FPR</div>
-          <div>Among actual negatives, how many you correctly reject.</div>
-          <div class="mono"><span class="eqLhs">Balanced Accuracy</span> = (TPR + TNR) / 2</div>
-          <div>Average of sensitivity and specificity.</div>
-          <div class="mono"><span class="eqLhs">NPV (Negative Predictive Value)</span> = TN / (TN + FN)</div>
-          <div>Among predicted negatives, how many are truly negative.</div>
+        <div class="chart-card">
+          <div class="chart-title">ROC · iso-LR⁺ curve</div>
+          <div class="plot-wrap" id="roc"></div>
         </div>
-      </details>
-
-      <details class="note small explain" style="margin-top:10px;">
-        <summary><strong>Bayesian view: why prevalence matters</strong></summary>
-        <div style="margin-top:8px;">
-          <div class="mono"><span class="eqLhs">D+</span> = true positive class</div>
-          <div class="mono"><span class="eqLhs">D-</span> = true negative class</div>
-          <div class="mono"><span class="eqLhs">T+</span> = model/test predicts positive</div>
-          <div class="mono"> <span class="eqLhs">T-</span> = model/test predicts negative</div>
-          <div class="mono"><span class="eqLhs">P(A|B)</span>: probability of A, assuming B happened</div>
-          <div class="mono"><span class="eqLhs">P(D+|T+)</span>: if test (model, prediction) is positive, chance it is truly positive class</div>
-          <div>Bayes links test quality (TPR/FPR) with prevalence (prior probability).</div>
-          <!--TODO <div class="mono"><span class="eqLhs">P(D+)</span> = = π/div> -->
-          <div class="mono">Prior: <span class="eqLhs">P(D+)</span> = π, <span class="eqLhs">P(D-)</span> = 1 - π</div>
-          <div>Before seeing a test result, prevalence is your best guess of disease/class probability.</div>
+        <div class="chart-card">
+          <div class="chart-title">Precision-Recall · vary π</div>
+          <div class="plot-wrap" id="pr"></div>
         </div>
+      </div>
 
-        <div style="margin-top:10px;">
-          <div><strong>Posterior after a positive test</strong></div>
-          <div class="mono"><span class="eqLhs">P(T+|D+)</span> = TPR</div>
-          <div class="mono"><span class="eqLhs">P(T+|D-)</span> = FPR</div>
-          <div class="mono"><span class="eqLhs">P(D+|T+)</span> = (TPR * π) / ((TPR * π) + (FPR * (1 - π))) = PPV </div>
-          <div>This is Precision (PPV): probability of truly positive given a positive prediction.</div>
-          <div>In words: start from prior positives (<span class="mono">π</span>), then adjust by how often positives/negatives trigger a positive test.</div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Posterior after a negative test</strong></div>
-          <div class="mono"><span class="eqLhs">P(T-|D-)</span> = TNR = 1 - FPR</div>
-          <div class="mono"><span class="eqLhs">P(T-|D+)</span> = FNR = 1 - TPR</div>
-          <div class="mono"><span class="eqLhs">P(D-|T-)</span> = (TNR * (1 - π)) / ((TNR * (1 - π)) + (FNR * π))</div>
-          <div>This is NPV (Negative Predictive Value): probability of truly negative given a negative prediction.</div>
-          <div>In words: among negative test results, compare true negatives against missed positives.</div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Practical takeaway</strong></div>
-          <div>When π is very small, even a modest FPR can create many false positives, lowering PPV.</div>
-          <div>That is why Precision (PPV) can drop sharply in imbalanced settings, even when TPR looks strong.</div>
-        </div>
-      </details>
     </div>
   </div>
+</div>
 
 <script>
-  const el = (id) => document.getElementById(id);
+const el=id=>document.getElementById(id);
 
-  // --- Non-linear scale transformations ---
-  const N_MIN = 100, N_MAX = 500000;
-  const LOG_N_MIN = Math.log(N_MIN), LOG_N_MAX = Math.log(N_MAX);
-  const sliderToN = (v) => Math.round(Math.exp(LOG_N_MIN + (v / 1000) * (LOG_N_MAX - LOG_N_MIN)));
-  const nToSlider = (v) => 1000 * (Math.log(v) - LOG_N_MIN) / (LOG_N_MAX - LOG_N_MIN);
+const LOG_N_MIN=Math.log(100),LOG_N_MAX=Math.log(500000);
+const sliderToN  =v=>Math.round(Math.exp(LOG_N_MIN+(v/1000)*(LOG_N_MAX-LOG_N_MIN)));
+const nToSlider  =v=>1000*(Math.log(v)-LOG_N_MIN)/(LOG_N_MAX-LOG_N_MIN);
+const sliderToPct=v=>100/(1+Math.exp(-v));
+const pctToSlider=v=>{const p=Math.max(1e-6,Math.min(1-1e-6,v/100));return Math.log(p/(1-p));};
 
-  const LOGIT_MIN = -5, LOGIT_MAX = 5; // Range for sliders
-  // Logit scale: gives high precision near 0 and 1
-  const sliderToPct = (v) => 100 / (1 + Math.exp(-v));
-  const pctToSlider = (v) => {
-    const p = Math.max(1e-6, Math.min(1 - 1e-6, v / 100)); // Clamp to avoid infinity
-    return Math.log(p / (1 - p));
+const fmtPct=x=>(x*100).toFixed(1)+'%';
+const fmtInt=x=>Math.round(x).toLocaleString('en-US');
+
+function readParams(){
+  return{
+    N:  parseInt(el('nVal').value,10)||100,
+    pi: parseFloat(el('piVal').value)/100,
+    tpr:parseFloat(el('tprVal').value)/100,
+    fpr:parseFloat(el('fprVal').value)/100,
   };
+}
 
-  function fmtPct(x){ return (x * 100).toFixed(2) + "%"; }
-  function fmtInt(x){ return Math.round(x).toLocaleString("en-US"); }
+function compute(p){
+  const P=p.N*p.pi,Nn=p.N*(1-p.pi);
+  const TP=P*p.tpr,FN=P-TP,FP=Nn*p.fpr,TN=Nn-FP;
+  const PredP=TP+FP,PredN=TN+FN;
+  const prec=TP/(PredP+1e-15),acc=(TP+TN)/(p.N+1e-15);
+  const f1=2*prec*p.tpr/(prec+p.tpr+1e-15);
+  const tnr=1-p.fpr,npv=TN/(PredN+1e-15),bacc=.5*(p.tpr+tnr);
+  return{P,Nn,TP,FP,TN,FN,PredP,PredN,prec,acc,f1,tnr,npv,bacc};
+}
 
-  function readParams(){
-    // Read from the text input boxes, which hold the "real" values
-    return {
-      N:   parseInt(el("nVal").value, 10),
-      pi:  parseFloat(el("piVal").value) / 100,
-      tpr: parseFloat(el("tprVal").value) / 100,
-      fpr: parseFloat(el("fprVal").value) / 100,
-    };
-  }
+function syncToSliders(){
+  el('nVal').value  =sliderToN(el('n').value);
+  el('piVal').value =sliderToPct(el('pi').value).toFixed(2);
+  el('tprVal').value=sliderToPct(el('tpr').value).toFixed(2);
+  el('fprVal').value=sliderToPct(el('fpr').value).toFixed(2);
+}
 
-  const setPiAndRender = (pct) => {
-    el("pi").value = pctToSlider(pct);
-    el("piVal").value = pct.toFixed(2);
-    render();
-  };
-
-  function syncInputsToSliders() {
-    el("nVal").value   = sliderToN(el("n").value).toLocaleString("en-US", {useGrouping: false});
-    el("piVal").value  = sliderToPct(el("pi").value).toFixed(2);
-    el("tprVal").value = sliderToPct(el("tpr").value).toFixed(2);
-    el("fprVal").value = sliderToPct(el("fpr").value).toFixed(2);
-  }
-
-  function compute(p){
-    const P  = p.N * p.pi;
-    const Nn = p.N * (1 - p.pi);
-
-    const TP = P * p.tpr;
-    const FN = P - TP;
-
-    const FP = Nn * p.fpr;
-    const TN = Nn - FP;
-
-    const PredP = TP + FP;
-    const PredN = TN + FN;
-
-    const prec = TP / (PredP + 1e-15);
-    const acc  = (TP + TN) / (p.N + 1e-15);
-    const f1   = (2 * prec * p.tpr) / (prec + p.tpr + 1e-15);
-
-    const tnr  = 1 - p.fpr;
-    const npv  = TN / (PredN + 1e-15);
-    const bacc = 0.5 * (p.tpr + tnr);
-
-    return { P, Nn, TP, FP, TN, FN, PredP, PredN, prec, acc, f1, tnr, npv, bacc };
-  }
-
-  function drawMosaic(r){
-    const svg = el("mosaic");
-    svg.innerHTML = "";
-
-    const W = 1000, H = 500;
-    const TOP = 44, innerY = TOP, innerH = H - TOP;
-
-    const total = r.P + r.Nn;
-
-    const wNeg = W * (r.Nn / (total + 1e-15));
-    const wPos = W - wNeg;
-
-    const hTN = innerH * (r.TN / (r.Nn + 1e-15));
-    const hFP = innerH - hTN;
-
-    const hFN = innerH * (r.FN / (r.P + 1e-15));
-    const hTP = innerH - hFN;
-
-    const C_TP = "#8fd694";
-    const C_FN = "#ff9aa2";
-    const C_FP = "#ffd27d";
-    const C_TN = "#b8c0ff";
-
-    const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
-
-    const patPos = document.createElementNS("http://www.w3.org/2000/svg","pattern");
-    patPos.setAttribute("id", "posHatch");
-    patPos.setAttribute("patternUnits", "userSpaceOnUse");
-    patPos.setAttribute("width", "18");
-    patPos.setAttribute("height", "18");
-    patPos.setAttribute("patternTransform", "rotate(45)");
-    const linePos = document.createElementNS("http://www.w3.org/2000/svg","line");
-    linePos.setAttribute("x1", "0"); linePos.setAttribute("y1", "0");
-    linePos.setAttribute("x2", "0"); linePos.setAttribute("y2", "18");
-    linePos.setAttribute("stroke", "rgba(0,0,0,0.22)");
-    linePos.setAttribute("stroke-width", "4");
-    patPos.appendChild(linePos);
-
-    const patNeg = document.createElementNS("http://www.w3.org/2000/svg","pattern");
-    patNeg.setAttribute("id", "negHatch");
-    patNeg.setAttribute("patternUnits", "userSpaceOnUse");
-    patNeg.setAttribute("width", "18");
-    patNeg.setAttribute("height", "18");
-    patNeg.setAttribute("patternTransform", "rotate(-45)");
-    const lineNeg = document.createElementNS("http://www.w3.org/2000/svg","line");
-    lineNeg.setAttribute("x1", "0"); lineNeg.setAttribute("y1", "0");
-    lineNeg.setAttribute("x2", "0"); lineNeg.setAttribute("y2", "18");
-    lineNeg.setAttribute("stroke", "rgba(0,0,0,0.18)");
-    lineNeg.setAttribute("stroke-width", "4");
-    patNeg.appendChild(lineNeg);
-
-    defs.appendChild(patPos);
-    defs.appendChild(patNeg);
-    svg.appendChild(defs);
-
-    function rect(x,y,w,h,fill,label){
-      const R = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      R.setAttribute("x", x); R.setAttribute("y", y);
-      R.setAttribute("width", w); R.setAttribute("height", h);
-      R.setAttribute("fill", fill);
-      R.setAttribute("stroke", "rgba(0,0,0,0.30)");
-      R.setAttribute("stroke-width", "1");
-      svg.appendChild(R);
-
-      // iPhone: label only if enough room
-      if (w > 170 && h > 80){
-        const T = document.createElementNS("http://www.w3.org/2000/svg","text");
-        T.setAttribute("x", x + 10);
-        T.setAttribute("y", Math.min(y + h - 12, y + 34));
-        T.setAttribute("font-size", "24");
-        T.setAttribute("font-family", "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace");
-        T.textContent = label;
-        svg.appendChild(T);
-      }
+function drawMosaic(r){
+  const svg=el('mosaic');svg.innerHTML='';
+  const W=1000,H=500,TOP=40,iY=TOP,iH=H-TOP;
+  const tot=r.P+r.Nn;
+  const wNeg=W*(r.Nn/(tot+1e-15)),wPos=W-wNeg;
+  const hTN=iH*(r.TN/(r.Nn+1e-15)),hFP=iH-hTN;
+  const hFN=iH*(r.FN/(r.P+1e-15)),hTP=iH-hFN;
+  const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  bg.setAttribute('width',W);bg.setAttribute('height',H);bg.setAttribute('fill','#0a0c10');
+  svg.appendChild(bg);
+  const C={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'};
+  function rect(x,y,w,h,fill,lbl){
+    const R=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    R.setAttribute('x',x);R.setAttribute('y',y);
+    R.setAttribute('width',Math.max(0,w));R.setAttribute('height',Math.max(0,h));
+    R.setAttribute('fill',fill);R.setAttribute('fill-opacity','0.85');
+    R.setAttribute('stroke','#0a0c10');R.setAttribute('stroke-width','2');
+    svg.appendChild(R);
+    if(w>110&&h>55){
+      const T=document.createElementNS('http://www.w3.org/2000/svg','text');
+      T.setAttribute('x',x+10);T.setAttribute('y',Math.min(y+h-12,y+30));
+      T.setAttribute('font-size','23');T.setAttribute('font-family','Space Mono,monospace');
+      T.setAttribute('fill','rgba(0,0,0,0.75)');T.setAttribute('font-weight','700');
+      T.textContent=lbl;svg.appendChild(T);
     }
-
-    rect(0,    innerY + 0,   wNeg, hTN, C_TN, `TN ${fmtInt(r.TN)}`);
-    rect(0,    innerY + hTN, wNeg, hFP, C_FP, `FP ${fmtInt(r.FP)}`);
-    rect(wNeg, innerY + 0,   wPos, hFN, C_FN, `FN ${fmtInt(r.FN)}`);
-    rect(wNeg, innerY + hFN, wPos, hTP, C_TP, `TP ${fmtInt(r.TP)}`);
-
-    const overlayNeg = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    overlayNeg.setAttribute("x", 0);
-    overlayNeg.setAttribute("y", innerY);
-    overlayNeg.setAttribute("width", wNeg);
-    overlayNeg.setAttribute("height", innerH);
-    overlayNeg.setAttribute("fill", "url(#negHatch)");
-    overlayNeg.setAttribute("pointer-events", "none");
-    svg.appendChild(overlayNeg);
-
-    const overlayPos = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    overlayPos.setAttribute("x", wNeg);
-    overlayPos.setAttribute("y", innerY);
-    overlayPos.setAttribute("width", wPos);
-    overlayPos.setAttribute("height", innerH);
-    overlayPos.setAttribute("fill", "url(#posHatch)");
-    overlayPos.setAttribute("pointer-events", "none");
-    svg.appendChild(overlayPos);
-
-    // Add a single border around the "Predicted Positive" (T+) group (the union of FP and TP).
-    // A <path> is used to draw a single continuous outline without an internal dividing line.
-    const predPosGroup = document.createElementNS("http://www.w3.org/2000/svg","path");
-    const pathData = [
-      `M 0, ${innerY + hTN}`,          // Move to top-left of FP
-      `L ${wNeg}, ${innerY + hTN}`,    // Line to top-right of FP
-      `L ${wNeg}, ${innerY + hFN}`,    // Line along the FP/TP boundary to top of TP
-      `L ${W}, ${innerY + hFN}`,       // Line to top-right of TP
-      `L ${W}, ${innerY + innerH}`,    // Line to bottom-right of TP
-      `L 0, ${innerY + innerH}`,       // Line to bottom-left of FP
-      'Z'                              // Close the path
-    ].join(' ');
-    predPosGroup.setAttribute("d", pathData);
-    predPosGroup.setAttribute("fill", "rgba(0,0,0,0.04)");
-    const predPosStroke = "rgba(0,0,0,0.5)";
-    const predPosStrokeWidth = "3";
-    predPosGroup.setAttribute("stroke", predPosStroke);
-    predPosGroup.setAttribute("stroke-width", predPosStrokeWidth);
-    predPosGroup.setAttribute("pointer-events", "none");
-    svg.appendChild(predPosGroup);
-    // Sync legend item style to match the path
-    el("predPosDot").style.borderWidth = predPosStrokeWidth + 'px';
-
-    if (wNeg > 160){
-      const t0 = document.createElementNS("http://www.w3.org/2000/svg","text");
-      t0.setAttribute("x", 12);
-      t0.setAttribute("y", 26);
-      t0.setAttribute("font-size", "22");
-      t0.setAttribute("font-weight", "800");
-      t0.textContent = "Actual Negative";
-      svg.appendChild(t0);
-    }
-    if (wPos > 160){
-      const t1 = document.createElementNS("http://www.w3.org/2000/svg","text");
-      t1.setAttribute("x", wNeg + 12);
-      t1.setAttribute("y", 26);
-      t1.setAttribute("font-size", "22");
-      t1.setAttribute("font-weight", "800");
-      t1.textContent = "Actual Positive";
-      svg.appendChild(t1);
-    }
-
-    el("mosaicCaption").textContent =
-      `P=${fmtInt(r.P)}  N=${fmtInt(r.Nn)}  |  TP=${fmtInt(r.TP)} FP=${fmtInt(r.FP)} TN=${fmtInt(r.TN)} FN=${fmtInt(r.FN)}`;
   }
-
-  let last = null;
-
-  function render(){
-    const p = readParams();
-    const r = compute(p);
-
-    el("precKpi").textContent = fmtPct(r.prec);
-    el("accKpi").textContent  = fmtPct(r.acc);
-    el("f1Kpi").textContent   = fmtPct(r.f1);
-
-    el("tnrKpi").textContent  = fmtPct(r.tnr);
-    el("npvKpi").textContent  = fmtPct(r.npv);
-    el("baccKpi").textContent = fmtPct(r.bacc);
-
-    let msg = "";
-    if (last){
-      const changedN   = p.N !== last.p.N;
-      const changedPi  = p.pi !== last.p.pi;
-      const changedTpr = p.tpr !== last.p.tpr;
-      const changedFpr = p.fpr !== last.p.fpr;
-
-      if (changedN && !changedPi && !changedTpr && !changedFpr){
-        msg = `Only N changed → all *rates* stay the same, rectangle areas scale up/down.`;
-      } else if (changedPi && !changedTpr && !changedFpr){
-        msg = `Only π changed → TPR/FPR unchanged, but Precision (PPV) and FP/TP areas move a lot.`;
-      } else if (changedTpr || changedFpr){
-        msg = `Changing TPR/FPR changes the *shape* inside each class block (FN↔TP, TN↔FP).`;
-      } else {
-        msg = `Move sliders to see which parts depend on N, π, TPR, FPR.`;
-      }
-    } else {
-      msg = `Try: keep TPR=0.85 and FPR=0.05, then switch π from 0.5 → 0.01 and watch FP dominate.`;
-    }
-    el("note").innerHTML = `<b>${msg}</b>`;
-    last = { p: { ...p } };
-
-    drawMosaic(r);
-
-    const plotCfg = { displayModeBar: false, responsive: true };
-
-    const countsY = [r.TP, r.FP, r.TN, r.FN];
-    const maxCount = Math.max(...countsY);
-    const countsTextPositions = countsY.map(y => (y / (maxCount + 1e-9)) < 0.2 ? 'outside' : 'inside');
-
-    Plotly.react("counts", [{
-      x: ["TP","FP","TN","FN"],
-      y: countsY,
-      type: "bar",
-      name: "Counts",
-      texttemplate: '%{y:,.0f}',
-      textposition: countsTextPositions
-    }], {
-      title: "Counts",
-      yaxis: { title: "count" },
-      margin: { l: 55, r: 20, t: 40, b: 45 }
-    }, plotCfg);
-
-    const ratesY = [p.tpr*100, p.fpr*100, r.prec*100, r.acc*100, r.f1*100, r.bacc*100, r.npv*100];
-    const ratesTextPositions = ratesY.map(y => y < 20 ? 'outside' : 'inside');
-
-    Plotly.react("metrics", [{
-      x: ["TPR","FPR","Precision","Accuracy","F1","BalancedAcc","NPV"],
-      y: ratesY,
-      type: "bar",
-      name: "Rates",
-      texttemplate: '%{y:.1f}',
-      textposition: ratesTextPositions
-    }], {
-      title: "Rates",
-      yaxis: { title: "value (%)", range: [0,100] },
-      margin: { l: 55, r: 20, t: 40, b: 55 }
-    }, plotCfg);
-  }
-
-  function updateEquations(p, r) {
-    const { P, Nn, TP, FP, TN, FN, PredP, PredN } = r;
-
-    const colorSpan = (type, value) => {
-      const colors = { TP: '#8fd694', FN: '#ff9aa2', FP: '#ffd27d', TN: '#b8c0ff' };
-      return `<span style="color:${colors[type]}; font-weight:bold;">${type}(${fmtInt(value)})</span>`;
-    };
-
-    const sTP = colorSpan('TP', r.TP);
-    const sFP = colorSpan('FP', r.FP);
-    const sTN = colorSpan('TN', r.TN);
-    const sFN = colorSpan('FN', r.FN);
-
-    el('totalsEq').innerHTML = `<b>N</b>=${fmtInt(p.N)} &nbsp; <b>P</b>=${fmtInt(P)} &nbsp; <b>N<sub>neg</sub></b>=${fmtInt(Nn)} &nbsp; | &nbsp; <b>T+</b>=${fmtInt(PredP)} &nbsp; <b>T-</b>=${fmtInt(PredN)}`;
-
-    el('tprEq').innerHTML  = `<b>TPR</b> = ${sTP} / (${sTP} + ${sFN}) = <span style="color:#8fd694; font-weight:bold;">TP</span> / P = ${fmtInt(r.TP)} / ${fmtInt(P)} = <b>${(p.tpr * 100).toFixed(2)}%</b>`;
-    el('fprEq').innerHTML  = `<b>FPR</b> = ${sFP} / (${sFP} + ${sTN}) = <span style="color:#ffd27d; font-weight:bold;">FP</span> / N<sub>neg</sub> = ${fmtInt(r.FP)} / ${fmtInt(Nn)} = <b>${(p.fpr * 100).toFixed(2)}%</b>`;
-    el('precEq').innerHTML = `<b>PPV</b> = ${sTP} / (${sTP} + ${sFP}) = <span style="color:#8fd694; font-weight:bold;">TP</span> / <b>T+</b> = ${fmtInt(r.TP)} / ${fmtInt(PredP)} = <b>${(r.prec * 100).toFixed(2)}%</b>`;
-    el('accEq').innerHTML  = `<b>Acc</b> = (${sTP} + ${sTN}) / N = (<span style="color:#8fd694; font-weight:bold;">TP</span>+<span style="color:#b8c0ff; font-weight:bold;">TN</span>) / N = ${fmtInt(r.TP + r.TN)} / ${fmtInt(p.N)} = <b>${(r.acc * 100).toFixed(2)}%</b>`;
-    el('tnrEq').innerHTML  = `<b>TNR</b> = ${sTN} / (${sTN} + ${sFP}) = <span style="color:#b8c0ff; font-weight:bold;">TN</span> / N<sub>neg</sub> = ${fmtInt(r.TN)} / ${fmtInt(Nn)} = <b>${(r.tnr * 100).toFixed(2)}%</b>`;
-    el('npvEq').innerHTML  = `<b>NPV</b> = ${sTN} / (${sTN} + ${sFN}) = <span style="color:#b8c0ff; font-weight:bold;">TN</span> / <b>T-</b> = ${fmtInt(r.TN)} / ${fmtInt(PredN)} = <b>${(r.npv * 100).toFixed(2)}%</b>`;
-    el('baccEq').innerHTML = `<b>B.Acc</b> = (TPR + TNR) / 2 = <b>${(r.bacc * 100).toFixed(2)}%</b>`;
-    el('f1Eq').innerHTML   = `<b>F1</b> = 2*(PPV*TPR)/(PPV+TPR) = <b>${(r.f1 * 100).toFixed(2)}%</b>`;
-  }
-
-  const originalRender = render;
-  render = function() {
-    originalRender();
-    updateEquations(readParams(), compute(readParams()));
-  }
-
-  function setupTwoWayBinding(sliderId, inputId) {
-    const slider = el(sliderId);
-    const input = el(inputId);
-
-    const isN = sliderId === 'n';
-    const toDisplay = isN ? sliderToN : sliderToPct;
-    const toSlider = isN ? nToSlider : pctToSlider;
-
-    slider.addEventListener("input", () => {
-      const val = toDisplay(slider.value);
-      input.value = isN ? Math.round(val) : val.toFixed(2);
-      render();
-    });
-
-    input.addEventListener("change", () => {
-      slider.value = toSlider(input.value);
-      render();
-    });
-  }
-
-  setupTwoWayBinding("n", "nVal");
-  setupTwoWayBinding("pi", "piVal");
-  setupTwoWayBinding("tpr", "tprVal");
-  setupTwoWayBinding("fpr", "fprVal");
-
-  el("bal").onclick  = () => setPiAndRender(50);
-  el("imb").onclick  = () => setPiAndRender(10);
-  el("vimb").onclick = () => setPiAndRender(1);
-
-  // Initial render
-  syncInputsToSliders();
-  render();
-
-  // Better resize on iPhone (address bar/orientation)
-  let resizeTimer = null;
-  const doResize = () => {
-    try { Plotly.Plots.resize("counts"); } catch(e) {}
-    try { Plotly.Plots.resize("metrics"); } catch(e) {}
-  };
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(doResize, 120);
+  rect(0,   iY,     wNeg,hTN,C.TN,`TN  ${fmtInt(r.TN)}`);
+  rect(0,   iY+hTN, wNeg,hFP,C.FP,`FP  ${fmtInt(r.FP)}`);
+  rect(wNeg,iY,     wPos,hFN,C.FN,`FN  ${fmtInt(r.FN)}`);
+  rect(wNeg,iY+hFN, wPos,hTP,C.TP,`TP  ${fmtInt(r.TP)}`);
+  [[0,wNeg,'Actual Negative'],[wNeg,wPos,'Actual Positive']].forEach(([x,w,t])=>{
+    if(w<80)return;
+    const T=document.createElementNS('http://www.w3.org/2000/svg','text');
+    T.setAttribute('x',x+w/2);T.setAttribute('y',28);T.setAttribute('text-anchor','middle');
+    T.setAttribute('font-size','18');T.setAttribute('font-family','Syne,sans-serif');
+    T.setAttribute('font-weight','700');T.setAttribute('fill','rgba(255,255,255,0.4)');
+    T.textContent=t;svg.appendChild(T);
   });
-  window.addEventListener("orientationchange", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(doResize, 220);
-  });
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',[
+    `M 0,${iY+hTN}`,`L ${wNeg},${iY+hTN}`,
+    `L ${wNeg},${iY+hFN}`,`L ${W},${iY+hFN}`,
+    `L ${W},${iY+iH}`,`L 0,${iY+iH}`,'Z'
+  ].join(' '));
+  path.setAttribute('fill','rgba(255,255,255,0.03)');
+  path.setAttribute('stroke','rgba(255,255,255,0.8)');
+  path.setAttribute('stroke-width','4');
+  path.setAttribute('stroke-dasharray','10 5');
+  path.setAttribute('pointer-events','none');
+  svg.appendChild(path);
+  el('mosaicCaption').textContent=
+    `P=${fmtInt(r.P)}  N=${fmtInt(r.Nn)}  |  TP=${fmtInt(r.TP)}  FP=${fmtInt(r.FP)}  TN=${fmtInt(r.TN)}  FN=${fmtInt(r.FN)}`;
+}
+
+const PL=(extra={})=>({
+  paper_bgcolor:'transparent',plot_bgcolor:'transparent',
+  font:{family:'Space Mono,monospace',size:10,color:'#7b8099'},
+  margin:{l:34,r:6,t:6,b:34},
+  xaxis:{gridcolor:'#1e2230',tickcolor:'#2a2f3e',linecolor:'#2a2f3e',zeroline:false,...(extra.xaxis||{})},
+  yaxis:{gridcolor:'#1e2230',tickcolor:'#2a2f3e',linecolor:'#2a2f3e',zeroline:false,...(extra.yaxis||{})},
+  showlegend:false,...extra
+});
+const PC={displayModeBar:false,responsive:true};
+
+let rocHistory=[],lastP=null;
+
+function render(){
+  const p=readParams(),r=compute(p);
+
+  const kc=v=>v>.75?'kpi-val good':v<.35?'kpi-val bad':'kpi-val warn';
+  el('precKpi').textContent=fmtPct(r.prec);el('precKpi').className=kc(r.prec);
+  el('f1Kpi').textContent  =fmtPct(r.f1);  el('f1Kpi').className  =kc(r.f1);
+  el('accKpi').textContent =fmtPct(r.acc); el('accKpi').className =kc(r.acc);
+  el('baccKpi').textContent=fmtPct(r.bacc);el('baccKpi').className=kc(r.bacc);
+  el('tnrKpi').textContent =fmtPct(r.tnr); el('tnrKpi').className =kc(r.tnr);
+  el('npvKpi').textContent =fmtPct(r.npv); el('npvKpi').className =kc(r.npv);
+
+  let msg='';
+  if(lastP){
+    const dN=p.N!==lastP.N,dPi=p.pi!==lastP.pi,dT=p.tpr!==lastP.tpr,dF=p.fpr!==lastP.fpr;
+    if(dN&&!dPi&&!dT&&!dF)      msg='↕ N changed → all rates stay fixed; areas scale.';
+    else if(dPi&&!dT&&!dF)      msg='⚖ π changed → TPR/FPR fixed, Precision shifts sharply.';
+    else if(dT&&!dF)             msg='↑ TPR changed → TP/FN ratio shifts in Actual Positive column.';
+    else if(!dT&&dF)             msg='→ FPR changed → FP/TN ratio shifts in Actual Negative column.';
+    else if(dT&&dF)              msg='↑→ Both changed → classifier moved in ROC space.';
+  }else{msg='Try: TPR=90%, FPR=5%, set π=1% → watch Precision collapse.';}
+  el('insight').textContent=msg;
+  lastP={...p};
+
+  drawMosaic(r);
+
+  // counts
+  const CC={TP:'#4ade80',FP:'#fbbf24',TN:'#818cf8',FN:'#f87171'};
+  Plotly.react('counts',[{
+    x:['TP','FP','TN','FN'],y:[r.TP,r.FP,r.TN,r.FN],type:'bar',
+    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN]},
+    texttemplate:'%{y:,.0f}',textposition:'auto',textfont:{size:9}
+  }],PL({yaxis:{title:{text:'count',font:{size:9}}}}),PC);
+
+  // rates
+  const rv=[p.tpr*100,p.fpr*100,r.prec*100,r.acc*100,r.f1*100,r.bacc*100,r.npv*100];
+  Plotly.react('metrics',[{
+    x:['TPR','FPR','Prec','Acc','F1','BAcc','NPV'],y:rv,type:'bar',
+    marker:{color:rv.map(v=>v>75?'#4ade80':v<35?'#f87171':'#fbbf24')},
+    texttemplate:'%{y:.1f}',textposition:'auto',textfont:{size:9}
+  }],PL({yaxis:{range:[0,100],title:{text:'%',font:{size:9}}}}),PC);
+
+  // ROC
+  const LR=p.fpr>1e-9?p.tpr/p.fpr:Infinity;
+  const rcx=[],rcy=[];
+  for(let i=0;i<=200;i++){const fx=i/200;rcx.push(fx);rcy.push(Math.min(1,LR*fx));}
+  rocHistory.push({x:p.fpr,y:p.tpr});
+  if(rocHistory.length>80)rocHistory.shift();
+  const rhx=rocHistory.map(d=>d.x),rhy=rocHistory.map(d=>d.y);
+  Plotly.react('roc',[
+    {x:[0,1],y:[0,1],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
+    {x:rcx,y:rcy,mode:'lines',line:{color:'rgba(91,140,255,0.2)',width:1.5},
+     fill:'tozeroy',fillcolor:'rgba(91,140,255,0.04)',hoverinfo:'skip'},
+    {x:rhx,y:rhy,mode:'lines+markers',line:{color:'rgba(91,140,255,0.25)',width:1},
+     marker:{color:rhx.map((_,i)=>`rgba(91,140,255,${.1+.7*(i/rhx.length)})`),size:3},hoverinfo:'skip'},
+    {x:[p.fpr],y:[p.tpr],mode:'markers+text',
+     marker:{color:'#5b8cff',size:11,line:{color:'#fff',width:2}},
+     text:[`  LR⁺=${LR===Infinity?'∞':LR.toFixed(1)}`],
+     textposition:'middle right',textfont:{size:9,color:'#7b8099'},
+     hovertemplate:'FPR:%{x:.3f}<br>TPR:%{y:.3f}<extra></extra>'}
+  ],PL({
+    xaxis:{range:[0,1],title:{text:'FPR',font:{size:9}}},
+    yaxis:{range:[0,1],title:{text:'TPR',font:{size:9}}}
+  }),PC);
+
+  // PR
+  const prs=300,prRec=[],prPrec=[],prPi=[];
+  for(let i=0;i<=prs;i++){
+    const pi=.001+.998*(i/prs);
+    prRec.push(p.tpr);
+    prPrec.push((p.tpr*pi)/(p.tpr*pi+p.fpr*(1-pi)+1e-15));
+    prPi.push(pi);
+  }
+  Plotly.react('pr',[
+    {x:[0,1],y:[p.pi,p.pi],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
+    {x:prRec,y:prPrec,mode:'lines',line:{color:'rgba(251,191,36,0.55)',width:2},
+     text:prPi.map(v=>`π=${(v*100).toFixed(1)}%`),
+     hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<br>%{text}<extra></extra>'},
+    {x:[p.tpr],y:[r.prec],mode:'markers',
+     marker:{color:'#fbbf24',size:11,line:{color:'#fff',width:2}},
+     hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<extra></extra>'}
+  ],PL({
+    xaxis:{range:[0,1],title:{text:'Recall (TPR)',font:{size:9}}},
+    yaxis:{range:[0,1],title:{text:'Precision',font:{size:9}}}
+  }),PC);
+
+  // live equations — fully self-contained, one line each
+  const cv=(type,v)=>{
+    const col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];
+    return`<span style="color:${col};font-weight:700">${fmtInt(v)}</span>`;
+  };
+  const ct=(type)=>{
+    const col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];
+    return`<span style="color:${col};font-weight:700">${type}</span>`;
+  };
+  const{P,Nn,TP,FP,TN,FN,PredP,PredN}=r;
+  const div=(label)=>`__DIV__${label}`;
+  // [label, symbolic formula, live numeric, result]
+  const eqs=[
+    div('Counts'),
+    ['N',    `${ct('TP')} + ${ct('FN')} + ${ct('FP')} + ${ct('TN')}`,  `${cv('TP',TP)} + ${cv('FN',FN)} + ${cv('FP',FP)} + ${cv('TN',TN)}`,  `${fmtInt(p.N)}`],
+    div('Rates · from actual class'),
+    ['TPR',  `${ct('TP')} / (${ct('TP')}+${ct('FN')})`,   `${cv('TP',TP)} / (${cv('TP',TP)}+${cv('FN',FN)})`,   `${(p.tpr*100).toFixed(2)}%`],
+    ['FNR',  `${ct('FN')} / (${ct('TP')}+${ct('FN')})`,   `${cv('FN',FN)} / (${cv('TP',TP)}+${cv('FN',FN)})`,   `${((1-p.tpr)*100).toFixed(2)}%`],
+    ['TNR',  `${ct('TN')} / (${ct('FP')}+${ct('TN')})`,   `${cv('TN',TN)} / (${cv('FP',FP)}+${cv('TN',TN)})`,   `${(r.tnr*100).toFixed(2)}%`],
+    ['FPR',  `${ct('FP')} / (${ct('FP')}+${ct('TN')})`,   `${cv('FP',FP)} / (${cv('FP',FP)}+${cv('TN',TN)})`,   `${(p.fpr*100).toFixed(2)}%`],
+    div('Scores · from predicted class'),
+    ['Prec', `${ct('TP')} / (${ct('TP')}+${ct('FP')})`,   `${cv('TP',TP)} / (${cv('TP',TP)}+${cv('FP',FP)})`,   `${(r.prec*100).toFixed(2)}%`],
+    ['NPV',  `${ct('TN')} / (${ct('TN')}+${ct('FN')})`,   `${cv('TN',TN)} / (${cv('TN',TN)}+${cv('FN',FN)})`,   `${(r.npv*100).toFixed(2)}%`],
+    ['Acc',  `(${ct('TP')}+${ct('TN')}) / N`,              `(${cv('TP',TP)}+${cv('TN',TN)}) / ${fmtInt(p.N)}`,   `${(r.acc*100).toFixed(2)}%`],
+    ['F1',   `2·${ct('TP')} / (2·${ct('TP')}+${ct('FP')}+${ct('FN')})`,
+             `2·${cv('TP',TP)} / (2·${cv('TP',TP)}+${cv('FP',FP)}+${cv('FN',FN)})`,                               `${(r.f1*100).toFixed(2)}%`],
+    ['BAcc', `½·(TPR + TNR)`,                              `½·(${(p.tpr*100).toFixed(1)}% + ${(r.tnr*100).toFixed(1)}%)`,  `${(r.bacc*100).toFixed(2)}%`],
+  ];
+  el('liveEq').innerHTML=eqs.map(item=>{
+    if(typeof item==='string'&&item.startsWith('__DIV__')){
+      const label=item.replace('__DIV__','');
+      return`<div style="font-size:9px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--text3);margin:8px 0 4px;padding-left:2px">${label}</div>`;
+    }
+    const[l,formula,numeric,result]=item;
+    return`<div class="eq-card"><span class="eq-lbl">${l}</span><span class="eq-sep">=</span><span class="eq-formula">${formula}</span><span class="eq-sep">=</span><span style="color:#c8cde0;font-size:10px">${numeric}</span><span class="eq-sep">=</span><span class="eq-result">${result}</span></div>`;
+  }).join('');
+}
+
+// bindings
+function bind(sid,iid){
+  const s=el(sid),inp=el(iid),isN=sid==='n';
+  const toD=isN?sliderToN:sliderToPct,toS=isN?nToSlider:pctToSlider;
+  s.addEventListener('input',()=>{inp.value=isN?Math.round(toD(s.value)):toD(s.value).toFixed(2);render();});
+  inp.addEventListener('change',()=>{s.value=toS(parseFloat(inp.value));render();});
+}
+['n','pi','tpr','fpr'].forEach((id,i)=>bind(id,['nVal','piVal','tprVal','fprVal'][i]));
+
+const setPi =p=>{el('pi').value =pctToSlider(p);el('piVal').value =p.toFixed(2);};
+const setTpr=p=>{el('tpr').value=pctToSlider(p);el('tprVal').value=p.toFixed(2);};
+const setFpr=p=>{el('fpr').value=pctToSlider(p);el('fprVal').value=p.toFixed(2);};
+
+el('bal').onclick    =()=>{setPi(50);render();};
+el('imb').onclick    =()=>{setPi(10);render();};
+el('vimb').onclick   =()=>{setPi(1); render();};
+el('perfect').onclick=()=>{setTpr(99.9);setFpr(0.1);render();};
+el('random').onclick =()=>{const v=parseFloat(el('tprVal').value)||50;setFpr(v);render();};
+el('resetBtn').onclick=()=>{
+  el('n').value='460';el('pi').value='-0.847';
+  el('tpr').value='0.847';el('fpr').value='-0.847';
+  rocHistory=[];syncToSliders();render();
+};
+
+syncToSliders();render();
+
+let rt=null;
+const doResize=()=>['counts','metrics','roc','pr'].forEach(id=>{try{Plotly.Plots.resize(id);}catch(e){}});
+window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(doResize,100);});
 </script>
 </body>
 </html>
