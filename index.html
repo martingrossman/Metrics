@@ -173,6 +173,78 @@ input[type=range]::-moz-range-thumb{
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 .js-plotly-plot .plotly .modebar{display:none!important;}
+
+/* ── mobile ── */
+@media(max-width:700px){
+  html,body{overflow:auto;height:auto;}
+
+  .app{
+    display:flex;flex-direction:column;
+    height:auto;min-height:100dvh;
+    padding:10px;gap:10px;
+  }
+
+  header{flex-wrap:wrap;gap:6px;}
+  header p{display:none;}
+  #insight{
+    margin-left:0;max-width:100%;width:100%;
+    white-space:normal;font-size:10px;
+  }
+
+  .body{
+    display:flex;flex-direction:column;
+    gap:10px;min-height:0;
+  }
+
+  /* left: params stack naturally */
+  .left{display:flex;flex-direction:column;gap:10px;}
+  .panel{overflow:visible;}
+
+  /* sliders bigger for touch */
+  input[type=range]{height:5px;}
+  input[type=range]::-webkit-slider-thumb{width:22px;height:22px;}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;}
+  .ctrl-val{font-size:14px;padding:3px 9px;min-width:64px;}
+  .ctrl-label{font-size:13px;}
+  .pbtn{padding:10px 10px;font-size:12px;}
+  .pbtn .tag{font-size:10px;}
+  .presets{grid-template-columns:1fr 1fr 1fr;gap:6px;}
+
+  /* kpi strip: 3 col stays, but bigger */
+  .kpi-strip{gap:6px;}
+  .kpi{padding:9px 10px;}
+  .kpi-val{font-size:17px;}
+
+  /* right: full vertical stack, no fixed heights */
+  .right{display:flex;flex-direction:column;gap:10px;}
+
+  /* top row: stack mosaic above equations */
+  .top-row{display:flex;flex-direction:column;gap:10px;}
+
+  .mosaic-card{
+    display:flex;flex-direction:column;gap:6px;
+    min-height:0;
+  }
+  .svgBox{height:220px;flex-shrink:0;}
+
+  /* equations: simpler on mobile — hide middle numeric column */
+  .eq-panel{overflow-y:visible;}
+  .eq-card{
+    grid-template-columns:40px 10px 1fr 10px 50px;
+    font-size:10px;
+  }
+  /* hide the live-numeric column (col 5 & sep before it = cols 4&5) */
+  .eq-card .eq-numeric-sep,
+  .eq-card .eq-numeric{display:none;}
+
+  /* charts: 2×2 grid */
+  .charts-row{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .chart-card{min-height:170px;}
+  .plot-wrap{height:140px;}
+}
 </style>
 </head>
 <body>
@@ -530,7 +602,7 @@ function render(){
       return`<div style="font-size:9px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--text3);margin:8px 0 4px;padding-left:2px">${label}</div>`;
     }
     const[l,formula,numeric,result]=item;
-    return`<div class="eq-card"><span class="eq-lbl">${l}</span><span class="eq-sep">=</span><span class="eq-formula">${formula}</span><span class="eq-sep">=</span><span style="color:#c8cde0;font-size:10px">${numeric}</span><span class="eq-sep">=</span><span class="eq-result">${result}</span></div>`;
+    return`<div class="eq-card"><span class="eq-lbl">${l}</span><span class="eq-sep">=</span><span class="eq-formula">${formula}</span><span class="eq-sep eq-numeric-sep">=</span><span class="eq-numeric" style="color:#c8cde0;font-size:10px">${numeric}</span><span class="eq-sep">=</span><span class="eq-result">${result}</span></div>`;
   }).join('');
 }
 
