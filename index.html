@@ -341,9 +341,8 @@ header .sub{display:none;}
 #insight{margin-left:0;width:100%;max-width:100%;white-space:normal;font-size:10px;line-height:1.4;}
 header{-ms-flex-wrap:wrap;flex-wrap:wrap;}
 .grid{grid-template-columns:repeat(2,1fr);-ms-grid-columns:1fr 8px 1fr;grid-gap:8px;gap:8px;}
-.tile.span2,.tile.span3,.tile.span4{grid-column:span 2;-ms-grid-column-span:2;}
-.tile.span3{grid-column:span 3;}
-.tile.span4{grid-column:span 4;}
+/* Cap all wide tiles to 2 cols (the grid max at this breakpoint) */
+.tile.span2,.tile.span3,.tile.span4{grid-column:span 2!important;-ms-grid-column-span:2;}
 .plot-wrap{height:160px;}
 .svgBox{height:120px;}
 input[type=range]::-webkit-slider-thumb{width:20px;height:20px;}
@@ -358,6 +357,29 @@ input[type=range]{height:5px;}
 .plot-wrap{height:140px;}
 .eq-inner{max-height:280px;}
 header h1{font-size:14px;}
+}
+/* Landscape phones: short viewport, wider than tall */
+@media(max-height:500px) and (orientation:landscape){
+.app{padding:4px 8px;}
+header{padding-bottom:3px;}
+header h1{font-size:13px;}
+#insight{font-size:9px;padding:2px 8px;}
+.toolbar{padding:0;}
+.toolbar .htxt{display:none;}
+.grid{grid-template-columns:repeat(4,1fr);grid-gap:5px;gap:5px;}
+/* Let wide tiles use all 4 cols in landscape */
+.tile.span2{grid-column:span 2!important;}
+.tile.span3{grid-column:span 3!important;}
+.tile.span4{grid-column:span 4!important;}
+.tile-hdr{padding:3px 8px 2px;}
+.tile-body{padding:4px 8px 6px;}
+.plot-wrap{height:130px;}
+.svgBox{height:100px;}
+.eq-inner{max-height:180px;}
+.ctrl{margin-bottom:4px;}
+.kpi-strip{grid-gap:3px;gap:3px;}
+.kpi{padding:3px 5px;}
+.kpi-val{font-size:12px;}
 }
 </style>
 
