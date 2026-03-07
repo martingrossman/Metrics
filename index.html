@@ -8,516 +8,208 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
 <style>
-:root {
-  --bg:     #0d0f14;
-  --surf:   #161920;
-  --surf2:  #1e2230;
-  --border: #2a2f3e;
-  --text:   #f0f2f7;
-  --text2:  #b4bcd0;
-  --text3:  #8a92ab;
-  --accent: #6b9cff;
-  --tp:#4ade80; --fn:#f87171; --fp:#fbbf24; --tn:#818cf8;
-  --r:10px;
-  --mono:'Space Mono',monospace;
-  --sans:'Syne',sans-serif;
-  --safe-l: env(safe-area-inset-left, 0px);
-  --safe-r: env(safe-area-inset-right, 0px);
-  --safe-t: env(safe-area-inset-top, 0px);
-  --safe-b: env(safe-area-inset-bottom, 0px);
+:root{
+  --bg:#0d0f14;--surf:#161920;--surf2:#1e2230;--border:#2a2f3e;
+  --text:#f0f2f7;--text2:#b4bcd0;--text3:#8a92ab;--accent:#6b9cff;
+  --tp:#4ade80;--fn:#f87171;--fp:#fbbf24;--tn:#818cf8;
+  --r:10px;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{
-  height:100%;width:100%;
-  background:var(--bg);color:var(--text);
-  font-family:var(--sans);font-size:13px;
-  overflow:hidden;
-  color-scheme:dark;
+  height:100%;width:100%;background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:13px;overflow-y:auto;overflow-x:hidden;
+  color-scheme:dark;-webkit-overflow-scrolling:touch;
 }
 
-/* ── app shell ── */
-.app{
-display:grid;
-grid-template-rows:40px 1fr;
-height:100vh;
-padding:8px 10px;
-gap:7px;
-}
+.app{display:flex;flex-direction:column;min-height:100vh;padding:8px 10px;gap:7px;}
 
-/* ── header ── */
-header{
-display:flex;align-items:center;gap:12px;
-border-bottom:1px solid var(–border);padding-bottom:5px;
-}
+/* header */
+header{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(–border);padding-bottom:5px;flex-shrink:0;}
 header h1{font-size:16px;font-weight:800;letter-spacing:-.4px;color:#fff;}
-header p{font-size:11px;color:var(–text2);font-family:var(–mono);}
+header .sub{font-size:11px;color:var(–text2);font-family:var(–mono);}
 #insight{
-margin-left:auto;
-font-size:11px;font-family:var(–mono);color:var(–text2);
+margin-left:auto;font-size:11px;font-family:var(–mono);color:var(–text2);
 background:var(–surf2);border-left:3px solid var(–accent);
 border-radius:0 6px 6px 0;padding:3px 10px;
 max-width:440px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
-/* ── body: left | charts | equations ── */
-.body{
-display:grid;
-grid-template-columns:280px minmax(0,1fr) 320px;
-gap:7px;min-height:0;
+/* toolbar */
+.toolbar{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:2px 0;}
+.tbtn{
+background:var(–surf2);border:1px solid var(–border);border-radius:6px;
+color:var(–text2);padding:4px 10px;font-family:var(–sans);font-size:10px;
+font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.3px;
+}
+.tbtn:hover{background:#252840;border-color:var(–accent);color:var(–text);}
+.tbtn.active{background:rgba(107,156,255,.15);border-color:var(–accent);color:var(–accent);}
+.toolbar .htxt{font-size:10px;color:var(–text3);font-family:var(–mono);margin-left:4px;}
+
+/* grid */
+.grid{
+display:grid;grid-template-columns:repeat(4,1fr);
+grid-auto-rows:min-content;gap:7px;flex:1;
 }
 
-/* ── left ── */
-.left{
-display:grid;
-grid-template-rows:auto auto auto;
-gap:7px;min-height:0;
-overflow-y:auto;
+/* tile */
+.tile{
+background:var(–surf);border:1px solid var(–border);border-radius:var(–r);
+display:flex;flex-direction:column;overflow:hidden;
+transition:box-shadow .25s,border-color .25s,opacity .25s,transform .25s;
 }
+.tile.span2{grid-column:span 2;}
+.tile-hdr{
+display:flex;align-items:center;gap:6px;
+padding:6px 10px 4px;flex-shrink:0;
+border-bottom:1px solid rgba(255,255,255,.04);
+user-select:none;-webkit-user-select:none;
+}
+.grip{
+width:18px;height:18px;opacity:.25;transition:opacity .15s;
+display:flex;align-items:center;justify-content:center;flex-shrink:0;
+touch-action:none;cursor:grab;
+}
+.edit-on .grip{opacity:.45;}
+.edit-on .grip:hover{opacity:.8;}
+.grip:active{cursor:grabbing;}
+.grip svg{width:14px;height:14px;}
+.grip circle{fill:var(–text2);}
+.edit-on .grip circle{fill:var(–accent);}
+.tile-title{
+font-size:10px;font-weight:700;letter-spacing:1.2px;
+text-transform:uppercase;color:var(–text3);
+}
+.tile-body{padding:8px 10px 10px;flex:1;min-height:0;overflow:hidden;}
 
-.mosaic-inline{margin-top:4px;}
-.mosaic-inline .svgBox{height:160px;}
-.mosaic-inline .mos-cap{
-font-family:var(–mono);font-size:9px;color:var(–text2);
-text-align:center;margin-top:3px;
+/* drag states */
+.tile.dragging{opacity:.25;transform:scale(.96);border:2px dashed var(–accent);}
+.tile.drag-over{
+border-color:var(–accent);
+box-shadow:0 0 0 2px rgba(107,156,255,.25),inset 0 0 30px rgba(107,156,255,.06);
 }
-.presets-panel .presets{grid-template-columns:repeat(3,1fr);}
+.tile.drag-over::before{
+content:‘↕ Drop here’;position:absolute;inset:0;z-index:10;
+display:flex;align-items:center;justify-content:center;
+background:rgba(107,156,255,.07);color:var(–accent);
+font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+border-radius:var(–r);pointer-events:none;
+}
+.drag-ghost{
+position:fixed;z-index:9999;pointer-events:none;
+border-radius:8px;border:2px solid var(–accent);
+background:rgba(22,25,32,.93);backdrop-filter:blur(10px);
+box-shadow:0 14px 44px rgba(0,0,0,.55),0 0 0 1px rgba(107,156,255,.2);
+padding:8px 14px;font-size:11px;font-weight:700;color:var(–accent);
+font-family:var(–sans);letter-spacing:.5px;
+display:flex;align-items:center;gap:7px;
+transform:translate(-50%,-50%) rotate(-1.5deg) scale(1.05);
+max-width:200px;white-space:nowrap;
+}
+.drag-ghost svg{width:12px;height:12px;flex-shrink:0;}
+.drag-ghost circle{fill:var(–accent);}
 
-.panel{
-background:var(–surf);border:1px solid var(–border);
-border-radius:var(–r);padding:10px;overflow:hidden;
+/* edit mode ring */
+.edit-on .tile{position:relative;}
+.edit-on .tile::after{
+content:’’;position:absolute;inset:-1px;border-radius:var(–r);
+border:1px dashed rgba(107,156,255,.2);pointer-events:none;
+transition:border-color .2s;
 }
-.ptitle{
-font-size:10px;font-weight:700;letter-spacing:1.4px;
-text-transform:uppercase;color:var(–text3);margin-bottom:8px;
-}
-.ctrl{margin-bottom:9px;}
-.ctrl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:6px;}
+.edit-on .tile:hover::after{border-color:rgba(107,156,255,.45);}
+
+/* controls */
+.ctrl{margin-bottom:8px;}
+.ctrl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:4px;}
 .ctrl-label{font-size:11px;font-weight:600;color:var(–text);}
 .ctrl-val{
-font-family:var(–mono);font-size:12px;color:var(–accent);
+font-family:var(–mono);font-size:11px;color:var(–accent);
 -webkit-text-fill-color:var(–accent);
 background:rgba(107,156,255,.12);border:1px solid rgba(107,156,255,.3);
-border-radius:5px;padding:1px 7px;min-width:56px;
-text-align:right;outline:none;transition:border-color .15s;
--webkit-appearance:none;-moz-appearance:textfield;appearance:none;
-color-scheme:dark;
+border-radius:5px;padding:1px 6px;min-width:50px;
+text-align:right;outline:none;
+-webkit-appearance:none;-moz-appearance:textfield;appearance:none;color-scheme:dark;
 }
-.ctrl-val::-webkit-inner-spin-button,
-.ctrl-val::-webkit-outer-spin-button{
--webkit-appearance:none;margin:0;opacity:0;
-}
-.ctrl-val:focus{border-color:var(–accent);-webkit-text-fill-color:var(–accent);}
-input[type=range]{
--webkit-appearance:none;width:100%;height:3px;
-background:var(–border);border-radius:2px;outline:none;cursor:pointer;
-}
-input[type=range]::-webkit-slider-thumb{
--webkit-appearance:none;width:15px;height:15px;border-radius:50%;
-background:var(–accent);border:2px solid var(–bg);
-box-shadow:0 0 7px rgba(107,156,255,.5);
-}
-input[type=range]::-moz-range-thumb{
-width:15px;height:15px;border-radius:50%;
-background:var(–accent);border:2px solid var(–bg);cursor:pointer;
-}
-.hint{font-size:10px;color:var(–text3);margin-top:2px;}
-.presets{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.ctrl-val::-webkit-inner-spin-button,.ctrl-val::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(–border);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(–accent);border:2px solid var(–bg);box-shadow:0 0 6px rgba(107,156,255,.5);}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(–accent);border:2px solid var(–bg);cursor:pointer;}
+.hint{font-size:9px;color:var(–text3);margin-top:1px;}
+
+/* presets */
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
 .pbtn{
-background:var(–surf2);border:1px solid var(–border);border-radius:7px;
-color:var(–text);padding:6px 8px;font-family:var(–sans);font-size:11px;
-font-weight:600;cursor:pointer;text-align:left;
-transition:background .15s,border-color .15s;
+background:var(–surf2);border:1px solid var(–border);border-radius:6px;
+color:var(–text);padding:5px 6px;font-family:var(–sans);font-size:10px;
+font-weight:600;cursor:pointer;text-align:left;transition:all .15s;
 }
 .pbtn:hover{background:#252840;border-color:var(–accent);}
-.pbtn .tag{display:block;font-family:var(–mono);font-size:9px;color:var(–text2);margin-top:2px;}
+.pbtn .tag{display:block;font-family:var(–mono);font-size:8px;color:var(–text2);margin-top:1px;}
 
-/* kpi strip */
-.kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
-.kpi{background:var(–surf2);border:1px solid var(–border);border-radius:8px;padding:7px 9px;}
-.kpi-name{font-size:9px;color:var(–text3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
-.kpi-val{font-family:var(–mono);font-size:15px;font-weight:700;margin-top:1px;}
-.good{color:var(–tp);}
-.warn{color:var(–fp);}
-.bad{color:var(–fn);}
+/* KPIs */
+.kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
+.kpi{background:var(–surf2);border:1px solid var(–border);border-radius:6px;padding:6px 7px;}
+.kpi-name{font-size:8px;color:var(–text3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.kpi-val{font-family:var(–mono);font-size:14px;font-weight:700;margin-top:1px;}
+.good{color:var(–tp);}.warn{color:var(–fp);}.bad{color:var(–fn);}
 
-/* ── charts column ── */.charts-col{
-min-height:0;
-display:flex;
-}
-.charts-row{
-display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
-gap:7px;min-height:0;flex:1;
-}
-.chart-card{
-background:var(–surf);border:1px solid var(–border);
-border-radius:var(–r);padding:8px 9px;
-display:grid;grid-template-rows:auto 1fr;gap:3px;min-height:0;
-}
-.chart-title{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(–text3);}
-.plot-wrap{min-height:0;}
-
-/* ── equations sidebar ── */
-.eq-panel{
-background:linear-gradient(170deg, #161920 0%, #13151d 100%);
-border:1px solid rgba(107,156,255,.12);
-border-radius:var(–r);padding:10px 10px;
-min-height:0;
-overflow-y:auto;
-overscroll-behavior:contain;
-}
-.eq-card{
-background:rgba(255,255,255,.02);
-border:1px solid rgba(255,255,255,.04);
-border-left:3px solid rgba(107,156,255,.25);
-border-radius:6px;padding:6px 8px;
-font-family:var(–mono);font-size:10px;
-margin-bottom:4px;
-display:grid;
-grid-template-columns:48px 6px minmax(0,1fr) 6px 64px;
-align-items:center;
-gap:4px;
-line-height:1.45;
-min-width:0;
-transition:border-left-color .2s, background .2s;
-}
-.eq-card:hover{
-border-left-color:var(–accent);
-background:rgba(107,156,255,.05);
-}
-.eq-card:last-child{margin-bottom:0;}
-.eq-lbl{color:var(–accent);font-weight:700;white-space:nowrap;}
-.eq-sep{color:var(–text3);font-weight:700;text-align:center;}
-.eq-formula{
-color:#dde0ee;
-min-width:0;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-.eq-result{
-color:#fff;font-weight:700;text-align:right;white-space:nowrap;
-}
-.eq-section-hdr{
-font-size:9px;font-weight:700;letter-spacing:1.3px;
-text-transform:uppercase;color:var(–accent);
-margin:10px 0 4px;padding:0 2px 3px;
-border-bottom:1px solid rgba(107,156,255,.1);
-}
-
-/* misc */
-.legend{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
-.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;font-family:var(–mono);color:var(–text2);}
-.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
-.svgBox{width:100%;min-height:0;border-radius:7px;overflow:hidden;background:#0a0c10;}
+/* mosaic */
+.svgBox{width:100%;border-radius:6px;overflow:hidden;background:#0a0c10;height:140px;}
 .svgBox svg{display:block;width:100%;height:100%;}
+.mos-cap{font-family:var(–mono);font-size:8px;color:var(–text2);text-align:center;margin-top:3px;}
+.legend{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:3px;}
+.leg-item{display:flex;align-items:center;gap:3px;font-size:9px;font-family:var(–mono);color:var(–text2);}
+.leg-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+
+/* charts */
+.plot-wrap{width:100%;height:200px;min-height:0;}
+
+/* equations */
+.eq-inner{max-height:420px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+.eq-section-hdr{
+font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(–accent);
+margin:8px 0 4px;padding:0 0 3px;border-bottom:1px solid rgba(107,156,255,.1);
+}
+.eq-section-hdr:first-child{margin-top:0;}
+.eq-card{
+background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+border-left:3px solid rgba(107,156,255,.25);border-radius:6px;
+padding:5px 7px 5px 9px;margin-bottom:3px;
+font-family:var(–mono);font-size:9px;
+display:grid;grid-template-columns:40px minmax(0,1fr) auto;
+align-items:baseline;gap:0 8px;line-height:1.4;
+transition:border-left-color .2s,background .2s;
+}
+.eq-card:hover{border-left-color:var(–accent);background:rgba(107,156,255,.05);}
+.eq-lbl{color:var(–accent);font-weight:700;font-size:9px;}
+.eq-formula{color:rgba(221,224,238,.55);font-size:8px;grid-column:1/-1;margin-top:1px;word-break:break-word;}
+.eq-result{color:#fff;font-weight:700;font-size:11px;text-align:right;}
 
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(–border);border-radius:2px;}
 .js-plotly-plot .plotly .modebar{display:none!important;}
 
-/* ── Scroll fade indicator for eq-panel ── */
-.eq-panel-wrap{
-display:contents;
-}
-
-/* MOBILE / TABLET PORTRAIT */
+/* responsive */
 @media(max-width:900px){
-html,body{
-overflow-y:auto;overflow-x:hidden;
-height:auto;-webkit-overflow-scrolling:touch;
-}
-.app{
-display:flex;flex-direction:column;
-height:auto;min-height:100dvh;
-padding:10px calc(10px + var(–safe-l)) calc(10px + var(–safe-b)) calc(10px + var(–safe-r));
-padding-top:calc(10px + var(–safe-t));
-gap:10px;
-}
-header{flex-wrap:wrap;gap:6px;padding-bottom:6px;}
-header h1{font-size:15px;}
-header p{display:none;}
-#insight{
-margin-left:0;max-width:100%;width:100%;
-white-space:normal;font-size:10px;line-height:1.4;
-}
-
-/* ── Body grid: compact sliders left, wide equations right ── */
-.body{
-display:grid;
-grid-template-columns:1fr 2fr;
-gap:8px;
-min-height:0;
-}
-
-/* ── Sliders column: ultra-compact ── */
-.left{
-display:flex;
-flex-direction:column;
-gap:8px;
-overflow:visible;
-grid-column:1;
-grid-row:1 / 2;
-}
-.panel{overflow:visible;padding:8px 9px;}
-
-.ctrl{margin-bottom:6px;}
-.ctrl-row{margin-bottom:2px;gap:4px;}
-.ctrl-val{font-size:11px;padding:2px 5px;min-width:48px;}
-.ctrl-label{font-size:10px;}
-.hint{display:none;} /* hide hints to save space on mobile */
-
-input[type=range]{height:5px;margin:3px 0;}
-input[type=range]::-webkit-slider-thumb{width:20px;height:20px;}
-input[type=range]::-moz-range-thumb{width:20px;height:20px;}
-
-.ptitle{font-size:8px;margin-bottom:5px;letter-spacing:1.6px;}
-
-.mosaic-inline .svgBox{height:100px;}
-.mosaic-inline .mos-cap{font-size:7px;}
-.mosaic-inline .legend{gap:3px;margin-top:3px;}
-.mosaic-inline .leg-item{font-size:7px;}
-.mosaic-inline .leg-dot{width:6px;height:6px;}
-
-.kpi-strip{grid-template-columns:repeat(2,1fr);gap:4px;}
-.kpi{padding:5px 6px;border-radius:6px;}
-.kpi-val{font-size:13px;}
-.kpi-name{font-size:7px;letter-spacing:.3px;}
-
-.pbtn{padding:4px 5px;font-size:9px;border-radius:6px;}
-.pbtn .tag{font-size:7px;margin-top:1px;}
-.presets{grid-template-columns:repeat(2,1fr);gap:3px;}
-
-/* ── Equations panel: sticky, scrollable, visually rich ── */
-.eq-panel{
-grid-column:2;
-grid-row:1 / 2;
-position:sticky;
-top:10px;
-align-self:start;
-max-height:calc(100dvh - 80px);
-overflow:hidden;
-padding:0;
-display:flex;
-flex-direction:column;
-border:1px solid rgba(107,156,255,.15);
-background:linear-gradient(170deg, #161920 0%, #13151d 100%);
-}
-.eq-panel > .ptitle{
-position:sticky;
-top:0;
-z-index:2;
-background:linear-gradient(170deg, #161920 0%, #13151d 100%);
-padding:9px 10px 6px;
-margin-bottom:0;
-border-bottom:1px solid rgba(107,156,255,.12);
-flex-shrink:0;
-font-size:9px;
-letter-spacing:1.6px;
-}
-.eq-panel > #liveEq{
-flex:1;
-overflow-y:auto;
-overscroll-behavior:contain;
--webkit-overflow-scrolling:touch;
-padding:6px 8px 14px;
-}
-
-/* Bottom scroll fade */
-.eq-panel::after{
-content:’’;
-position:absolute;
-bottom:0;left:0;right:0;
-height:32px;
-background:linear-gradient(to top, #13151d 0%, transparent 100%);
-pointer-events:none;
-z-index:1;
-border-radius:0 0 var(–r) var(–r);
-}
-.eq-panel.scrolled-bottom::after{opacity:0;}
-
-/* ── Eq cards: compact horizontal rows with colored left border ── */
-.eq-section-hdr{
-font-size:7px;
-margin:10px 0 5px;
-padding:0 0 3px;
-border-bottom:1px solid rgba(107,156,255,.1);
-color:var(–accent);
-letter-spacing:1.8px;
-}
-.eq-section-hdr:first-child{margin-top:2px;}
-
-.eq-card{
-grid-template-columns:38px minmax(0,1fr) auto;
-gap:0 8px;
-font-size:9px;
-padding:5px 7px 5px 9px;
-margin-bottom:3px;
-border-radius:6px;
-border:1px solid rgba(255,255,255,.04);
-border-left:3px solid rgba(107,156,255,.3);
-background:rgba(255,255,255,.02);
-align-items:baseline;
-transition:border-left-color .2s, background .2s;
-}
-.eq-card:hover{
-border-left-color:var(–accent);
-background:rgba(107,156,255,.05);
-}
-.eq-lbl{
-font-size:9px;
-letter-spacing:.2px;
-grid-row:1;
-grid-column:1;
-}
-.eq-sep{display:none;}
-.eq-formula{
-grid-row:2;
-grid-column:1 / -1;
-white-space:normal;
-overflow:visible;
-text-overflow:clip;
-line-height:1.45;
-word-break:break-word;
-color:rgba(221,224,238,.6);
-font-size:8px;
-margin-top:1px;
-}
-.eq-result{
-grid-row:1;
-grid-column:3;
-text-align:right;
-font-size:12px;
-font-weight:700;
-padding-top:0;
-border-top:none;
-letter-spacing:-.2px;
-}
-.eq-result::before{content:none;}
-
-/* Charts: full width below */
-.charts-col{
-grid-column:1 / -1;
-grid-row:2;
-display:flex;flex-direction:column;gap:10px;
-}
-.charts-row{grid-template-columns:1fr 1fr;gap:8px;}
-.chart-card{min-height:180px;padding:8px;}
-.plot-wrap{height:145px;}
-}
-
-/* VERY SMALL PORTRAIT */
-@media(max-width:370px){
-.body{
-grid-template-columns:1fr;
-}
-.left{grid-column:1;}
-.eq-panel{
-grid-column:1;
-grid-row:2;
-position:relative;
-top:0;
-max-height:300px;
-}
-.charts-col{
-grid-column:1;
-grid-row:3;
-}
-.hint{display:block;font-size:8px;}
-.ctrl-label{font-size:11px;}
-.ctrl-val{font-size:12px;min-width:54px;}
-.kpi-strip{grid-template-columns:repeat(3,1fr);}
-.presets{grid-template-columns:1fr 1fr;gap:4px;}
-.mosaic-inline .svgBox{height:140px;}
-.charts-row{grid-template-columns:1fr;}
-.chart-card{min-height:200px;}
+.app{padding:8px;}
+header .sub{display:none;}
+#insight{margin-left:0;width:100%;max-width:100%;white-space:normal;font-size:10px;}
+header{flex-wrap:wrap;gap:6px;}
+.grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+.tile.span2{grid-column:span 2;}
 .plot-wrap{height:160px;}
-header h1{font-size:13px;}
-}
-
-/* MOBILE LANDSCAPE */
-@media(max-height:500px) and (orientation:landscape){
-html,body{
-overflow-y:auto;overflow-x:hidden;
-height:auto;-webkit-overflow-scrolling:touch;
-}
-.app{
-display:flex;flex-direction:column;
-height:auto;min-height:100dvh;
-padding:6px calc(8px + var(–safe-r)) calc(6px + var(–safe-b)) calc(8px + var(–safe-l));
-padding-top:calc(6px + var(–safe-t));
-gap:6px;
-}
-header{gap:8px;padding-bottom:4px;}
-header h1{font-size:14px;}
-header p{display:none;}
-#insight{font-size:10px;white-space:nowrap;max-width:60%;flex-shrink:1;}
-
-.body{
-display:grid;
-grid-template-columns:1fr .9fr .9fr;
-gap:8px;
-}
-.left{
-grid-column:1;
-display:flex;flex-direction:column;gap:6px;
-overflow:visible;
-}
-
-.mosaic-inline .svgBox{height:120px;}
-.mosaic-inline .mos-cap{font-size:7px;}
-.mosaic-inline .legend{gap:3px;}
-.mosaic-inline .leg-item{font-size:8px;}
-
-input[type=range]{height:5px;margin:2px 0;}
+.svgBox{height:120px;}
 input[type=range]::-webkit-slider-thumb{width:20px;height:20px;}
 input[type=range]::-moz-range-thumb{width:20px;height:20px;}
-.ctrl{margin-bottom:6px;}
-.ctrl-val{font-size:11px;padding:2px 5px;}
-.ctrl-label{font-size:10px;}
-.hint{font-size:8px;margin-top:1px;}
-.pbtn{padding:5px 6px;font-size:9px;}
-.pbtn .tag{font-size:7px;margin-top:1px;}
-.presets{grid-template-columns:1fr 1fr;gap:3px;}
-.ptitle{margin-bottom:5px;font-size:8px;}
-
-.kpi-strip{gap:4px;}
-.kpi{padding:6px 7px;}
-.kpi-val{font-size:13px;}
-.kpi-name{font-size:7px;}
-
-.charts-col{
-grid-column:2;
-display:flex;
+input[type=range]{height:5px;}
+.toolbar .htxt{display:none;}
 }
-.charts-row{grid-template-columns:repeat(2,1fr);gap:6px;}
-.chart-card{min-height:160px;padding:6px 7px;}
-.plot-wrap{height:130px;}
-
-.eq-panel{
-grid-column:3;
-overflow-y:auto;
-max-height:none;
-padding:8px;
-}
-.eq-card{
-grid-template-columns:44px 6px minmax(0,1fr) 6px 50px;
-font-size:8px;padding:4px 5px;margin-bottom:2px;
-}
-.eq-formula{
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-.eq-sep{display:block;}
-.eq-result{
-text-align:right;
-border-top:none;
-padding-top:0;
-font-size:8px;
-}
-.eq-result::before{content:none;}
-.eq-section-hdr{margin:4px 0 2px;font-size:7px;}
+@media(max-width:480px){
+.grid{grid-template-columns:1fr 1fr;gap:6px;}
+.presets{grid-template-columns:repeat(2,1fr);}
+.plot-wrap{height:140px;}
+.eq-inner{max-height:280px;}
+header h1{font-size:14px;}
 }
 </style>
 
@@ -525,63 +217,36 @@ font-size:8px;
 <body>
 <div class="app">
 
-  <header>
-    <h1>Classifier Metrics Playground</h1>
-    <p>N · π · TPR · FPR → live</p>
-    <div id="insight">Move a slider to see what changes…</div>
-  </header>
+<header>
+  <h1>Classifier Metrics Playground</h1>
+  <span class="sub">N · π · TPR · FPR → live</span>
+  <div id="insight">Drag panels by their grip to rearrange the layout.</div>
+</header>
 
-  <div class="body">
+<div class="toolbar">
+  <button class="tbtn active" id="editToggle">⠿ Edit Layout</button>
+  <button class="tbtn" id="resetLayout">↺ Reset</button>
+  <span class="htxt">Grab ⠿ on any panel to reorder</span>
+</div>
 
-```
-<!-- LEFT -->
-<div class="left">
-  <div class="panel">
-    <div class="ptitle">Parameters</div>
+<div class="grid edit-on" id="grid">
 
-    <div class="ctrl">
-      <div class="ctrl-row">
-        <span class="ctrl-label">Dataset size (N)</span>
-        <input type="number" class="ctrl-val" id="nVal"/>
-      </div>
-      <input id="n" type="range" min="0" max="1000" step="1" value="460"/>
-      <div class="hint">Log scale · 100 → 500 000</div>
+  <div class="tile" data-tile="params">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Parameters</span></div>
+    <div class="tile-body">
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">Dataset size (N)</span><input type="number" class="ctrl-val" id="nVal"/></div><input id="n" type="range" min="0" max="1000" step="1" value="460"/><div class="hint">Log · 100 → 500k</div></div>
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">Prevalence (π)</span><input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1"/></div><input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847"/><div class="hint">% positives</div></div>
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">TPR (Sensitivity)</span><input type="number" class="ctrl-val" id="tprVal" min="0" max="100" step="0.1"/></div><input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847"/><div class="hint">True Positive Rate</div></div>
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">FPR (1−Spec)</span><input type="number" class="ctrl-val" id="fprVal" min="0" max="100" step="0.1"/></div><input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847"/><div class="hint">False Positive Rate</div></div>
     </div>
+  </div>
 
-    <div class="ctrl">
-      <div class="ctrl-row">
-        <span class="ctrl-label">Prevalence (π)</span>
-        <input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1"/>
-      </div>
-      <input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
-      <div class="hint">% of actual positives</div>
-    </div>
-
-    <div class="ctrl">
-      <div class="ctrl-row">
-        <span class="ctrl-label">TPR (Sensitivity)</span>
-        <input type="number" class="ctrl-val" id="tprVal" min="0" max="100" step="0.1"/>
-      </div>
-      <input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847"/>
-      <div class="hint">True Positive Rate · Recall</div>
-    </div>
-
-    <div class="ctrl">
-      <div class="ctrl-row">
-        <span class="ctrl-label">FPR (1 − Specificity)</span>
-        <input type="number" class="ctrl-val" id="fprVal" min="0" max="100" step="0.1"/>
-      </div>
-      <input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
-      <div class="hint">False Positive Rate</div>
-    </div>
-
-    <div class="ptitle" style="margin-top:4px">Confusion Matrix</div>
-    <div class="mosaic-inline">
-      <div class="svgBox">
-        <svg id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg>
-      </div>
+  <div class="tile" data-tile="mosaic">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Confusion Matrix</span></div>
+    <div class="tile-body">
+      <div class="svgBox"><svg id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg></div>
       <div class="mos-cap" id="mosaicCaption"></div>
-      <div class="legend" style="margin-top:4px">
+      <div class="legend">
         <div class="leg-item"><div class="leg-dot" style="background:var(--tp)"></div>TP</div>
         <div class="leg-item"><div class="leg-dot" style="background:var(--fn)"></div>FN</div>
         <div class="leg-item"><div class="leg-dot" style="background:var(--fp)"></div>FP</div>
@@ -590,486 +255,351 @@ font-size:8px;
     </div>
   </div>
 
-  <div class="panel" style="padding:10px">
-    <div class="ptitle">Derived Metrics</div>
-    <div class="kpi-strip">
-      <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">—</div></div>
-      <div class="kpi"><div class="kpi-name">F1</div><div class="kpi-val" id="f1Kpi">—</div></div>
-      <div class="kpi"><div class="kpi-name">Accuracy</div><div class="kpi-val" id="accKpi">—</div></div>
-      <div class="kpi"><div class="kpi-name">Bal Acc</div><div class="kpi-val" id="baccKpi">—</div></div>
-      <div class="kpi"><div class="kpi-name">TNR</div><div class="kpi-val" id="tnrKpi">—</div></div>
-      <div class="kpi"><div class="kpi-name">NPV</div><div class="kpi-val" id="npvKpi">—</div></div>
+  <div class="tile" data-tile="kpis">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Derived Metrics</span></div>
+    <div class="tile-body">
+      <div class="kpi-strip">
+        <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">—</div></div>
+        <div class="kpi"><div class="kpi-name">F1</div><div class="kpi-val" id="f1Kpi">—</div></div>
+        <div class="kpi"><div class="kpi-name">Accuracy</div><div class="kpi-val" id="accKpi">—</div></div>
+        <div class="kpi"><div class="kpi-name">Bal Acc</div><div class="kpi-val" id="baccKpi">—</div></div>
+        <div class="kpi"><div class="kpi-name">TNR</div><div class="kpi-val" id="tnrKpi">—</div></div>
+        <div class="kpi"><div class="kpi-name">NPV</div><div class="kpi-val" id="npvKpi">—</div></div>
+      </div>
     </div>
   </div>
 
-  <div class="panel presets-panel" style="padding:8px 10px">
-    <div class="presets">
-      <button class="pbtn" id="bal">Balanced<span class="tag">π=50%</span></button>
-      <button class="pbtn" id="imb">Imbalanced<span class="tag">π=10%</span></button>
-      <button class="pbtn" id="vimb">Very imbalanced<span class="tag">π=1%</span></button>
-      <button class="pbtn" id="perfect">Perfect<span class="tag">TPR≈100 FPR≈0</span></button>
-      <button class="pbtn" id="random">Random<span class="tag">TPR=FPR</span></button>
-      <button class="pbtn" id="resetBtn">Reset<span class="tag">defaults</span></button>
+  <div class="tile" data-tile="presets">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Presets</span></div>
+    <div class="tile-body">
+      <div class="presets">
+        <button class="pbtn" id="bal">Balanced<span class="tag">π=50%</span></button>
+        <button class="pbtn" id="imb">Imbalanced<span class="tag">π=10%</span></button>
+        <button class="pbtn" id="vimb">V. Imbalanced<span class="tag">π=1%</span></button>
+        <button class="pbtn" id="perfect">Perfect<span class="tag">TPR≈100 FPR≈0</span></button>
+        <button class="pbtn" id="random">Random<span class="tag">TPR=FPR</span></button>
+        <button class="pbtn" id="resetBtn">Reset<span class="tag">defaults</span></button>
+      </div>
     </div>
   </div>
+
+  <div class="tile" data-tile="counts">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Counts</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="counts"></div></div>
+  </div>
+
+  <div class="tile" data-tile="rates">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Rates</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="metrics"></div></div>
+  </div>
+
+  <div class="tile" data-tile="roc">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">ROC · iso-LR⁺</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="roc"></div></div>
+  </div>
+
+  <div class="tile" data-tile="pr">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Precision-Recall</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="pr"></div></div>
+  </div>
+
+  <div class="tile span2" data-tile="equations">
+    <div class="tile-hdr"><div class="grip" data-grip></div><span class="tile-title">Live Equations</span></div>
+    <div class="tile-body"><div class="eq-inner" id="liveEq"></div></div>
+  </div>
+
 </div>
-
-<!-- CHARTS -->
-<div class="charts-col">
-  <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-title">Counts</div>
-      <div class="plot-wrap" id="counts"></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Rates</div>
-      <div class="plot-wrap" id="metrics"></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">ROC · iso-LR⁺ curve</div>
-      <div class="plot-wrap" id="roc"></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Precision-Recall · vary π</div>
-      <div class="plot-wrap" id="pr"></div>
-    </div>
-  </div>
-</div>
-
-<!-- EQUATIONS -->
-<div class="eq-panel">
-  <div class="ptitle">Live Equations</div>
-  <div id="liveEq"></div>
-</div>
-```
-
-  </div>
 </div>
 
 <script>
+/* ── grip SVGs ── */
+const GRIP_SVG='<svg viewBox="0 0 16 16"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg>';
+document.querySelectorAll('.grip').forEach(g=>{g.innerHTML=GRIP_SVG;});
+
+/* ══════════ DRAG & DROP ══════════ */
+const gridEl=document.getElementById('grid');
+let dragSrc=null,ghost=null,editMode=true;
+
+function tileOf(el){return el.closest('.tile');}
+
+/* mouse */
+gridEl.addEventListener('mousedown',e=>{
+  const g=e.target.closest('[data-grip]');
+  if(!g||!editMode)return;
+  e.preventDefault();
+  beginDrag(tileOf(g),e.clientX,e.clientY);
+});
+document.addEventListener('mousemove',e=>{if(!dragSrc)return;e.preventDefault();onDragMove(e.clientX,e.clientY);});
+document.addEventListener('mouseup',()=>{if(dragSrc)endDrag();});
+
+/* touch */
+gridEl.addEventListener('touchstart',e=>{
+  const g=e.target.closest('[data-grip]');
+  if(!g||!editMode)return;
+  const t=e.touches[0];
+  beginDrag(tileOf(g),t.clientX,t.clientY);
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(!dragSrc)return;e.preventDefault();
+  const t=e.touches[0];onDragMove(t.clientX,t.clientY);
+},{passive:false});
+document.addEventListener('touchend',()=>{if(dragSrc)endDrag();},{passive:true});
+document.addEventListener('touchcancel',()=>{if(dragSrc)cleanup();},{passive:true});
+
+function beginDrag(tile,x,y){
+  dragSrc=tile;
+  tile.classList.add('dragging');
+  ghost=document.createElement('div');
+  ghost.className='drag-ghost';
+  ghost.innerHTML=GRIP_SVG+' '+tile.querySelector('.tile-title').textContent;
+  document.body.appendChild(ghost);
+  ghost.style.left=x+'px';ghost.style.top=y+'px';
+}
+
+function onDragMove(x,y){
+  if(ghost){ghost.style.left=x+'px';ghost.style.top=y+'px';}
+  const tiles=[...gridEl.querySelectorAll('.tile:not(.dragging)')];
+  tiles.forEach(t=>t.classList.remove('drag-over'));
+  for(const t of tiles){
+    const r=t.getBoundingClientRect();
+    if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){
+      t.classList.add('drag-over');break;
+    }
+  }
+}
+
+function endDrag(){
+  const over=gridEl.querySelector('.tile.drag-over');
+  if(over&&over!==dragSrc){
+    const all=[...gridEl.querySelectorAll('.tile')];
+    const si=all.indexOf(dragSrc),ti=all.indexOf(over);
+    if(si<ti) over.after(dragSrc); else over.before(dragSrc);
+    requestAnimationFrame(()=>setTimeout(resizeCharts,60));
+  }
+  cleanup();
+}
+
+function cleanup(){
+  if(dragSrc)dragSrc.classList.remove('dragging');
+  gridEl.querySelectorAll('.tile').forEach(t=>t.classList.remove('drag-over'));
+  if(ghost){ghost.remove();ghost=null;}
+  dragSrc=null;
+}
+
+function resizeCharts(){
+  ['counts','metrics','roc','pr'].forEach(id=>{
+    try{Plotly.Plots.resize(document.getElementById(id));}catch(e){}
+  });
+}
+
+/* edit toggle */
+document.getElementById('editToggle').addEventListener('click',function(){
+  editMode=!editMode;
+  this.classList.toggle('active',editMode);
+  gridEl.classList.toggle('edit-on',editMode);
+});
+
+/* reset layout */
+const DEF_ORDER=['params','mosaic','kpis','presets','counts','rates','roc','pr','equations'];
+document.getElementById('resetLayout').addEventListener('click',()=>{
+  const tiles={};
+  gridEl.querySelectorAll('.tile').forEach(t=>{tiles[t.dataset.tile]=t;});
+  DEF_ORDER.forEach(id=>{if(tiles[id])gridEl.appendChild(tiles[id]);});
+  setTimeout(()=>{resizeCharts();render();},60);
+});
+
+/* ══════════ METRICS ENGINE ══════════ */
 const el=id=>document.getElementById(id);
-
 const LOG_N_MIN=Math.log(100),LOG_N_MAX=Math.log(500000);
-const sliderToN  =v=>Math.round(Math.exp(LOG_N_MIN+(v/1000)*(LOG_N_MAX-LOG_N_MIN)));
-const nToSlider  =v=>1000*(Math.log(v)-LOG_N_MIN)/(LOG_N_MAX-LOG_N_MIN);
+const sliderToN=v=>Math.round(Math.exp(LOG_N_MIN+(v/1000)*(LOG_N_MAX-LOG_N_MIN)));
+const nToSlider=v=>1000*(Math.log(v)-LOG_N_MIN)/(LOG_N_MAX-LOG_N_MIN);
 const sliderToPct=v=>100/(1+Math.exp(-v));
-const pctToSlider=v=>{
-  const p=Math.max(1e-6,Math.min(1-1e-6,v/100));
-  return Math.log(p/(1-p));
-};
-
+const pctToSlider=v=>{const p=Math.max(1e-6,Math.min(1-1e-6,v/100));return Math.log(p/(1-p));};
 const fmtPct=x=>(x*100).toFixed(1)+'%';
 const fmtInt=x=>Math.round(x).toLocaleString('en-US');
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const nearlyEqual=(a,b,eps=1e-12)=>Math.abs(a-b)<eps;
 
 function sameParams(a,b){
-  if(!a||!b) return false;
-  return nearlyEqual(a.N,b.N) &&
-         nearlyEqual(a.pi,b.pi) &&
-         nearlyEqual(a.tpr,b.tpr) &&
-         nearlyEqual(a.fpr,b.fpr);
+  if(!a||!b)return false;
+  return nearlyEqual(a.N,b.N)&&nearlyEqual(a.pi,b.pi)&&nearlyEqual(a.tpr,b.tpr)&&nearlyEqual(a.fpr,b.fpr);
 }
-
 function readParams(){
-  return{
-    N:   clamp(parseInt(el('nVal').value,10)||100,100,500000),
-    pi:  clamp((parseFloat(el('piVal').value)||0)/100,0,1),
-    tpr: clamp((parseFloat(el('tprVal').value)||0)/100,0,1),
-    fpr: clamp((parseFloat(el('fprVal').value)||0)/100,0,1),
-  };
+  return{N:clamp(parseInt(el('nVal').value,10)||100,100,500000),
+    pi:clamp((parseFloat(el('piVal').value)||0)/100,0,1),
+    tpr:clamp((parseFloat(el('tprVal').value)||0)/100,0,1),
+    fpr:clamp((parseFloat(el('fprVal').value)||0)/100,0,1)};
 }
-
 function compute(p){
-  const P=p.N*p.pi, Nn=p.N*(1-p.pi);
-  const TP=P*p.tpr, FN=P-TP, FP=Nn*p.fpr, TN=Nn-FP;
-  const PredP=TP+FP, PredN=TN+FN;
-  const prec=TP/(PredP+1e-15), acc=(TP+TN)/(p.N+1e-15);
-  const f1=2*prec*p.tpr/(prec+p.tpr+1e-15);
-  const tnr=1-p.fpr, npv=TN/(PredN+1e-15), bacc=.5*(p.tpr+tnr);
-  return {P,Nn,TP,FP,TN,FN,PredP,PredN,prec,acc,f1,tnr,npv,bacc};
+  const P=p.N*p.pi,Nn=p.N*(1-p.pi),TP=P*p.tpr,FN=P-TP,FP=Nn*p.fpr,TN=Nn-FP;
+  const PredP=TP+FP,PredN=TN+FN,prec=TP/(PredP+1e-15),acc=(TP+TN)/(p.N+1e-15);
+  const f1=2*prec*p.tpr/(prec+p.tpr+1e-15),tnr=1-p.fpr,npv=TN/(PredN+1e-15),bacc=.5*(p.tpr+tnr);
+  return{P,Nn,TP,FP,TN,FN,PredP,PredN,prec,acc,f1,tnr,npv,bacc};
 }
-
 function syncToSliders(){
-  el('nVal').value  = sliderToN(el('n').value);
-  el('piVal').value = sliderToPct(el('pi').value).toFixed(2);
-  el('tprVal').value= sliderToPct(el('tpr').value).toFixed(2);
-  el('fprVal').value= sliderToPct(el('fpr').value).toFixed(2);
+  el('nVal').value=sliderToN(el('n').value);
+  el('piVal').value=sliderToPct(el('pi').value).toFixed(2);
+  el('tprVal').value=sliderToPct(el('tpr').value).toFixed(2);
+  el('fprVal').value=sliderToPct(el('fpr').value).toFixed(2);
 }
 
 function drawMosaic(r){
-  const svg=el('mosaic');
-  svg.innerHTML='';
-
-  const W=1000,H=500,TOP=40,iY=TOP,iH=H-TOP;
-  const tot=r.P+r.Nn;
-  const wNeg=W*(r.Nn/(tot+1e-15)), wPos=W-wNeg;
-  const hTN=iH*(r.TN/(r.Nn+1e-15)), hFP=iH-hTN;
-  const hFN=iH*(r.FN/(r.P+1e-15)), hTP=iH-hFN;
-
+  const svg=el('mosaic');svg.innerHTML='';
+  const W=1000,H=500,TOP=40,iY=TOP,iH=H-TOP,tot=r.P+r.Nn;
+  const wNeg=W*(r.Nn/(tot+1e-15)),wPos=W-wNeg;
+  const hTN=iH*(r.TN/(r.Nn+1e-15)),hFP=iH-hTN;
+  const hFN=iH*(r.FN/(r.P+1e-15)),hTP=iH-hFN;
   const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
-  bg.setAttribute('width',W);
-  bg.setAttribute('height',H);
-  bg.setAttribute('fill','#0a0c10');
-  svg.appendChild(bg);
-
+  bg.setAttribute('width',W);bg.setAttribute('height',H);bg.setAttribute('fill','#0a0c10');svg.appendChild(bg);
   const C={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'};
-
   function rect(x,y,w,h,fill,lbl){
     const R=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    R.setAttribute('x',x); R.setAttribute('y',y);
-    R.setAttribute('width',Math.max(0,w)); R.setAttribute('height',Math.max(0,h));
-    R.setAttribute('fill',fill); R.setAttribute('fill-opacity','0.85');
-    R.setAttribute('stroke','#0a0c10'); R.setAttribute('stroke-width','2');
+    R.setAttribute('x',x);R.setAttribute('y',y);R.setAttribute('width',Math.max(0,w));R.setAttribute('height',Math.max(0,h));
+    R.setAttribute('fill',fill);R.setAttribute('fill-opacity','0.85');R.setAttribute('stroke','#0a0c10');R.setAttribute('stroke-width','2');
     svg.appendChild(R);
-
-    if(w>110&&h>55){
-      const T=document.createElementNS('http://www.w3.org/2000/svg','text');
-      T.setAttribute('x',x+10);
-      T.setAttribute('y',Math.min(y+h-12,y+30));
-      T.setAttribute('font-size','23');
-      T.setAttribute('font-family','Space Mono,monospace');
-      T.setAttribute('fill','rgba(0,0,0,0.75)');
-      T.setAttribute('font-weight','700');
-      T.textContent=lbl;
-      svg.appendChild(T);
-    }
+    if(w>100&&h>50){const T=document.createElementNS('http://www.w3.org/2000/svg','text');
+      T.setAttribute('x',x+10);T.setAttribute('y',Math.min(y+h-12,y+30));T.setAttribute('font-size','22');
+      T.setAttribute('font-family','Space Mono,monospace');T.setAttribute('fill','rgba(0,0,0,0.7)');T.setAttribute('font-weight','700');
+      T.textContent=lbl;svg.appendChild(T);}
   }
-
-  rect(0,   iY,     wNeg,hTN,C.TN,`TN  ${fmtInt(r.TN)}`);
-  rect(0,   iY+hTN, wNeg,hFP,C.FP,`FP  ${fmtInt(r.FP)}`);
-  rect(wNeg,iY,     wPos,hFN,C.FN,`FN  ${fmtInt(r.FN)}`);
-  rect(wNeg,iY+hFN, wPos,hTP,C.TP,`TP  ${fmtInt(r.TP)}`);
-
-  [[0,wNeg,'Actual Negative'],[wNeg,wPos,'Actual Positive']].forEach(([x,w,t])=>{
-    if(w<80)return;
-    const T=document.createElementNS('http://www.w3.org/2000/svg','text');
-    T.setAttribute('x',x+w/2);
-    T.setAttribute('y',28);
-    T.setAttribute('text-anchor','middle');
-    T.setAttribute('font-size','18');
-    T.setAttribute('font-family','Syne,sans-serif');
-    T.setAttribute('font-weight','700');
-    T.setAttribute('fill','rgba(255,255,255,0.55)');
-    T.textContent=t;
-    svg.appendChild(T);
+  rect(0,iY,wNeg,hTN,C.TN,`TN ${fmtInt(r.TN)}`);rect(0,iY+hTN,wNeg,hFP,C.FP,`FP ${fmtInt(r.FP)}`);
+  rect(wNeg,iY,wPos,hFN,C.FN,`FN ${fmtInt(r.FN)}`);rect(wNeg,iY+hFN,wPos,hTP,C.TP,`TP ${fmtInt(r.TP)}`);
+  [[0,wNeg,'Actual Neg'],[wNeg,wPos,'Actual Pos']].forEach(([x,w,t])=>{
+    if(w<80)return;const T=document.createElementNS('http://www.w3.org/2000/svg','text');
+    T.setAttribute('x',x+w/2);T.setAttribute('y',28);T.setAttribute('text-anchor','middle');
+    T.setAttribute('font-size','18');T.setAttribute('font-family','Syne,sans-serif');
+    T.setAttribute('font-weight','700');T.setAttribute('fill','rgba(255,255,255,0.5)');T.textContent=t;svg.appendChild(T);
   });
-
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',[
-    `M 0,${iY+hTN}`,`L ${wNeg},${iY+hTN}`,
-    `L ${wNeg},${iY+hFN}`,`L ${W},${iY+hFN}`,
-    `L ${W},${iY+iH}`,`L 0,${iY+iH}`,'Z'
-  ].join(' '));
-  path.setAttribute('fill','rgba(255,255,255,0.03)');
-  path.setAttribute('stroke','rgba(255,255,255,0.8)');
-  path.setAttribute('stroke-width','4');
-  path.setAttribute('stroke-dasharray','10 5');
-  path.setAttribute('pointer-events','none');
-  svg.appendChild(path);
-
-  el('mosaicCaption').textContent=
-    `P=${fmtInt(r.P)}  N=${fmtInt(r.Nn)}  |  TP=${fmtInt(r.TP)}  FP=${fmtInt(r.FP)}  TN=${fmtInt(r.TN)}  FN=${fmtInt(r.FN)}`;
-}
-
-function getPlotMargins(){
-  const w=window.innerWidth;
-  if(w<=500) return {l:28,r:4,t:4,b:28};
-  if(w<=844 && window.innerHeight<=500) return {l:30,r:5,t:5,b:30};
-  return {l:34,r:6,t:6,b:34};
+  path.setAttribute('d',[`M 0,${iY+hTN}`,`L ${wNeg},${iY+hTN}`,`L ${wNeg},${iY+hFN}`,`L ${W},${iY+hFN}`,`L ${W},${iY+iH}`,`L 0,${iY+iH}`,'Z'].join(' '));
+  path.setAttribute('fill','rgba(255,255,255,0.03)');path.setAttribute('stroke','rgba(255,255,255,0.7)');
+  path.setAttribute('stroke-width','3');path.setAttribute('stroke-dasharray','8 4');path.setAttribute('pointer-events','none');svg.appendChild(path);
+  el('mosaicCaption').textContent=`P=${fmtInt(r.P)} N=${fmtInt(r.Nn)} | TP=${fmtInt(r.TP)} FP=${fmtInt(r.FP)} TN=${fmtInt(r.TN)} FN=${fmtInt(r.FN)}`;
 }
 
 const PL=(extra={})=>{
-  const m=getPlotMargins();
+  const m=window.innerWidth<=500?{l:28,r:4,t:4,b:28}:{l:34,r:6,t:6,b:34};
   const fs=window.innerWidth<=500?8:10;
-  return{
-    paper_bgcolor:'transparent',
-    plot_bgcolor:'transparent',
-    font:{family:'Space Mono,monospace',size:fs,color:'#b4bcd0'},
-    margin:m,
-    xaxis:{
-      gridcolor:'#1e2230',
-      tickcolor:'#3a4060',
-      linecolor:'#3a4060',
-      tickfont:{color:'#b4bcd0'},
-      zeroline:false,
-      ...(extra.xaxis||{})
-    },
-    yaxis:{
-      gridcolor:'#1e2230',
-      tickcolor:'#3a4060',
-      linecolor:'#3a4060',
-      tickfont:{color:'#b4bcd0'},
-      zeroline:false,
-      ...(extra.yaxis||{})
-    },
-    showlegend:false,
-    ...extra,
-    margin:m
-  };
+  return{paper_bgcolor:'transparent',plot_bgcolor:'transparent',
+    font:{family:'Space Mono,monospace',size:fs,color:'#b4bcd0'},margin:m,
+    xaxis:{gridcolor:'#1e2230',tickcolor:'#3a4060',linecolor:'#3a4060',tickfont:{color:'#b4bcd0'},zeroline:false,...(extra.xaxis||{})},
+    yaxis:{gridcolor:'#1e2230',tickcolor:'#3a4060',linecolor:'#3a4060',tickfont:{color:'#b4bcd0'},zeroline:false,...(extra.yaxis||{})},
+    showlegend:false,...extra,margin:m};
 };
 const PC={displayModeBar:false,responsive:true};
-
-let rocHistory=[], lastP=null, lastHistoryP=null;
+let rocHistory=[],lastP=null,lastHistoryP=null;
 
 function render(){
-  const p=readParams(), r=compute(p);
-
+  const p=readParams(),r=compute(p);
   const kc=v=>v>.75?'kpi-val good':v<.35?'kpi-val bad':'kpi-val warn';
-  el('precKpi').textContent=fmtPct(r.prec); el('precKpi').className=kc(r.prec);
-  el('f1Kpi').textContent  =fmtPct(r.f1);   el('f1Kpi').className  =kc(r.f1);
-  el('accKpi').textContent =fmtPct(r.acc);  el('accKpi').className =kc(r.acc);
-  el('baccKpi').textContent=fmtPct(r.bacc); el('baccKpi').className=kc(r.bacc);
-  el('tnrKpi').textContent =fmtPct(r.tnr);  el('tnrKpi').className =kc(r.tnr);
-  el('npvKpi').textContent =fmtPct(r.npv);  el('npvKpi').className =kc(r.npv);
+  el('precKpi').textContent=fmtPct(r.prec);el('precKpi').className=kc(r.prec);
+  el('f1Kpi').textContent=fmtPct(r.f1);el('f1Kpi').className=kc(r.f1);
+  el('accKpi').textContent=fmtPct(r.acc);el('accKpi').className=kc(r.acc);
+  el('baccKpi').textContent=fmtPct(r.bacc);el('baccKpi').className=kc(r.bacc);
+  el('tnrKpi').textContent=fmtPct(r.tnr);el('tnrKpi').className=kc(r.tnr);
+  el('npvKpi').textContent=fmtPct(r.npv);el('npvKpi').className=kc(r.npv);
 
   let msg='';
   if(lastP){
-    const dN = !nearlyEqual(p.N,lastP.N);
-    const dPi= !nearlyEqual(p.pi,lastP.pi);
-    const dT = !nearlyEqual(p.tpr,lastP.tpr);
-    const dF = !nearlyEqual(p.fpr,lastP.fpr);
-
-    if(dN&&!dPi&&!dT&&!dF)       msg='↕ N changed → all rates stay fixed; areas scale.';
-    else if(dPi&&!dT&&!dF)       msg='⚖ π changed → TPR/FPR fixed, Precision shifts sharply.';
-    else if(dT&&!dF)             msg='↑ TPR changed → TP/FN ratio shifts in Actual Positive column.';
-    else if(!dT&&dF)             msg='→ FPR changed → FP/TN ratio shifts in Actual Negative column.';
-    else if(dT&&dF)              msg='↑→ Both changed → classifier moved in ROC space.';
-    else                         msg='Move a slider to see what changes…';
-  } else {
-    msg='Try: TPR=90%, FPR=5%, set π=1% → watch Precision collapse.';
-  }
-  el('insight').textContent=msg;
-  lastP={...p};
+    const dN=!nearlyEqual(p.N,lastP.N),dPi=!nearlyEqual(p.pi,lastP.pi),dT=!nearlyEqual(p.tpr,lastP.tpr),dF=!nearlyEqual(p.fpr,lastP.fpr);
+    if(dN&&!dPi&&!dT&&!dF)msg='↕ N changed → rates fixed, counts scale.';
+    else if(dPi&&!dT&&!dF)msg='⚖ π changed → Precision shifts sharply.';
+    else if(dT&&!dF)msg='↑ TPR changed → TP/FN ratio shifts.';
+    else if(!dT&&dF)msg='→ FPR changed → FP/TN ratio shifts.';
+    else if(dT&&dF)msg='↑→ Both changed → moved in ROC space.';
+    else msg='Drag panels by ⠿ grip to rearrange.';
+  }else msg='Try: TPR=90%, FPR=5%, π=1% → watch Precision collapse.';
+  el('insight').textContent=msg;lastP={...p};
 
   drawMosaic(r);
 
   const CC={TP:'#4ade80',FP:'#fbbf24',TN:'#818cf8',FN:'#f87171'};
-
-  Plotly.react('counts',[{
-    x:['TP','FP','TN','FN'], y:[r.TP,r.FP,r.TN,r.FN], type:'bar',
-    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN]},
-    texttemplate:'%{y:,.0f}', textposition:'auto',
-    textfont:{size:window.innerWidth<=500?7:9,color:'#fff'}
-  }],PL({yaxis:{title:{text:'count',font:{size:9,color:'#8a92ab'}}}}),PC);
+  const tsz=window.innerWidth<=500?7:9;
+  Plotly.react('counts',[{x:['TP','FP','TN','FN'],y:[r.TP,r.FP,r.TN,r.FN],type:'bar',
+    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN]},texttemplate:'%{y:,.0f}',textposition:'auto',
+    textfont:{size:tsz,color:'#fff'}}],PL({yaxis:{title:{text:'count',font:{size:9,color:'#8a92ab'}}}}),PC);
 
   const rv=[p.tpr*100,p.fpr*100,r.prec*100,r.acc*100,r.f1*100,r.bacc*100,r.npv*100];
-  Plotly.react('metrics',[{
-    x:['TPR','FPR','Prec','Acc','F1','BAcc','NPV'], y:rv, type:'bar',
-    marker:{color:rv.map(v=>v>75?'#4ade80':v<35?'#f87171':'#fbbf24')},
-    texttemplate:'%{y:.1f}', textposition:'auto',
-    textfont:{size:window.innerWidth<=500?7:9,color:'#fff'}
-  }],PL({yaxis:{range:[0,100],title:{text:'%',font:{size:9,color:'#8a92ab'}}}}),PC);
+  Plotly.react('metrics',[{x:['TPR','FPR','Prec','Acc','F1','BAcc','NPV'],y:rv,type:'bar',
+    marker:{color:rv.map(v=>v>75?'#4ade80':v<35?'#f87171':'#fbbf24')},texttemplate:'%{y:.1f}',textposition:'auto',
+    textfont:{size:tsz,color:'#fff'}}],PL({yaxis:{range:[0,100],title:{text:'%',font:{size:9,color:'#8a92ab'}}}}),PC);
 
   const LR=p.fpr>1e-9?p.tpr/p.fpr:Infinity;
-  const rcx=[], rcy=[];
-  for(let i=0;i<=200;i++){
-    const fx=i/200;
-    rcx.push(fx);
-    rcy.push(Math.min(1,LR*fx));
-  }
-
-  if(!sameParams(p,lastHistoryP)){
-    rocHistory.push({x:p.fpr,y:p.tpr});
-    if(rocHistory.length>80) rocHistory.shift();
-    lastHistoryP={...p};
-  }
-
-  const rhx=rocHistory.map(d=>d.x), rhy=rocHistory.map(d=>d.y);
-
+  const rcx=[],rcy=[];
+  for(let i=0;i<=200;i++){const fx=i/200;rcx.push(fx);rcy.push(Math.min(1,LR*fx));}
+  if(!sameParams(p,lastHistoryP)){rocHistory.push({x:p.fpr,y:p.tpr});if(rocHistory.length>80)rocHistory.shift();lastHistoryP={...p};}
+  const rhx=rocHistory.map(d=>d.x),rhy=rocHistory.map(d=>d.y);
   Plotly.react('roc',[
     {x:[0,1],y:[0,1],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
-    {x:rcx,y:rcy,mode:'lines',line:{color:'rgba(107,156,255,0.25)',width:1.5},
-     fill:'tozeroy',fillcolor:'rgba(107,156,255,0.06)',hoverinfo:'skip'},
+    {x:rcx,y:rcy,mode:'lines',line:{color:'rgba(107,156,255,0.25)',width:1.5},fill:'tozeroy',fillcolor:'rgba(107,156,255,0.06)',hoverinfo:'skip'},
     {x:rhx,y:rhy,mode:'lines+markers',line:{color:'rgba(107,156,255,0.3)',width:1},
-     marker:{color:rhx.map((_,i)=>`rgba(107,156,255,${.15+.7*(i/Math.max(1,rhx.length))})`),size:3},hoverinfo:'skip'},
-    {x:[p.fpr],y:[p.tpr],mode:'markers+text',
-     marker:{color:'#6b9cff',size:11,line:{color:'#fff',width:2}},
-     text:[`  LR⁺=${LR===Infinity?'∞':LR.toFixed(1)}`],
-     textposition:'middle right',textfont:{size:9,color:'#b4bcd0'},
-     hovertemplate:'FPR:%{x:.3f}<br>TPR:%{y:.3f}<extra></extra>'}
-  ],PL({
-    xaxis:{range:[0,1],title:{text:'FPR',font:{size:9,color:'#8a92ab'}}},
-    yaxis:{range:[0,1],title:{text:'TPR',font:{size:9,color:'#8a92ab'}}}
-  }),PC);
+      marker:{color:rhx.map((_,i)=>`rgba(107,156,255,${.15+.7*(i/Math.max(1,rhx.length))})`),size:3},hoverinfo:'skip'},
+    {x:[p.fpr],y:[p.tpr],mode:'markers+text',marker:{color:'#6b9cff',size:11,line:{color:'#fff',width:2}},
+      text:[`  LR⁺=${LR===Infinity?'∞':LR.toFixed(1)}`],textposition:'middle right',textfont:{size:9,color:'#b4bcd0'},
+      hovertemplate:'FPR:%{x:.3f}<br>TPR:%{y:.3f}<extra></extra>'}
+  ],PL({xaxis:{range:[0,1],title:{text:'FPR',font:{size:9,color:'#8a92ab'}}},yaxis:{range:[0,1],title:{text:'TPR',font:{size:9,color:'#8a92ab'}}}}),PC);
 
-  const prs=300, prRec=[], prPrec=[], prPi=[];
-  for(let i=0;i<=prs;i++){
-    const pi=.001+.998*(i/prs);
-    prRec.push(p.tpr);
-    prPrec.push((p.tpr*pi)/(p.tpr*pi+p.fpr*(1-pi)+1e-15));
-    prPi.push(pi);
-  }
-
+  const prs=300,prRec=[],prPrec=[],prPi=[];
+  for(let i=0;i<=prs;i++){const pi=.001+.998*(i/prs);prRec.push(p.tpr);prPrec.push((p.tpr*pi)/(p.tpr*pi+p.fpr*(1-pi)+1e-15));prPi.push(pi);}
   Plotly.react('pr',[
     {x:[0,1],y:[p.pi,p.pi],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
-    {x:prRec,y:prPrec,mode:'lines',line:{color:'rgba(251,191,36,0.6)',width:2},
-     text:prPi.map(v=>`π=${(v*100).toFixed(1)}%`),
-     hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<br>%{text}<extra></extra>'},
-    {x:[p.tpr],y:[r.prec],mode:'markers',
-     marker:{color:'#fbbf24',size:11,line:{color:'#fff',width:2}},
-     hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<extra></extra>'}
-  ],PL({
-    xaxis:{range:[0,1],title:{text:'Recall (TPR)',font:{size:9,color:'#8a92ab'}}},
-    yaxis:{range:[0,1],title:{text:'Precision',font:{size:9,color:'#8a92ab'}}}
-  }),PC);
+    {x:prRec,y:prPrec,mode:'lines',line:{color:'rgba(251,191,36,0.6)',width:2},text:prPi.map(v=>`π=${(v*100).toFixed(1)}%`),
+      hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<br>%{text}<extra></extra>'},
+    {x:[p.tpr],y:[r.prec],mode:'markers',marker:{color:'#fbbf24',size:11,line:{color:'#fff',width:2}},
+      hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<extra></extra>'}
+  ],PL({xaxis:{range:[0,1],title:{text:'Recall',font:{size:9,color:'#8a92ab'}}},yaxis:{range:[0,1],title:{text:'Precision',font:{size:9,color:'#8a92ab'}}}}),PC);
 
-  const ct=(type)=>{
-    const col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];
-    return `<span style="color:${col};font-weight:700">${type}</span>`;
-  };
-
-  const rc=(val)=>{ // result color based on percentage value
-    const v=parseFloat(val);
-    if(isNaN(v)) return '#fff';
-    return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';
-  };
-
-  const {P,Nn}=r;
-  const div=(label)=>`__DIV__${label}`;
+  /* equations */
+  const ct=type=>{const col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];return`<span style="color:${col};font-weight:700">${type}</span>`;};
+  const rc=v=>v>75?'#4ade80':v<35?'#f87171':'#fbbf24';
+  const{P,Nn}=r,D=l=>`__D__${l}`;
   const eqs=[
-    div('Counts'),
-    ['N',    `${ct('TP')} + ${ct('FN')} + ${ct('FP')} + ${ct('TN')}`, `${fmtInt(p.N)}`, null],
-    ['P',    `${ct('TP')} + ${ct('FN')}`, `${fmtInt(P)}`, null],
-    ['Neg',  `${ct('TN')} + ${ct('FP')}`, `${fmtInt(Nn)}`, null],
-
-    div('Rates'),
-    ['TPR',  `${ct('TP')} / (${ct('TP')} + ${ct('FN')})`, `${(p.tpr*100).toFixed(2)}%`, p.tpr*100],
-    ['FNR',  `${ct('FN')} / (${ct('TP')} + ${ct('FN')})`, `${((1-p.tpr)*100).toFixed(2)}%`, null],
-    ['TNR',  `${ct('TN')} / (${ct('TN')} + ${ct('FP')})`, `${(r.tnr*100).toFixed(2)}%`, r.tnr*100],
-    ['FPR',  `${ct('FP')} / (${ct('TN')} + ${ct('FP')})`, `${(p.fpr*100).toFixed(2)}%`, null],
-
-    div('Scores'),
-    ['Prec', `${ct('TP')} / (${ct('TP')} + ${ct('FP')})`, `${(r.prec*100).toFixed(2)}%`, r.prec*100],
-    ['NPV',  `${ct('TN')} / (${ct('TN')} + ${ct('FN')})`, `${(r.npv*100).toFixed(2)}%`, r.npv*100],
-    ['Acc',  `(${ct('TP')} + ${ct('TN')}) / N`, `${(r.acc*100).toFixed(2)}%`, r.acc*100],
-    ['F1',   `2${ct('TP')} / (2${ct('TP')} + ${ct('FP')} + ${ct('FN')})`, `${(r.f1*100).toFixed(2)}%`, r.f1*100],
-    ['BAcc', `½ × (TPR + TNR)`, `${(r.bacc*100).toFixed(2)}%`, r.bacc*100],
+    D('Counts'),['N',`${ct('TP')}+${ct('FN')}+${ct('FP')}+${ct('TN')}`,fmtInt(p.N),null],
+    ['P',`${ct('TP')}+${ct('FN')}`,fmtInt(P),null],['Neg',`${ct('TN')}+${ct('FP')}`,fmtInt(Nn),null],
+    D('Rates'),['TPR',`${ct('TP')}/(${ct('TP')}+${ct('FN')})`,(p.tpr*100).toFixed(2)+'%',p.tpr*100],
+    ['FNR',`${ct('FN')}/(${ct('TP')}+${ct('FN')})`,((1-p.tpr)*100).toFixed(2)+'%',null],
+    ['TNR',`${ct('TN')}/(${ct('TN')}+${ct('FP')})`,(r.tnr*100).toFixed(2)+'%',r.tnr*100],
+    ['FPR',`${ct('FP')}/(${ct('TN')}+${ct('FP')})`,(p.fpr*100).toFixed(2)+'%',null],
+    D('Scores'),['Prec',`${ct('TP')}/(${ct('TP')}+${ct('FP')})`,(r.prec*100).toFixed(2)+'%',r.prec*100],
+    ['NPV',`${ct('TN')}/(${ct('TN')}+${ct('FN')})`,(r.npv*100).toFixed(2)+'%',r.npv*100],
+    ['Acc',`(${ct('TP')}+${ct('TN')})/N`,(r.acc*100).toFixed(2)+'%',r.acc*100],
+    ['F1',`2${ct('TP')}/(2${ct('TP')}+${ct('FP')}+${ct('FN')})`,(r.f1*100).toFixed(2)+'%',r.f1*100],
+    ['BAcc',`½×(TPR+TNR)`,(r.bacc*100).toFixed(2)+'%',r.bacc*100],
   ];
-
   el('liveEq').innerHTML=eqs.map(item=>{
-    if(typeof item==='string' && item.startsWith('__DIV__')){
-      return `<div class="eq-section-hdr">${item.replace('__DIV__','')}</div>`;
-    }
-    const [l,formula,result,colorVal]=item;
-    const resColor = colorVal!==null ? rc(colorVal) : '#fff';
-    const borderColor = colorVal!==null ? resColor : 'rgba(107,156,255,.25)';
-    return `
-      <div class="eq-card" style="border-left-color:${borderColor}">
-        <span class="eq-lbl">${l}</span>
-        <span class="eq-sep">=</span>
-        <span class="eq-formula">${formula}</span>
-        <span class="eq-sep">=</span>
-        <span class="eq-result" style="color:${resColor}">${result}</span>
-      </div>
-    `;
+    if(typeof item==='string'&&item.startsWith('__D__'))return`<div class="eq-section-hdr">${item.slice(5)}</div>`;
+    const[l,f,res,cv]=item;const c=cv!==null?rc(cv):'#fff';const bc=cv!==null?c:'rgba(107,156,255,.25)';
+    return`<div class="eq-card" style="border-left-color:${bc}"><span class="eq-lbl">${l}</span><span class="eq-result" style="color:${c}">${res}</span><span class="eq-formula">${f}</span></div>`;
   }).join('');
-
-  // Update scroll fade on eq-panel
-  updateEqScrollFade();
 }
 
-/* ── Scroll fade logic for mobile eq-panel ── */
-function updateEqScrollFade(){
-  const panel = document.querySelector('.eq-panel');
-  const scrollEl = el('liveEq');
-  if(!panel || !scrollEl) return;
-
-  // Check if we're in mobile mode (eq-panel has max-height)
-  const style = getComputedStyle(panel);
-  if(style.maxHeight === 'none') {
-    panel.classList.remove('scrolled-bottom');
-    return;
-  }
-
-  const atBottom = scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight < 8;
-  panel.classList.toggle('scrolled-bottom', atBottom);
-}
-
-// Listen for scroll on liveEq container
-document.addEventListener('scroll', function(e){
-  if(e.target && e.target.id === 'liveEq'){
-    updateEqScrollFade();
-  }
-}, true);
-
+/* bindings */
 function bind(sid,iid){
-  const s=el(sid), inp=el(iid), isN=sid==='n';
-  const toD=isN?sliderToN:sliderToPct;
-  const toS=isN?nToSlider:pctToSlider;
-
-  s.addEventListener('input',()=>{
-    inp.value=isN ? Math.round(toD(s.value)) : toD(s.value).toFixed(2);
-    render();
-  });
-
-  const applyInput=()=>{
-    let v=parseFloat(inp.value);
-    if(!Number.isFinite(v)) v=isN?100:50;
-
-    if(isN){
-      v=clamp(v,100,500000);
-      inp.value=Math.round(v);
-    }else{
-      v=clamp(v,0,100);
-      inp.value=v.toFixed(2);
-    }
-
-    s.value=toS(v);
-    render();
-  };
-
-  inp.addEventListener('change',applyInput);
-  inp.addEventListener('blur',applyInput);
+  const s=el(sid),inp=el(iid),isN=sid==='n';
+  const toD=isN?sliderToN:sliderToPct,toS=isN?nToSlider:pctToSlider;
+  s.addEventListener('input',()=>{inp.value=isN?Math.round(toD(s.value)):toD(s.value).toFixed(2);render();});
+  const apply=()=>{let v=parseFloat(inp.value);if(!Number.isFinite(v))v=isN?100:50;
+    if(isN){v=clamp(v,100,500000);inp.value=Math.round(v);}else{v=clamp(v,0,100);inp.value=v.toFixed(2);}
+    s.value=toS(v);render();};
+  inp.addEventListener('change',apply);inp.addEventListener('blur',apply);
 }
-
 ['n','pi','tpr','fpr'].forEach((id,i)=>bind(id,['nVal','piVal','tprVal','fprVal'][i]));
 
-const setPi =p=>{ el('pi').value  = pctToSlider(p); el('piVal').value  = p.toFixed(2); };
-const setTpr=p=>{ el('tpr').value = pctToSlider(p); el('tprVal').value = p.toFixed(2); };
-const setFpr=p=>{ el('fpr').value = pctToSlider(p); el('fprVal').value = p.toFixed(2); };
+const setPi=p=>{el('pi').value=pctToSlider(p);el('piVal').value=p.toFixed(2);};
+const setTpr=p=>{el('tpr').value=pctToSlider(p);el('tprVal').value=p.toFixed(2);};
+const setFpr=p=>{el('fpr').value=pctToSlider(p);el('fprVal').value=p.toFixed(2);};
+el('bal').onclick=()=>{setPi(50);render();};
+el('imb').onclick=()=>{setPi(10);render();};
+el('vimb').onclick=()=>{setPi(1);render();};
+el('perfect').onclick=()=>{setTpr(99.99);setFpr(0.01);render();};
+el('random').onclick=()=>{const v=parseFloat(el('tprVal').value)||50;setTpr(v);setFpr(v);render();};
+el('resetBtn').onclick=()=>{el('n').value='460';el('pi').value='-0.847';el('tpr').value='0.847';el('fpr').value='-0.847';rocHistory=[];lastP=null;lastHistoryP=null;syncToSliders();render();};
 
-el('bal').onclick     =()=>{ setPi(50); render(); };
-el('imb').onclick     =()=>{ setPi(10); render(); };
-el('vimb').onclick    =()=>{ setPi(1); render(); };
-el('perfect').onclick =()=>{ setTpr(99.99); setFpr(0.01); render(); };
-el('random').onclick  =()=>{
-  const v=parseFloat(el('tprVal').value)||50;
-  setTpr(v);
-  setFpr(v);
-  render();
-};
-el('resetBtn').onclick=()=>{
-  el('n').value='460';
-  el('pi').value='-0.847';
-  el('tpr').value='0.847';
-  el('fpr').value='-0.847';
-  rocHistory=[];
-  lastP=null;
-  lastHistoryP=null;
-  syncToSliders();
-  render();
-};
-
-syncToSliders();
-render();
+syncToSliders();render();
 
 let rt=null;
-const doResize=()=>{
-  ['counts','metrics','roc','pr'].forEach(id=>{
-    try{ Plotly.Plots.resize(el(id)); }catch(e){}
-  });
-  render();
-};
-
-window.addEventListener('resize',()=>{
-  clearTimeout(rt);
-  rt=setTimeout(doResize,150);
-});
-window.addEventListener('orientationchange',()=>{
-  clearTimeout(rt);
-  rt=setTimeout(doResize,300);
-});
+window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{resizeCharts();render();},150);});
+window.addEventListener('orientationchange',()=>{clearTimeout(rt);rt=setTimeout(()=>{resizeCharts();render();},300);});
 </script>
 
 </body>
