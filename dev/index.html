@@ -367,7 +367,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;}
 .kpi{padding:14px 16px;border-radius:10px;}
 .kpi-name{font-size:13px;letter-spacing:.6px;}
 .kpi-val{font-size:28px;margin-top:5px;}
-.svgBox{height:240px;}
+.svgBox{height:280px;}
 .mos-cap{font-size:14px;margin-top:7px;}
 .legend{margin-top:10px;}
 .legend > *{margin-right:14px;}
@@ -771,7 +771,7 @@ function drawMosaic(r){
     R.setAttribute('fill',fill);R.setAttribute('fill-opacity','0.85');R.setAttribute('stroke','#0a0c10');R.setAttribute('stroke-width','2');
     svg.appendChild(R);
     if(w>100&&h>50){var T=document.createElementNS(NS,'text');
-      T.setAttribute('x',x+10);T.setAttribute('y',Math.min(y+h-12,y+30));T.setAttribute('font-size','22');
+      T.setAttribute('x',x+16);T.setAttribute('y',Math.min(y+h-18,y+46));T.setAttribute('font-size','38');
       T.setAttribute('font-family','Space Mono,monospace');T.setAttribute('fill','rgba(0,0,0,0.7)');T.setAttribute('font-weight','700');
       T.textContent=lbl;svg.appendChild(T);}
   }
@@ -783,7 +783,7 @@ function drawMosaic(r){
     var lx=labels[li][0],lw=labels[li][1],lt=labels[li][2];
     if(lw<80)continue;lT=document.createElementNS(NS,'text');
     lT.setAttribute('x',lx+lw/2);lT.setAttribute('y',28);lT.setAttribute('text-anchor','middle');
-    lT.setAttribute('font-size','18');lT.setAttribute('font-family','Syne,sans-serif');
+    lT.setAttribute('font-size','30');lT.setAttribute('font-family','Syne,sans-serif');
     lT.setAttribute('font-weight','700');lT.setAttribute('fill','rgba(255,255,255,0.5)');lT.textContent=lt;svg.appendChild(lT);
   }
   var path=document.createElementNS(NS,'path');
