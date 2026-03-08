@@ -1,663 +1,935 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <!-- iPhone-friendly viewport -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Metrics Playground (N, prevalence, TPR, FPR)</title>
-  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
-  <style>
-    :root{ --pad: 12px; --card: 12px; }
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Classifier Metrics Playground</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" />
+<script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+<style type="text/css">
+/* ── CSS Variables ── */
+:root{
+  --bg:#0d0f14;--surf:#161920;--surf2:#1e2230;--border:#2a2f3e;
+  --text:#f0f2f7;--text2:#b4bcd0;--text3:#8a92ab;--accent:#6b9cff;
+  --tp:#4ade80;--fn:#f87171;--fp:#fbbf24;--tn:#818cf8;
+  --r:10px;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
 
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      margin: 0;
-      padding: var(--pad);
-      padding-left: calc(var(--pad) + env(safe-area-inset-left));
-      padding-right: calc(var(--pad) + env(safe-area-inset-right));
-      padding-top: calc(var(--pad) + env(safe-area-inset-top));
-      padding-bottom: calc(var(--pad) + env(safe-area-inset-bottom));
-      background:#fff;
-    }
+/* ── Reset ── */
+*,*::before,*::after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;}
+html,body{
+height:100%;width:100%;
+background:#0d0f14;background:var(–bg);
+color:#f0f2f7;color:var(–text);
+font-family:‘Syne’,sans-serif;font-family:var(–sans);
+font-size:13px;
+overflow-y:auto;overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+-ms-overflow-style:-ms-autohiding-scrollbar;
+}
 
-    h2{ font-size:18px; margin:6px 0 12px; }
+/* ── App Shell ── */
+.app{
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;
+min-height:100vh;padding:8px 10px;
+}
+.app > *{margin-bottom:7px;}
+.app > *:last-child{margin-bottom:0;}
 
-    /* Base layout */
-    .grid{ display:grid; grid-template-columns: 440px 1fr; gap:18px; align-items:start; }
+/* ── Header ── */
+header{
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+-ms-flex-wrap:wrap;flex-wrap:wrap;
+border-bottom:1px solid #2a2f3e;border-bottom:1px solid var(–border);
+padding-bottom:5px;
+-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;
+}
+header > *{margin-right:12px;}
+header > *:last-child{margin-right:0;}
+header h1{font-size:16px;font-weight:800;letter-spacing:-.4px;color:#fff;}
+header .sub{font-size:11px;color:#b4bcd0;color:var(–text2);font-family:‘Space Mono’,monospace;font-family:var(–mono);}
+#insight{
+margin-left:auto;font-size:11px;
+font-family:‘Space Mono’,monospace;font-family:var(–mono);
+color:#b4bcd0;color:var(–text2);
+background:#1e2230;background:var(–surf2);
+border-left:3px solid #6b9cff;border-left:3px solid var(–accent);
+border-radius:0 6px 6px 0;padding:3px 10px;
+max-width:440px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 
-    .card{
-      border:1px solid #ddd;
-      border-radius: var(--card);
-      padding: 12px;
-      background:#fff;
-    }
+/* ── Toolbar ── */
+.toolbar{
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;
+padding:2px 0;
+}
+.toolbar > *{margin-right:8px;}
+.toolbar > *:last-child{margin-right:0;}
+.tbtn{
+background:#1e2230;background:var(–surf2);
+border:1px solid #2a2f3e;border:1px solid var(–border);
+border-radius:6px;color:#b4bcd0;color:var(–text2);
+padding:4px 10px;font-family:‘Syne’,sans-serif;font-family:var(–sans);
+font-size:10px;font-weight:600;cursor:pointer;
+-webkit-transition:all .15s;transition:all .15s;letter-spacing:.3px;
+}
+.tbtn:hover{background:#252840;border-color:#6b9cff;border-color:var(–accent);color:#f0f2f7;color:var(–text);}
+.tbtn.active{background:rgba(107,156,255,.15);border-color:#6b9cff;border-color:var(–accent);color:#6b9cff;color:var(–accent);}
+.toolbar .htxt{font-size:10px;color:#8a92ab;color:var(–text3);font-family:‘Space Mono’,monospace;font-family:var(–mono);margin-left:4px;}
 
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 110px;
-      gap:10px;
-      align-items:center;
-      margin:10px 0;
-    }
+/* ── Grid ── */
+.grid{
+display:-ms-grid;display:grid;
+grid-template-columns:repeat(4,1fr);
+-ms-grid-columns:1fr 7px 1fr 7px 1fr 7px 1fr;
+grid-auto-rows:-webkit-min-content;grid-auto-rows:min-content;
+grid-gap:7px;gap:7px;
+-webkit-box-flex:1;-ms-flex:1;flex:1;
+}
 
-    input[type="range"]{ width:100%; height:34px; }
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance:none;
-      width:26px; height:26px; border-radius:13px;
-    }
-    input[type="range"]::-moz-range-thumb{ width:26px; height:26px; border-radius:13px; }
+/* ── Tile ── */
+.tile{
+background:#161920;background:var(–surf);
+border:1px solid #2a2f3e;border:1px solid var(–border);
+border-radius:10px;border-radius:var(–r);
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;
+overflow:hidden;position:relative;
+-webkit-transition:box-shadow .25s,border-color .25s,opacity .25s,-webkit-transform .25s;
+transition:box-shadow .25s,border-color .25s,opacity .25s,transform .25s;
+}
+.tile.span2,.tile.span3,.tile.span4{grid-column:span 2;-ms-grid-column-span:2;}
+.tile.span3{grid-column:span 3;}
+.tile.span4{grid-column:span 4;}
 
-    .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    .small{ color:#444; font-size:12.5px; line-height:1.35; }
-    .explain{ font-size:15.5px; line-height:1.5; }
-    .explain .mono{ font-size:16.5px; }
-    .eqLhs{ font-weight:800; }
+.tile-hdr{
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+padding:6px 10px 4px;
+-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;
+border-bottom:1px solid rgba(255,255,255,.04);
+-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+}
+.tile-hdr > *{margin-right:6px;}
+.tile-hdr > *:last-child{margin-right:0;}
 
-    .btns{ display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px; }
-    button{
-      border:1px solid #ccc;
-      background:#fff;
-      border-radius:12px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-size:14px;
-    }
-    button:active{ transform: scale(0.98); }
+.grip{
+width:18px;height:18px;opacity:.25;
+-webkit-transition:opacity .15s;transition:opacity .15s;
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;
+-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;
+-ms-touch-action:none;touch-action:none;cursor:grab;
+}
+.edit-on .grip{opacity:.45;}
+.edit-on .grip:hover{opacity:.8;}
+.grip:active{cursor:grabbing;}
+.grip svg{width:14px;height:14px;}
+.grip circle{fill:#b4bcd0;fill:var(–text2);}
+.edit-on .grip circle{fill:#6b9cff;fill:var(–accent);}
 
-    .kpi{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
-    .kpi div{ border:1px solid #eee; border-radius:10px; padding:10px; }
-    .note{ border-left:4px solid #ddd; padding-left:10px; margin-top:10px; }
+.sizebtn{
+margin-left:auto;
+background:var(–surf2);
+border:1px solid var(–border);
+color:var(–text2);
+border-radius:5px;
+font-family:var(–mono);
+font-size:9px;
+padding:2px 6px;
+cursor:pointer;
+transition:all .15s;
+}
+.sizebtn:hover{
+border-color:var(–accent);
+color:var(–accent);
+}
+.tile-title{
+font-size:10px;font-weight:700;letter-spacing:1.2px;
+text-transform:uppercase;color:#8a92ab;color:var(–text3);
+}
+.tile-body{padding:8px 10px 10px;-webkit-box-flex:1;-ms-flex:1;flex:1;min-height:0;overflow:hidden;}
 
-    .rightCol{ display:grid; grid-template-rows: auto auto; gap:12px; }
-    .chartsGrid{ display:grid; grid-template-columns: 1fr; gap:12px; }
-    .plot{ border:1px solid #eee; border-radius:12px; overflow:hidden; }
+/* ── Drag States ── */
+.tile.dragging{opacity:.25;-webkit-transform:scale(.96);transform:scale(.96);border:2px dashed #6b9cff;border:2px dashed var(–accent);}
+.tile.drag-over{
+border-color:#6b9cff;border-color:var(–accent);
+-webkit-box-shadow:0 0 0 2px rgba(107,156,255,.25),inset 0 0 30px rgba(107,156,255,.06);
+box-shadow:0 0 0 2px rgba(107,156,255,.25),inset 0 0 30px rgba(107,156,255,.06);
+}
+.tile.drag-over::before{
+content:’\2195  Drop here’;
+position:absolute;top:0;right:0;bottom:0;left:0;z-index:10;
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;
+background:rgba(107,156,255,.07);color:#6b9cff;color:var(–accent);
+font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+border-radius:10px;border-radius:var(–r);pointer-events:none;
+}
 
-    .vizWrap{ margin-top:0; }
-    .legend{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .chip{ display:inline-flex; align-items:center; gap:6px; border:1px solid #eee; border-radius:999px; padding:4px 8px; }
-    .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; border:1px solid rgba(0,0,0,0.15); }
+.drag-ghost{
+position:fixed;z-index:9999;pointer-events:none;
+border-radius:8px;border:2px solid #6b9cff;border:2px solid var(–accent);
+background:rgba(22,25,32,.93);
+-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+-webkit-box-shadow:0 14px 44px rgba(0,0,0,.55),0 0 0 1px rgba(107,156,255,.2);
+box-shadow:0 14px 44px rgba(0,0,0,.55),0 0 0 1px rgba(107,156,255,.2);
+padding:8px 14px;font-size:11px;font-weight:700;color:#6b9cff;color:var(–accent);
+font-family:‘Syne’,sans-serif;font-family:var(–sans);letter-spacing:.5px;
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+-webkit-transform:translate(-50%,-50%) rotate(-1.5deg) scale(1.05);
+-ms-transform:translate(-50%,-50%) rotate(-1.5deg) scale(1.05);
+transform:translate(-50%,-50%) rotate(-1.5deg) scale(1.05);
+max-width:200px;white-space:nowrap;
+}
+.drag-ghost > *{margin-right:7px;}
+.drag-ghost > *:last-child{margin-right:0;}
+.drag-ghost svg{width:12px;height:12px;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;}
+.drag-ghost circle{fill:#6b9cff;fill:var(–accent);}
 
-    .svgBox{
-      width:100%;
-      height:240px; /* iPhone 13 portrait */
-      border:1px solid #eee;
-      border-radius:12px;
-      overflow:hidden;
-      background:#fafafa;
-    }
-    .caption{ margin-top:6px; }
+/* ── Edit Mode Ring ── */
+.edit-on .tile::after{
+content:’’;position:absolute;top:-1px;right:-1px;bottom:-1px;left:-1px;
+border-radius:10px;border-radius:var(–r);
+border:1px dashed rgba(107,156,255,.2);pointer-events:none;
+-webkit-transition:border-color .2s;transition:border-color .2s;
+}
+.edit-on .tile:hover::after{border-color:rgba(107,156,255,.45);}
 
-    /* Desktop: larger mosaic + two charts side-by-side */
-    @media (min-width: 1024px){
-      .grid{ grid-template-columns: 1000px 1fr; gap:22px; }
-      .svgBox{ height:420px; }
-      .chartsGrid{ grid-template-columns: 1fr 1fr; }
-      .plot{ height:320px !important; }
-    }
+/* ── Controls ── */
+.ctrl{margin-bottom:8px;}
+.ctrl-row{
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+margin-bottom:3px;
+}
+.ctrl-label{font-size:11px;font-weight:600;color:#f0f2f7;color:var(–text);}
+.ctrl-val{
+font-family:‘Space Mono’,monospace;font-family:var(–mono);
+font-size:11px;color:#6b9cff;color:var(–accent);
+-webkit-text-fill-color:#6b9cff;
+background:rgba(107,156,255,.12);
+border:1px solid rgba(107,156,255,.3);
+border-radius:5px;padding:1px 6px;min-width:50px;
+text-align:right;outline:none;
+-webkit-appearance:none;-moz-appearance:textfield;appearance:none;
+}
+.ctrl-val::-webkit-inner-spin-button,
+.ctrl-val::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+input[type=range]{
+-webkit-appearance:none;-moz-appearance:none;appearance:none;
+width:100%;height:3px;
+background:#2a2f3e;background:var(–border);
+border:none;border-radius:2px;outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+background:#6b9cff;background:var(–accent);
+border:2px solid #0d0f14;border:2px solid var(–bg);
+-webkit-box-shadow:0 0 6px rgba(107,156,255,.5);box-shadow:0 0 6px rgba(107,156,255,.5);
+}
+input[type=range]::-moz-range-thumb{
+width:14px;height:14px;border-radius:50%;
+background:#6b9cff;background:var(–accent);
+border:2px solid #0d0f14;border:2px solid var(–bg);cursor:pointer;
+}
+input[type=range]::-ms-thumb{
+width:14px;height:14px;border-radius:50%;
+background:#6b9cff;border:2px solid #0d0f14;
+}
+input[type=range]::-ms-track{
+width:100%;height:3px;background:transparent;
+border-color:transparent;color:transparent;
+}
+input[type=range]::-ms-fill-lower{background:#2a2f3e;border-radius:2px;}
+input[type=range]::-ms-fill-upper{background:#2a2f3e;border-radius:2px;}
+.hint{font-size:9px;color:#8a92ab;color:var(–text3);margin-top:1px;}
 
-    /* iPhone: single column + MOSAIC FIRST */
-    @media (max-width: 520px){
-      .grid{
-        grid-template-columns: 1fr;
-        gap:12px;
-      }
-      /* reorder: mosaic card first, inputs second */
-      .card.rightCol{ order: 1; }
-      .card.inputsCard{ order: 2; }
-    }
+/* ── Presets ── */
+.presets{display:-ms-grid;display:grid;grid-template-columns:repeat(3,1fr);grid-gap:4px;gap:4px;}
+.pbtn{
+background:#1e2230;background:var(–surf2);
+border:1px solid #2a2f3e;border:1px solid var(–border);border-radius:6px;
+color:#f0f2f7;color:var(–text);padding:5px 6px;
+font-family:‘Syne’,sans-serif;font-family:var(–sans);font-size:10px;
+font-weight:600;cursor:pointer;text-align:left;
+-webkit-transition:all .15s;transition:all .15s;
+}
+.pbtn:hover{background:#252840;border-color:#6b9cff;border-color:var(–accent);}
+.pbtn .tag{display:block;font-family:‘Space Mono’,monospace;font-family:var(–mono);font-size:8px;color:#b4bcd0;color:var(–text2);margin-top:1px;}
 
-    /* iPhone 13 landscape: smaller mosaic, charts side-by-side */
-    @media (max-height: 450px) and (max-width: 932px){
-      .svgBox{ height:210px; }
-      .chartsGrid{ grid-template-columns: 1fr 1fr; }
-      .plot{ height:240px !important; }
-    }
-  </style>
+/* ── KPIs ── */
+.kpi-strip{display:-ms-grid;display:grid;grid-template-columns:repeat(3,1fr);grid-gap:4px;gap:4px;}
+.kpi{background:#1e2230;background:var(–surf2);border:1px solid #2a2f3e;border:1px solid var(–border);border-radius:6px;padding:6px 7px;}
+.kpi-name{font-size:8px;color:#8a92ab;color:var(–text3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.kpi-val{font-family:‘Space Mono’,monospace;font-family:var(–mono);font-size:14px;font-weight:700;margin-top:1px;}
+.good{color:#4ade80;color:var(–tp);}
+.warn{color:#fbbf24;color:var(–fp);}
+.bad{color:#f87171;color:var(–fn);}
+
+/* ── Mosaic ── */
+.svgBox{width:100%;border-radius:6px;overflow:hidden;background:#0a0c10;height:140px;}
+.svgBox svg{display:block;width:100%;height:100%;}
+.mos-cap{font-family:‘Space Mono’,monospace;font-family:var(–mono);font-size:8px;color:#b4bcd0;color:var(–text2);text-align:center;margin-top:3px;}
+.legend{
+display:-webkit-box;display:-ms-flexbox;display:flex;
+-ms-flex-wrap:wrap;flex-wrap:wrap;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+margin-top:3px;
+}
+.legend > *{margin-right:5px;}
+.legend > *:last-child{margin-right:0;}
+.leg-item{
+display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;
+-webkit-box-align:center;-ms-flex-align:center;align-items:center;
+font-size:9px;font-family:‘Space Mono’,monospace;font-family:var(–mono);color:#b4bcd0;color:var(–text2);
+}
+.leg-item > *{margin-right:3px;}
+.leg-item > *:last-child{margin-right:0;}
+.leg-dot{width:7px;height:7px;border-radius:2px;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;}
+
+/* ── Charts ── */
+.plot-wrap{width:100%;height:200px;min-height:0;}
+
+/* ── Equations ── */
+.eq-inner{max-height:420px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.eq-section-hdr{
+font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+color:#6b9cff;color:var(–accent);
+margin:8px 0 4px;padding:0 0 3px;
+border-bottom:1px solid rgba(107,156,255,.1);
+}
+.eq-section-hdr:first-child{margin-top:0;}
+.eq-card{
+background:rgba(255,255,255,.02);
+border:1px solid rgba(255,255,255,.04);
+border-left:3px solid rgba(107,156,255,.25);
+border-radius:6px;padding:5px 7px 5px 9px;margin-bottom:3px;
+font-family:‘Space Mono’,monospace;font-family:var(–mono);font-size:9px;
+display:-ms-grid;display:grid;
+grid-template-columns:40px minmax(0,1fr) auto;
+-ms-grid-columns:40px minmax(0,1fr) auto;
+-webkit-box-align:baseline;-ms-flex-align:baseline;align-items:baseline;
+grid-gap:0 8px;gap:0 8px;line-height:1.4;
+-webkit-transition:border-left-color .2s,background .2s;transition:border-left-color .2s,background .2s;
+}
+.eq-card:hover{border-left-color:#6b9cff;border-left-color:var(–accent);background:rgba(107,156,255,.05);}
+.eq-lbl{color:#6b9cff;color:var(–accent);font-weight:700;font-size:9px;}
+.eq-formula{color:rgba(221,224,238,.55);font-size:8px;grid-column:1/-1;-ms-grid-column-span:3;margin-top:1px;word-break:break-word;}
+.eq-result{color:#fff;font-weight:700;font-size:11px;text-align:right;}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#2a2f3e;background:var(–border);border-radius:2px;}
+.js-plotly-plot .plotly .modebar{display:none!important;}
+
+/* ── Desktop (>900px) ── */
+@media(min-width:901px){
+html,body{font-size:15px;}
+.app{padding:14px 20px;}
+.app > *{margin-bottom:12px;}
+header{padding-bottom:9px;}
+header > *{margin-right:18px;}
+header h1{font-size:22px;letter-spacing:-.5px;}
+header .sub{font-size:13px;}
+#insight{font-size:13px;max-width:580px;padding:5px 14px;}
+.toolbar > *{margin-right:12px;}
+.tbtn{font-size:12px;padding:6px 16px;border-radius:7px;}
+.toolbar .htxt{font-size:12px;}
+.grid{grid-gap:12px;gap:12px;}
+.tile-hdr{padding:10px 14px 7px;}
+.tile-hdr > *{margin-right:9px;}
+.tile-title{font-size:12px;letter-spacing:1.4px;}
+.tile-body{padding:12px 14px 14px;}
+.sizebtn{font-size:11px;padding:3px 9px;}
+.ctrl{margin-bottom:12px;}
+.ctrl-label{font-size:13px;}
+.ctrl-val{font-size:13px;min-width:64px;padding:2px 8px;}
+input[type=range]{height:4px;}
+input[type=range]::-webkit-slider-thumb{width:16px;height:16px;}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;}
+.hint{font-size:11px;margin-top:3px;}
+.presets{grid-gap:6px;gap:6px;}
+.pbtn{font-size:12px;padding:8px 10px;border-radius:7px;}
+.pbtn .tag{font-size:10px;margin-top:2px;}
+.kpi-strip{grid-gap:6px;gap:6px;}
+.kpi{padding:10px 12px;border-radius:8px;}
+.kpi-name{font-size:10px;letter-spacing:.5px;}
+.kpi-val{font-size:20px;margin-top:3px;}
+.svgBox{height:200px;}
+.mos-cap{font-size:11px;margin-top:5px;}
+.legend{margin-top:6px;}
+.legend > *{margin-right:10px;}
+.leg-item{font-size:11px;}
+.leg-dot{width:9px;height:9px;}
+.plot-wrap{height:260px;}
+.eq-inner{max-height:520px;}
+.eq-section-hdr{font-size:10px;letter-spacing:1.8px;margin:12px 0 6px;padding:0 0 4px;}
+.eq-card{font-size:11px;padding:7px 10px 7px 12px;margin-bottom:5px;grid-template-columns:52px minmax(0,1fr) auto;grid-gap:0 10px;gap:0 10px;}
+.eq-lbl{font-size:11px;}
+.eq-formula{font-size:10px;margin-top:2px;}
+.eq-result{font-size:14px;}
+}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+.app{padding:8px;}
+header .sub{display:none;}
+#insight{margin-left:0;width:100%;max-width:100%;white-space:normal;font-size:10px;line-height:1.4;}
+header{-ms-flex-wrap:wrap;flex-wrap:wrap;}
+.grid{grid-template-columns:repeat(2,1fr);-ms-grid-columns:1fr 8px 1fr;grid-gap:8px;gap:8px;}
+/* Cap all wide tiles to 2 cols (the grid max at this breakpoint) */
+.tile.span2,.tile.span3,.tile.span4{grid-column:span 2!important;-ms-grid-column-span:2;}
+.plot-wrap{height:160px;}
+.svgBox{height:120px;}
+input[type=range]::-webkit-slider-thumb{width:20px;height:20px;}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;}
+input[type=range]::-ms-thumb{width:20px;height:20px;}
+input[type=range]{height:5px;}
+.toolbar .htxt{display:none;}
+}
+@media(max-width:480px){
+.grid{grid-template-columns:1fr 1fr;-ms-grid-columns:1fr 6px 1fr;grid-gap:6px;gap:6px;}
+.presets{grid-template-columns:repeat(2,1fr);}
+.plot-wrap{height:140px;}
+.eq-inner{max-height:280px;}
+header h1{font-size:14px;}
+}
+/* Landscape phones: short viewport, wider than tall */
+@media(max-height:500px) and (orientation:landscape){
+.app{padding:4px 8px;}
+header{padding-bottom:3px;}
+header h1{font-size:13px;}
+#insight{font-size:9px;padding:2px 8px;}
+.toolbar{padding:0;}
+.toolbar .htxt{display:none;}
+.grid{grid-template-columns:repeat(4,1fr);grid-gap:5px;gap:5px;}
+/* Let wide tiles use all 4 cols in landscape */
+.tile.span2{grid-column:span 2!important;}
+.tile.span3{grid-column:span 3!important;}
+.tile.span4{grid-column:span 4!important;}
+.tile-hdr{padding:3px 8px 2px;}
+.tile-body{padding:4px 8px 6px;}
+.plot-wrap{height:130px;}
+.svgBox{height:100px;}
+.eq-inner{max-height:180px;}
+.ctrl{margin-bottom:4px;}
+.kpi-strip{grid-gap:3px;gap:3px;}
+.kpi{padding:3px 5px;}
+.kpi-val{font-size:12px;}
+}
+</style>
+
 </head>
 <body>
-  <h2>Dataset imbalance (prevalence, π) doesn't influence TPR, FPR but does other metrics.</h2>
+<div class="app">
 
-  <div class="grid">
-    <!-- MOSAIC + CHARTS (will appear first on iPhone) -->
-    <div class="card rightCol">
-      <div class="vizWrap">
-        <h3 style="margin:0 0 6px;">Rectangle view (areas = counts)</h3>
-        <div class="svgBox">
-          <svg id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none" width="100%" height="100%"></svg>
-        </div>
+<header>
+  <h1>Classifier Metrics Playground</h1>
+  <span class="sub">N &middot; &pi; &middot; TPR &middot; FPR &rarr; live</span>
+  <div id="insight">Drag panels by their grip to rearrange the layout.</div>
+</header>
 
-        <div class="legend small">
-          <span class="chip"><span class="dot" style="background:#8fd694;"></span> TP</span>
-          <span class="chip"><span class="dot" style="background:#ff9aa2;"></span> FN</span>
-          <span class="chip"><span class="dot" style="background:#ffd27d;"></span> FP</span>
-          <span class="chip"><span class="dot" style="background:#b8c0ff;"></span> TN</span>
-          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Pos = hatch ↗</span>
-          <span class="chip"><span class="dot" style="background:transparent; border:1px solid rgba(0,0,0,0.3);"></span> Neg = hatch ↘</span>
-          <span class="chip"><span id="predPosDot" class="dot" style="background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.5);"></span> Predicted Positive</span>
-        </div>
-        <div class="caption small mono" id="mosaicCaption"></div>
-      </div>
+<div class="toolbar">
+  <button class="tbtn active" id="editToggle" type="button">&#x2807; Edit Layout</button>
+  <button class="tbtn" id="resetLayout" type="button">&#x21BA; Reset</button>
+  <span class="htxt">Grab &#x2807; on any panel to reorder</span>
+</div>
 
-      <div class="chartsGrid">
-        <div id="counts" class="plot" style="height: 320px;"></div>
-        <div id="metrics" class="plot" style="height: 320px;"></div>
-      </div>
+<div class="grid edit-on" id="grid">
 
-      <div id="equations" class="note small explain" style="margin-top:12px; font-size:14px;">
-        <h4 style="margin:0 0 8px; font-size:16px;">Metric Equations</h4>
-        <div id="totalsEq" class="mono" style="margin-bottom:8px; padding-bottom: 8px; border-bottom: 1px solid #eee;"></div>
+  <!-- Row 1: params | equations | mosaic | kpis -->
 
-        <div id="tprEq" class="mono"></div>
-        <div id="fprEq" class="mono"></div>
-        <div id="precEq" class="mono"></div>
-        <div id="accEq" class="mono"></div>
-        <div id="tnrEq" class="mono"></div>
-        <div id="npvEq" class="mono"></div>
-        <div id="baccEq" class="mono"></div>
-        <div id="f1Eq" class="mono"></div>
-      </div>
-    </div>
-
-    <!-- INPUTS (will appear second on iPhone) -->
-    <div class="card inputsCard">
-      <h3 style="margin:0 0 8px;">Inputs</h3>
-
-      <div class="row">
-        <label>Dataset size (N)</label>
-        <input type="number" class="mono" id="nVal" />
-      </div>
-      <input id="n" type="range" min="0" max="1000" step="1" value="460"/>
-
-      <div class="btns">
-        <button id="bal">Balanced (π = 50%)</button>
-        <button id="imb">Imbalanced (π = 10%)</button>
-        <button id="vimb">Very imbalanced (π = 1%)</button>
-      </div>
-
-      <div class="row">
-        <label>Prevalence π</label>
-        <input type="number" class="mono" id="piVal" min="0" max="100" step="0.1" />
-      </div>
-      <input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
-
-      <div class="row">
-        <label>TPR (Recall)</label>
-        <input type="number" class="mono" id="tprVal" min="0" max="100" step="0.1" />
-      </div>
-      <input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847"/>
-
-      <div class="row">
-        <label>FPR</label>
-        <input type="number" class="mono" id="fprVal" min="0" max="100" step="0.1" />
-      </div>
-      <input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847"/>
-
-      <div class="kpi">
-        <div><div class="small">Precision (PPV)</div><div class="mono" id="precKpi">—</div></div>
-        <div><div class="small">Accuracy</div><div class="mono" id="accKpi">—</div></div>
-        <div><div class="small">F1</div><div class="mono" id="f1Kpi">—</div></div>
-        <div><div class="small">Balanced Acc</div><div class="mono" id="baccKpi">—</div></div>
-        <div><div class="small">Specificity (TNR)</div><div class="mono" id="tnrKpi">—</div></div>
-        <div><div class="small">NPV (Negative Predictive Value)</div><div class="mono" id="npvKpi">—</div></div>
-      </div>
-
-      <div class="note small" id="note"></div>
-
-      <details class="note small explain" style="margin-top:10px;">
-        <summary><strong>Equations and what they mean</strong></summary>
-        <div style="margin-top:8px;">
-          <div><strong>Notation (symbols)</strong></div>
-          <div class="mono"><span class="eqLhs">D+</span> = actually positive </div>
-          <div class="mono"><span class="eqLhs">D-</span> = actually negative</div>
-          <div class="mono"><span class="eqLhs">T+</span> = predicted (tested) positive
-          <div class="mono"><span class="eqLhs">T-</span> = predicted (tested) negative</div>
-          <!--<div class="mono"><span class="eqLhs">P(A|B)</span> = probability of A given B is true</div>
-          <div>Example: <span class="mono">P(D+|T+)</span> means "if test is positive, chance it is truly positive".</div>-->
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Base quantities</strong></div>
-          <div class="mono"><span class="eqLhs">P</span> = N * π</div>
-          <div>Actual positives in the dataset.</div>
-          <div class="mono"><span class="eqLhs">Nneg</span> = N * (1 - π)</div>
-          <div>Actual negatives in the dataset.</div>
-          <div class="mono"><span class="eqLhs">TP</span> = P * TPR</div>
-          <div>True positives (positive cases found correctly).</div>
-          <div class="mono"><span class="eqLhs">FN</span> = P - TP</div>
-          <div>False negatives (positive cases missed).</div>
-          <div class="mono"><span class="eqLhs">FP</span> = Nneg * FPR</div>
-          <div>False positives (negative cases predicted as positive).</div>
-          <div class="mono"><span class="eqLhs">TN</span> = Nneg - FP</div>
-          <div>True negatives (negative cases correctly rejected).</div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Rates and scores</strong></div>
-          <div class="mono"><span class="eqLhs">TPR (Recall)</span> = TP / (TP + FN)</div>
-          <div>Among actual positives, how many you catch.</div>
-          <div class="mono"><span class="eqLhs">FPR</span> = FP / (FP + TN)</div>
-          <div>Among actual negatives, how many false alarms you raise.</div>
-          <div class="mono"><span class="eqLhs">Precision (PPV)</span> = TP / (TP + FP)</div>
-          <div>Among predicted positives, how many are truly positive.</div>
-          <div class="mono"><span class="eqLhs">Accuracy</span> = (TP + TN) / N</div>
-          <div>Overall fraction of correct predictions.</div>
-          <div class="mono"><span class="eqLhs">F1</span> = 2 * (Precision(PPV) * Recall) / (Precision(PPV) + Recall)</div>
-          <div>Harmonic mean of Precision (PPV) and Recall.</div>
-          <div class="mono"><span class="eqLhs">Specificity (TNR)</span> = TN / (TN + FP) = 1 - FPR</div>
-          <div>Among actual negatives, how many you correctly reject.</div>
-          <div class="mono"><span class="eqLhs">Balanced Accuracy</span> = (TPR + TNR) / 2</div>
-          <div>Average of sensitivity and specificity.</div>
-          <div class="mono"><span class="eqLhs">NPV (Negative Predictive Value)</span> = TN / (TN + FN)</div>
-          <div>Among predicted negatives, how many are truly negative.</div>
-        </div>
-      </details>
-
-      <details class="note small explain" style="margin-top:10px;">
-        <summary><strong>Bayesian view: why prevalence matters</strong></summary>
-        <div style="margin-top:8px;">
-          <div class="mono"><span class="eqLhs">D+</span> = true positive class</div>
-          <div class="mono"><span class="eqLhs">D-</span> = true negative class</div>
-          <div class="mono"><span class="eqLhs">T+</span> = model/test predicts positive</div>
-          <div class="mono"> <span class="eqLhs">T-</span> = model/test predicts negative</div>
-          <div class="mono"><span class="eqLhs">P(A|B)</span>: probability of A, assuming B happened</div>
-          <div class="mono"><span class="eqLhs">P(D+|T+)</span>: if test (model, prediction) is positive, chance it is truly positive class</div>
-          <div>Bayes links test quality (TPR/FPR) with prevalence (prior probability).</div>
-          <!--TODO <div class="mono"><span class="eqLhs">P(D+)</span> = = π/div> -->
-          <div class="mono">Prior: <span class="eqLhs">P(D+)</span> = π, <span class="eqLhs">P(D-)</span> = 1 - π</div>
-          <div>Before seeing a test result, prevalence is your best guess of disease/class probability.</div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Posterior after a positive test</strong></div>
-          <div class="mono"><span class="eqLhs">P(T+|D+)</span> = TPR</div>
-          <div class="mono"><span class="eqLhs">P(T+|D-)</span> = FPR</div>
-          <div class="mono"><span class="eqLhs">P(D+|T+)</span> = (TPR * π) / ((TPR * π) + (FPR * (1 - π))) = PPV </div>
-          <div>This is Precision (PPV): probability of truly positive given a positive prediction.</div>
-          <div>In words: start from prior positives (<span class="mono">π</span>), then adjust by how often positives/negatives trigger a positive test.</div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Posterior after a negative test</strong></div>
-          <div class="mono"><span class="eqLhs">P(T-|D-)</span> = TNR = 1 - FPR</div>
-          <div class="mono"><span class="eqLhs">P(T-|D+)</span> = FNR = 1 - TPR</div>
-          <div class="mono"><span class="eqLhs">P(D-|T-)</span> = (TNR * (1 - π)) / ((TNR * (1 - π)) + (FNR * π))</div>
-          <div>This is NPV (Negative Predictive Value): probability of truly negative given a negative prediction.</div>
-          <div>In words: among negative test results, compare true negatives against missed positives.</div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div><strong>Practical takeaway</strong></div>
-          <div>When π is very small, even a modest FPR can create many false positives, lowering PPV.</div>
-          <div>That is why Precision (PPV) can drop sharply in imbalanced settings, even when TPR looks strong.</div>
-        </div>
-      </details>
+  <div class="tile" data-tile="params">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Parameters</span></div>
+    <div class="tile-body">
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">Dataset size (N)</span><input type="number" class="ctrl-val" id="nVal" /></div><input id="n" type="range" min="0" max="1000" step="1" value="460" /><div class="hint">Log &middot; 100 &rarr; 500k</div></div>
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">Prevalence (&pi;)</span><input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1" /></div><input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847" /><div class="hint">% positives</div></div>
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">TPR (Sensitivity)</span><input type="number" class="ctrl-val" id="tprVal" min="0" max="100" step="0.1" /></div><input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847" /><div class="hint">True Positive Rate</div></div>
+      <div class="ctrl"><div class="ctrl-row"><span class="ctrl-label">FPR (1&minus;Spec)</span><input type="number" class="ctrl-val" id="fprVal" min="0" max="100" step="0.1" /></div><input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847" /><div class="hint">False Positive Rate</div></div>
     </div>
   </div>
 
-<script>
-  const el = (id) => document.getElementById(id);
+  <div class="tile" data-tile="equations">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Live Equations</span><button class="sizebtn" id="eqSizeBtn" type="button" title="Change equation panel width">Width</button></div>
+    <div class="tile-body"><div class="eq-inner" id="liveEq"></div></div>
+  </div>
 
-  // --- Non-linear scale transformations ---
-  const N_MIN = 100, N_MAX = 500000;
-  const LOG_N_MIN = Math.log(N_MIN), LOG_N_MAX = Math.log(N_MAX);
-  const sliderToN = (v) => Math.round(Math.exp(LOG_N_MIN + (v / 1000) * (LOG_N_MAX - LOG_N_MIN)));
-  const nToSlider = (v) => 1000 * (Math.log(v) - LOG_N_MIN) / (LOG_N_MAX - LOG_N_MIN);
+  <div class="tile" data-tile="mosaic">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Confusion Matrix</span></div>
+    <div class="tile-body">
+      <div class="svgBox"><svg xmlns="http://www.w3.org/2000/svg" id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg></div>
+      <div class="mos-cap" id="mosaicCaption"></div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#4ade80"></div><span>TP</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f87171"></div><span>FN</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#fbbf24"></div><span>FP</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#818cf8"></div><span>TN</span></div>
+      </div>
+    </div>
+  </div>
 
-  const LOGIT_MIN = -5, LOGIT_MAX = 5; // Range for sliders
-  // Logit scale: gives high precision near 0 and 1
-  const sliderToPct = (v) => 100 / (1 + Math.exp(-v));
-  const pctToSlider = (v) => {
-    const p = Math.max(1e-6, Math.min(1 - 1e-6, v / 100)); // Clamp to avoid infinity
-    return Math.log(p / (1 - p));
-  };
+  <div class="tile" data-tile="kpis">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Derived Metrics</span></div>
+    <div class="tile-body">
+      <div class="kpi-strip">
+        <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">&mdash;</div></div>
+        <div class="kpi"><div class="kpi-name">F1</div><div class="kpi-val" id="f1Kpi">&mdash;</div></div>
+        <div class="kpi"><div class="kpi-name">Accuracy</div><div class="kpi-val" id="accKpi">&mdash;</div></div>
+        <div class="kpi"><div class="kpi-name">Bal Acc</div><div class="kpi-val" id="baccKpi">&mdash;</div></div>
+        <div class="kpi"><div class="kpi-name">TNR</div><div class="kpi-val" id="tnrKpi">&mdash;</div></div>
+        <div class="kpi"><div class="kpi-name">NPV</div><div class="kpi-val" id="npvKpi">&mdash;</div></div>
+      </div>
+    </div>
+  </div>
 
-  function fmtPct(x){ return (x * 100).toFixed(2) + "%"; }
-  function fmtInt(x){ return Math.round(x).toLocaleString("en-US"); }
+  <!-- Row 2: presets | counts | rates | roc (unchanged) -->
 
-  function readParams(){
-    // Read from the text input boxes, which hold the "real" values
-    return {
-      N:   parseInt(el("nVal").value, 10),
-      pi:  parseFloat(el("piVal").value) / 100,
-      tpr: parseFloat(el("tprVal").value) / 100,
-      fpr: parseFloat(el("fprVal").value) / 100,
-    };
-  }
+  <div class="tile" data-tile="presets">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Presets</span></div>
+    <div class="tile-body">
+      <div class="presets">
+        <button class="pbtn" id="bal" type="button">Balanced<span class="tag">&pi;=50%</span></button>
+        <button class="pbtn" id="imb" type="button">Imbalanced<span class="tag">&pi;=10%</span></button>
+        <button class="pbtn" id="vimb" type="button">V. Imbalanced<span class="tag">&pi;=1%</span></button>
+        <button class="pbtn" id="perfect" type="button">Perfect<span class="tag">TPR&asymp;100 FPR&asymp;0</span></button>
+        <button class="pbtn" id="random" type="button">Random<span class="tag">TPR=FPR</span></button>
+        <button class="pbtn" id="resetBtn" type="button">Reset<span class="tag">defaults</span></button>
+      </div>
+    </div>
+  </div>
 
-  const setPiAndRender = (pct) => {
-    el("pi").value = pctToSlider(pct);
-    el("piVal").value = pct.toFixed(2);
-    render();
-  };
+  <div class="tile" data-tile="counts">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Counts</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="counts"></div></div>
+  </div>
 
-  function syncInputsToSliders() {
-    el("nVal").value   = sliderToN(el("n").value).toLocaleString("en-US", {useGrouping: false});
-    el("piVal").value  = sliderToPct(el("pi").value).toFixed(2);
-    el("tprVal").value = sliderToPct(el("tpr").value).toFixed(2);
-    el("fprVal").value = sliderToPct(el("fpr").value).toFixed(2);
-  }
+  <div class="tile" data-tile="rates">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Rates</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="metrics"></div></div>
+  </div>
 
-  function compute(p){
-    const P  = p.N * p.pi;
-    const Nn = p.N * (1 - p.pi);
+  <div class="tile" data-tile="roc">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">ROC &middot; iso-LR&#x207A;</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="roc"></div></div>
+  </div>
 
-    const TP = P * p.tpr;
-    const FN = P - TP;
+  <!-- Row 3: pr -->
 
-    const FP = Nn * p.fpr;
-    const TN = Nn - FP;
+  <div class="tile" data-tile="pr">
+    <div class="tile-hdr"><div class="grip" data-grip="1"></div><span class="tile-title">Precision-Recall</span></div>
+    <div class="tile-body"><div class="plot-wrap" id="pr"></div></div>
+  </div>
 
-    const PredP = TP + FP;
-    const PredN = TN + FN;
+</div>
+</div>
 
-    const prec = TP / (PredP + 1e-15);
-    const acc  = (TP + TN) / (p.N + 1e-15);
-    const f1   = (2 * prec * p.tpr) / (prec + p.tpr + 1e-15);
+<script type="text/javascript">
+/* ── Polyfills ── */
+if(!Element.prototype.closest){Element.prototype.closest=function(s){var el=this;do{if(el.matches(s))return el;el=el.parentElement||el.parentNode;}while(el!==null&&el.nodeType===1);return null;};}
+if(!Element.prototype.matches){Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector;}
+if(!NodeList.prototype.forEach){NodeList.prototype.forEach=Array.prototype.forEach;}
 
-    const tnr  = 1 - p.fpr;
-    const npv  = TN / (PredN + 1e-15);
-    const bacc = 0.5 * (p.tpr + tnr);
+/* ── Grip SVGs ── */
+var GRIP_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg>';
+document.querySelectorAll('.grip').forEach(function(g){g.innerHTML=GRIP_SVG;});
 
-    return { P, Nn, TP, FP, TN, FN, PredP, PredN, prec, acc, f1, tnr, npv, bacc };
-  }
+/* ══════════ DRAG & DROP ══════════ */
+var gridEl=document.getElementById('grid');
+var dragSrc=null,ghost=null,editMode=true;
+var STORAGE_EDIT_KEY='cmp_layout_edit_v1';
 
-  function drawMosaic(r){
-    const svg = el("mosaic");
-    svg.innerHTML = "";
+function saveEditMode(){
+  try{localStorage.setItem(STORAGE_EDIT_KEY,editMode?'1':'0');}catch(e){}
+}
+function loadEditMode(){
+  try{
+    var v=localStorage.getItem(STORAGE_EDIT_KEY);
+    if(v===null)return;
+    editMode=v==='1';
+  }catch(e){}
+}
 
-    const W = 1000, H = 500;
-    const TOP = 44, innerY = TOP, innerH = H - TOP;
+function tileOf(el){return el.closest('.tile');}
 
-    const total = r.P + r.Nn;
+function supportsPassive(){var r=false;try{var o=Object.defineProperty({},'passive',{get:function(){r=true;}});window.addEventListener('test',null,o);window.removeEventListener('test',null,o);}catch(e){}return r;}
+var passiveSupported=supportsPassive();
+var passiveOpt=passiveSupported?{passive:true}:false;
+var activeOpt=passiveSupported?{passive:false}:false;
 
-    const wNeg = W * (r.Nn / (total + 1e-15));
-    const wPos = W - wNeg;
+/* mouse */
+gridEl.addEventListener('mousedown',function(e){
+  var g=e.target.closest('[data-grip]');
+  if(!g||!editMode)return;
+  e.preventDefault();
+  beginDrag(tileOf(g),e.clientX,e.clientY);
+});
+document.addEventListener('mousemove',function(e){if(!dragSrc)return;e.preventDefault();onDragMove(e.clientX,e.clientY);});
+document.addEventListener('mouseup',function(){if(dragSrc)endDrag();});
 
-    const hTN = innerH * (r.TN / (r.Nn + 1e-15));
-    const hFP = innerH - hTN;
+/* touch */
+gridEl.addEventListener('touchstart',function(e){
+  var g=e.target.closest('[data-grip]');
+  if(!g||!editMode)return;
+  var t=e.touches[0];
+  beginDrag(tileOf(g),t.clientX,t.clientY);
+},passiveOpt);
+document.addEventListener('touchmove',function(e){
+  if(!dragSrc)return;e.preventDefault();
+  var t=e.touches[0];onDragMove(t.clientX,t.clientY);
+},activeOpt);
+document.addEventListener('touchend',function(){if(dragSrc)endDrag();},passiveOpt);
+document.addEventListener('touchcancel',function(){if(dragSrc)cleanup();},passiveOpt);
 
-    const hFN = innerH * (r.FN / (r.P + 1e-15));
-    const hTP = innerH - hFN;
+function beginDrag(tile,x,y){
+  dragSrc=tile;
+  tile.classList.add('dragging');
+  ghost=document.createElement('div');
+  ghost.className='drag-ghost';
+  var span=document.createElement('span');
+  span.textContent=tile.querySelector('.tile-title').textContent;
+  ghost.innerHTML=GRIP_SVG;
+  ghost.appendChild(span);
+  document.body.appendChild(ghost);
+  ghost.style.left=x+'px';ghost.style.top=y+'px';
+}
 
-    const C_TP = "#8fd694";
-    const C_FN = "#ff9aa2";
-    const C_FP = "#ffd27d";
-    const C_TN = "#b8c0ff";
-
-    const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
-
-    const patPos = document.createElementNS("http://www.w3.org/2000/svg","pattern");
-    patPos.setAttribute("id", "posHatch");
-    patPos.setAttribute("patternUnits", "userSpaceOnUse");
-    patPos.setAttribute("width", "18");
-    patPos.setAttribute("height", "18");
-    patPos.setAttribute("patternTransform", "rotate(45)");
-    const linePos = document.createElementNS("http://www.w3.org/2000/svg","line");
-    linePos.setAttribute("x1", "0"); linePos.setAttribute("y1", "0");
-    linePos.setAttribute("x2", "0"); linePos.setAttribute("y2", "18");
-    linePos.setAttribute("stroke", "rgba(0,0,0,0.22)");
-    linePos.setAttribute("stroke-width", "4");
-    patPos.appendChild(linePos);
-
-    const patNeg = document.createElementNS("http://www.w3.org/2000/svg","pattern");
-    patNeg.setAttribute("id", "negHatch");
-    patNeg.setAttribute("patternUnits", "userSpaceOnUse");
-    patNeg.setAttribute("width", "18");
-    patNeg.setAttribute("height", "18");
-    patNeg.setAttribute("patternTransform", "rotate(-45)");
-    const lineNeg = document.createElementNS("http://www.w3.org/2000/svg","line");
-    lineNeg.setAttribute("x1", "0"); lineNeg.setAttribute("y1", "0");
-    lineNeg.setAttribute("x2", "0"); lineNeg.setAttribute("y2", "18");
-    lineNeg.setAttribute("stroke", "rgba(0,0,0,0.18)");
-    lineNeg.setAttribute("stroke-width", "4");
-    patNeg.appendChild(lineNeg);
-
-    defs.appendChild(patPos);
-    defs.appendChild(patNeg);
-    svg.appendChild(defs);
-
-    function rect(x,y,w,h,fill,label){
-      const R = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      R.setAttribute("x", x); R.setAttribute("y", y);
-      R.setAttribute("width", w); R.setAttribute("height", h);
-      R.setAttribute("fill", fill);
-      R.setAttribute("stroke", "rgba(0,0,0,0.30)");
-      R.setAttribute("stroke-width", "1");
-      svg.appendChild(R);
-
-      // iPhone: label only if enough room
-      if (w > 170 && h > 80){
-        const T = document.createElementNS("http://www.w3.org/2000/svg","text");
-        T.setAttribute("x", x + 10);
-        T.setAttribute("y", Math.min(y + h - 12, y + 34));
-        T.setAttribute("font-size", "24");
-        T.setAttribute("font-family", "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace");
-        T.textContent = label;
-        svg.appendChild(T);
-      }
+function onDragMove(x,y){
+  if(ghost){ghost.style.left=x+'px';ghost.style.top=y+'px';}
+  var tiles=gridEl.querySelectorAll('.tile:not(.dragging)');
+  tiles.forEach(function(t){t.classList.remove('drag-over');});
+  for(var i=0;i<tiles.length;i++){
+    var r=tiles[i].getBoundingClientRect();
+    if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){
+      tiles[i].classList.add('drag-over');break;
     }
-
-    rect(0,    innerY + 0,   wNeg, hTN, C_TN, `TN ${fmtInt(r.TN)}`);
-    rect(0,    innerY + hTN, wNeg, hFP, C_FP, `FP ${fmtInt(r.FP)}`);
-    rect(wNeg, innerY + 0,   wPos, hFN, C_FN, `FN ${fmtInt(r.FN)}`);
-    rect(wNeg, innerY + hFN, wPos, hTP, C_TP, `TP ${fmtInt(r.TP)}`);
-
-    const overlayNeg = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    overlayNeg.setAttribute("x", 0);
-    overlayNeg.setAttribute("y", innerY);
-    overlayNeg.setAttribute("width", wNeg);
-    overlayNeg.setAttribute("height", innerH);
-    overlayNeg.setAttribute("fill", "url(#negHatch)");
-    overlayNeg.setAttribute("pointer-events", "none");
-    svg.appendChild(overlayNeg);
-
-    const overlayPos = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    overlayPos.setAttribute("x", wNeg);
-    overlayPos.setAttribute("y", innerY);
-    overlayPos.setAttribute("width", wPos);
-    overlayPos.setAttribute("height", innerH);
-    overlayPos.setAttribute("fill", "url(#posHatch)");
-    overlayPos.setAttribute("pointer-events", "none");
-    svg.appendChild(overlayPos);
-
-    // Add a single border around the "Predicted Positive" (T+) group (the union of FP and TP).
-    // A <path> is used to draw a single continuous outline without an internal dividing line.
-    const predPosGroup = document.createElementNS("http://www.w3.org/2000/svg","path");
-    const pathData = [
-      `M 0, ${innerY + hTN}`,          // Move to top-left of FP
-      `L ${wNeg}, ${innerY + hTN}`,    // Line to top-right of FP
-      `L ${wNeg}, ${innerY + hFN}`,    // Line along the FP/TP boundary to top of TP
-      `L ${W}, ${innerY + hFN}`,       // Line to top-right of TP
-      `L ${W}, ${innerY + innerH}`,    // Line to bottom-right of TP
-      `L 0, ${innerY + innerH}`,       // Line to bottom-left of FP
-      'Z'                              // Close the path
-    ].join(' ');
-    predPosGroup.setAttribute("d", pathData);
-    predPosGroup.setAttribute("fill", "rgba(0,0,0,0.04)");
-    const predPosStroke = "rgba(0,0,0,0.5)";
-    const predPosStrokeWidth = "3";
-    predPosGroup.setAttribute("stroke", predPosStroke);
-    predPosGroup.setAttribute("stroke-width", predPosStrokeWidth);
-    predPosGroup.setAttribute("pointer-events", "none");
-    svg.appendChild(predPosGroup);
-    // Sync legend item style to match the path
-    el("predPosDot").style.borderWidth = predPosStrokeWidth + 'px';
-
-    if (wNeg > 160){
-      const t0 = document.createElementNS("http://www.w3.org/2000/svg","text");
-      t0.setAttribute("x", 12);
-      t0.setAttribute("y", 26);
-      t0.setAttribute("font-size", "22");
-      t0.setAttribute("font-weight", "800");
-      t0.textContent = "Actual Negative";
-      svg.appendChild(t0);
-    }
-    if (wPos > 160){
-      const t1 = document.createElementNS("http://www.w3.org/2000/svg","text");
-      t1.setAttribute("x", wNeg + 12);
-      t1.setAttribute("y", 26);
-      t1.setAttribute("font-size", "22");
-      t1.setAttribute("font-weight", "800");
-      t1.textContent = "Actual Positive";
-      svg.appendChild(t1);
-    }
-
-    el("mosaicCaption").textContent =
-      `P=${fmtInt(r.P)}  N=${fmtInt(r.Nn)}  |  TP=${fmtInt(r.TP)} FP=${fmtInt(r.FP)} TN=${fmtInt(r.TN)} FN=${fmtInt(r.FN)}`;
   }
+}
 
-  let last = null;
-
-  function render(){
-    const p = readParams();
-    const r = compute(p);
-
-    el("precKpi").textContent = fmtPct(r.prec);
-    el("accKpi").textContent  = fmtPct(r.acc);
-    el("f1Kpi").textContent   = fmtPct(r.f1);
-
-    el("tnrKpi").textContent  = fmtPct(r.tnr);
-    el("npvKpi").textContent  = fmtPct(r.npv);
-    el("baccKpi").textContent = fmtPct(r.bacc);
-
-    let msg = "";
-    if (last){
-      const changedN   = p.N !== last.p.N;
-      const changedPi  = p.pi !== last.p.pi;
-      const changedTpr = p.tpr !== last.p.tpr;
-      const changedFpr = p.fpr !== last.p.fpr;
-
-      if (changedN && !changedPi && !changedTpr && !changedFpr){
-        msg = `Only N changed → all *rates* stay the same, rectangle areas scale up/down.`;
-      } else if (changedPi && !changedTpr && !changedFpr){
-        msg = `Only π changed → TPR/FPR unchanged, but Precision (PPV) and FP/TP areas move a lot.`;
-      } else if (changedTpr || changedFpr){
-        msg = `Changing TPR/FPR changes the *shape* inside each class block (FN↔TP, TN↔FP).`;
-      } else {
-        msg = `Move sliders to see which parts depend on N, π, TPR, FPR.`;
-      }
-    } else {
-      msg = `Try: keep TPR=0.85 and FPR=0.05, then switch π from 0.5 → 0.01 and watch FP dominate.`;
-    }
-    el("note").innerHTML = `<b>${msg}</b>`;
-    last = { p: { ...p } };
-
-    drawMosaic(r);
-
-    const plotCfg = { displayModeBar: false, responsive: true };
-
-    const countsY = [r.TP, r.FP, r.TN, r.FN];
-    const maxCount = Math.max(...countsY);
-    const countsTextPositions = countsY.map(y => (y / (maxCount + 1e-9)) < 0.2 ? 'outside' : 'inside');
-
-    Plotly.react("counts", [{
-      x: ["TP","FP","TN","FN"],
-      y: countsY,
-      type: "bar",
-      name: "Counts",
-      texttemplate: '%{y:,.0f}',
-      textposition: countsTextPositions
-    }], {
-      title: "Counts",
-      yaxis: { title: "count" },
-      margin: { l: 55, r: 20, t: 40, b: 45 }
-    }, plotCfg);
-
-    const ratesY = [p.tpr*100, p.fpr*100, r.prec*100, r.acc*100, r.f1*100, r.bacc*100, r.npv*100];
-    const ratesTextPositions = ratesY.map(y => y < 20 ? 'outside' : 'inside');
-
-    Plotly.react("metrics", [{
-      x: ["TPR","FPR","Precision","Accuracy","F1","BalancedAcc","NPV"],
-      y: ratesY,
-      type: "bar",
-      name: "Rates",
-      texttemplate: '%{y:.1f}',
-      textposition: ratesTextPositions
-    }], {
-      title: "Rates",
-      yaxis: { title: "value (%)", range: [0,100] },
-      margin: { l: 55, r: 20, t: 40, b: 55 }
-    }, plotCfg);
+function endDrag(){
+  var over=gridEl.querySelector('.tile.drag-over');
+  if(over&&over!==dragSrc){
+    var all=Array.prototype.slice.call(gridEl.querySelectorAll('.tile'));
+    var si=all.indexOf(dragSrc),ti=all.indexOf(over);
+    if(si<ti){over.parentNode.insertBefore(dragSrc,over.nextSibling);}
+    else{over.parentNode.insertBefore(dragSrc,over);}
+    saveLayoutState();
+    setTimeout(function(){resizeCharts();render();},60);
   }
+  cleanup();
+}
 
-  function updateEquations(p, r) {
-    const { P, Nn, TP, FP, TN, FN, PredP, PredN } = r;
+function cleanup(){
+  if(dragSrc)dragSrc.classList.remove('dragging');
+  gridEl.querySelectorAll('.tile').forEach(function(t){t.classList.remove('drag-over');});
+  if(ghost){ghost.parentNode.removeChild(ghost);ghost=null;}
+  dragSrc=null;
+}
 
-    const colorSpan = (type, value) => {
-      const colors = { TP: '#8fd694', FN: '#ff9aa2', FP: '#ffd27d', TN: '#b8c0ff' };
-      return `<span style="color:${colors[type]}; font-weight:bold;">${type}(${fmtInt(value)})</span>`;
-    };
-
-    const sTP = colorSpan('TP', r.TP);
-    const sFP = colorSpan('FP', r.FP);
-    const sTN = colorSpan('TN', r.TN);
-    const sFN = colorSpan('FN', r.FN);
-
-    el('totalsEq').innerHTML = `<b>N</b>=${fmtInt(p.N)} &nbsp; <b>P</b>=${fmtInt(P)} &nbsp; <b>N<sub>neg</sub></b>=${fmtInt(Nn)} &nbsp; | &nbsp; <b>T+</b>=${fmtInt(PredP)} &nbsp; <b>T-</b>=${fmtInt(PredN)}`;
-
-    el('tprEq').innerHTML  = `<b>TPR</b> = ${sTP} / (${sTP} + ${sFN}) = <span style="color:#8fd694; font-weight:bold;">TP</span> / P = ${fmtInt(r.TP)} / ${fmtInt(P)} = <b>${(p.tpr * 100).toFixed(2)}%</b>`;
-    el('fprEq').innerHTML  = `<b>FPR</b> = ${sFP} / (${sFP} + ${sTN}) = <span style="color:#ffd27d; font-weight:bold;">FP</span> / N<sub>neg</sub> = ${fmtInt(r.FP)} / ${fmtInt(Nn)} = <b>${(p.fpr * 100).toFixed(2)}%</b>`;
-    el('precEq').innerHTML = `<b>PPV</b> = ${sTP} / (${sTP} + ${sFP}) = <span style="color:#8fd694; font-weight:bold;">TP</span> / <b>T+</b> = ${fmtInt(r.TP)} / ${fmtInt(PredP)} = <b>${(r.prec * 100).toFixed(2)}%</b>`;
-    el('accEq').innerHTML  = `<b>Acc</b> = (${sTP} + ${sTN}) / N = (<span style="color:#8fd694; font-weight:bold;">TP</span>+<span style="color:#b8c0ff; font-weight:bold;">TN</span>) / N = ${fmtInt(r.TP + r.TN)} / ${fmtInt(p.N)} = <b>${(r.acc * 100).toFixed(2)}%</b>`;
-    el('tnrEq').innerHTML  = `<b>TNR</b> = ${sTN} / (${sTN} + ${sFP}) = <span style="color:#b8c0ff; font-weight:bold;">TN</span> / N<sub>neg</sub> = ${fmtInt(r.TN)} / ${fmtInt(Nn)} = <b>${(r.tnr * 100).toFixed(2)}%</b>`;
-    el('npvEq').innerHTML  = `<b>NPV</b> = ${sTN} / (${sTN} + ${sFN}) = <span style="color:#b8c0ff; font-weight:bold;">TN</span> / <b>T-</b> = ${fmtInt(r.TN)} / ${fmtInt(PredN)} = <b>${(r.npv * 100).toFixed(2)}%</b>`;
-    el('baccEq').innerHTML = `<b>B.Acc</b> = (TPR + TNR) / 2 = <b>${(r.bacc * 100).toFixed(2)}%</b>`;
-    el('f1Eq').innerHTML   = `<b>F1</b> = 2*(PPV*TPR)/(PPV+TPR) = <b>${(r.f1 * 100).toFixed(2)}%</b>`;
-  }
-
-  const originalRender = render;
-  render = function() {
-    originalRender();
-    updateEquations(readParams(), compute(readParams()));
-  }
-
-  function setupTwoWayBinding(sliderId, inputId) {
-    const slider = el(sliderId);
-    const input = el(inputId);
-
-    const isN = sliderId === 'n';
-    const toDisplay = isN ? sliderToN : sliderToPct;
-    const toSlider = isN ? nToSlider : pctToSlider;
-
-    slider.addEventListener("input", () => {
-      const val = toDisplay(slider.value);
-      input.value = isN ? Math.round(val) : val.toFixed(2);
-      render();
-    });
-
-    input.addEventListener("change", () => {
-      slider.value = toSlider(input.value);
-      render();
-    });
-  }
-
-  setupTwoWayBinding("n", "nVal");
-  setupTwoWayBinding("pi", "piVal");
-  setupTwoWayBinding("tpr", "tprVal");
-  setupTwoWayBinding("fpr", "fprVal");
-
-  el("bal").onclick  = () => setPiAndRender(50);
-  el("imb").onclick  = () => setPiAndRender(10);
-  el("vimb").onclick = () => setPiAndRender(1);
-
-  // Initial render
-  syncInputsToSliders();
-  render();
-
-  // Better resize on iPhone (address bar/orientation)
-  let resizeTimer = null;
-  const doResize = () => {
-    try { Plotly.Plots.resize("counts"); } catch(e) {}
-    try { Plotly.Plots.resize("metrics"); } catch(e) {}
-  };
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(doResize, 120);
+function resizeCharts(){
+  ['counts','metrics','roc','pr'].forEach(function(id){
+    try{Plotly.Plots.resize(document.getElementById(id));}catch(e){}
   });
-  window.addEventListener("orientationchange", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(doResize, 220);
+}
+
+/* edit toggle */
+document.getElementById('editToggle').addEventListener('click',function(){
+  editMode=!editMode;
+  this.classList.toggle('active',editMode);
+  gridEl.classList.toggle('edit-on',editMode);
+  saveEditMode();
+});
+
+
+function saveLayoutState(){
+  try{
+    var order=Array.prototype.slice.call(gridEl.querySelectorAll('.tile')).map(function(t){return t.getAttribute('data-tile');});
+    var eqTile=gridEl.querySelector('[data-tile="equations"]');
+    var eqClass='tile';
+    if(eqTile.classList.contains('span4')) eqClass='tile span4';
+    else if(eqTile.classList.contains('span3')) eqClass='tile span3';
+    else if(eqTile.classList.contains('span2')) eqClass='tile span2';
+    localStorage.setItem('cmp_layout_order', JSON.stringify(order));
+    localStorage.setItem('cmp_eq_class', eqClass);
+  }catch(e){}
+}
+
+function loadLayoutState(){
+  try{
+    var raw=localStorage.getItem('cmp_layout_order');
+    var eqClass=localStorage.getItem('cmp_eq_class');
+    var tiles={};
+    gridEl.querySelectorAll('.tile').forEach(function(t){tiles[t.getAttribute('data-tile')]=t;});
+    if(raw){
+      JSON.parse(raw).forEach(function(id){ if(tiles[id]) gridEl.appendChild(tiles[id]); });
+    }
+    var eqTile=gridEl.querySelector('[data-tile="equations"]');
+    if(eqTile && eqClass){
+      eqTile.className=eqClass;
+    }
+  }catch(e){}
+}
+
+/* reset layout — updated default order: equations right of params */
+var DEF_ORDER=['params','equations','mosaic','kpis','presets','counts','rates','roc','pr'];
+document.getElementById('resetLayout').addEventListener('click',function(){
+  var tiles={};
+  gridEl.querySelectorAll('.tile').forEach(function(t){tiles[t.getAttribute('data-tile')]=t;});
+  DEF_ORDER.forEach(function(id){if(tiles[id])gridEl.appendChild(tiles[id]);});
+  var eqTile=gridEl.querySelector('[data-tile="equations"]');
+  if(eqTile)eqTile.className='tile';
+  saveLayoutState();
+  setTimeout(function(){resizeCharts();render();},60);
+});
+
+loadEditMode();
+document.getElementById('editToggle').classList.toggle('active',editMode);
+gridEl.classList.toggle('edit-on',editMode);
+
+
+var eqSizeBtn=document.getElementById('eqSizeBtn');
+if(eqSizeBtn){
+  eqSizeBtn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var eqTile=gridEl.querySelector('[data-tile="equations"]');
+    if(!eqTile)return;
+    if(eqTile.classList.contains('span4')){
+      eqTile.className='tile';
+    }else if(eqTile.classList.contains('span3')){
+      eqTile.className='tile span4';
+    }else if(eqTile.classList.contains('span2')){
+      eqTile.className='tile span3';
+    }else{
+      eqTile.className='tile span2';
+    }
+    saveLayoutState();
+    setTimeout(resizeCharts,60);
   });
+}
+
+loadLayoutState();
+
+/* ══════════ METRICS ENGINE ══════════ */
+function el(id){return document.getElementById(id);}
+var LOG_N_MIN=Math.log(100),LOG_N_MAX=Math.log(500000);
+function sliderToN(v){return Math.round(Math.exp(LOG_N_MIN+(v/1000)*(LOG_N_MAX-LOG_N_MIN)));}
+function nToSlider(v){return 1000*(Math.log(v)-LOG_N_MIN)/(LOG_N_MAX-LOG_N_MIN);}
+function sliderToPct(v){return 100/(1+Math.exp(-v));}
+function pctToSlider(v){var p=Math.max(1e-6,Math.min(1-1e-6,v/100));return Math.log(p/(1-p));}
+function fmtPct(x){return(x*100).toFixed(1)+'%';}
+function fmtInt(x){return Math.round(x).toLocaleString('en-US');}
+function clamp(x,a,b){return Math.min(b,Math.max(a,x));}
+function nearlyEqual(a,b){return Math.abs(a-b)<1e-12;}
+
+function sameParams(a,b){
+  if(!a||!b)return false;
+  return nearlyEqual(a.N,b.N)&&nearlyEqual(a.pi,b.pi)&&nearlyEqual(a.tpr,b.tpr)&&nearlyEqual(a.fpr,b.fpr);
+}
+function readParams(){
+  return{N:clamp(parseInt(el('nVal').value,10)||100,100,500000),
+    pi:clamp((parseFloat(el('piVal').value)||0)/100,0,1),
+    tpr:clamp((parseFloat(el('tprVal').value)||0)/100,0,1),
+    fpr:clamp((parseFloat(el('fprVal').value)||0)/100,0,1)};
+}
+function compute(p){
+  var P=p.N*p.pi,Nn=p.N*(1-p.pi),TP=P*p.tpr,FN=P-TP,FP=Nn*p.fpr,TN=Nn-FP;
+  var PredP=TP+FP,PredN=TN+FN,prec=TP/(PredP+1e-15),acc=(TP+TN)/(p.N+1e-15);
+  var f1=2*prec*p.tpr/(prec+p.tpr+1e-15),tnr=1-p.fpr,npv=TN/(PredN+1e-15),bacc=.5*(p.tpr+tnr);
+  return{P:P,Nn:Nn,TP:TP,FP:FP,TN:TN,FN:FN,PredP:PredP,PredN:PredN,prec:prec,acc:acc,f1:f1,tnr:tnr,npv:npv,bacc:bacc};
+}
+function syncToSliders(){
+  el('nVal').value=sliderToN(el('n').value);
+  el('piVal').value=sliderToPct(el('pi').value).toFixed(2);
+  el('tprVal').value=sliderToPct(el('tpr').value).toFixed(2);
+  el('fprVal').value=sliderToPct(el('fpr').value).toFixed(2);
+}
+
+function drawMosaic(r){
+  var svg=el('mosaic');svg.innerHTML='';
+  var W=1000,H=500,TOP=40,iY=TOP,iH=H-TOP,tot=r.P+r.Nn;
+  var wNeg=W*(r.Nn/(tot+1e-15)),wPos=W-wNeg;
+  var hTN=iH*(r.TN/(r.Nn+1e-15)),hFP=iH-hTN;
+  var hFN=iH*(r.FN/(r.P+1e-15)),hTP=iH-hFN;
+  var NS='http://www.w3.org/2000/svg';
+  var bg=document.createElementNS(NS,'rect');
+  bg.setAttribute('width',W);bg.setAttribute('height',H);bg.setAttribute('fill','#0a0c10');svg.appendChild(bg);
+  var C={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'};
+  function rect(x,y,w,h,fill,lbl){
+    var R=document.createElementNS(NS,'rect');
+    R.setAttribute('x',x);R.setAttribute('y',y);R.setAttribute('width',Math.max(0,w));R.setAttribute('height',Math.max(0,h));
+    R.setAttribute('fill',fill);R.setAttribute('fill-opacity','0.85');R.setAttribute('stroke','#0a0c10');R.setAttribute('stroke-width','2');
+    svg.appendChild(R);
+    if(w>100&&h>50){var T=document.createElementNS(NS,'text');
+      T.setAttribute('x',x+10);T.setAttribute('y',Math.min(y+h-12,y+30));T.setAttribute('font-size','22');
+      T.setAttribute('font-family','Space Mono,monospace');T.setAttribute('fill','rgba(0,0,0,0.7)');T.setAttribute('font-weight','700');
+      T.textContent=lbl;svg.appendChild(T);}
+  }
+  rect(0,iY,wNeg,hTN,C.TN,'TN '+fmtInt(r.TN));rect(0,iY+hTN,wNeg,hFP,C.FP,'FP '+fmtInt(r.FP));
+  rect(wNeg,iY,wPos,hFN,C.FN,'FN '+fmtInt(r.FN));rect(wNeg,iY+hFN,wPos,hTP,C.TP,'TP '+fmtInt(r.TP));
+  var labels=[[0,wNeg,'Actual Neg'],[wNeg,wPos,'Actual Pos']];
+  var lT;
+  for(var li=0;li<labels.length;li++){
+    var lx=labels[li][0],lw=labels[li][1],lt=labels[li][2];
+    if(lw<80)continue;lT=document.createElementNS(NS,'text');
+    lT.setAttribute('x',lx+lw/2);lT.setAttribute('y',28);lT.setAttribute('text-anchor','middle');
+    lT.setAttribute('font-size','18');lT.setAttribute('font-family','Syne,sans-serif');
+    lT.setAttribute('font-weight','700');lT.setAttribute('fill','rgba(255,255,255,0.5)');lT.textContent=lt;svg.appendChild(lT);
+  }
+  var path=document.createElementNS(NS,'path');
+  path.setAttribute('d','M 0,'+(iY+hTN)+' L '+wNeg+','+(iY+hTN)+' L '+wNeg+','+(iY+hFN)+' L '+W+','+(iY+hFN)+' L '+W+','+(iY+iH)+' L 0,'+(iY+iH)+' Z');
+  path.setAttribute('fill','rgba(255,255,255,0.03)');path.setAttribute('stroke','rgba(255,255,255,0.7)');
+  path.setAttribute('stroke-width','3');path.setAttribute('stroke-dasharray','8 4');path.setAttribute('pointer-events','none');svg.appendChild(path);
+  el('mosaicCaption').textContent='P='+fmtInt(r.P)+' N='+fmtInt(r.Nn)+' | TP='+fmtInt(r.TP)+' FP='+fmtInt(r.FP)+' TN='+fmtInt(r.TN)+' FN='+fmtInt(r.FN);
+}
+
+function getPL(extra){
+  extra=extra||{};
+  var m=window.innerWidth<=500?{l:28,r:4,t:4,b:28}:window.innerWidth>900?{l:44,r:8,t:8,b:44}:{l:34,r:6,t:6,b:34};
+  var fs=window.innerWidth<=500?8:window.innerWidth>900?12:10;
+  var ax={gridcolor:'#1e2230',tickcolor:'#3a4060',linecolor:'#3a4060',tickfont:{color:'#b4bcd0'},zeroline:false};
+  var xax={};var yax={};var k;
+  for(k in ax){xax[k]=ax[k];yax[k]=ax[k];}
+  if(extra.xaxis)for(k in extra.xaxis)xax[k]=extra.xaxis[k];
+  if(extra.yaxis)for(k in extra.yaxis)yax[k]=extra.yaxis[k];
+  var out={paper_bgcolor:'transparent',plot_bgcolor:'transparent',
+    font:{family:'Space Mono,monospace',size:fs,color:'#b4bcd0'},margin:m,
+    xaxis:xax,yaxis:yax,showlegend:false};
+  for(k in extra){if(k!=='xaxis'&&k!=='yaxis')out[k]=extra[k];}
+  return out;
+}
+var PC={displayModeBar:false,responsive:true};
+var rocHistory=[],lastP=null,lastHistoryP=null;
+
+function render(){
+  var p=readParams(),r=compute(p);
+  function kc(v){return v>.75?'kpi-val good':v<.35?'kpi-val bad':'kpi-val warn';}
+  el('precKpi').textContent=fmtPct(r.prec);el('precKpi').className=kc(r.prec);
+  el('f1Kpi').textContent=fmtPct(r.f1);el('f1Kpi').className=kc(r.f1);
+  el('accKpi').textContent=fmtPct(r.acc);el('accKpi').className=kc(r.acc);
+  el('baccKpi').textContent=fmtPct(r.bacc);el('baccKpi').className=kc(r.bacc);
+  el('tnrKpi').textContent=fmtPct(r.tnr);el('tnrKpi').className=kc(r.tnr);
+  el('npvKpi').textContent=fmtPct(r.npv);el('npvKpi').className=kc(r.npv);
+
+  var msg='';
+  if(lastP){
+    var dN=!nearlyEqual(p.N,lastP.N),dPi=!nearlyEqual(p.pi,lastP.pi),dT=!nearlyEqual(p.tpr,lastP.tpr),dF=!nearlyEqual(p.fpr,lastP.fpr);
+    if(dN&&!dPi&&!dT&&!dF)msg='\u2195 N changed \u2192 rates fixed, counts scale.';
+    else if(dPi&&!dT&&!dF)msg='\u2696 \u03c0 changed \u2192 Precision shifts sharply.';
+    else if(dT&&!dF)msg='\u2191 TPR changed \u2192 TP/FN ratio shifts.';
+    else if(!dT&&dF)msg='\u2192 FPR changed \u2192 FP/TN ratio shifts.';
+    else if(dT&&dF)msg='\u2191\u2192 Both changed \u2192 moved in ROC space.';
+    else msg='Drag panels by \u2807 grip to rearrange.';
+  }else msg='Try: TPR=90%, FPR=5%, \u03c0=1% \u2192 watch Precision collapse.';
+  el('insight').textContent=msg;lastP={N:p.N,pi:p.pi,tpr:p.tpr,fpr:p.fpr};
+
+  drawMosaic(r);
+
+  var CC={TP:'#4ade80',FP:'#fbbf24',TN:'#818cf8',FN:'#f87171'};
+  var tsz=window.innerWidth<=500?7:window.innerWidth>900?11:9;
+  Plotly.react('counts',[{x:['TP','FP','TN','FN'],y:[r.TP,r.FP,r.TN,r.FN],type:'bar',
+    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN]},texttemplate:'%{y:,.0f}',textposition:'auto',
+    textfont:{size:tsz,color:'#fff'}}],getPL({yaxis:{title:{text:'count',font:{size:9,color:'#8a92ab'}}}}),PC);
+
+  var rv=[p.tpr*100,p.fpr*100,r.prec*100,r.acc*100,r.f1*100,r.bacc*100,r.npv*100];
+  Plotly.react('metrics',[{x:['TPR','FPR','Prec','Acc','F1','BAcc','NPV'],y:rv,type:'bar',
+    marker:{color:rv.map(function(v){return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';})},texttemplate:'%{y:.1f}',textposition:'auto',
+    textfont:{size:tsz,color:'#fff'}}],getPL({yaxis:{range:[0,100],title:{text:'%',font:{size:9,color:'#8a92ab'}}}}),PC);
+
+  var LR=p.fpr>1e-9?p.tpr/p.fpr:Infinity;
+  var rcx=[],rcy=[],i,fx;
+  for(i=0;i<=200;i++){fx=i/200;rcx.push(fx);rcy.push(Math.min(1,LR*fx));}
+  if(!sameParams(p,lastHistoryP)){rocHistory.push({x:p.fpr,y:p.tpr});if(rocHistory.length>80)rocHistory.shift();lastHistoryP={N:p.N,pi:p.pi,tpr:p.tpr,fpr:p.fpr};}
+  var rhx=rocHistory.map(function(d){return d.x;}),rhy=rocHistory.map(function(d){return d.y;});
+  Plotly.react('roc',[
+    {x:[0,1],y:[0,1],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
+    {x:rcx,y:rcy,mode:'lines',line:{color:'rgba(107,156,255,0.25)',width:1.5},fill:'tozeroy',fillcolor:'rgba(107,156,255,0.06)',hoverinfo:'skip'},
+    {x:rhx,y:rhy,mode:'lines+markers',line:{color:'rgba(107,156,255,0.3)',width:1},
+      marker:{color:rhx.map(function(_,i){return'rgba(107,156,255,'+(0.15+0.7*(i/Math.max(1,rhx.length)))+')';})},hoverinfo:'skip'},
+    {x:[p.fpr],y:[p.tpr],mode:'markers+text',marker:{color:'#6b9cff',size:11,line:{color:'#fff',width:2}},
+      text:['  LR\u207A='+(LR===Infinity?'\u221E':LR.toFixed(1))],textposition:'middle right',textfont:{size:9,color:'#b4bcd0'},
+      hovertemplate:'FPR:%{x:.3f}<br>TPR:%{y:.3f}<extra></extra>'}
+  ],getPL({xaxis:{range:[0,1],title:{text:'FPR',font:{size:9,color:'#8a92ab'}}},yaxis:{range:[0,1],title:{text:'TPR',font:{size:9,color:'#8a92ab'}}}}),PC);
+
+  var prs=300,prRec=[],prPrec=[],prPi=[],pi2;
+  for(i=0;i<=prs;i++){pi2=.001+.998*(i/prs);prRec.push(p.tpr);prPrec.push((p.tpr*pi2)/(p.tpr*pi2+p.fpr*(1-pi2)+1e-15));prPi.push(pi2);}
+  Plotly.react('pr',[
+    {x:[0,1],y:[p.pi,p.pi],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
+    {x:prRec,y:prPrec,mode:'lines',line:{color:'rgba(251,191,36,0.6)',width:2},text:prPi.map(function(v){return'\u03c0='+(v*100).toFixed(1)+'%';}),
+      hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<br>%{text}<extra></extra>'},
+    {x:[p.tpr],y:[r.prec],mode:'markers',marker:{color:'#fbbf24',size:11,line:{color:'#fff',width:2}},
+      hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<extra></extra>'}
+  ],getPL({xaxis:{range:[0,1],title:{text:'Recall',font:{size:9,color:'#8a92ab'}}},yaxis:{range:[0,1],title:{text:'Precision',font:{size:9,color:'#8a92ab'}}}}),PC);
+
+  /* equations */
+  function ct(type){var col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];return'<span style="color:'+col+';font-weight:700">'+type+'</span>';}
+  function rc(v){return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';}
+  var P=r.P,Nn=r.Nn;
+  var eqs=[
+    '__D__Counts',['N',ct('TP')+'+'+ct('FN')+'+'+ct('FP')+'+'+ct('TN'),fmtInt(p.N),null],
+    ['P',ct('TP')+'+'+ct('FN'),fmtInt(P),null],['Neg',ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
+    '__D__Rates',['TPR',ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
+    ['FNR',ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
+    ['TNR',ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
+    ['FPR',ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
+    '__D__Scores',['Prec',ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
+    ['NPV',ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
+    ['Acc','('+ct('TP')+'+'+ct('TN')+')/N',(r.acc*100).toFixed(2)+'%',r.acc*100],
+    ['F1','2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
+    ['BAcc','\u00BD\u00D7(TPR+TNR)',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
+  ];
+  var html='',item,l,f,res,cv,c,bc;
+  for(i=0;i<eqs.length;i++){
+    item=eqs[i];
+    if(typeof item==='string'&&item.indexOf('__D__')===0){html+='<div class="eq-section-hdr">'+item.slice(5)+'</div>';continue;}
+    l=item[0];f=item[1];res=item[2];cv=item[3];
+    c=cv!==null?rc(cv):'#fff';bc=cv!==null?c:'rgba(107,156,255,.25)';
+    html+='<div class="eq-card" style="border-left-color:'+bc+'"><span class="eq-lbl">'+l+'</span><span class="eq-result" style="color:'+c+'">'+res+'</span><span class="eq-formula">'+f+'</span></div>';
+  }
+  el('liveEq').innerHTML=html;
+}
+
+/* ── Bindings ── */
+function bind(sid,iid){
+  var s=el(sid),inp=el(iid),isN=(sid==='n');
+  function toD(v){return isN?sliderToN(v):sliderToPct(v);}
+  function toS(v){return isN?nToSlider(v):pctToSlider(v);}
+  s.addEventListener('input',function(){inp.value=isN?Math.round(toD(s.value)):toD(s.value).toFixed(2);render();});
+  function apply(){var v=parseFloat(inp.value);if(!isFinite(v))v=isN?100:50;
+    if(isN){v=clamp(v,100,500000);inp.value=Math.round(v);}else{v=clamp(v,0,100);inp.value=v.toFixed(2);}
+    s.value=toS(v);render();}
+  inp.addEventListener('change',apply);inp.addEventListener('blur',apply);
+}
+var ids=['n','pi','tpr','fpr'],vals=['nVal','piVal','tprVal','fprVal'];
+for(var bi=0;bi<ids.length;bi++)bind(ids[bi],vals[bi]);
+
+function setPi(p){el('pi').value=pctToSlider(p);el('piVal').value=p.toFixed(2);}
+function setTpr(p){el('tpr').value=pctToSlider(p);el('tprVal').value=p.toFixed(2);}
+function setFpr(p){el('fpr').value=pctToSlider(p);el('fprVal').value=p.toFixed(2);}
+el('bal').onclick=function(){setPi(50);render();};
+el('imb').onclick=function(){setPi(10);render();};
+el('vimb').onclick=function(){setPi(1);render();};
+el('perfect').onclick=function(){setTpr(99.99);setFpr(0.01);render();};
+el('random').onclick=function(){var v=parseFloat(el('tprVal').value)||50;setTpr(v);setFpr(v);render();};
+el('resetBtn').onclick=function(){el('n').value='460';el('pi').value='-0.847';el('tpr').value='0.847';el('fpr').value='-0.847';rocHistory=[];lastP=null;lastHistoryP=null;syncToSliders();render();};
+
+syncToSliders();render();
+
+var rt=null;
+function doResize(){resizeCharts();render();}
+window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(doResize,150);});
+window.addEventListener('orientationchange',function(){clearTimeout(rt);rt=setTimeout(doResize,300);});
 </script>
+
 </body>
 </html>
