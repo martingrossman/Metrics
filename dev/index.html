@@ -314,6 +314,7 @@ font-size:9px;font-family:'Space Mono',monospace;font-family:var(--mono);color:#
 .leg-item > *{margin-right:3px;}
 .leg-item > *:last-child{margin-right:0;}
 .leg-dot{width:7px;height:7px;border-radius:2px;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;}
+.leg-dash{width:14px;height:0;border-top:2px dashed rgba(255,255,255,.75);-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;}
 
 /* ── Charts ── */
 .plot-wrap{width:100%;height:200px;min-height:0;}
@@ -390,6 +391,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;}
 .legend > *{margin-right:14px;}
 .leg-item{font-size:14px;}
 .leg-dot{width:12px;height:12px;}
+.leg-dash{width:22px;border-top-width:3px;}
 .plot-wrap{height:300px;}
 .eq-inner{max-height:600px;}
 .eq-section-hdr{font-size:16px;letter-spacing:2px;margin:18px 0 10px;padding:0 0 6px;}
@@ -493,6 +495,7 @@ header h1{font-size:13px;}
         <div class="leg-item"><div class="leg-dot" style="background:#f87171"></div><span>FN</span></div>
         <div class="leg-item"><div class="leg-dot" style="background:#fbbf24"></div><span>FP</span></div>
         <div class="leg-item"><div class="leg-dot" style="background:#818cf8"></div><span>TN</span></div>
+        <div class="leg-item"><div class="leg-dash"></div><span>Prediction</span></div>
       </div>
     </div>
   </div>
