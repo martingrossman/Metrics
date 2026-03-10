@@ -1,3 +1,4 @@
 {
-    "claudeCodeChat.permissions.yoloMode": false
+    "claudeCodeChat.permissions.yoloMode": false,
+    "genieai.openai.model": "o1-preview"
 }
