@@ -914,21 +914,22 @@ function render(){
 
   /* equations */
   function ct(type){var col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];return'<span style="color:'+col+';font-weight:700">'+type+'</span>';}
+  function st(type){var col={P:'#6b9cff',Neg:'#94a3b8','Pred+':'#6b9cff','Pred-':'#94a3b8'}[type]||'#b4bcd0';return'<span style="color:'+col+';font-weight:700">'+type+'</span>';}
   function rc(v){return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';}
   var P=r.P,Nn=r.Nn;
   var eqs=[
     '__D__Counts',['N (Total)',ct('TP')+'+'+ct('FN')+'+'+ct('FP')+'+'+ct('TN'),fmtInt(p.N),null],
-    ['P (Actual)',ct('TP')+'+'+ct('FN'),fmtInt(P),null],['Neg (Actual)',ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
-    ['Pred+ (Predict+)',ct('TP')+'+'+ct('FP'),fmtInt(r.PredP),null],['Pred- (Predict-)',ct('TN')+'+'+ct('FN'),fmtInt(r.PredN),null],
-    '__D__Rates',['TPR (Recall)',ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
-    ['FNR (Miss)',ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
-    ['TNR (Specificity)',ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
-    ['FPR (Fallout)',ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
-    '__D__Scores',['Prec (Prediction)',ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
-    ['NPV (Prediction)',ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
-    ['Acc (Overall)','('+ct('TP')+'+'+ct('TN')+')/N',(r.acc*100).toFixed(2)+'%',r.acc*100],
-    ['F1 (Balance)','2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
-    ['BAcc (Balanced)','\u00BD\u00D7(TPR+TNR)',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
+    ['P (Actual)',st('P')+'='+ct('TP')+'+'+ct('FN'),fmtInt(P),null],['Neg (Actual)',st('Neg')+'='+ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
+    ['Pred+ (Predict+)',st('Pred+')+'='+ct('TP')+'+'+ct('FP'),fmtInt(r.PredP),null],['Pred- (Predict-)',st('Pred-')+'='+ct('TN')+'+'+ct('FN'),fmtInt(r.PredN),null],
+    '__D__Rates',['TPR (Recall)',ct('TP')+'/'+st('P')+'='+ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
+    ['FNR (Miss)',ct('FN')+'/'+st('P')+'='+ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
+    ['TNR (Specificity)',ct('TN')+'/'+st('Neg')+'='+ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
+    ['FPR (Fallout)',ct('FP')+'/'+st('Neg')+'='+ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
+    '__D__Scores',['Prec (Prediction)',ct('TP')+'/'+st('Pred+')+'='+ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
+    ['NPV (Prediction)',ct('TN')+'/'+st('Pred-')+'='+ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
+    ['Acc (Overall)','('+ct('TP')+'+'+ct('TN')+')/N = ('+ct('TP')+'+'+ct('TN')+')/'+fmtInt(p.N),(r.acc*100).toFixed(2)+'%',r.acc*100],
+    ['F1 (Balance)','2'+ct('TP')+'/('+st('P')+'+'+st('Pred+')+') = 2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
+    ['BAcc (Balanced)','\u00BD\u00D7('+ct('TP')+'/'+st('P')+' + '+ct('TN')+'/'+st('Neg')+')',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
   ];
   var html='',item,l,f,res,cv,c,bc;
   for(i=0;i<eqs.length;i++){
