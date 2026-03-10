@@ -876,10 +876,10 @@ function render(){
 
   drawMosaic(r);
 
-  var CC={TP:'#4ade80',FP:'#fbbf24',TN:'#818cf8',FN:'#f87171'};
+  var CC={TP:'#4ade80',FP:'#fbbf24',TN:'#818cf8',FN:'#f87171',PredP:'#6b9cff',PredN:'#94a3b8'};
   var tsz=window.innerWidth<=500?7:window.innerWidth>900?11:9;
-  Plotly.react('counts',[{x:['TP','FP','TN','FN'],y:[r.TP,r.FP,r.TN,r.FN],type:'bar',
-    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN]},texttemplate:'%{y:,.0f}',textposition:'auto',
+  Plotly.react('counts',[{x:['TP','FP','TN','FN','Pred+','Pred-'],y:[r.TP,r.FP,r.TN,r.FN,r.PredP,r.PredN],type:'bar',
+    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN,CC.PredP,CC.PredN]},texttemplate:'%{y:,.0f}',textposition:'auto',
     textfont:{size:tsz,color:'#fff'}}],getPL({yaxis:{title:{text:'count',font:{size:9,color:'#8a92ab'}}}}),PC);
 
   var rv=[p.tpr*100,p.fpr*100,r.prec*100,r.acc*100,r.f1*100,r.bacc*100,r.npv*100];
@@ -919,6 +919,7 @@ function render(){
   var eqs=[
     '__D__Counts',['N',ct('TP')+'+'+ct('FN')+'+'+ct('FP')+'+'+ct('TN'),fmtInt(p.N),null],
     ['P',ct('TP')+'+'+ct('FN'),fmtInt(P),null],['Neg',ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
+    ['Pred+',ct('TP')+'+'+ct('FP'),fmtInt(r.PredP),null],['Pred-',ct('TN')+'+'+ct('FN'),fmtInt(r.PredN),null],
     '__D__Rates',['TPR',ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
     ['FNR',ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
     ['TNR',ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
