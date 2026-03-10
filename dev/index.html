@@ -335,14 +335,14 @@ border-left:3px solid rgba(107,156,255,.25);
 border-radius:6px;padding:5px 7px 5px 9px;margin-bottom:3px;
 font-family:'Space Mono',monospace;font-family:var(--mono);font-size:9px;
 display:-ms-grid;display:grid;
-grid-template-columns:40px minmax(0,1fr) auto;
--ms-grid-columns:40px minmax(0,1fr) auto;
+grid-template-columns:120px minmax(0,1fr) auto;
+-ms-grid-columns:120px minmax(0,1fr) auto;
 -webkit-box-align:baseline;-ms-flex-align:baseline;align-items:baseline;
 grid-gap:0 8px;gap:0 8px;line-height:1.4;
 -webkit-transition:border-left-color .2s,background .2s;transition:border-left-color .2s,background .2s;
 }
 .eq-card:hover{border-left-color:#6b9cff;border-left-color:var(--accent);background:rgba(107,156,255,.05);}
-.eq-lbl{color:#6b9cff;color:var(--accent);font-weight:700;font-size:9px;}
+.eq-lbl{color:#6b9cff;color:var(--accent);font-weight:700;font-size:9px;white-space:nowrap;}
 .eq-formula{color:rgba(221,224,238,.55);font-size:8px;grid-column:1/-1;-ms-grid-column-span:3;margin-top:1px;word-break:break-word;}
 .eq-result{color:#fff;font-weight:700;font-size:11px;text-align:right;}
 
@@ -395,7 +395,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;}
 .plot-wrap{height:300px;}
 .eq-inner{max-height:600px;}
 .eq-section-hdr{font-size:16px;letter-spacing:2px;margin:18px 0 10px;padding:0 0 6px;}
-.eq-card{font-size:17px;padding:13px 16px 13px 20px;margin-bottom:10px;grid-template-columns:80px minmax(0,1fr) auto;grid-gap:0 14px;gap:0 14px;}
+.eq-card{font-size:17px;padding:13px 16px 13px 20px;margin-bottom:10px;grid-template-columns:180px minmax(0,1fr) auto;grid-gap:0 14px;gap:0 14px;}
 .eq-lbl{font-size:17px;}
 .eq-formula{font-size:17px;margin-top:5px;}
 .eq-result{font-size:24px;}
@@ -917,18 +917,18 @@ function render(){
   function rc(v){return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';}
   var P=r.P,Nn=r.Nn;
   var eqs=[
-    '__D__Counts',['N',ct('TP')+'+'+ct('FN')+'+'+ct('FP')+'+'+ct('TN'),fmtInt(p.N),null],
-    ['P',ct('TP')+'+'+ct('FN'),fmtInt(P),null],['Neg',ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
-    ['Pred+',ct('TP')+'+'+ct('FP'),fmtInt(r.PredP),null],['Pred-',ct('TN')+'+'+ct('FN'),fmtInt(r.PredN),null],
-    '__D__Rates',['TPR',ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
-    ['FNR',ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
-    ['TNR',ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
-    ['FPR',ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
-    '__D__Scores',['Prec',ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
-    ['NPV',ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
-    ['Acc','('+ct('TP')+'+'+ct('TN')+')/N',(r.acc*100).toFixed(2)+'%',r.acc*100],
-    ['F1','2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
-    ['BAcc','\u00BD\u00D7(TPR+TNR)',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
+    '__D__Counts',['N (Total)',ct('TP')+'+'+ct('FN')+'+'+ct('FP')+'+'+ct('TN'),fmtInt(p.N),null],
+    ['P (Actual)',ct('TP')+'+'+ct('FN'),fmtInt(P),null],['Neg (Actual)',ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
+    ['Pred+ (Predict+)',ct('TP')+'+'+ct('FP'),fmtInt(r.PredP),null],['Pred- (Predict-)',ct('TN')+'+'+ct('FN'),fmtInt(r.PredN),null],
+    '__D__Rates',['TPR (Recall)',ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
+    ['FNR (Miss)',ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
+    ['TNR (Specificity)',ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
+    ['FPR (Fallout)',ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
+    '__D__Scores',['Prec (Prediction)',ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
+    ['NPV (Prediction)',ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
+    ['Acc (Overall)','('+ct('TP')+'+'+ct('TN')+')/N',(r.acc*100).toFixed(2)+'%',r.acc*100],
+    ['F1 (Balance)','2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
+    ['BAcc (Balanced)','\u00BD\u00D7(TPR+TNR)',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
   ];
   var html='',item,l,f,res,cv,c,bc;
   for(i=0;i<eqs.length;i++){
