@@ -280,13 +280,19 @@ font-weight:600;cursor:pointer;text-align:left;
 .pbtn .tag{display:block;font-family:'Space Mono',monospace;font-family:var(--mono);font-size:8px;color:#b4bcd0;color:var(--text2);margin-top:1px;}
 
 /* ── KPIs ── */
-.kpi-strip{display:-ms-grid;display:grid;grid-template-columns:repeat(3,1fr);grid-gap:4px;gap:4px;}
+.kpi-strip{
+display:-ms-grid;display:grid;
+grid-template-columns:repeat(auto-fit,minmax(92px,1fr));
+grid-gap:4px;gap:4px;
+align-content:start;
+}
 .kpi{background:#1e2230;background:var(--surf2);border:1px solid #2a2f3e;border:1px solid var(--border);border-radius:6px;padding:6px 7px;}
 .kpi-name{font-size:8px;color:#8a92ab;color:var(--text3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
 .kpi-val{font-family:'Space Mono',monospace;font-family:var(--mono);font-size:14px;font-weight:700;margin-top:1px;}
 .good{color:#4ade80;color:var(--tp);}
 .warn{color:#fbbf24;color:var(--fp);}
 .bad{color:#f87171;color:var(--fn);}
+[data-tile="kpis"] .tile-body{overflow:visible;}
 
 /* ── Mosaic ── */
 .svgBox{width:100%;border-radius:6px;overflow:hidden;background:#0a0c10;height:140px;}
@@ -374,7 +380,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;}
 .presets{grid-gap:8px;gap:8px;}
 .pbtn{font-size:15px;padding:12px 14px;border-radius:8px;}
 .pbtn .tag{font-size:12px;margin-top:3px;}
-.kpi-strip{grid-gap:8px;gap:8px;}
+.kpi-strip{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));grid-gap:8px;gap:8px;}
 .kpi{padding:14px 16px;border-radius:10px;}
 .kpi-name{font-size:13px;letter-spacing:.6px;}
 .kpi-val{font-size:28px;margin-top:5px;}
@@ -463,7 +469,7 @@ header h1{font-size:13px;}
   <!-- Row 1: params | equations | mosaic | kpis -->
 
   <div class="tile" data-tile="params">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Parameters panel" title="Reorder Parameters panel"></button><span class="tile-title">Parameters</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Parameters panel" title="Reorder Parameters panel"></button><span class="tile-title">Parameters</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body">
       <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="nLabel" for="nVal">Dataset size (N)</label><input type="number" class="ctrl-val" id="nVal" aria-labelledby="nLabel" /></div><input id="n" type="range" min="0" max="1000" step="1" value="460" aria-labelledby="nLabel" /><div class="hint">Log &middot; 100 &rarr; 500k</div></div>
       <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="piLabel" for="piVal">Prevalence (&pi;)</label><input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1" aria-labelledby="piLabel" /></div><input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847" aria-labelledby="piLabel" /><div class="hint">% positives</div></div>
@@ -473,12 +479,12 @@ header h1{font-size:13px;}
   </div>
 
   <div class="tile" data-tile="equations">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Live Equations panel" title="Reorder Live Equations panel"></button><span class="tile-title">Live Equations</span><button class="sizebtn" id="eqSizeBtn" type="button" title="Change equation panel width">Width</button></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Live Equations panel" title="Reorder Live Equations panel"></button><span class="tile-title">Live Equations</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body"><div class="eq-inner" id="liveEq"></div></div>
   </div>
 
   <div class="tile" data-tile="mosaic">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Confusion Matrix panel" title="Reorder Confusion Matrix panel"></button><span class="tile-title">Confusion Matrix</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Confusion Matrix panel" title="Reorder Confusion Matrix panel"></button><span class="tile-title">Confusion Matrix</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body">
       <div class="svgBox"><svg xmlns="http://www.w3.org/2000/svg" id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg></div>
       <div class="mos-cap" id="mosaicCaption"></div>
@@ -492,7 +498,7 @@ header h1{font-size:13px;}
   </div>
 
   <div class="tile" data-tile="kpis">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Derived Metrics panel" title="Reorder Derived Metrics panel"></button><span class="tile-title">Derived Metrics</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Derived Metrics panel" title="Reorder Derived Metrics panel"></button><span class="tile-title">Derived Metrics</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body">
       <div class="kpi-strip">
         <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">&mdash;</div></div>
@@ -508,7 +514,7 @@ header h1{font-size:13px;}
   <!-- Row 2: presets | counts | rates | roc (unchanged) -->
 
   <div class="tile" data-tile="presets">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Presets panel" title="Reorder Presets panel"></button><span class="tile-title">Presets</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Presets panel" title="Reorder Presets panel"></button><span class="tile-title">Presets</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body">
       <div class="presets">
         <button class="pbtn" id="bal" type="button">Balanced<span class="tag">&pi;=50%</span></button>
@@ -522,24 +528,24 @@ header h1{font-size:13px;}
   </div>
 
   <div class="tile" data-tile="counts">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Counts panel" title="Reorder Counts panel"></button><span class="tile-title">Counts</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Counts panel" title="Reorder Counts panel"></button><span class="tile-title">Counts</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body"><div class="plot-wrap" id="counts"></div></div>
   </div>
 
   <div class="tile" data-tile="rates">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Rates panel" title="Reorder Rates panel"></button><span class="tile-title">Rates</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Rates panel" title="Reorder Rates panel"></button><span class="tile-title">Rates</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body"><div class="plot-wrap" id="metrics"></div></div>
   </div>
 
   <div class="tile" data-tile="roc">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder ROC panel" title="Reorder ROC panel"></button><span class="tile-title">ROC &middot; iso-LR&#x207A;</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder ROC panel" title="Reorder ROC panel"></button><span class="tile-title">ROC &middot; iso-LR&#x207A;</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body"><div class="plot-wrap" id="roc"></div></div>
   </div>
 
   <!-- Row 3: pr -->
 
   <div class="tile" data-tile="pr">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Precision-Recall panel" title="Reorder Precision-Recall panel"></button><span class="tile-title">Precision-Recall</span></div>
+    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Precision-Recall panel" title="Reorder Precision-Recall panel"></button><span class="tile-title">Precision-Recall</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
     <div class="tile-body"><div class="plot-wrap" id="pr"></div></div>
   </div>
 
@@ -654,6 +660,31 @@ function resizeCharts(){
   });
 }
 
+function getTileSpan(tile){
+  if(tile.classList.contains('span4'))return 4;
+  if(tile.classList.contains('span3'))return 3;
+  if(tile.classList.contains('span2'))return 2;
+  return 1;
+}
+
+function applyTileSpan(tile,span){
+  tile.classList.remove('span2','span3','span4');
+  if(span>1)tile.classList.add('span'+span);
+}
+
+function updateSizeButton(tile){
+  var btn=tile.querySelector('[data-size-btn]');
+  if(!btn)return;
+  var span=getTileSpan(tile);
+  btn.textContent=span+'x';
+  btn.setAttribute('aria-label','Change panel width, currently '+span+' columns');
+  btn.setAttribute('title','Change panel width, currently '+span+' columns');
+}
+
+function updateAllSizeButtons(){
+  gridEl.querySelectorAll('.tile').forEach(updateSizeButton);
+}
+
 /* edit toggle */
 document.getElementById('editToggle').addEventListener('click',function(){
   editMode=!editMode;
@@ -666,29 +697,31 @@ document.getElementById('editToggle').addEventListener('click',function(){
 function saveLayoutState(){
   try{
     var order=Array.prototype.slice.call(gridEl.querySelectorAll('.tile')).map(function(t){return t.getAttribute('data-tile');});
-    var eqTile=gridEl.querySelector('[data-tile="equations"]');
-    var eqClass='tile';
-    if(eqTile.classList.contains('span4')) eqClass='tile span4';
-    else if(eqTile.classList.contains('span3')) eqClass='tile span3';
-    else if(eqTile.classList.contains('span2')) eqClass='tile span2';
+    var sizes={};
+    gridEl.querySelectorAll('.tile').forEach(function(t){
+      sizes[t.getAttribute('data-tile')]=getTileSpan(t);
+    });
     localStorage.setItem('cmp_layout_order', JSON.stringify(order));
-    localStorage.setItem('cmp_eq_class', eqClass);
+    localStorage.setItem('cmp_tile_sizes', JSON.stringify(sizes));
   }catch(e){}
 }
 
 function loadLayoutState(){
   try{
     var raw=localStorage.getItem('cmp_layout_order');
-    var eqClass=localStorage.getItem('cmp_eq_class');
+    var sizeRaw=localStorage.getItem('cmp_tile_sizes');
     var tiles={};
     gridEl.querySelectorAll('.tile').forEach(function(t){tiles[t.getAttribute('data-tile')]=t;});
     if(raw){
       JSON.parse(raw).forEach(function(id){ if(tiles[id]) gridEl.appendChild(tiles[id]); });
     }
-    var eqTile=gridEl.querySelector('[data-tile="equations"]');
-    if(eqTile && eqClass){
-      eqTile.className=eqClass;
+    if(sizeRaw){
+      var sizes=JSON.parse(sizeRaw);
+      Object.keys(sizes).forEach(function(id){
+        if(tiles[id])applyTileSpan(tiles[id],sizes[id]);
+      });
     }
+    updateAllSizeButtons();
   }catch(e){}
 }
 
@@ -698,8 +731,8 @@ document.getElementById('resetLayout').addEventListener('click',function(){
   var tiles={};
   gridEl.querySelectorAll('.tile').forEach(function(t){tiles[t.getAttribute('data-tile')]=t;});
   DEF_ORDER.forEach(function(id){if(tiles[id])gridEl.appendChild(tiles[id]);});
-  var eqTile=gridEl.querySelector('[data-tile="equations"]');
-  if(eqTile)eqTile.className='tile';
+  gridEl.querySelectorAll('.tile').forEach(function(tile){applyTileSpan(tile,1);});
+  updateAllSizeButtons();
   saveLayoutState();
   setTimeout(function(){resizeCharts();render();},60);
 });
@@ -709,25 +742,19 @@ document.getElementById('editToggle').classList.toggle('active',editMode);
 gridEl.classList.toggle('edit-on',editMode);
 
 
-var eqSizeBtn=document.getElementById('eqSizeBtn');
-if(eqSizeBtn){
-  eqSizeBtn.addEventListener('click',function(e){
+gridEl.querySelectorAll('[data-size-btn]').forEach(function(btn){
+  btn.addEventListener('click',function(e){
     e.stopPropagation();
-    var eqTile=gridEl.querySelector('[data-tile="equations"]');
-    if(!eqTile)return;
-    if(eqTile.classList.contains('span4')){
-      eqTile.className='tile';
-    }else if(eqTile.classList.contains('span3')){
-      eqTile.className='tile span4';
-    }else if(eqTile.classList.contains('span2')){
-      eqTile.className='tile span3';
-    }else{
-      eqTile.className='tile span2';
-    }
+    var tile=tileOf(btn);
+    if(!tile)return;
+    var nextSpan=getTileSpan(tile)+1;
+    if(nextSpan>4)nextSpan=1;
+    applyTileSpan(tile,nextSpan);
+    updateSizeButton(tile);
     saveLayoutState();
-    setTimeout(resizeCharts,60);
+    setTimeout(function(){resizeCharts();render();},60);
   });
-}
+});
 
 loadLayoutState();
 
