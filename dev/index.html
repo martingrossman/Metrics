@@ -118,18 +118,30 @@ header .sub{font-size:11px;color:var(--text2);font-family:var(--mono);}
 .tile-hdr > *:last-child{margin-right:0;}
 
 .grip{
-  width:18px;height:18px;opacity:.25;
+  width:34px;
+  height:34px;
+  min-width:34px;
+  min-height:34px;
+  opacity:.25;
   transition:opacity .15s;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   flex-shrink:0;
   touch-action:none;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
   cursor:grab;
-  background:none;border:0;padding:0;appearance:none;
+  background:none;
+  border:0;
+  padding:0;
+  appearance:none;
 }
 .edit-on .grip{opacity:.45;}
 .edit-on .grip:hover{opacity:.8;}
 .grip:active{cursor:grabbing;}
-.grip svg{width:14px;height:14px;}
+.grip svg{width:18px;height:18px;}
 .grip circle{fill:var(--text2);}
 .edit-on .grip circle{fill:var(--accent);}
 .grip:focus-visible{
@@ -429,7 +441,11 @@ input[type=range]::-moz-range-thumb{
 <div class="grid edit-on" id="grid">
 
   <div class="tile" data-tile="params">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Parameters panel" title="Reorder Parameters panel"></button><span class="tile-title">Parameters</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Parameters panel" title="Reorder Parameters panel"></button>
+      <span class="tile-title">Parameters</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body">
       <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="nLabel" for="nVal">Dataset size (N)</label><input type="number" class="ctrl-val" id="nVal" aria-labelledby="nLabel" /></div><input id="n" type="range" min="0" max="1000" step="1" value="460" aria-labelledby="nLabel" /><div class="hint">Log · 100 → 500k</div></div>
       <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="piLabel" for="piVal">Prevalence (π)</label><input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1" aria-labelledby="piLabel" /></div><input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847" aria-labelledby="piLabel" /><div class="hint">% positives</div></div>
@@ -439,12 +455,20 @@ input[type=range]::-moz-range-thumb{
   </div>
 
   <div class="tile span4" data-tile="equations">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Live Equations panel" title="Reorder Live Equations panel"></button><span class="tile-title">Live Equations</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">4x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Live Equations panel" title="Reorder Live Equations panel"></button>
+      <span class="tile-title">Live Equations</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">4x</button>
+    </div>
     <div class="tile-body"><div class="eq-inner" id="liveEq"></div></div>
   </div>
 
   <div class="tile" data-tile="mosaic">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Confusion Matrix panel" title="Reorder Confusion Matrix panel"></button><span class="tile-title">Confusion Matrix</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Confusion Matrix panel" title="Reorder Confusion Matrix panel"></button>
+      <span class="tile-title">Confusion Matrix</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body">
       <div class="svgBox"><svg xmlns="http://www.w3.org/2000/svg" id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg></div>
       <div class="mos-cap" id="mosaicCaption"></div>
@@ -459,7 +483,11 @@ input[type=range]::-moz-range-thumb{
   </div>
 
   <div class="tile" data-tile="kpis">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Derived Metrics panel" title="Reorder Derived Metrics panel"></button><span class="tile-title">Derived Metrics</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Derived Metrics panel" title="Reorder Derived Metrics panel"></button>
+      <span class="tile-title">Derived Metrics</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body">
       <div class="kpi-strip">
         <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">&mdash;</div></div>
@@ -473,7 +501,11 @@ input[type=range]::-moz-range-thumb{
   </div>
 
   <div class="tile" data-tile="presets">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Presets panel" title="Reorder Presets panel"></button><span class="tile-title">Presets</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Presets panel" title="Reorder Presets panel"></button>
+      <span class="tile-title">Presets</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body">
       <div class="presets">
         <button class="pbtn" id="bal" type="button">Balanced<span class="tag">π=50%</span></button>
@@ -487,22 +519,38 @@ input[type=range]::-moz-range-thumb{
   </div>
 
   <div class="tile" data-tile="counts">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Counts panel" title="Reorder Counts panel"></button><span class="tile-title">Counts</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Counts panel" title="Reorder Counts panel"></button>
+      <span class="tile-title">Counts</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body"><div class="plot-wrap" id="counts"></div></div>
   </div>
 
   <div class="tile" data-tile="rates">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Rates panel" title="Reorder Rates panel"></button><span class="tile-title">Rates</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Rates panel" title="Reorder Rates panel"></button>
+      <span class="tile-title">Rates</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body"><div class="plot-wrap" id="metrics"></div></div>
   </div>
 
   <div class="tile" data-tile="roc">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder ROC panel" title="Reorder ROC panel"></button><span class="tile-title">ROC · iso-LR⁺</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder ROC panel" title="Reorder ROC panel"></button>
+      <span class="tile-title">ROC · iso-LR⁺</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body"><div class="plot-wrap" id="roc"></div></div>
   </div>
 
   <div class="tile" data-tile="pr">
-    <div class="tile-hdr"><button class="grip" data-grip="1" type="button" aria-label="Reorder Precision-Recall panel" title="Reorder Precision-Recall panel"></button><span class="tile-title">Precision-Recall</span><button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button></div>
+    <div class="tile-hdr">
+      <button class="grip" data-grip="1" type="button" aria-label="Reorder Precision-Recall panel" title="Reorder Precision-Recall panel"></button>
+      <span class="tile-title">Precision-Recall</span>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+    </div>
     <div class="tile-body"><div class="plot-wrap" id="pr"></div></div>
   </div>
 
@@ -519,19 +567,15 @@ document.querySelectorAll('.grip').forEach(function(g){g.innerHTML=GRIP_SVG;});
 
 var gridEl=document.getElementById('grid');
 var dragSrc=null,ghost=null,editMode=true,dragPointerId=null;
+var dragTouchId=null;
 var STORAGE_EDIT_KEY='cmp_layout_edit_v1';
 
 function saveEditMode(){try{localStorage.setItem(STORAGE_EDIT_KEY,editMode?'1':'0');}catch(e){}}
 function loadEditMode(){try{var v=localStorage.getItem(STORAGE_EDIT_KEY);if(v===null)return;editMode=v==='1';}catch(e){}}
 function tileOf(el){return el.closest('.tile');}
 
-function beginDrag(tile,x,y,pointerId){
-  if(!tile)return;
-  cleanup();
-  dragSrc=tile;
-  dragPointerId=pointerId;
-  tile.classList.add('dragging');
-
+function makeGhost(tile,x,y){
+  if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);
   ghost=document.createElement('div');
   ghost.className='drag-ghost';
   var span=document.createElement('span');
@@ -543,19 +587,43 @@ function beginDrag(tile,x,y,pointerId){
   ghost.style.top=y+'px';
 }
 
-function onDragMove(x,y){
-  if(!dragSrc)return;
-  if(ghost){ghost.style.left=x+'px';ghost.style.top=y+'px';}
+function beginDrag(tile,x,y,mode,id){
+  if(!tile)return;
+  cleanup();
+  dragSrc=tile;
+  if(mode==='pointer')dragPointerId=id;
+  if(mode==='touch')dragTouchId=id;
+  tile.classList.add('dragging');
+  document.body.style.overflow='hidden';
+  makeGhost(tile,x,y);
+}
+
+function updateGhost(x,y){
+  if(ghost){
+    ghost.style.left=x+'px';
+    ghost.style.top=y+'px';
+  }
+}
+
+function findDropTarget(x,y){
   var tiles=gridEl.querySelectorAll('.tile:not(.dragging)');
   tiles.forEach(function(t){t.classList.remove('drag-over');});
-
+  var found=null;
   for(var i=0;i<tiles.length;i++){
     var r=tiles[i].getBoundingClientRect();
     if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){
-      tiles[i].classList.add('drag-over');
+      found=tiles[i];
       break;
     }
   }
+  if(found)found.classList.add('drag-over');
+  return found;
+}
+
+function onDragMove(x,y){
+  if(!dragSrc)return;
+  updateGhost(x,y);
+  findDropTarget(x,y);
 }
 
 function endDrag(){
@@ -579,34 +647,77 @@ function cleanup(){
   ghost=null;
   dragSrc=null;
   dragPointerId=null;
+  dragTouchId=null;
+  document.body.style.overflow='';
 }
 
+/* pointer events */
 gridEl.addEventListener('pointerdown',function(e){
   var g=e.target.closest('[data-grip]');
   if(!g||!editMode)return;
+  if(e.pointerType==='mouse' && e.button!==0)return;
   e.preventDefault();
-  if(g.setPointerCapture){try{g.setPointerCapture(e.pointerId);}catch(err){}}
-  beginDrag(tileOf(g),e.clientX,e.clientY,e.pointerId);
+  try{ if(g.setPointerCapture)g.setPointerCapture(e.pointerId); }catch(err){}
+  beginDrag(tileOf(g),e.clientX,e.clientY,'pointer',e.pointerId);
 });
 
 document.addEventListener('pointermove',function(e){
   if(!dragSrc)return;
-  if(dragPointerId!==null&&e.pointerId!==dragPointerId)return;
+  if(dragPointerId!==null && e.pointerId!==dragPointerId)return;
   e.preventDefault();
   onDragMove(e.clientX,e.clientY);
 },{passive:false});
 
 document.addEventListener('pointerup',function(e){
   if(!dragSrc)return;
-  if(dragPointerId!==null&&e.pointerId!==dragPointerId)return;
+  if(dragPointerId!==null && e.pointerId!==dragPointerId)return;
   endDrag();
 });
 
 document.addEventListener('pointercancel',function(e){
   if(!dragSrc)return;
-  if(dragPointerId!==null&&e.pointerId!==dragPointerId)return;
+  if(dragPointerId!==null && e.pointerId!==dragPointerId)return;
   cleanup();
 });
+
+/* touch fallback for iPhone Safari */
+function getTrackedTouch(e){
+  if(dragTouchId===null)return null;
+  for(var i=0;i<e.changedTouches.length;i++){
+    if(e.changedTouches[i].identifier===dragTouchId)return e.changedTouches[i];
+  }
+  for(var j=0;j<e.touches.length;j++){
+    if(e.touches[j].identifier===dragTouchId)return e.touches[j];
+  }
+  return null;
+}
+
+gridEl.addEventListener('touchstart',function(e){
+  var g=e.target.closest('[data-grip]');
+  if(!g||!editMode)return;
+  if(e.touches.length<1)return;
+  var t=e.touches[0];
+  e.preventDefault();
+  beginDrag(tileOf(g),t.clientX,t.clientY,'touch',t.identifier);
+},{passive:false});
+
+document.addEventListener('touchmove',function(e){
+  if(!dragSrc || dragTouchId===null)return;
+  var t=getTrackedTouch(e);
+  if(!t)return;
+  e.preventDefault();
+  onDragMove(t.clientX,t.clientY);
+},{passive:false});
+
+document.addEventListener('touchend',function(){
+  if(!dragSrc || dragTouchId===null)return;
+  endDrag();
+},{passive:false});
+
+document.addEventListener('touchcancel',function(){
+  if(!dragSrc)return;
+  cleanup();
+},{passive:false});
 
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&dragSrc)cleanup();
