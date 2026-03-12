@@ -454,16 +454,16 @@ input[type=range]::-moz-range-thumb{
     </div>
   </div>
 
-  <div class="tile span4" data-tile="equations">
+  <div class="tile" data-tile="equations">
     <div class="tile-hdr">
       <button class="grip" data-grip="1" type="button" aria-label="Reorder Live Equations panel" title="Reorder Live Equations panel"></button>
       <span class="tile-title">Live Equations</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">4x</button>
+      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
     </div>
     <div class="tile-body"><div class="eq-inner" id="liveEq"></div></div>
   </div>
 
-  <div class="tile" data-tile="mosaic">
+  <div class="tile span2" data-tile="mosaic">
     <div class="tile-hdr">
       <button class="grip" data-grip="1" type="button" aria-label="Reorder Confusion Matrix panel" title="Reorder Confusion Matrix panel"></button>
       <span class="tile-title">Confusion Matrix</span>
@@ -482,7 +482,7 @@ input[type=range]::-moz-range-thumb{
     </div>
   </div>
 
-  <div class="tile" data-tile="kpis">
+  <div class="tile span2" data-tile="kpis">
     <div class="tile-hdr">
       <button class="grip" data-grip="1" type="button" aria-label="Reorder Derived Metrics panel" title="Reorder Derived Metrics panel"></button>
       <span class="tile-title">Derived Metrics</span>
@@ -774,9 +774,9 @@ function saveLayoutState(){
 var DEF_ORDER=['params','equations','mosaic','kpis','presets','counts','rates','roc','pr'];
 var DEF_SIZES={
   params:1,
-  equations:4,
-  mosaic:1,
-  kpis:1,
+  equations:1,
+  mosaic:2,
+  kpis:2,
   presets:1,
   counts:1,
   rates:1,
