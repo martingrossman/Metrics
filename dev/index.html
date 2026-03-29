@@ -472,9 +472,21 @@ input[type=range]::-moz-range-thumb{
   input[type=range]{height:5px;}
   .toolbar .htxt{display:none;}
   /* Mobile: sliders left, mosaic right — top row */
-  .tile[data-tile="params"]{order:-2 !important;width:calc(50% - 4px) !important;flex:0 0 auto !important;}
-  .tile[data-tile="mosaic"]{order:-1 !important;width:calc(50% - 4px) !important;flex:0 0 auto !important;}
-  .tile:not([data-tile="params"]):not([data-tile="mosaic"]){order:0 !important;width:100% !important;flex:0 0 auto !important;}
+  .tile[data-tile="params"]{order:-3 !important;width:calc(50% - 4px) !important;flex:0 0 auto !important;}
+  .tile[data-tile="mosaic"]{order:-2 !important;width:calc(50% - 4px) !important;flex:0 0 auto !important;}
+  .tile[data-tile="kpis"]{order:-1 !important;width:100% !important;flex:0 0 auto !important;}
+  .tile:not([data-tile="params"]):not([data-tile="mosaic"]):not([data-tile="kpis"]){order:0 !important;width:100% !important;flex:0 0 auto !important;}
+  /* Tighter margins + bigger slider handles & values */
+  .ctrl{margin-bottom:4px;}
+  .ctrl-row{margin-bottom:2px;}
+  .ctrl-label{font-size:10px;}
+  .ctrl-val{font-size:12px;font-weight:700;min-width:44px;padding:2px 5px;color:#fff;-webkit-text-fill-color:#fff;background:rgba(107,156,255,.18);border-color:rgba(107,156,255,.45);}
+  .hint{font-size:8px;margin-top:0;}
+  .tile-hdr{padding:4px 8px 3px;}
+  .tile-body{padding:6px 8px 8px;}
+  input[type=range]::-webkit-slider-thumb{width:22px;height:22px;box-shadow:0 0 8px rgba(107,156,255,.6);}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;}
+  input[type=range]{height:5px;}
 }
 @media(max-width:480px){
   .grid{gap:6px;}
@@ -486,6 +498,12 @@ input[type=range]::-moz-range-thumb{
   .tile[data-tile="params"]{order:-2 !important;width:calc(50% - 3px) !important;}
   .tile[data-tile="mosaic"]{order:-1 !important;width:calc(50% - 3px) !important;}
   .tile:not([data-tile="params"]):not([data-tile="mosaic"]){order:0 !important;width:100% !important;}
+  .ctrl{margin-bottom:3px;}
+  .ctrl-row{margin-bottom:1px;}
+  .ctrl-val{font-size:13px;font-weight:700;padding:2px 4px;min-width:40px;}
+  input[type=range]::-webkit-slider-thumb{width:24px;height:24px;}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;}
+  input[type=range]{height:6px;}
 }
 @media(max-height:500px) and (orientation:landscape){
   .app{padding:4px 8px;}
