@@ -1339,9 +1339,9 @@ function render(){
     ['FPR (Fallout)',ct('FP')+'/'+st('Neg')+'='+ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
 
     '__D__Scores',
-    ['Prec (Prediction)',ct('TP')+'/'+st('Pred+')+'='+ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
-    ['NPV (Prediction)',ct('TN')+'/'+st('Pred-')+'='+ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
-    ['Acc (Overall)','('+ct('TP')+'+'+ct('TN')+')/N = ('+ct('TP')+'+'+ct('TN')+')/'+fmtInt(p.N),(r.acc*100).toFixed(2)+'%',r.acc*100],
+    ['Prec (Precission)',ct('TP')+'/'+st('Pred+')+'='+ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
+    ['NPV (Neg. Pred. Value)',ct('TN')+'/'+st('Pred-')+'='+ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
+    ['Acc (Accuracy)','('+ct('TP')+'+'+ct('TN')+')/N = ('+ct('TP')+'+'+ct('TN')+')/'+fmtInt(p.N),(r.acc*100).toFixed(2)+'%',r.acc*100],
     ['F1 (Balance)','2'+ct('TP')+'/('+st('P')+'+'+st('Pred+')+') = 2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
     ['BAcc (Balanced)','½×('+ct('TP')+'/'+st('P')+' + '+ct('TN')+'/'+st('Neg')+')',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
   ];
