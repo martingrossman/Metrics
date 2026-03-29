@@ -471,6 +471,10 @@ input[type=range]::-moz-range-thumb{
   input[type=range]::-moz-range-thumb{width:20px;height:20px;}
   input[type=range]{height:5px;}
   .toolbar .htxt{display:none;}
+  /* Mobile: sliders left, mosaic right — top row */
+  .tile[data-tile="params"]{order:-2 !important;width:calc(50% - 4px) !important;flex:0 0 auto !important;}
+  .tile[data-tile="mosaic"]{order:-1 !important;width:calc(50% - 4px) !important;flex:0 0 auto !important;}
+  .tile:not([data-tile="params"]):not([data-tile="mosaic"]){order:0 !important;width:100% !important;flex:0 0 auto !important;}
 }
 @media(max-width:480px){
   .grid{gap:6px;}
@@ -478,6 +482,10 @@ input[type=range]::-moz-range-thumb{
   .plot-wrap{height:140px;}
   .eq-inner{max-height:none;}
   header h1{font-size:14px;}
+  /* Keep sliders + mosaic side by side even on small phones */
+  .tile[data-tile="params"]{order:-2 !important;width:calc(50% - 3px) !important;}
+  .tile[data-tile="mosaic"]{order:-1 !important;width:calc(50% - 3px) !important;}
+  .tile:not([data-tile="params"]):not([data-tile="mosaic"]){order:0 !important;width:100% !important;}
 }
 @media(max-height:500px) and (orientation:landscape){
   .app{padding:4px 8px;}
