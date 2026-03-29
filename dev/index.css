@@ -1,0 +1,16 @@
+.responsive-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 600px) {
+  .responsive-text {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .responsive-text {
+    font-size: 1.5rem;
+  }
+}
