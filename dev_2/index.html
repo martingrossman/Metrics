@@ -334,9 +334,121 @@
       gap: 14px;
     }
     .plot-distributions { grid-column: 1; grid-row: 2; }
-    .plot-roc { grid-column: 2; grid-row: 2; }
-    .plot-cm-mosaic { grid-column: 1; grid-row: 3; }
+    .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
+    .plot-roc { grid-column: 1; grid-row: 3; }
     .plot-metrics { grid-column: 2; grid-row: 3; }
+  }
+
+  /* ── Mobile (iPhone 13 = 390px, covers most phones) ── */
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 1rem;
+      padding: 14px 10px 8px;
+    }
+
+    .layout {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 8px 10px 16px;
+    }
+
+    .controls {
+      order: 1;
+      display: block;
+    }
+
+    .plot-cm-mosaic { order: 2; }
+    .plot-metrics { order: 3; }
+    .plot-distributions { order: 4; }
+    .plot-roc { order: 5; }
+
+    .panel {
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    #distPlot, #rocPlot {
+      height: 260px !important;
+    }
+
+    .slider-group label {
+      font-size: 0.72rem;
+    }
+
+    input[type="range"] {
+      height: 6px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 18px;
+      height: 18px;
+    }
+
+    .plot-cm-mosaic {
+      min-height: 200px;
+    }
+
+    #mosaicSVG {
+      width: 100%;
+      height: auto;
+      min-height: 300px;
+    }
+
+    .cm-grid {
+      max-width: 100%;
+      aspect-ratio: 1.1;
+    }
+
+    .cm-cell .count {
+      font-size: 1.2rem;
+    }
+
+    .cm-cell .label {
+      font-size: 0.55rem;
+    }
+
+    .cm-cell .rate {
+      font-size: 0.6rem;
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .metric-card {
+      padding: 8px 10px;
+    }
+
+    .metric-card .metric-val {
+      font-size: 1rem;
+    }
+
+    .metric-card .metric-name {
+      font-size: 0.6rem;
+    }
+
+    .metric-card .metric-formula {
+      font-size: 0.55rem;
+    }
+
+    .bidirectional-hint {
+      font-size: 0.55rem;
+    }
+
+    .panel-title {
+      font-size: 0.65rem;
+    }
+
+    .section-label {
+      font-size: 0.6rem;
+    }
+
+    .view-toggle button {
+      font-size: 0.6rem;
+      padding: 4px 8px;
+    }
   }
 </style>
 </head>
@@ -419,12 +531,12 @@
     <div class="panel-header">
       <div class="panel-title">Confusion Matrix</div>
       <div class="view-toggle">
-        <button class="active" id="btn_cm" onclick="switchView('cm')">Matrix</button>
-        <button id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
+        <button id="btn_cm" onclick="switchView('cm')">Matrix</button>
+        <button class="active" id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
       </div>
     </div>
 
-    <div class="cm-view active" id="cmView">
+    <div class="cm-view" id="cmView">
       <div class="cm-grid">
         <div class="cm-corner"></div>
         <div class="cm-header top-label">Predicted</div>
@@ -455,8 +567,8 @@
       </div>
     </div>
 
-    <div class="mosaic-view" id="mosaicView">
-      <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="mosaic-view active" id="mosaicView">
+      <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
 
@@ -630,14 +742,18 @@ function switchView(view) {
   const paperBg = 'rgba(0,0,0,0)';
   const gridColor = '#1e2333';
   const fontColor = '#8892a4';
-  const basePlotLayout = {
-    paper_bgcolor: paperBg,
-    plot_bgcolor: plotBg,
-    font: { family: 'JetBrains Mono, monospace', size: 10, color: fontColor },
-    margin: { l: 45, r: 15, t: 10, b: 40 },
-    xaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
-    yaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
-  };
+  const isMobile = () => window.innerWidth <= 640;
+  function getBasePlotLayout() {
+    const mobile = isMobile();
+    return {
+      paper_bgcolor: paperBg,
+      plot_bgcolor: plotBg,
+      font: { family: 'JetBrains Mono, monospace', size: mobile ? 9 : 10, color: fontColor },
+      margin: mobile ? { l: 35, r: 8, t: 8, b: 32 } : { l: 45, r: 15, t: 10, b: 40 },
+      xaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
+      yaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
+    };
+  }
 
   // ─── Render All ───
   function render() {
@@ -687,11 +803,12 @@ function switchView(view) {
       { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,169,77,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
     ];
 
+    const base = getBasePlotLayout();
     const layout = {
-      ...basePlotLayout,
-      xaxis: { ...basePlotLayout.xaxis, title: 'Score' },
-      yaxis: { ...basePlotLayout.yaxis, title: 'Weighted Density' },
-      legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: 9, color: fontColor } },
+      ...base,
+      xaxis: { ...base.xaxis, title: 'Score' },
+      yaxis: { ...base.yaxis, title: 'Weighted Density' },
+      legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
       shapes: [{
         type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
         line: { color: '#fff', width: 2, dash: 'dot' }
@@ -714,11 +831,12 @@ function switchView(view) {
       { x: [fpr], y: [tpr], name: 'Operating Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: var_accent(), width: 2 } }, type: 'scatter' },
     ];
 
+    const base = getBasePlotLayout();
     const layout = {
-      ...basePlotLayout,
-      xaxis: { ...basePlotLayout.xaxis, title: 'FPR', range: [-0.02, 1.02] },
-      yaxis: { ...basePlotLayout.yaxis, title: 'TPR', range: [-0.02, 1.02] },
-      legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: 9, color: fontColor } },
+      ...base,
+      xaxis: { ...base.xaxis, title: 'FPR', range: [-0.02, 1.02] },
+      yaxis: { ...base.yaxis, title: 'TPR', range: [-0.02, 1.02] },
+      legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
     };
 
     Plotly.react('rocPlot', traces, layout, { displayModeBar: false, responsive: true });
@@ -788,18 +906,27 @@ function switchView(view) {
     const TN = Nn - FP;
 
     const svg = $('mosaicSVG');
+    const mobile = isMobile();
+
+    if (mobile) {
+      renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr);
+    } else {
+      renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr);
+    }
+  }
+
+  function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
     const W = 700, H = 320;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     const pad = { l: 50, r: 20, t: 30, b: 40 };
-    const bW = W - pad.l - pad.r;  // bar area width
-    const bH = H - pad.t - pad.b;  // bar area height
+    const bW = W - pad.l - pad.r;
+    const bH = H - pad.t - pad.b;
 
-    const pW = state.bal * bW;      // Positive column width
-    const nW = (1 - state.bal) * bW; // Negative column width
+    const pW = state.bal * bW;
+    const nW = (1 - state.bal) * bW;
 
-    // TP is top of P column, FN is bottom
     const tpH = P > 0 ? (TP / P) * bH : 0;
     const fnH = bH - tpH;
-    // FP is top of N column, TN is bottom
     const fpH = Nn > 0 ? (FP / Nn) * bH : 0;
     const tnH = bH - fpH;
 
@@ -807,46 +934,77 @@ function switchView(view) {
     const y0 = pad.t;
 
     let html = '';
-
-    // ── Cells ──
-    // TP (top-left of P column)
     html += rect(x0, y0, pW, tpH, 'rgba(0,214,143,0.35)', 'TP', TP, '#00d68f');
-    // FN (bottom of P column)
     html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,169,77,0.35)', 'FN', FN, '#ffa94d');
-    // FP (top of N column)
     html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,107,107,0.35)', 'FP', FP, '#ff6b6b');
-    // TN (bottom of N column)
     html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(79,140,255,0.35)', 'TN', TN, '#4f8cff');
 
-    // ── "Predicted Positive" outline around TP + FP ──
-    // TP spans [x0, y0] → [x0+pW, y0+tpH]
-    // FP spans [x0+pW, y0] → [x0+pW+nW, y0+fpH]
-    // The outline is an irregular polygon connecting their outer edges
     const ppPoints = [
-      [x0, y0],                       // top-left of TP
-      [x0 + pW + nW, y0],             // top-right of FP
-      [x0 + pW + nW, y0 + fpH],      // bottom-right of FP
-      [x0 + pW, y0 + fpH],           // bottom-left of FP = right edge at FP bottom
-      [x0 + pW, y0 + tpH],           // bottom-right of TP
-      [x0, y0 + tpH],                // bottom-left of TP
+      [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
+      [x0 + pW, y0 + fpH], [x0 + pW, y0 + tpH], [x0, y0 + tpH],
     ].map(p => p.join(',')).join(' ');
-
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
-    // "Predicted Positive" label
     html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.7">← Predicted Positive →</text>';
-
-    // ── Column labels (bottom) ──
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#4fc3f7" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff8a65" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
-
-    // ── Prevalence width annotation ──
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#6b7280" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#6b7280" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
-
-    // ── Side labels ──
     html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#00d68f" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
     html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffa94d" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+
+    svg.innerHTML = html;
+  }
+
+  // Vertical mosaic for mobile: two rows (Actual P on top, Actual N below)
+  function renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
+    const W = 360, H = 520;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const pad = { l: 12, r: 12, t: 28, b: 12 };
+    const bW = W - pad.l - pad.r;  // full width for bars
+    const gap = 32; // gap between the two rows
+    const labelH = 24; // space for row label above each row
+
+    // Row heights proportional to prevalence
+    const totalBarH = H - pad.t - pad.b - gap - labelH * 2;
+    const pRowH = state.bal * totalBarH;
+    const nRowH = (1 - state.bal) * totalBarH;
+
+    const x0 = pad.l;
+
+    // ── Actual Positive row (top) ──
+    const y0p = pad.t + labelH;
+    // TP on left, FN on right — widths proportional to TPR/FNR
+    const tpW = P > 0 ? (TP / P) * bW : 0;
+    const fnW = bW - tpW;
+
+    // ── Actual Negative row (bottom) ──
+    const y0n = y0p + pRowH + gap + labelH;
+    // FP on left, TN on right — widths proportional to FPR/TNR
+    const fpW = Nn > 0 ? (FP / Nn) * bW : 0;
+    const tnW = bW - fpW;
+
+    let html = '';
+
+    // Row labels
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#4fc3f7" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff8a65" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
+
+    // Positive row cells
+    html += rect(x0, y0p, tpW, pRowH, 'rgba(0,214,143,0.35)', 'TP', TP, '#00d68f');
+    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,169,77,0.35)', 'FN', FN, '#ffa94d');
+
+    // Negative row cells
+    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,107,107,0.35)', 'FP', FP, '#ff6b6b');
+    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(79,140,255,0.35)', 'TN', TN, '#4f8cff');
+
+    // "Predicted Positive" outline: TP (top-left of P row) + FP (top-left of N row)
+    // Draw dashed outlines around TP and FP individually to indicate "predicted positive"
+    if (tpW > 1) html += '<rect x="'+x0+'" y="'+y0p+'" width="'+tpW+'" height="'+pRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
+    if (fpW > 1) html += '<rect x="'+x0+'" y="'+y0n+'" width="'+fpW+'" height="'+nRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
+
+    // Predicted Positive label at top
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.6">⬜ dashed = Predicted Positive</text>';
 
     svg.innerHTML = html;
   }
@@ -924,6 +1082,13 @@ function switchView(view) {
 
   // ─── Init ───
   render();
+
+  // Re-render on resize/orientation change for mobile layout adjustments
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(render, 150);
+  });
 
 })();
 </script>
