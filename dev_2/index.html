@@ -1010,7 +1010,7 @@ function switchView(view) {
       }]
     };
 
-    Plotly.react('distPlot', traces, layout, { displayModeBar: false, responsive: true });
+    Plotly.react('distPlot', traces, layout, { displayModeBar: true, responsive: true });
   }
 
   // ─── Top View: Scatter plot preview ───
@@ -1152,7 +1152,7 @@ function switchView(view) {
       legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
     };
 
-    Plotly.react('rocPlot', traces, layout, { displayModeBar: false, responsive: true });
+    Plotly.react('rocPlot', traces, layout, { displayModeBar: true, responsive: true });
   }
 
   function var_accent() { return '#00f0ff'; }
