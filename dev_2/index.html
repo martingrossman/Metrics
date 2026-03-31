@@ -9,23 +9,23 @@
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
 
   :root {
-    --bg: #0c0e14;
-    --bg2: #141720;
-    --bg3: #1a1e2a;
-    --border: #2a2f3e;
-    --text: #c8cdd8;
-    --text-dim: #6b7280;
-    --accent: #4f8cff;
-    --accent2: #6c5ce7;
-    --green: #00d68f;
-    --red: #ff6b6b;
-    --orange: #ffa94d;
-    --pos-color: #4fc3f7;
-    --neg-color: #ff8a65;
-    --tp-color: #00d68f;
-    --fp-color: #ff6b6b;
-    --tn-color: #4f8cff;
-    --fn-color: #ffa94d;
+    --bg: #0a0a12;
+    --bg2: #12101e;
+    --bg3: #1b1730;
+    --border: #2e2650;
+    --text: #e0daf0;
+    --text-dim: #7a6f99;
+    --accent: #00f0ff;
+    --accent2: #ff2d95;
+    --green: #39ff14;
+    --red: #ff2d55;
+    --orange: #ffb400;
+    --pos-color: #00f0ff;
+    --neg-color: #ff2d95;
+    --tp-color: #39ff14;
+    --fp-color: #ff2d55;
+    --tn-color: #00f0ff;
+    --fn-color: #ffb400;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,7 +45,7 @@
     text-align: center;
     padding: 18px 0 10px;
     letter-spacing: -0.5px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    background: linear-gradient(135deg, var(--accent), var(--accent2), #b44dff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -219,10 +219,10 @@
     margin-top: 2px;
   }
 
-  .cm-tp { background: rgba(0,214,143,0.15); color: var(--tp-color); }
-  .cm-fp { background: rgba(255,107,107,0.15); color: var(--fp-color); }
-  .cm-fn { background: rgba(255,169,77,0.15); color: var(--fn-color); }
-  .cm-tn { background: rgba(79,140,255,0.15); color: var(--tn-color); }
+  .cm-tp { background: rgba(57,255,20,0.12); color: var(--tp-color); }
+  .cm-fp { background: rgba(255,45,85,0.15); color: var(--fp-color); }
+  .cm-fn { background: rgba(255,180,0,0.15); color: var(--fn-color); }
+  .cm-tn { background: rgba(0,240,255,0.12); color: var(--tn-color); }
 
   .metrics-grid {
     display: grid;
@@ -265,7 +265,7 @@
     color: var(--text-dim);
     text-align: center;
     padding: 6px;
-    background: rgba(79,140,255,0.06);
+    background: rgba(0,240,255,0.06);
     border-radius: 6px;
     margin-bottom: 10px;
     line-height: 1.4;
@@ -768,8 +768,8 @@ function switchView(view) {
   // ─── Plot Config ───
   const plotBg = 'rgba(0,0,0,0)';
   const paperBg = 'rgba(0,0,0,0)';
-  const gridColor = '#1e2333';
-  const fontColor = '#8892a4';
+  const gridColor = '#221d3a';
+  const fontColor = '#9088b0';
   const isMobile = () => window.innerWidth <= 640;
   function getBasePlotLayout() {
     const mobile = isMobile();
@@ -778,8 +778,8 @@ function switchView(view) {
       plot_bgcolor: plotBg,
       font: { family: 'JetBrains Mono, monospace', size: mobile ? 9 : 10, color: fontColor },
       margin: mobile ? { l: 35, r: 8, t: 8, b: 32 } : { l: 45, r: 15, t: 10, b: 40 },
-      xaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
-      yaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
+      xaxis: { gridcolor: gridColor, zerolinecolor: '#2e2650' },
+      yaxis: { gridcolor: gridColor, zerolinecolor: '#2e2650' },
     };
   }
 
@@ -825,10 +825,10 @@ function switchView(view) {
     }
 
     const traces = [
-      { x: xs, y: yNeg, name: 'Negative', line: { color: '#ff8a65', width: 2 }, type: 'scatter' },
-      { x: xs, y: yPos, name: 'Positive', line: { color: '#4fc3f7', width: 2 }, type: 'scatter' },
-      { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,107,107,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
-      { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,169,77,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+      { x: xs, y: yNeg, name: 'Negative', line: { color: '#ff2d95', width: 2 }, type: 'scatter' },
+      { x: xs, y: yPos, name: 'Positive', line: { color: '#00f0ff', width: 2 }, type: 'scatter' },
+      { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,45,85,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+      { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,180,0,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
     ];
 
     const base = getBasePlotLayout();
@@ -855,7 +855,7 @@ function switchView(view) {
 
     const traces = [
       { x: [0, 1], y: [0, 1], name: 'Random', line: { color: '#333', dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
-      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: 'rgba(79,140,255,0.08)' },
+      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: 'rgba(0,240,255,0.08)' },
       { x: [fpr], y: [tpr], name: 'Operating Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: var_accent(), width: 2 } }, type: 'scatter' },
     ];
 
@@ -870,7 +870,7 @@ function switchView(view) {
     Plotly.react('rocPlot', traces, layout, { displayModeBar: false, responsive: true });
   }
 
-  function var_accent() { return '#4f8cff'; }
+  function var_accent() { return '#00f0ff'; }
 
   function renderCM(tpr, fpr) {
     const P = Math.round(state.N * state.bal);
@@ -962,10 +962,10 @@ function switchView(view) {
     const y0 = pad.t;
 
     let html = '';
-    html += rect(x0, y0, pW, tpH, 'rgba(0,214,143,0.35)', 'TP', TP, '#00d68f');
-    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,169,77,0.35)', 'FN', FN, '#ffa94d');
-    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,107,107,0.35)', 'FP', FP, '#ff6b6b');
-    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(79,140,255,0.35)', 'TN', TN, '#4f8cff');
+    html += rect(x0, y0, pW, tpH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
+    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
+    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
+    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
 
     const ppPoints = [
       [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
@@ -974,12 +974,12 @@ function switchView(view) {
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
     html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.7">← Predicted Positive →</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#4fc3f7" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff8a65" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#6b7280" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#6b7280" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
-    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#00d68f" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
-    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffa94d" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff2d95" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
+    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
 
     svg.innerHTML = html;
   }
@@ -1015,16 +1015,16 @@ function switchView(view) {
     let html = '';
 
     // Row labels
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#4fc3f7" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff8a65" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#00f0ff" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff2d95" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
 
     // Positive row cells
-    html += rect(x0, y0p, tpW, pRowH, 'rgba(0,214,143,0.35)', 'TP', TP, '#00d68f');
-    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,169,77,0.35)', 'FN', FN, '#ffa94d');
+    html += rect(x0, y0p, tpW, pRowH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
+    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
 
     // Negative row cells
-    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,107,107,0.35)', 'FP', FP, '#ff6b6b');
-    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(79,140,255,0.35)', 'TN', TN, '#4f8cff');
+    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
+    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
 
     // "Predicted Positive" outline: TP (top-left of P row) + FP (top-left of N row)
     // Draw dashed outlines around TP and FP individually to indicate "predicted positive"
