@@ -324,6 +324,49 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
+  .metrics-vals-view, .metrics-eqs-view { display: none; }
+  .metrics-vals-view.active, .metrics-eqs-view.active { display: block; }
+
+  .equations-box {
+    overflow-y: auto;
+    max-height: 340px;
+    padding-right: 4px;
+  }
+
+  .eq-section {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background: var(--bg3);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .eq-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .eq {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    padding: 4px 0;
+    line-height: 1.4;
+  }
+
+  .eq-desc {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
   @media (max-width: 1100px) {
     .layout {
       grid-template-columns: 1fr 1fr;
@@ -616,22 +659,109 @@
 
   <!-- METRICS -->
   <div class="panel plot-metrics">
-    <div class="panel-title">Derived Metrics</div>
-    <div class="metrics-grid">
-      <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
-      <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
-      <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
-      <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
-      <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
-      <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
-      <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
-      <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+    <div class="panel-header">
+      <div class="panel-title">Derived Metrics</div>
+      <div class="view-toggle">
+        <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
+        <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Equations</button>
+      </div>
+    </div>
+
+    <div class="metrics-vals-view active" id="metricsValsView">
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
+        <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
+        <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
+        <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
+        <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
+        <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
+        <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
+        <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+      </div>
+    </div>
+
+    <div class="metrics-eqs-view" id="metricsEqsView">
+      <div class="equations-box">
+        <div class="eq-section">
+          <div class="eq-title">Bayes' Theorem</div>
+          <div class="eq">P(D|+) = P(+|D) · P(D) / P(+)</div>
+          <div class="eq-desc">The foundation of probabilistic classification. Given a positive test result (+), what is the probability the patient actually has the disease (D)? The answer depends on three things: how good the test is at catching true cases (likelihood), how common the disease is (prior), and how often the test fires overall (evidence). This is why a 99% accurate test can still give mostly false positives for a rare disease.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Precision (PPV) via Bayes</div>
+          <div class="eq">PPV = TPR · Prev / (TPR · Prev + FPR · (1−Prev))</div>
+          <div class="eq-desc">Precision answers: "If the model says positive, how likely is it correct?" Rewritten via Bayes, it becomes clear that precision is not just about the model's quality (TPR and FPR) but is heavily influenced by prevalence. In a dataset where only 1% of samples are positive, even a good classifier will have many false positives drowning out the true ones. This is the base-rate fallacy in action. Increase prevalence (the Balance slider) and watch precision rise.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">NPV via Bayes</div>
+          <div class="eq">NPV = TNR · (1−Prev) / (TNR · (1−Prev) + FNR · Prev)</div>
+          <div class="eq-desc">The mirror of PPV: "If the model says negative, how likely is that correct?" When prevalence is low, most negative predictions are correct (high NPV) because negatives dominate the population. As prevalence increases, the fraction of missed positives (FN) grows relative to true negatives, and NPV drops. NPV and PPV move in opposite directions as you change prevalence, which is a key Bayesian insight.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Sensitivity (Recall / TPR)</div>
+          <div class="eq">TPR = P(+|D) = TP / (TP + FN)</div>
+          <div class="eq-desc">Of all the actual positives, how many did the model catch? A sensitivity of 0.95 means 95% of true cases are detected, but 5% are missed (false negatives). Critical in medical screening: missing a cancer diagnosis (FN) is usually worse than a false alarm (FP). Sensitivity is intrinsic to the model and threshold, not affected by prevalence. Moving the threshold left increases sensitivity but also increases false positives.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Specificity (TNR)</div>
+          <div class="eq">TNR = P(−|D̄) = TN / (TN + FP)</div>
+          <div class="eq-desc">Of all the actual negatives, how many did the model correctly identify? Specificity of 0.90 means 10% of healthy patients receive a false positive. Like sensitivity, specificity is independent of prevalence. It depends only on the negative class distribution and the chosen threshold. High specificity is important when false positives are costly, such as unnecessary surgeries or wrongful convictions.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Accuracy</div>
+          <div class="eq">Acc = (TP + TN) / N</div>
+          <div class="eq-desc">The most intuitive metric: what fraction of all predictions were correct? However, accuracy is misleading with imbalanced classes. A model that always predicts "negative" on a dataset with 95% negatives achieves 95% accuracy while catching zero true positives. This is why accuracy alone is never sufficient. Compare it with the Balance slider at extreme values to see this paradox in action.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">F1 Score</div>
+          <div class="eq">F1 = 2 · PPV · TPR / (PPV + TPR)</div>
+          <div class="eq-desc">The harmonic mean of precision and recall. Unlike the arithmetic mean, the harmonic mean punishes extreme imbalance: if either precision or recall is near zero, F1 collapses. An F1 of 0.8 guarantees that both precision and recall are at least 0.67. It is prevalence-dependent (through precision) and is most useful when you care equally about false positives and false negatives. For asymmetric costs, consider F-beta variants.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">AUC (Area Under ROC Curve)</div>
+          <div class="eq">AUC = integral of TPR d(FPR) over [0,1]</div>
+          <div class="eq-desc">AUC measures the model's ability to discriminate between classes across all possible thresholds. It equals the probability that a randomly chosen positive scores higher than a randomly chosen negative. AUC = 0.5 means random guessing (diagonal ROC), AUC = 1.0 means perfect separation. Unlike most other metrics, AUC is threshold-independent and prevalence-independent, making it ideal for comparing models. Try increasing the distance between the distribution means and watch AUC approach 1.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">MCC (Matthews Correlation Coefficient)</div>
+          <div class="eq">MCC = (TP·TN − FP·FN) / √((TP+FP)(TP+FN)(TN+FP)(TN+FN))</div>
+          <div class="eq-desc">MCC is a correlation coefficient between the observed and predicted binary classifications, ranging from −1 (total disagreement) through 0 (random) to +1 (perfect). Unlike F1 and accuracy, MCC uses all four confusion matrix quadrants and is considered the most informative single metric for binary classification. It remains reliable even with highly imbalanced datasets because it only achieves a high score if the model performs well on both the positive and negative class.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Likelihood Ratios</div>
+          <div class="eq">LR+ = TPR / FPR &nbsp;&nbsp;|&nbsp;&nbsp; LR− = FNR / TNR</div>
+          <div class="eq-desc">Likelihood ratios express how much a test result shifts the odds. LR+ tells you how much more likely a positive result is in a true positive vs. a false positive. LR+ > 10 is considered strong diagnostic evidence. LR− tells you how much a negative result reduces the odds of disease. LR− < 0.1 is strong evidence for ruling out. Unlike PPV/NPV, likelihood ratios are independent of prevalence, making them portable across populations with different base rates.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">The Prevalence Paradox</div>
+          <div class="eq">If Prev = 0.01, TPR = 0.99, FPR = 0.01: PPV = 0.50</div>
+          <div class="eq-desc">Even with 99% sensitivity and 99% specificity, half the positive predictions are wrong when the disease affects only 1% of the population. For every true positive caught, there is one false positive from the vast pool of healthy individuals. This is not a flaw in the test but a mathematical consequence of Bayes' theorem. It explains why population-wide screening for rare conditions produces so many false alarms, and why confirmatory tests exist.</div>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
+function switchMetricsView(view) {
+  var valsView = document.getElementById('metricsValsView');
+  var eqsView = document.getElementById('metricsEqsView');
+  var btnVals = document.getElementById('btn_metrics_vals');
+  var btnEqs = document.getElementById('btn_metrics_eqs');
+  if (view === 'vals') {
+    valsView.classList.add('active');
+    eqsView.classList.remove('active');
+    btnVals.classList.add('active');
+    btnEqs.classList.remove('active');
+  } else {
+    valsView.classList.remove('active');
+    eqsView.classList.add('active');
+    btnVals.classList.remove('active');
+    btnEqs.classList.add('active');
+  }
+}
+
 function switchDistView(view) {
   var curvesView = document.getElementById('distCurvesView');
   var topView = document.getElementById('distTopView');
