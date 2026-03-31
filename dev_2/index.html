@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROC &amp; Confusion Matrix Playground</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0c0e14;
+    --bg2: #141720;
+    --bg3: #1a1e2a;
+    --border: #2a2f3e;
+    --text: #c8cdd8;
+    --text-dim: #6b7280;
+    --accent: #4f8cff;
+    --accent2: #6c5ce7;
+    --green: #00d68f;
+    --red: #ff6b6b;
+    --orange: #ffa94d;
+    --pos-color: #4fc3f7;
+    --neg-color: #ff8a65;
+    --tp-color: #00d68f;
+    --fp-color: #ff6b6b;
+    --tn-color: #4f8cff;
+    --fn-color: #ffa94d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 18px 0 10px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 14px;
+    padding: 10px 16px 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .controls {
+    grid-row: 1 / 3;
+    grid-column: 1;
+  }
+
+  .plot-distributions { grid-column: 2; grid-row: 1; }
+  .plot-roc { grid-column: 3; grid-row: 1; }
+  .plot-cm { grid-column: 2; grid-row: 2; }
+  .plot-metrics { grid-column: 3; grid-row: 2; }
+
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    min-height: 0;
+  }
+
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .slider-group {
+    margin-bottom: 10px;
+  }
+
+  .slider-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
+
+  .slider-group label span.val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--bg3);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent2);
+    margin: 14px 0 6px;
+  }
+
+  .section-label:first-child { margin-top: 0; }
+
+  .separator {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 10px 0;
+  }
+
+  .cm-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-rows: auto auto 1fr 1fr;
+    gap: 3px;
+    width: 100%;
+    aspect-ratio: 1.15;
+    max-width: 360px;
+    margin: 0 auto;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .cm-corner { }
+  .cm-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px;
+  }
+  .cm-header.top-label {
+    grid-column: 2 / 4;
+    grid-row: 1;
+  }
+  .cm-header.left-label {
+    grid-column: 1;
+    grid-row: 3 / 5;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+  }
+
+  .cm-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 8px;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .cm-cell .count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cm-cell .label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  .cm-cell .rate {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  .cm-tp { background: rgba(0,214,143,0.15); color: var(--tp-color); }
+  .cm-fp { background: rgba(255,107,107,0.15); color: var(--fp-color); }
+  .cm-fn { background: rgba(255,169,77,0.15); color: var(--fn-color); }
+  .cm-tn { background: rgba(79,140,255,0.15); color: var(--tn-color); }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .metric-card {
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+
+  .metric-card .metric-name {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .metric-card .metric-val {
+    font-size: 1.15rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+  }
+
+  .metric-card .metric-formula {
+    font-size: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .bidirectional-hint {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 6px;
+    background: rgba(79,140,255,0.06);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  @media (max-width: 1100px) {
+    .layout {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+    }
+    .controls {
+      grid-column: 1 / 3;
+      grid-row: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    .plot-distributions { grid-column: 1; grid-row: 2; }
+    .plot-roc { grid-column: 2; grid-row: 2; }
+    .plot-cm { grid-column: 1; grid-row: 3; }
+    .plot-metrics { grid-column: 2; grid-row: 3; }
+  }
+</style>
+</head>
+<body>
+
+<h1>ROC &amp; Confusion Matrix Playground</h1>
+
+<div class="layout">
+
+  <!-- CONTROLS -->
+  <div class="controls panel">
+    <div class="panel-title">Parameters</div>
+    <div class="bidirectional-hint">
+      ↔ Distribution params &amp; operating point (TPR/FPR) are bidirectionally linked.
+      Changing one updates the other.
+    </div>
+
+    <div class="section-label">Class Distributions</div>
+
+    <div class="slider-group">
+      <label>μ Negative <span class="val" id="v_mu_neg">0.0</span></label>
+      <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0">
+    </div>
+    <div class="slider-group">
+      <label>σ Negative <span class="val" id="v_std_neg">1.0</span></label>
+      <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1">
+    </div>
+    <div class="slider-group">
+      <label>μ Positive <span class="val" id="v_mu_pos">2.0</span></label>
+      <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2">
+    </div>
+    <div class="slider-group">
+      <label>σ Positive <span class="val" id="v_std_pos">1.0</span></label>
+      <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1">
+    </div>
+
+    <hr class="separator">
+    <div class="section-label">Operating Point</div>
+
+    <div class="slider-group">
+      <label>TPR (Sensitivity) <span class="val" id="v_tpr">0.80</span></label>
+      <input type="range" id="s_tpr" min="0" max="1" step="0.005" value="0.8">
+    </div>
+    <div class="slider-group">
+      <label>FPR (1 − Specificity) <span class="val" id="v_fpr">0.10</span></label>
+      <input type="range" id="s_fpr" min="0" max="1" step="0.005" value="0.1">
+    </div>
+    <div class="slider-group">
+      <label>Threshold <span class="val" id="v_thresh">—</span></label>
+      <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
+    </div>
+
+    <hr class="separator">
+    <div class="section-label">Dataset</div>
+
+    <div class="slider-group">
+      <label>N (total samples) <span class="val" id="v_N">1000</span></label>
+      <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
+    </div>
+    <div class="slider-group">
+      <label>Balance (P prevalence) <span class="val" id="v_bal">0.30</span></label>
+      <input type="range" id="s_bal" min="0.01" max="0.99" step="0.01" value="0.30">
+    </div>
+  </div>
+
+  <!-- DISTRIBUTION PLOT -->
+  <div class="panel plot-distributions">
+    <div class="panel-title">Class Distributions &amp; Threshold</div>
+    <div id="distPlot" style="width:100%;height:340px;"></div>
+  </div>
+
+  <!-- ROC PLOT -->
+  <div class="panel plot-roc">
+    <div class="panel-title">ROC Curve</div>
+    <div id="rocPlot" style="width:100%;height:340px;"></div>
+  </div>
+
+  <!-- CONFUSION MATRIX -->
+  <div class="panel plot-cm">
+    <div class="panel-title">Confusion Matrix</div>
+    <div class="cm-grid">
+      <div class="cm-corner"></div>
+      <div class="cm-header top-label">Predicted</div>
+      <div class="cm-corner"></div>
+      <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
+      <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
+      <div class="cm-header left-label">Actual</div>
+      <div class="cm-cell cm-tp" id="cm_tp">
+        <span class="count">—</span>
+        <span class="label">TP</span>
+        <span class="rate"></span>
+      </div>
+      <div class="cm-cell cm-fn" id="cm_fn">
+        <span class="count">—</span>
+        <span class="label">FN</span>
+        <span class="rate"></span>
+      </div>
+      <div class="cm-cell cm-fp" id="cm_fp">
+        <span class="count">—</span>
+        <span class="label">FP</span>
+        <span class="rate"></span>
+      </div>
+      <div class="cm-cell cm-tn" id="cm_tn">
+        <span class="count">—</span>
+        <span class="label">TN</span>
+        <span class="rate"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="panel plot-metrics">
+    <div class="panel-title">Derived Metrics</div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
+      <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
+      <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
+      <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
+      <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
+      <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
+      <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
+      <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ─── Helpers ───
+  const $ = id => document.getElementById(id);
+  const pf = (v, d=2) => v.toFixed(d);
+
+  // Normal PDF
+  function normPDF(x, mu, sigma) {
+    const z = (x - mu) / sigma;
+    return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
+  }
+
+  // Normal CDF via approximation (Abramowitz & Stegun)
+  function normCDF(x, mu, sigma) {
+    const z = (x - mu) / sigma;
+    return stdNormCDF(z);
+  }
+
+  function stdNormCDF(z) {
+    const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+    const sign = z < 0 ? -1 : 1;
+    const az = Math.abs(z);
+    const t = 1.0 / (1.0 + p * az);
+    const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-az*az/2);
+    return 0.5 * (1.0 + sign * y);
+  }
+
+  // Inverse normal CDF (rational approximation)
+  function stdNormInvCDF(p) {
+    if (p <= 0) return -8;
+    if (p >= 1) return 8;
+    if (p < 0.5) return -stdNormInvCDF(1 - p);
+    // Rational approximation for 0.5 <= p < 1
+    const t = Math.sqrt(-2 * Math.log(1 - p));
+    const c0=2.515517, c1=0.802853, c2=0.010328;
+    const d1=1.432788, d2=0.189269, d3=0.001308;
+    return t - (c0 + c1*t + c2*t*t) / (1 + d1*t + d2*t*t + d3*t*t*t);
+  }
+
+  function normInvCDF(p, mu, sigma) {
+    return mu + sigma * stdNormInvCDF(p);
+  }
+
+  // ─── State ───
+  let state = {
+    mu_neg: 0, std_neg: 1,
+    mu_pos: 2, std_pos: 1,
+    N: 1000, bal: 0.3,
+    threshold: 1.0
+  };
+
+  let updating = false; // reentrance guard
+
+  // ─── Derived: from threshold → TPR, FPR ───
+  function threshToRates(t) {
+    // TPR = P(X > t | positive) = 1 - CDF(t, mu_pos, std_pos)
+    const tpr = 1 - normCDF(t, state.mu_pos, state.std_pos);
+    // FPR = P(X > t | negative) = 1 - CDF(t, mu_neg, std_neg)
+    const fpr = 1 - normCDF(t, state.mu_neg, state.std_neg);
+    return { tpr, fpr };
+  }
+
+  // ─── From TPR → threshold (given positive distribution) ───
+  function tprToThresh(tpr) {
+    // TPR = 1 - CDF(t) => CDF(t) = 1-TPR => t = invCDF(1-TPR)
+    return normInvCDF(1 - tpr, state.mu_pos, state.std_pos);
+  }
+
+  // ─── From FPR → threshold (given negative distribution) ───
+  function fprToThresh(fpr) {
+    return normInvCDF(1 - fpr, state.mu_neg, state.std_neg);
+  }
+
+  // ─── Generate ROC curve points ───
+  function generateROC(nPts) {
+    const pts = [];
+    for (let i = 0; i <= nPts; i++) {
+      const t = state.mu_neg - 4*state.std_neg + (state.mu_pos + 4*state.std_pos - state.mu_neg + 4*state.std_neg) * i / nPts;
+      const { tpr, fpr } = threshToRates(t);
+      pts.push({ fpr, tpr, t });
+    }
+    // sort by fpr
+    pts.sort((a, b) => a.fpr - b.fpr);
+    return pts;
+  }
+
+  // ─── AUC via trapezoidal ───
+  function computeAUC(rocPts) {
+    let auc = 0;
+    for (let i = 1; i < rocPts.length; i++) {
+      const dx = rocPts[i].fpr - rocPts[i-1].fpr;
+      const avgY = (rocPts[i].tpr + rocPts[i-1].tpr) / 2;
+      auc += dx * avgY;
+    }
+    return auc;
+  }
+
+  // ─── Slider read/write ───
+  function readSliders() {
+    return {
+      mu_neg: parseFloat($('s_mu_neg').value),
+      std_neg: parseFloat($('s_std_neg').value),
+      mu_pos: parseFloat($('s_mu_pos').value),
+      std_pos: parseFloat($('s_std_pos').value),
+      N: parseInt($('s_N').value),
+      bal: parseFloat($('s_bal').value),
+      threshold: parseFloat($('s_thresh').value)
+    };
+  }
+
+  function writeSlider(id, val) {
+    $(id).value = val;
+  }
+
+  function updateValueDisplays() {
+    const { tpr, fpr } = threshToRates(state.threshold);
+    $('v_mu_neg').textContent = pf(state.mu_neg, 1);
+    $('v_std_neg').textContent = pf(state.std_neg, 1);
+    $('v_mu_pos').textContent = pf(state.mu_pos, 1);
+    $('v_std_pos').textContent = pf(state.std_pos, 1);
+    $('v_N').textContent = state.N;
+    $('v_bal').textContent = pf(state.bal);
+    $('v_tpr').textContent = pf(tpr, 3);
+    $('v_fpr').textContent = pf(fpr, 3);
+    $('v_thresh').textContent = pf(state.threshold);
+  }
+
+  // ─── Plot Config ───
+  const plotBg = 'rgba(0,0,0,0)';
+  const paperBg = 'rgba(0,0,0,0)';
+  const gridColor = '#1e2333';
+  const fontColor = '#8892a4';
+  const basePlotLayout = {
+    paper_bgcolor: paperBg,
+    plot_bgcolor: plotBg,
+    font: { family: 'JetBrains Mono, monospace', size: 10, color: fontColor },
+    margin: { l: 45, r: 15, t: 10, b: 40 },
+    xaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
+    yaxis: { gridcolor: gridColor, zerolinecolor: '#2a3040' },
+  };
+
+  // ─── Render All ───
+  function render() {
+    const { tpr, fpr } = threshToRates(state.threshold);
+    updateValueDisplays();
+
+    // Sync TPR/FPR sliders
+    writeSlider('s_tpr', Math.max(0, Math.min(1, tpr)));
+    writeSlider('s_fpr', Math.max(0, Math.min(1, fpr)));
+
+    renderDistPlot(tpr, fpr);
+    renderROCPlot(tpr, fpr);
+    renderCM(tpr, fpr);
+    renderMetrics(tpr, fpr);
+  }
+
+  function renderDistPlot(tpr, fpr) {
+    const xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
+    const xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
+    const xs = [];
+    const yNeg = [], yPos = [];
+    const steps = 300;
+    const wP = state.bal;       // prevalence weight for positives
+    const wN = 1 - state.bal;   // prevalence weight for negatives
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (xMax - xMin) * i / steps;
+      xs.push(x);
+      yNeg.push(wN * normPDF(x, state.mu_neg, state.std_neg));
+      yPos.push(wP * normPDF(x, state.mu_pos, state.std_pos));
+    }
+
+    // Fill areas for FP and FN (weighted by prevalence)
+    const t = state.threshold;
+    const xFP = [], yFP = [];  // neg distribution, x > t
+    const xFN = [], yFN = [];  // pos distribution, x < t
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (xMax - xMin) * i / steps;
+      if (x >= t) { xFP.push(x); yFP.push(wN * normPDF(x, state.mu_neg, state.std_neg)); }
+      if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
+    }
+
+    const traces = [
+      { x: xs, y: yNeg, name: 'Negative', line: { color: '#ff8a65', width: 2 }, type: 'scatter' },
+      { x: xs, y: yPos, name: 'Positive', line: { color: '#4fc3f7', width: 2 }, type: 'scatter' },
+      { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,107,107,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+      { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,169,77,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+    ];
+
+    const layout = {
+      ...basePlotLayout,
+      xaxis: { ...basePlotLayout.xaxis, title: 'Score' },
+      yaxis: { ...basePlotLayout.yaxis, title: 'Weighted Density' },
+      legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: 9, color: fontColor } },
+      shapes: [{
+        type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
+        line: { color: '#fff', width: 2, dash: 'dot' }
+      }],
+      annotations: [{
+        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
+        font: { size: 10, color: '#fff' }
+      }]
+    };
+
+    Plotly.react('distPlot', traces, layout, { displayModeBar: false, responsive: true });
+  }
+
+  function renderROCPlot(tpr, fpr) {
+    const rocPts = generateROC(500);
+
+    const traces = [
+      { x: [0, 1], y: [0, 1], name: 'Random', line: { color: '#333', dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
+      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: 'rgba(79,140,255,0.08)' },
+      { x: [fpr], y: [tpr], name: 'Operating Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: var_accent(), width: 2 } }, type: 'scatter' },
+    ];
+
+    const layout = {
+      ...basePlotLayout,
+      xaxis: { ...basePlotLayout.xaxis, title: 'FPR', range: [-0.02, 1.02] },
+      yaxis: { ...basePlotLayout.yaxis, title: 'TPR', range: [-0.02, 1.02] },
+      legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: 9, color: fontColor } },
+    };
+
+    Plotly.react('rocPlot', traces, layout, { displayModeBar: false, responsive: true });
+  }
+
+  function var_accent() { return '#4f8cff'; }
+
+  function renderCM(tpr, fpr) {
+    const P = Math.round(state.N * state.bal);
+    const N_neg = state.N - P;
+    const TP = Math.round(P * tpr);
+    const FN = P - TP;
+    const FP = Math.round(N_neg * fpr);
+    const TN = N_neg - FP;
+
+    setCM('cm_tp', TP, 'TP', P > 0 ? pf(TP/P*100,1)+'%' : '—');
+    setCM('cm_fn', FN, 'FN', P > 0 ? pf(FN/P*100,1)+'%' : '—');
+    setCM('cm_fp', FP, 'FP', N_neg > 0 ? pf(FP/N_neg*100,1)+'%' : '—');
+    setCM('cm_tn', TN, 'TN', N_neg > 0 ? pf(TN/N_neg*100,1)+'%' : '—');
+  }
+
+  function setCM(id, count, label, rate) {
+    const el = $(id);
+    el.querySelector('.count').textContent = count;
+    el.querySelector('.label').textContent = label;
+    el.querySelector('.rate').textContent = rate;
+  }
+
+  function renderMetrics(tpr, fpr) {
+    const P = Math.round(state.N * state.bal);
+    const N_neg = state.N - P;
+    const TP = Math.round(P * tpr);
+    const FN = P - TP;
+    const FP = Math.round(N_neg * fpr);
+    const TN = N_neg - FP;
+
+    const acc = state.N > 0 ? (TP+TN)/state.N : 0;
+    const prec = (TP+FP) > 0 ? TP/(TP+FP) : 0;
+    const rec = (TP+FN) > 0 ? TP/(TP+FN) : 0;
+    const spec = (TN+FP) > 0 ? TN/(TN+FP) : 0;
+    const f1 = (prec+rec) > 0 ? 2*prec*rec/(prec+rec) : 0;
+    const npv = (TN+FN) > 0 ? TN/(TN+FN) : 0;
+
+    const denom = Math.sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN));
+    const mcc = denom > 0 ? (TP*TN - FP*FN)/denom : 0;
+
+    const rocPts = generateROC(500);
+    const auc = computeAUC(rocPts);
+
+    $('m_acc').textContent = pf(acc, 3);
+    $('m_prec').textContent = pf(prec, 3);
+    $('m_rec').textContent = pf(rec, 3);
+    $('m_spec').textContent = pf(spec, 3);
+    $('m_f1').textContent = pf(f1, 3);
+    $('m_auc').textContent = pf(auc, 3);
+    $('m_npv').textContent = pf(npv, 3);
+    $('m_mcc').textContent = pf(mcc, 3);
+  }
+
+  // ─── Event Wiring ───
+  // Distribution sliders → recompute threshold's TPR/FPR (threshold stays, rates change)
+  ['s_mu_neg','s_std_neg','s_mu_pos','s_std_pos'].forEach(id => {
+    $(id).addEventListener('input', () => {
+      if (updating) return;
+      updating = true;
+      state.mu_neg = parseFloat($('s_mu_neg').value);
+      state.std_neg = parseFloat($('s_std_neg').value);
+      state.mu_pos = parseFloat($('s_mu_pos').value);
+      state.std_pos = parseFloat($('s_std_pos').value);
+      // threshold stays, TPR/FPR update accordingly
+      render();
+      updating = false;
+    });
+  });
+
+  // TPR slider → compute new threshold from positive dist, update FPR
+  $('s_tpr').addEventListener('input', () => {
+    if (updating) return;
+    updating = true;
+    const newTPR = parseFloat($('s_tpr').value);
+    state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
+    writeSlider('s_thresh', state.threshold);
+    render();
+    updating = false;
+  });
+
+  // FPR slider → compute new threshold from negative dist, update TPR
+  $('s_fpr').addEventListener('input', () => {
+    if (updating) return;
+    updating = true;
+    const newFPR = parseFloat($('s_fpr').value);
+    state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
+    writeSlider('s_thresh', state.threshold);
+    render();
+    updating = false;
+  });
+
+  // Threshold slider → update TPR & FPR
+  $('s_thresh').addEventListener('input', () => {
+    if (updating) return;
+    updating = true;
+    state.threshold = parseFloat($('s_thresh').value);
+    render();
+    updating = false;
+  });
+
+  // N & Balance → just re-render CM & metrics
+  ['s_N','s_bal'].forEach(id => {
+    $(id).addEventListener('input', () => {
+      if (updating) return;
+      updating = true;
+      state.N = parseInt($('s_N').value);
+      state.bal = parseFloat($('s_bal').value);
+      render();
+      updating = false;
+    });
+  });
+
+  // ─── Init ───
+  render();
+
+})();
+</script>
+</body>
+</html>
