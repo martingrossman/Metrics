@@ -321,6 +321,9 @@
   .cm-view, .mosaic-view { display: none; }
   .cm-view.active, .mosaic-view.active { display: block; }
 
+  .dist-curves-view, .dist-topview-view { display: none; }
+  .dist-curves-view.active, .dist-topview-view.active { display: block; }
+
   @media (max-width: 1100px) {
     .layout {
       grid-template-columns: 1fr 1fr;
@@ -544,8 +547,19 @@
 
   <!-- DISTRIBUTION PLOT -->
   <div class="panel plot-distributions">
-    <div class="panel-title">Class Distributions &amp; Threshold</div>
-    <div id="distPlot" style="width:100%;height:340px;"></div>
+    <div class="panel-header">
+      <div class="panel-title">Class Distributions &amp; Threshold</div>
+      <div class="view-toggle">
+        <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
+        <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
+      </div>
+    </div>
+    <div class="dist-curves-view active" id="distCurvesView">
+      <div id="distPlot" style="width:100%;height:320px;"></div>
+    </div>
+    <div class="dist-topview-view" id="distTopView">
+      <svg id="topViewSVG" viewBox="0 0 700 320" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
   </div>
 
   <!-- ROC PLOT -->
@@ -618,6 +632,24 @@
 </div>
 
 <script>
+function switchDistView(view) {
+  var curvesView = document.getElementById('distCurvesView');
+  var topView = document.getElementById('distTopView');
+  var btnCurves = document.getElementById('btn_dist_curves');
+  var btnTop = document.getElementById('btn_dist_topview');
+  if (view === 'curves') {
+    curvesView.classList.add('active');
+    topView.classList.remove('active');
+    btnCurves.classList.add('active');
+    btnTop.classList.remove('active');
+  } else {
+    curvesView.classList.remove('active');
+    topView.classList.add('active');
+    btnCurves.classList.remove('active');
+    btnTop.classList.add('active');
+  }
+}
+
 function switchView(view) {
   var cmView = document.getElementById('cmView');
   var mosaicView = document.getElementById('mosaicView');
@@ -793,6 +825,7 @@ function switchView(view) {
     writeSlider('s_fpr', Math.max(0, Math.min(1, fpr)));
 
     renderDistPlot(tpr, fpr);
+    renderTopView(tpr, fpr);
     renderROCPlot(tpr, fpr);
     renderCM(tpr, fpr);
     renderMetrics(tpr, fpr);
@@ -848,6 +881,112 @@ function switchView(view) {
     };
 
     Plotly.react('distPlot', traces, layout, { displayModeBar: false, responsive: true });
+  }
+
+  // ─── Top View: 2D density strips ───
+  function renderTopView(tpr, fpr) {
+    const svg = $('topViewSVG');
+    const W = 700, H = 320;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    const pad = { l: 70, r: 20, t: 15, b: 45 };
+    const bW = W - pad.l - pad.r;
+    const bH = H - pad.t - pad.b;
+    const stripH = bH * 0.38;
+    const gap = bH * 0.24;
+    const t = state.threshold;
+
+    // Score range
+    const xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
+    const xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
+    const steps = 200;
+
+    // Precompute max densities for normalization
+    const peakNeg = normPDF(state.mu_neg, state.mu_neg, state.std_neg);
+    const peakPos = normPDF(state.mu_pos, state.mu_pos, state.std_pos);
+
+    let html = '';
+
+    // ── Negative strip (top) ──
+    const y0neg = pad.t;
+    html += buildStrip(xMin, xMax, steps, bW, stripH, pad.l, y0neg,
+      function(x) { return normPDF(x, state.mu_neg, state.std_neg) / peakNeg; },
+      '#ff2d95', 'Negative');
+
+    // ── Positive strip (bottom) ──
+    const y0pos = pad.t + stripH + gap;
+    html += buildStrip(xMin, xMax, steps, bW, stripH, pad.l, y0pos,
+      function(x) { return normPDF(x, state.mu_pos, state.std_pos) / peakPos; },
+      '#00f0ff', 'Positive');
+
+    // ── Threshold line across both strips ──
+    const tX = pad.l + ((t - xMin) / (xMax - xMin)) * bW;
+    if (tX >= pad.l && tX <= pad.l + bW) {
+      html += '<line x1="'+tX+'" y1="'+(pad.t - 5)+'" x2="'+tX+'" y2="'+(pad.t + stripH*2 + gap + 5)+'" stroke="#fff" stroke-width="2" stroke-dasharray="6,3" opacity="0.9"/>';
+      html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace">t='+pf(t)+'</text>';
+    }
+
+    // ── TP/FP/TN/FN region labels ──
+    // Negative strip: left of threshold = TN, right = FP
+    const tClamp = Math.max(xMin, Math.min(xMax, t));
+    const tFrac = (tClamp - xMin) / (xMax - xMin);
+    const tnMidX = pad.l + tFrac * bW / 2;
+    const fpMidX = pad.l + tFrac * bW + (1 - tFrac) * bW / 2;
+    const negMidY = y0neg + stripH / 2;
+    if (tFrac > 0.08) html += '<text x="'+tnMidX+'" y="'+negMidY+'" text-anchor="middle" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle" opacity="0.8">TN</text>';
+    if (tFrac < 0.92) html += '<text x="'+fpMidX+'" y="'+negMidY+'" text-anchor="middle" fill="#ff2d55" font-size="11" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle" opacity="0.8">FP</text>';
+
+    // Positive strip: left of threshold = FN, right = TP
+    const fnMidX = pad.l + tFrac * bW / 2;
+    const tpMidX = pad.l + tFrac * bW + (1 - tFrac) * bW / 2;
+    const posMidY = y0pos + stripH / 2;
+    if (tFrac > 0.08) html += '<text x="'+fnMidX+'" y="'+posMidY+'" text-anchor="middle" fill="#ffb400" font-size="11" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle" opacity="0.8">FN</text>';
+    if (tFrac < 0.92) html += '<text x="'+tpMidX+'" y="'+posMidY+'" text-anchor="middle" fill="#39ff14" font-size="11" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle" opacity="0.8">TP</text>';
+
+    // ── Row labels ──
+    html += '<text x="'+(pad.l - 10)+'" y="'+(y0neg + stripH/2)+'" text-anchor="end" fill="#ff2d95" font-size="12" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Neg</text>';
+    html += '<text x="'+(pad.l - 10)+'" y="'+(y0pos + stripH/2)+'" text-anchor="end" fill="#00f0ff" font-size="12" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Pos</text>';
+
+    // ── Score axis ──
+    const nTicks = 7;
+    for (let i = 0; i <= nTicks; i++) {
+      const v = xMin + (xMax - xMin) * i / nTicks;
+      const ax = pad.l + (i / nTicks) * bW;
+      html += '<text x="'+ax+'" y="'+(pad.t + stripH*2 + gap + 22)+'" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">'+pf(v,1)+'</text>';
+      html += '<line x1="'+ax+'" y1="'+(pad.t + stripH*2 + gap + 2)+'" x2="'+ax+'" y2="'+(pad.t + stripH*2 + gap + 8)+'" stroke="#7a6f99" stroke-width="1"/>';
+    }
+    html += '<text x="'+(pad.l + bW/2)+'" y="'+(H - 4)+'" text-anchor="middle" fill="#9088b0" font-size="10" font-family="JetBrains Mono, monospace">Score</text>';
+
+    svg.innerHTML = html;
+  }
+
+  function buildStrip(xMin, xMax, steps, bW, stripH, x0, y0, densityFn, baseColor, name) {
+    let html = '';
+    const sliceW = bW / steps;
+
+    // Parse base color to RGB
+    const r = parseInt(baseColor.slice(1,3), 16);
+    const g = parseInt(baseColor.slice(3,5), 16);
+    const b = parseInt(baseColor.slice(5,7), 16);
+
+    // Draw border
+    html += '<rect x="'+x0+'" y="'+y0+'" width="'+bW+'" height="'+stripH+'" fill="none" stroke="'+baseColor+'" stroke-width="1" rx="4" opacity="0.3"/>';
+
+    // Clip path for rounded corners
+    const clipId = 'clip_' + name;
+    html += '<defs><clipPath id="'+clipId+'"><rect x="'+x0+'" y="'+y0+'" width="'+bW+'" height="'+stripH+'" rx="4"/></clipPath></defs>';
+    html += '<g clip-path="url(#'+clipId+')">';
+
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (xMax - xMin) * i / steps;
+      const d = densityFn(x);
+      const alpha = Math.max(0.02, d * 0.85);
+      const sx = x0 + (i / steps) * bW;
+      html += '<rect x="'+sx+'" y="'+y0+'" width="'+(sliceW+0.5)+'" height="'+stripH+'" fill="rgba('+r+','+g+','+b+','+alpha.toFixed(3)+')"/>';
+    }
+
+    html += '</g>';
+    return html;
   }
 
   function renderROCPlot(tpr, fpr) {
