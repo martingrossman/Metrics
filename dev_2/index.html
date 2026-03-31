@@ -67,7 +67,7 @@
 
   .plot-distributions { grid-column: 2; grid-row: 1; }
   .plot-roc { grid-column: 3; grid-row: 1; }
-  .plot-cm { grid-column: 2; grid-row: 2; }
+  .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
   .plot-metrics { grid-column: 3; grid-row: 2; }
 
   .panel {
@@ -272,6 +272,55 @@
     font-style: italic;
   }
 
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-header .panel-title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .view-toggle {
+    display: flex;
+    background: var(--bg3);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .view-toggle button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .view-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .view-toggle button:hover:not(.active) {
+    color: var(--text);
+  }
+
+  .cm-view, .mosaic-view { display: none; }
+  .cm-view.active, .mosaic-view.active { display: block; }
+
   @media (max-width: 1100px) {
     .layout {
       grid-template-columns: 1fr 1fr;
@@ -286,7 +335,7 @@
     }
     .plot-distributions { grid-column: 1; grid-row: 2; }
     .plot-roc { grid-column: 2; grid-row: 2; }
-    .plot-cm { grid-column: 1; grid-row: 3; }
+    .plot-cm-mosaic { grid-column: 1; grid-row: 3; }
     .plot-metrics { grid-column: 2; grid-row: 3; }
   }
 </style>
@@ -365,36 +414,49 @@
     <div id="rocPlot" style="width:100%;height:340px;"></div>
   </div>
 
-  <!-- CONFUSION MATRIX -->
-  <div class="panel plot-cm">
-    <div class="panel-title">Confusion Matrix</div>
-    <div class="cm-grid">
-      <div class="cm-corner"></div>
-      <div class="cm-header top-label">Predicted</div>
-      <div class="cm-corner"></div>
-      <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
-      <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
-      <div class="cm-header left-label">Actual</div>
-      <div class="cm-cell cm-tp" id="cm_tp">
-        <span class="count">—</span>
-        <span class="label">TP</span>
-        <span class="rate"></span>
+  <!-- CONFUSION MATRIX / MOSAIC (toggled) -->
+  <div class="panel plot-cm-mosaic">
+    <div class="panel-header">
+      <div class="panel-title">Confusion Matrix</div>
+      <div class="view-toggle">
+        <button class="active" id="btn_cm" onclick="switchView('cm')">Matrix</button>
+        <button id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
       </div>
-      <div class="cm-cell cm-fn" id="cm_fn">
-        <span class="count">—</span>
-        <span class="label">FN</span>
-        <span class="rate"></span>
+    </div>
+
+    <div class="cm-view active" id="cmView">
+      <div class="cm-grid">
+        <div class="cm-corner"></div>
+        <div class="cm-header top-label">Predicted</div>
+        <div class="cm-corner"></div>
+        <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
+        <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
+        <div class="cm-header left-label">Actual</div>
+        <div class="cm-cell cm-tp" id="cm_tp">
+          <span class="count">—</span>
+          <span class="label">TP</span>
+          <span class="rate"></span>
+        </div>
+        <div class="cm-cell cm-fn" id="cm_fn">
+          <span class="count">—</span>
+          <span class="label">FN</span>
+          <span class="rate"></span>
+        </div>
+        <div class="cm-cell cm-fp" id="cm_fp">
+          <span class="count">—</span>
+          <span class="label">FP</span>
+          <span class="rate"></span>
+        </div>
+        <div class="cm-cell cm-tn" id="cm_tn">
+          <span class="count">—</span>
+          <span class="label">TN</span>
+          <span class="rate"></span>
+        </div>
       </div>
-      <div class="cm-cell cm-fp" id="cm_fp">
-        <span class="count">—</span>
-        <span class="label">FP</span>
-        <span class="rate"></span>
-      </div>
-      <div class="cm-cell cm-tn" id="cm_tn">
-        <span class="count">—</span>
-        <span class="label">TN</span>
-        <span class="rate"></span>
-      </div>
+    </div>
+
+    <div class="mosaic-view" id="mosaicView">
+      <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
 
@@ -415,6 +477,25 @@
 
 </div>
 
+<script>
+function switchView(view) {
+  var cmView = document.getElementById('cmView');
+  var mosaicView = document.getElementById('mosaicView');
+  var btnCM = document.getElementById('btn_cm');
+  var btnMosaic = document.getElementById('btn_mosaic');
+  if (view === 'cm') {
+    cmView.classList.add('active');
+    mosaicView.classList.remove('active');
+    btnCM.classList.add('active');
+    btnMosaic.classList.remove('active');
+  } else {
+    cmView.classList.remove('active');
+    mosaicView.classList.add('active');
+    btnCM.classList.remove('active');
+    btnMosaic.classList.add('active');
+  }
+}
+</script>
 <script>
 (function() {
   'use strict';
@@ -571,6 +652,7 @@
     renderROCPlot(tpr, fpr);
     renderCM(tpr, fpr);
     renderMetrics(tpr, fpr);
+    renderMosaic(tpr, fpr);
   }
 
   function renderDistPlot(tpr, fpr) {
@@ -694,6 +776,91 @@
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
     $('m_mcc').textContent = pf(mcc, 3);
+  }
+
+  // ─── Mosaic Plot (SVG) ───
+  function renderMosaic(tpr, fpr) {
+    const P = Math.round(state.N * state.bal);
+    const Nn = state.N - P;
+    const TP = Math.round(P * tpr);
+    const FN = P - TP;
+    const FP = Math.round(Nn * fpr);
+    const TN = Nn - FP;
+
+    const svg = $('mosaicSVG');
+    const W = 700, H = 320;
+    const pad = { l: 50, r: 20, t: 30, b: 40 };
+    const bW = W - pad.l - pad.r;  // bar area width
+    const bH = H - pad.t - pad.b;  // bar area height
+
+    const pW = state.bal * bW;      // Positive column width
+    const nW = (1 - state.bal) * bW; // Negative column width
+
+    // TP is top of P column, FN is bottom
+    const tpH = P > 0 ? (TP / P) * bH : 0;
+    const fnH = bH - tpH;
+    // FP is top of N column, TN is bottom
+    const fpH = Nn > 0 ? (FP / Nn) * bH : 0;
+    const tnH = bH - fpH;
+
+    const x0 = pad.l;
+    const y0 = pad.t;
+
+    let html = '';
+
+    // ── Cells ──
+    // TP (top-left of P column)
+    html += rect(x0, y0, pW, tpH, 'rgba(0,214,143,0.35)', 'TP', TP, '#00d68f');
+    // FN (bottom of P column)
+    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,169,77,0.35)', 'FN', FN, '#ffa94d');
+    // FP (top of N column)
+    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,107,107,0.35)', 'FP', FP, '#ff6b6b');
+    // TN (bottom of N column)
+    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(79,140,255,0.35)', 'TN', TN, '#4f8cff');
+
+    // ── "Predicted Positive" outline around TP + FP ──
+    // TP spans [x0, y0] → [x0+pW, y0+tpH]
+    // FP spans [x0+pW, y0] → [x0+pW+nW, y0+fpH]
+    // The outline is an irregular polygon connecting their outer edges
+    const ppPoints = [
+      [x0, y0],                       // top-left of TP
+      [x0 + pW + nW, y0],             // top-right of FP
+      [x0 + pW + nW, y0 + fpH],      // bottom-right of FP
+      [x0 + pW, y0 + fpH],           // bottom-left of FP = right edge at FP bottom
+      [x0 + pW, y0 + tpH],           // bottom-right of TP
+      [x0, y0 + tpH],                // bottom-left of TP
+    ].map(p => p.join(',')).join(' ');
+
+    html += '<polygon points="' + ppPoints + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+
+    // "Predicted Positive" label
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.7">← Predicted Positive →</text>';
+
+    // ── Column labels (bottom) ──
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#4fc3f7" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff8a65" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
+
+    // ── Prevalence width annotation ──
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#6b7280" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#6b7280" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+
+    // ── Side labels ──
+    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#00d68f" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
+    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffa94d" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+
+    svg.innerHTML = html;
+  }
+
+  function rect(x, y, w, h, fill, label, count, textColor) {
+    if (w < 1 || h < 1) return '';
+    let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="rgba(255,255,255,0.08)" stroke-width="1" rx="3"/>';
+    // Only add labels if cell is big enough
+    if (w > 30 && h > 30) {
+      const cx = x + w/2, cy = y + h/2;
+      s += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" fill="'+textColor+'" font-size="13" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" fill="'+textColor+'" font-size="11" font-family="JetBrains Mono, monospace" opacity="0.8" dominant-baseline="middle">'+count+'</text>';
+    }
+    return s;
   }
 
   // ─── Event Wiring ───
