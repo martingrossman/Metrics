@@ -1,1130 +1,1279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Classifier Metrics Playground</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" />
-<script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
-<style type="text/css">
-:root{
-  --bg:#0d0f14;--surf:#161920;--surf2:#1e2230;--border:#2a2f3e;
-  --text:#f0f2f7;--text2:#b4bcd0;--text3:#8a92ab;--accent:#6b9cff;
-  --tp:#4ade80;--fn:#f87171;--fp:#fbbf24;--tn:#818cf8;
-  --r:10px;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
-}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROC &amp; Confusion Matrix Playground</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{
-  height:100%;width:100%;
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--sans);
-  font-size:13px;
-  overflow-y:auto;overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-}
+  :root {
+    --bg: #0a0a12;
+    --bg2: #12101e;
+    --bg3: #1b1730;
+    --border: #2e2650;
+    --text: #e0daf0;
+    --text-dim: #7a6f99;
+    --accent: #00f0ff;
+    --accent2: #ff2d95;
+    --green: #39ff14;
+    --red: #ff2d55;
+    --orange: #ffb400;
+    --pos-color: #00f0ff;
+    --neg-color: #ff2d95;
+    --tp-color: #39ff14;
+    --fp-color: #ff2d55;
+    --tn-color: #00f0ff;
+    --fn-color: #ffb400;
+  }
 
-.app{
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-  padding:8px 10px;
-}
-.app > *{margin-bottom:7px;}
-.app > *:last-child{margin-bottom:0;}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-header{
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  border-bottom:1px solid var(--border);
-  padding-bottom:5px;
-  flex-shrink:0;
-}
-header > *{margin-right:12px;}
-header > *:last-child{margin-right:0;}
-header h1{font-size:16px;font-weight:800;letter-spacing:-.4px;color:#fff;}
-header .sub{font-size:11px;color:var(--text2);font-family:var(--mono);}
-#insight{
-  margin-left:auto;font-size:11px;
-  font-family:var(--mono);
-  color:var(--text2);
-  background:var(--surf2);
-  border-left:3px solid var(--accent);
-  border-radius:0 6px 6px 0;
-  padding:3px 10px;
-  max-width:440px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-.toolbar{
-  display:flex;
-  align-items:center;
-  flex-shrink:0;
-  padding:2px 0;
-}
-.toolbar > *{margin-right:8px;}
-.toolbar > *:last-child{margin-right:0;}
-.tbtn{
-  background:var(--surf2);
-  border:1px solid var(--border);
-  border-radius:6px;
-  color:var(--text2);
-  padding:4px 10px;
-  font-family:var(--sans);
-  font-size:10px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all .15s;
-  letter-spacing:.3px;
-}
-.tbtn:hover{background:#252840;border-color:var(--accent);color:var(--text);}
-.tbtn.active{background:rgba(107,156,255,.15);border-color:var(--accent);color:var(--accent);}
-.toolbar .htxt{font-size:10px;color:var(--text3);font-family:var(--mono);margin-left:4px;}
+  h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 18px 0 10px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), #b44dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-auto-rows:min-content;
-  gap:7px;
-  flex:1;
-}
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 14px;
+    padding: 10px 16px 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
 
-.tile{
-  background:var(--surf);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  position:relative;
-  transition:box-shadow .25s,border-color .25s,opacity .25s,transform .25s;
-}
-.tile.span2{grid-column:span 2;}
-.tile.span3{grid-column:span 3;}
-.tile.span4{grid-column:span 4;}
+  .controls {
+    grid-row: 1 / 3;
+    grid-column: 1;
+  }
 
-.tile-hdr{
-  display:flex;
-  align-items:center;
-  padding:6px 10px 4px;
-  flex-shrink:0;
-  border-bottom:1px solid rgba(255,255,255,.04);
-  user-select:none;
-}
-.tile-hdr > *{margin-right:6px;}
-.tile-hdr > *:last-child{margin-right:0;}
+  .plot-distributions { grid-column: 2; grid-row: 1; }
+  .plot-roc { grid-column: 3; grid-row: 1; }
+  .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
+  .plot-metrics { grid-column: 3; grid-row: 2; }
 
-.grip{
-  width:34px;
-  height:34px;
-  min-width:34px;
-  min-height:34px;
-  opacity:.25;
-  transition:opacity .15s;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  touch-action:none;
-  -webkit-touch-callout:none;
-  -webkit-user-select:none;
-  user-select:none;
-  cursor:grab;
-  background:none;
-  border:0;
-  padding:0;
-  appearance:none;
-}
-.edit-on .grip{opacity:.45;}
-.edit-on .grip:hover{opacity:.8;}
-.grip:active{cursor:grabbing;}
-.grip svg{width:18px;height:18px;}
-.grip circle{fill:var(--text2);}
-.edit-on .grip circle{fill:var(--accent);}
-.grip:focus-visible{
-  outline:2px solid var(--accent);
-  outline-offset:2px;
-  border-radius:4px;
-}
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    min-height: 0;
+  }
 
-.sizebtn{
-  margin-left:auto;
-  background:var(--surf2);
-  border:1px solid var(--border);
-  color:var(--text2);
-  border-radius:5px;
-  font-family:var(--mono);
-  font-size:9px;
-  padding:2px 6px;
-  cursor:pointer;
-  transition:all .15s;
-}
-.sizebtn:hover{border-color:var(--accent);color:var(--accent);}
-.tile-title{
-  font-size:10px;font-weight:700;letter-spacing:1.2px;
-  text-transform:uppercase;color:var(--text3);
-}
-.tile-body{padding:8px 10px 10px;flex:1;min-height:0;overflow:hidden;}
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
 
-.tile.dragging{
-  opacity:.25;
-  transform:scale(.96);
-  border:2px dashed var(--accent);
-}
-.tile.drag-over{
-  border-color:var(--accent);
-  box-shadow:0 0 0 2px rgba(107,156,255,.25),inset 0 0 30px rgba(107,156,255,.06);
-}
-.tile.drag-over::before{
-  content:'↕ Drop here';
-  position:absolute;inset:0;z-index:10;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(107,156,255,.07);
-  color:var(--accent);
-  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  border-radius:var(--r);
-  pointer-events:none;
-}
+  .slider-group {
+    margin-bottom: 10px;
+  }
 
-.drag-ghost{
-  position:fixed;z-index:9999;pointer-events:none;
-  border-radius:8px;border:2px solid var(--accent);
-  background:rgba(22,25,32,.93);
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  box-shadow:0 14px 44px rgba(0,0,0,.55),0 0 0 1px rgba(107,156,255,.2);
-  padding:8px 14px;font-size:11px;font-weight:700;color:var(--accent);
-  font-family:var(--sans);letter-spacing:.5px;
-  display:flex;align-items:center;
-  transform:translate(-50%,-50%) rotate(-1.5deg) scale(1.05);
-  max-width:220px;white-space:nowrap;
-}
-.drag-ghost > *{margin-right:7px;}
-.drag-ghost > *:last-child{margin-right:0;}
-.drag-ghost svg{width:12px;height:12px;flex-shrink:0;}
-.drag-ghost circle{fill:var(--accent);}
+  .slider-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
 
-.edit-on .tile::after{
-  content:'';position:absolute;inset:-1px;
-  border-radius:var(--r);
-  border:1px dashed rgba(107,156,255,.2);
-  pointer-events:none;
-  transition:border-color .2s;
-}
-.edit-on .tile:hover::after{border-color:rgba(107,156,255,.45);}
+  .slider-group label span.val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    min-width: 50px;
+    text-align: right;
+  }
 
-.ctrl{margin-bottom:8px;}
-.ctrl-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:3px;
-}
-.ctrl-label{font-size:11px;font-weight:600;color:var(--text);}
-.ctrl-val{
-  font-family:var(--mono);
-  font-size:11px;color:var(--accent);
-  -webkit-text-fill-color:var(--accent);
-  background:rgba(107,156,255,.12);
-  border:1px solid rgba(107,156,255,.3);
-  border-radius:5px;padding:1px 6px;min-width:50px;
-  text-align:right;outline:none;appearance:none;
-}
-.ctrl-val::-webkit-inner-spin-button,.ctrl-val::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
-input[type=range]{
-  -webkit-appearance:none;appearance:none;
-  width:100%;height:3px;
-  background:var(--border);
-  border:none;border-radius:2px;outline:none;cursor:pointer;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
-  background:var(--accent);
-  border:2px solid var(--bg);
-  box-shadow:0 0 6px rgba(107,156,255,.5);
-}
-input[type=range]::-moz-range-thumb{
-  width:14px;height:14px;border-radius:50%;
-  background:var(--accent);
-  border:2px solid var(--bg);cursor:pointer;
-}
-.hint{font-size:9px;color:var(--text3);margin-top:1px;}
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--bg3);
+    outline: none;
+    cursor: pointer;
+  }
 
-.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
-.pbtn{
-  background:var(--surf2);
-  border:1px solid var(--border);border-radius:6px;
-  color:var(--text);padding:5px 6px;
-  font-family:var(--sans);font-size:10px;
-  font-weight:600;cursor:pointer;text-align:left;
-  transition:all .15s;
-}
-.pbtn:hover{background:#252840;border-color:var(--accent);}
-.pbtn .tag{display:block;font-family:var(--mono);font-size:8px;color:var(--text2);margin-top:1px;}
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
 
-.kpi-strip{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(92px,1fr));
-  gap:4px;
-  align-content:start;
-}
-.kpi{background:var(--surf2);border:1px solid var(--border);border-radius:6px;padding:6px 7px;}
-.kpi-name{font-size:8px;color:var(--text3);font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
-.kpi-val{font-family:var(--mono);font-size:14px;font-weight:700;margin-top:1px;}
-.good{color:var(--tp);}
-.warn{color:var(--fp);}
-.bad{color:var(--fn);}
-[data-tile="kpis"] .tile-body{overflow:visible;}
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+  }
 
-.svgBox{width:100%;border-radius:6px;overflow:hidden;background:#0a0c10;height:140px;}
-.svgBox svg{display:block;width:100%;height:100%;}
-.mos-cap{font-family:var(--mono);font-size:8px;color:var(--text2);text-align:center;margin-top:3px;}
-.legend{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  margin-top:3px;
-}
-.legend > *{margin-right:5px;}
-.legend > *:last-child{margin-right:0;}
-.leg-item{
-  display:inline-flex;
-  align-items:center;
-  font-size:9px;font-family:var(--mono);color:var(--text2);
-}
-.leg-item > *{margin-right:3px;}
-.leg-item > *:last-child{margin-right:0;}
-.leg-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
-.leg-dash{width:14px;height:0;border-top:2px dashed rgba(255,255,255,.75);flex-shrink:0;}
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent2);
+    margin: 14px 0 6px;
+  }
 
-.plot-wrap{width:100%;height:200px;min-height:0;}
+  .section-label:first-child { margin-top: 0; }
 
-.eq-inner{max-height:420px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.eq-section-hdr{
-  font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--accent);
-  margin:8px 0 4px;padding:0 0 3px;
-  border-bottom:1px solid rgba(107,156,255,.1);
-}
-.eq-section-hdr:first-child{margin-top:0;}
-.eq-card{
-  background:rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.04);
-  border-left:3px solid rgba(107,156,255,.25);
-  border-radius:6px;padding:5px 7px 5px 9px;margin-bottom:3px;
-  font-family:var(--mono);font-size:9px;
-  display:grid;
-  grid-template-columns:120px minmax(0,1fr) auto;
-  align-items:baseline;
-  gap:0 8px;line-height:1.4;
-  transition:border-left-color .2s,background .2s;
-}
-.eq-card:hover{border-left-color:var(--accent);background:rgba(107,156,255,.05);}
-.eq-lbl{color:var(--accent);font-weight:700;font-size:9px;white-space:nowrap;}
-.eq-formula{color:rgba(221,224,238,.55);font-size:8px;grid-column:1/-1;margin-top:1px;word-break:break-word;}
-.eq-result{color:#fff;font-weight:700;font-size:11px;text-align:right;}
+  .separator {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 10px 0;
+  }
 
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.js-plotly-plot .plotly .modebar{display:none!important;}
+  .cm-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-rows: auto auto 1fr 1fr;
+    gap: 3px;
+    width: 100%;
+    aspect-ratio: 1.15;
+    max-width: 360px;
+    margin: 0 auto;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-@media(min-width:901px){
-  html,body{font-size:18px;}
-  .app{padding:20px 28px;}
-  .app > *{margin-bottom:18px;}
-  header{padding-bottom:14px;}
-  header > *{margin-right:24px;}
-  header h1{font-size:32px;letter-spacing:-.6px;}
-  header .sub{font-size:16px;}
-  #insight{font-size:15px;max-width:680px;padding:7px 18px;}
-  .toolbar > *{margin-right:14px;}
-  .tbtn{font-size:15px;padding:9px 22px;border-radius:8px;}
-  .toolbar .htxt{font-size:14px;}
-  .grid{gap:16px;}
-  .tile-hdr{padding:14px 20px 10px;}
-  .tile-hdr > *{margin-right:11px;}
-  .tile-title{font-size:14px;letter-spacing:1.6px;}
-  .tile-body{padding:16px 20px 20px;}
-  .sizebtn{font-size:13px;padding:5px 12px;}
-  .ctrl{margin-bottom:18px;}
-  .ctrl-label{font-size:16px;}
-  .ctrl-val{font-size:16px;min-width:76px;padding:4px 10px;}
-  input[type=range]{height:6px;}
-  input[type=range]::-webkit-slider-thumb{width:22px;height:22px;}
-  input[type=range]::-moz-range-thumb{width:22px;height:22px;}
-  .hint{font-size:14px;margin-top:5px;}
-  .presets{gap:8px;}
-  .pbtn{font-size:15px;padding:12px 14px;border-radius:8px;}
-  .pbtn .tag{font-size:12px;margin-top:3px;}
-  .kpi-strip{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;}
-  .kpi{padding:14px 16px;border-radius:10px;}
-  .kpi-name{font-size:13px;letter-spacing:.6px;}
-  .kpi-val{font-size:28px;margin-top:5px;}
-  .svgBox{height:280px;}
-  .mos-cap{font-size:14px;margin-top:7px;}
-  .legend{margin-top:10px;}
-  .legend > *{margin-right:14px;}
-  .leg-item{font-size:14px;}
-  .leg-dot{width:12px;height:12px;}
-  .leg-dash{width:22px;border-top-width:3px;}
-  .plot-wrap{height:300px;}
-  .eq-inner{max-height:600px;}
-  .eq-section-hdr{font-size:16px;letter-spacing:2px;margin:18px 0 10px;padding:0 0 6px;}
-  .eq-card{font-size:17px;padding:13px 16px 13px 20px;margin-bottom:10px;grid-template-columns:180px minmax(0,1fr) auto;gap:0 14px;}
-  .eq-lbl{font-size:17px;}
-  .eq-formula{font-size:17px;margin-top:5px;}
-  .eq-result{font-size:24px;}
-}
+  .cm-corner { }
+  .cm-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px;
+  }
+  .cm-header.top-label {
+    grid-column: 2 / 4;
+    grid-row: 1;
+  }
+  .cm-header.left-label {
+    grid-column: 1;
+    grid-row: 3 / 5;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+  }
 
-@media(max-width:900px){
-  .app{padding:8px;}
-  header .sub{display:none;}
-  #insight{margin-left:0;width:100%;max-width:100%;white-space:normal;font-size:10px;line-height:1.4;}
-  header{flex-wrap:wrap;}
-  .grid{grid-template-columns:repeat(2,1fr);gap:8px;}
-  .tile.span2,.tile.span3,.tile.span4{grid-column:span 2!important;}
-  .plot-wrap{height:160px;}
-  .svgBox{height:120px;}
-  input[type=range]::-webkit-slider-thumb{width:20px;height:20px;}
-  input[type=range]::-moz-range-thumb{width:20px;height:20px;}
-  input[type=range]{height:5px;}
-  .toolbar .htxt{display:none;}
-}
-@media(max-width:480px){
-  .grid{grid-template-columns:1fr 1fr;gap:6px;}
-  .presets{grid-template-columns:repeat(2,1fr);}
-  .plot-wrap{height:140px;}
-  .eq-inner{max-height:280px;}
-  header h1{font-size:14px;}
-}
-@media(max-height:500px) and (orientation:landscape){
-  .app{padding:4px 8px;}
-  header{padding-bottom:3px;}
-  header h1{font-size:13px;}
-  #insight{font-size:9px;padding:2px 8px;}
-  .toolbar{padding:0;}
-  .toolbar .htxt{display:none;}
-  .grid{grid-template-columns:repeat(4,1fr);gap:5px;}
-  .tile.span2{grid-column:span 2!important;}
-  .tile.span3{grid-column:span 3!important;}
-  .tile.span4{grid-column:span 4!important;}
-  .tile-hdr{padding:3px 8px 2px;}
-  .tile-body{padding:4px 8px 6px;}
-  .plot-wrap{height:130px;}
-  .svgBox{height:100px;}
-  .eq-inner{max-height:180px;}
-  .ctrl{margin-bottom:4px;}
-  .kpi-strip{gap:3px;}
-  .kpi{padding:3px 5px;}
-  .kpi-val{font-size:12px;}
-}
+  .cm-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 8px;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .cm-cell .count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cm-cell .label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  .cm-cell .rate {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  .cm-tp { background: rgba(57,255,20,0.12); color: var(--tp-color); }
+  .cm-fp { background: rgba(255,45,85,0.15); color: var(--fp-color); }
+  .cm-fn { background: rgba(255,180,0,0.15); color: var(--fn-color); }
+  .cm-tn { background: rgba(0,240,255,0.12); color: var(--tn-color); }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .metric-card {
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+
+  .metric-card .metric-name {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .metric-card .metric-val {
+    font-size: 1.15rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+  }
+
+  .metric-card .metric-formula {
+    font-size: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .bidirectional-hint {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 6px;
+    background: rgba(0,240,255,0.06);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-header .panel-title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .view-toggle {
+    display: flex;
+    background: var(--bg3);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .view-toggle button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .view-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .view-toggle button:hover:not(.active) {
+    color: var(--text);
+  }
+
+  .cm-view, .mosaic-view { display: none; }
+  .cm-view.active, .mosaic-view.active { display: block; }
+
+  .dist-curves-view, .dist-topview-view { display: none; }
+  .dist-curves-view.active, .dist-topview-view.active { display: block; }
+
+  @media (max-width: 1100px) {
+    .layout {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+    }
+    .controls {
+      grid-column: 1 / 3;
+      grid-row: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    .plot-distributions { grid-column: 1; grid-row: 2; }
+    .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
+    .plot-roc { grid-column: 1; grid-row: 3; }
+    .plot-metrics { grid-column: 2; grid-row: 3; }
+  }
+
+  /* ── Mobile (iPhone 13 = 390px, covers most phones) ── */
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 0.9rem;
+      padding: 10px 10px 6px;
+    }
+
+    .layout {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 6px 8px 14px;
+    }
+
+    .controls {
+      order: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 12px;
+      padding: 8px !important;
+    }
+
+    .controls .panel-title {
+      grid-column: 1 / -1;
+      margin-bottom: 4px;
+      padding-bottom: 4px;
+    }
+
+    .controls .bidirectional-hint {
+      display: none;
+    }
+
+    .controls .section-label {
+      grid-column: 1 / -1;
+      margin: 4px 0 2px;
+    }
+
+    .controls .separator {
+      grid-column: 1 / -1;
+      margin: 4px 0;
+    }
+
+    .slider-group {
+      margin-bottom: 2px !important;
+    }
+
+    .slider-group label {
+      font-size: 0.68rem;
+      margin-bottom: 1px;
+    }
+
+    input[type="range"] {
+      height: 4px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 16px;
+      height: 16px;
+    }
+
+    .plot-cm-mosaic { order: 2; }
+    .plot-metrics { order: 3; }
+    .plot-distributions { order: 4; }
+    .plot-roc { order: 5; }
+
+    .panel {
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    #distPlot, #rocPlot {
+      height: 260px !important;
+    }
+
+    .plot-cm-mosaic {
+      min-height: 150px;
+    }
+
+    #mosaicSVG {
+      width: 100%;
+      height: auto;
+      max-height: 320px;
+    }
+
+    .cm-grid {
+      max-width: 100%;
+      aspect-ratio: 1.1;
+    }
+
+    .cm-cell .count {
+      font-size: 1.2rem;
+    }
+
+    .cm-cell .label {
+      font-size: 0.55rem;
+    }
+
+    .cm-cell .rate {
+      font-size: 0.6rem;
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .metric-card {
+      padding: 8px 10px;
+    }
+
+    .metric-card .metric-val {
+      font-size: 1rem;
+    }
+
+    .metric-card .metric-name {
+      font-size: 0.6rem;
+    }
+
+    .metric-card .metric-formula {
+      font-size: 0.55rem;
+    }
+
+    .bidirectional-hint {
+      font-size: 0.55rem;
+    }
+
+    .panel-title {
+      font-size: 0.65rem;
+    }
+
+    .section-label {
+      font-size: 0.6rem;
+    }
+
+    .view-toggle button {
+      font-size: 0.6rem;
+      padding: 4px 8px;
+    }
+  }
 </style>
 </head>
 <body>
-<div class="app">
 
-<header>
-  <h1>Classifier Metrics Playground</h1>
-  <span class="sub">N · π · TPR · FPR → live</span>
-  <div id="insight">Drag panels by their grip to rearrange the layout.</div>
-</header>
+<h1>ROC &amp; Confusion Matrix Playground</h1>
 
-<div class="toolbar">
-  <button class="tbtn active" id="editToggle" type="button">⠇ Edit Layout</button>
-  <button class="tbtn" id="resetLayout" type="button">↺ Reset</button>
-  <span class="htxt">Grab ⠇ on any panel to reorder</span>
-</div>
+<div class="layout">
 
-<div class="grid edit-on" id="grid">
-
-  <div class="tile" data-tile="params">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Parameters panel" title="Reorder Parameters panel"></button>
-      <span class="tile-title">Parameters</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+  <!-- CONTROLS -->
+  <div class="controls panel">
+    <div class="panel-title">Parameters</div>
+    <div class="bidirectional-hint">
+      ↔ Distribution params &amp; operating point (TPR/FPR) are bidirectionally linked.
+      Changing one updates the other.
     </div>
-    <div class="tile-body">
-      <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="nLabel" for="nVal">Dataset size (N)</label><input type="number" class="ctrl-val" id="nVal" aria-labelledby="nLabel" /></div><input id="n" type="range" min="0" max="1000" step="1" value="460" aria-labelledby="nLabel" /><div class="hint">Log · 100 → 500k</div></div>
-      <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="piLabel" for="piVal">Prevalence (π)</label><input type="number" class="ctrl-val" id="piVal" min="0" max="100" step="0.1" aria-labelledby="piLabel" /></div><input id="pi" type="range" min="-10" max="10" step="0.01" value="-0.847" aria-labelledby="piLabel" /><div class="hint">% positives</div></div>
-      <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="tprLabel" for="tprVal">TPR (Sensitivity)</label><input type="number" class="ctrl-val" id="tprVal" min="0" max="100" step="0.1" aria-labelledby="tprLabel" /></div><input id="tpr" type="range" min="-10" max="10" step="0.01" value="0.847" aria-labelledby="tprLabel" /><div class="hint">True Positive Rate</div></div>
-      <div class="ctrl"><div class="ctrl-row"><label class="ctrl-label" id="fprLabel" for="fprVal">FPR (1−Spec)</label><input type="number" class="ctrl-val" id="fprVal" min="0" max="100" step="0.1" aria-labelledby="fprLabel" /></div><input id="fpr" type="range" min="-10" max="10" step="0.01" value="-0.847" aria-labelledby="fprLabel" /><div class="hint">False Positive Rate</div></div>
+
+    <div class="section-label">Class Distributions</div>
+
+    <div class="slider-group">
+      <label>μ Negative <span class="val" id="v_mu_neg">0.0</span></label>
+      <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0">
+    </div>
+    <div class="slider-group">
+      <label>σ Negative <span class="val" id="v_std_neg">1.0</span></label>
+      <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1">
+    </div>
+    <div class="slider-group">
+      <label>μ Positive <span class="val" id="v_mu_pos">2.0</span></label>
+      <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2">
+    </div>
+    <div class="slider-group">
+      <label>σ Positive <span class="val" id="v_std_pos">1.0</span></label>
+      <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1">
+    </div>
+
+    <hr class="separator">
+    <div class="section-label">Operating Point</div>
+
+    <div class="slider-group">
+      <label>TPR (Sensitivity) <span class="val" id="v_tpr">0.80</span></label>
+      <input type="range" id="s_tpr" min="0" max="1" step="0.005" value="0.8">
+    </div>
+    <div class="slider-group">
+      <label>FPR (1 − Specificity) <span class="val" id="v_fpr">0.10</span></label>
+      <input type="range" id="s_fpr" min="0" max="1" step="0.005" value="0.1">
+    </div>
+    <div class="slider-group">
+      <label>Threshold <span class="val" id="v_thresh">—</span></label>
+      <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
+    </div>
+
+    <hr class="separator">
+    <div class="section-label">Dataset</div>
+
+    <div class="slider-group">
+      <label>N (total samples) <span class="val" id="v_N">1000</span></label>
+      <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
+    </div>
+    <div class="slider-group">
+      <label>Balance (P prevalence) <span class="val" id="v_bal">0.30</span></label>
+      <input type="range" id="s_bal" min="0.01" max="0.99" step="0.01" value="0.30">
     </div>
   </div>
 
-  <div class="tile" data-tile="equations">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Live Equations panel" title="Reorder Live Equations panel"></button>
-      <span class="tile-title">Live Equations</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body"><div class="eq-inner" id="liveEq"></div></div>
-  </div>
-
-  <div class="tile span2" data-tile="mosaic">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Confusion Matrix panel" title="Reorder Confusion Matrix panel"></button>
-      <span class="tile-title">Confusion Matrix</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body">
-      <div class="svgBox"><svg xmlns="http://www.w3.org/2000/svg" id="mosaic" viewBox="0 0 1000 500" preserveAspectRatio="none"></svg></div>
-      <div class="mos-cap" id="mosaicCaption"></div>
-      <div class="legend">
-        <div class="leg-item"><div class="leg-dot" style="background:#4ade80"></div><span>TP</span></div>
-        <div class="leg-item"><div class="leg-dot" style="background:#f87171"></div><span>FN</span></div>
-        <div class="leg-item"><div class="leg-dot" style="background:#fbbf24"></div><span>FP</span></div>
-        <div class="leg-item"><div class="leg-dot" style="background:#818cf8"></div><span>TN</span></div>
-        <div class="leg-item"><div class="leg-dash"></div><span>Prediction</span></div>
+  <!-- DISTRIBUTION PLOT -->
+  <div class="panel plot-distributions">
+    <div class="panel-header">
+      <div class="panel-title">Class Distributions &amp; Threshold</div>
+      <div class="view-toggle">
+        <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
+        <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
       </div>
     </div>
+    <div class="dist-curves-view active" id="distCurvesView">
+      <div id="distPlot" style="width:100%;height:320px;"></div>
+    </div>
+    <div class="dist-topview-view" id="distTopView">
+      <svg id="topViewSVG" viewBox="0 0 700 320" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
   </div>
 
-  <div class="tile span2" data-tile="kpis">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Derived Metrics panel" title="Reorder Derived Metrics panel"></button>
-      <span class="tile-title">Derived Metrics</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body">
-      <div class="kpi-strip">
-        <div class="kpi"><div class="kpi-name">Precision</div><div class="kpi-val" id="precKpi">&mdash;</div></div>
-        <div class="kpi"><div class="kpi-name">F1</div><div class="kpi-val" id="f1Kpi">&mdash;</div></div>
-        <div class="kpi"><div class="kpi-name">Accuracy</div><div class="kpi-val" id="accKpi">&mdash;</div></div>
-        <div class="kpi"><div class="kpi-name">Bal Acc</div><div class="kpi-val" id="baccKpi">&mdash;</div></div>
-        <div class="kpi"><div class="kpi-name">TNR</div><div class="kpi-val" id="tnrKpi">&mdash;</div></div>
-        <div class="kpi"><div class="kpi-name">NPV</div><div class="kpi-val" id="npvKpi">&mdash;</div></div>
+  <!-- ROC PLOT -->
+  <div class="panel plot-roc">
+    <div class="panel-title">ROC Curve</div>
+    <div id="rocPlot" style="width:100%;height:340px;"></div>
+  </div>
+
+  <!-- CONFUSION MATRIX / MOSAIC (toggled) -->
+  <div class="panel plot-cm-mosaic">
+    <div class="panel-header">
+      <div class="panel-title">Confusion Matrix</div>
+      <div class="view-toggle">
+        <button id="btn_cm" onclick="switchView('cm')">Matrix</button>
+        <button class="active" id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
       </div>
     </div>
-  </div>
 
-  <div class="tile" data-tile="presets">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Presets panel" title="Reorder Presets panel"></button>
-      <span class="tile-title">Presets</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body">
-      <div class="presets">
-        <button class="pbtn" id="bal" type="button">Balanced<span class="tag">π=50%</span></button>
-        <button class="pbtn" id="imb" type="button">Imbalanced<span class="tag">π=10%</span></button>
-        <button class="pbtn" id="vimb" type="button">V. Imbalanced<span class="tag">π=1%</span></button>
-        <button class="pbtn" id="perfect" type="button">Perfect<span class="tag">TPR≈100 FPR≈0</span></button>
-        <button class="pbtn" id="random" type="button">Random<span class="tag">TPR=FPR</span></button>
-        <button class="pbtn" id="resetBtn" type="button">Reset<span class="tag">defaults</span></button>
+    <div class="cm-view" id="cmView">
+      <div class="cm-grid">
+        <div class="cm-corner"></div>
+        <div class="cm-header top-label">Predicted</div>
+        <div class="cm-corner"></div>
+        <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
+        <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
+        <div class="cm-header left-label">Actual</div>
+        <div class="cm-cell cm-tp" id="cm_tp">
+          <span class="count">—</span>
+          <span class="label">TP</span>
+          <span class="rate"></span>
+        </div>
+        <div class="cm-cell cm-fn" id="cm_fn">
+          <span class="count">—</span>
+          <span class="label">FN</span>
+          <span class="rate"></span>
+        </div>
+        <div class="cm-cell cm-fp" id="cm_fp">
+          <span class="count">—</span>
+          <span class="label">FP</span>
+          <span class="rate"></span>
+        </div>
+        <div class="cm-cell cm-tn" id="cm_tn">
+          <span class="count">—</span>
+          <span class="label">TN</span>
+          <span class="rate"></span>
+        </div>
       </div>
     </div>
+
+    <div class="mosaic-view active" id="mosaicView">
+      <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
   </div>
 
-  <div class="tile" data-tile="counts">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Counts panel" title="Reorder Counts panel"></button>
-      <span class="tile-title">Counts</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
+  <!-- METRICS -->
+  <div class="panel plot-metrics">
+    <div class="panel-title">Derived Metrics</div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
+      <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
+      <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
+      <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
+      <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
+      <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
+      <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
+      <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
     </div>
-    <div class="tile-body"><div class="plot-wrap" id="counts"></div></div>
-  </div>
-
-  <div class="tile" data-tile="rates">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Rates panel" title="Reorder Rates panel"></button>
-      <span class="tile-title">Rates</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body"><div class="plot-wrap" id="metrics"></div></div>
-  </div>
-
-  <div class="tile" data-tile="roc">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder ROC panel" title="Reorder ROC panel"></button>
-      <span class="tile-title">ROC · iso-LR⁺</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body"><div class="plot-wrap" id="roc"></div></div>
-  </div>
-
-  <div class="tile" data-tile="pr">
-    <div class="tile-hdr">
-      <button class="grip" data-grip="1" type="button" aria-label="Reorder Precision-Recall panel" title="Reorder Precision-Recall panel"></button>
-      <span class="tile-title">Precision-Recall</span>
-      <button class="sizebtn" data-size-btn type="button" title="Change panel width">1x</button>
-    </div>
-    <div class="tile-body"><div class="plot-wrap" id="pr"></div></div>
   </div>
 
 </div>
-</div>
 
-<script type="text/javascript">
-if(!Element.prototype.closest){Element.prototype.closest=function(s){var el=this;do{if(el.matches(s))return el;el=el.parentElement||el.parentNode;}while(el!==null&&el.nodeType===1);return null;};}
-if(!Element.prototype.matches){Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector;}
-if(!NodeList.prototype.forEach){NodeList.prototype.forEach=Array.prototype.forEach;}
-
-var GRIP_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg>';
-document.querySelectorAll('.grip').forEach(function(g){g.innerHTML=GRIP_SVG;});
-
-var gridEl=document.getElementById('grid');
-var dragSrc=null,ghost=null,editMode=true,dragPointerId=null;
-var dragTouchId=null;
-var STORAGE_EDIT_KEY='cmp_layout_edit_v1';
-
-function saveEditMode(){try{localStorage.setItem(STORAGE_EDIT_KEY,editMode?'1':'0');}catch(e){}}
-function loadEditMode(){try{var v=localStorage.getItem(STORAGE_EDIT_KEY);if(v===null)return;editMode=v==='1';}catch(e){}}
-function tileOf(el){return el.closest('.tile');}
-
-function makeGhost(tile,x,y){
-  if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);
-  ghost=document.createElement('div');
-  ghost.className='drag-ghost';
-  var span=document.createElement('span');
-  span.textContent=tile.querySelector('.tile-title').textContent;
-  ghost.innerHTML=GRIP_SVG;
-  ghost.appendChild(span);
-  document.body.appendChild(ghost);
-  ghost.style.left=x+'px';
-  ghost.style.top=y+'px';
-}
-
-function beginDrag(tile,x,y,mode,id){
-  if(!tile)return;
-  cleanup();
-  dragSrc=tile;
-  if(mode==='pointer')dragPointerId=id;
-  if(mode==='touch')dragTouchId=id;
-  tile.classList.add('dragging');
-  document.body.style.overflow='hidden';
-  makeGhost(tile,x,y);
-}
-
-function updateGhost(x,y){
-  if(ghost){
-    ghost.style.left=x+'px';
-    ghost.style.top=y+'px';
+<script>
+function switchDistView(view) {
+  var curvesView = document.getElementById('distCurvesView');
+  var topView = document.getElementById('distTopView');
+  var btnCurves = document.getElementById('btn_dist_curves');
+  var btnTop = document.getElementById('btn_dist_topview');
+  if (view === 'curves') {
+    curvesView.classList.add('active');
+    topView.classList.remove('active');
+    btnCurves.classList.add('active');
+    btnTop.classList.remove('active');
+  } else {
+    curvesView.classList.remove('active');
+    topView.classList.add('active');
+    btnCurves.classList.remove('active');
+    btnTop.classList.add('active');
   }
 }
 
-function findDropTarget(x,y){
-  var tiles=gridEl.querySelectorAll('.tile:not(.dragging)');
-  tiles.forEach(function(t){t.classList.remove('drag-over');});
-  var found=null;
-  for(var i=0;i<tiles.length;i++){
-    var r=tiles[i].getBoundingClientRect();
-    if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){
-      found=tiles[i];
-      break;
-    }
-  }
-  if(found)found.classList.add('drag-over');
-  return found;
-}
-
-function onDragMove(x,y){
-  if(!dragSrc)return;
-  updateGhost(x,y);
-  findDropTarget(x,y);
-}
-
-function endDrag(){
-  if(!dragSrc)return;
-  var over=gridEl.querySelector('.tile.drag-over');
-  if(over&&over!==dragSrc){
-    var all=Array.prototype.slice.call(gridEl.querySelectorAll('.tile'));
-    var si=all.indexOf(dragSrc),ti=all.indexOf(over);
-    if(si<ti) over.parentNode.insertBefore(dragSrc,over.nextSibling);
-    else over.parentNode.insertBefore(dragSrc,over);
-    saveLayoutState();
-    setTimeout(function(){resizeCharts();render();},60);
-  }
-  cleanup();
-}
-
-function cleanup(){
-  if(dragSrc)dragSrc.classList.remove('dragging');
-  gridEl.querySelectorAll('.tile').forEach(function(t){t.classList.remove('drag-over');});
-  if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);
-  ghost=null;
-  dragSrc=null;
-  dragPointerId=null;
-  dragTouchId=null;
-  document.body.style.overflow='';
-}
-
-/* pointer events */
-gridEl.addEventListener('pointerdown',function(e){
-  var g=e.target.closest('[data-grip]');
-  if(!g||!editMode)return;
-  if(e.pointerType==='mouse' && e.button!==0)return;
-  e.preventDefault();
-  try{ if(g.setPointerCapture)g.setPointerCapture(e.pointerId); }catch(err){}
-  beginDrag(tileOf(g),e.clientX,e.clientY,'pointer',e.pointerId);
-});
-
-document.addEventListener('pointermove',function(e){
-  if(!dragSrc)return;
-  if(dragPointerId!==null && e.pointerId!==dragPointerId)return;
-  e.preventDefault();
-  onDragMove(e.clientX,e.clientY);
-},{passive:false});
-
-document.addEventListener('pointerup',function(e){
-  if(!dragSrc)return;
-  if(dragPointerId!==null && e.pointerId!==dragPointerId)return;
-  endDrag();
-});
-
-document.addEventListener('pointercancel',function(e){
-  if(!dragSrc)return;
-  if(dragPointerId!==null && e.pointerId!==dragPointerId)return;
-  cleanup();
-});
-
-/* touch fallback for iPhone Safari */
-function getTrackedTouch(e){
-  if(dragTouchId===null)return null;
-  for(var i=0;i<e.changedTouches.length;i++){
-    if(e.changedTouches[i].identifier===dragTouchId)return e.changedTouches[i];
-  }
-  for(var j=0;j<e.touches.length;j++){
-    if(e.touches[j].identifier===dragTouchId)return e.touches[j];
-  }
-  return null;
-}
-
-gridEl.addEventListener('touchstart',function(e){
-  var g=e.target.closest('[data-grip]');
-  if(!g||!editMode)return;
-  if(e.touches.length<1)return;
-  var t=e.touches[0];
-  e.preventDefault();
-  beginDrag(tileOf(g),t.clientX,t.clientY,'touch',t.identifier);
-},{passive:false});
-
-document.addEventListener('touchmove',function(e){
-  if(!dragSrc || dragTouchId===null)return;
-  var t=getTrackedTouch(e);
-  if(!t)return;
-  e.preventDefault();
-  onDragMove(t.clientX,t.clientY);
-},{passive:false});
-
-document.addEventListener('touchend',function(){
-  if(!dragSrc || dragTouchId===null)return;
-  endDrag();
-},{passive:false});
-
-document.addEventListener('touchcancel',function(){
-  if(!dragSrc)return;
-  cleanup();
-},{passive:false});
-
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'&&dragSrc)cleanup();
-});
-
-function resizeCharts(){
-  ['counts','metrics','roc','pr'].forEach(function(id){
-    try{Plotly.Plots.resize(document.getElementById(id));}catch(e){}
-  });
-}
-
-function getTileSpan(tile){
-  if(tile.classList.contains('span4'))return 4;
-  if(tile.classList.contains('span3'))return 3;
-  if(tile.classList.contains('span2'))return 2;
-  return 1;
-}
-
-function applyTileSpan(tile,span){
-  tile.classList.remove('span2','span3','span4');
-  if(span>1)tile.classList.add('span'+span);
-}
-
-function updateSizeButton(tile){
-  var btn=tile.querySelector('[data-size-btn]');
-  if(!btn)return;
-  var span=getTileSpan(tile);
-  btn.textContent=span+'x';
-  btn.setAttribute('aria-label','Change panel width, currently '+span+' columns');
-  btn.setAttribute('title','Change panel width, currently '+span+' columns');
-}
-
-function updateAllSizeButtons(){gridEl.querySelectorAll('.tile').forEach(updateSizeButton);}
-
-document.getElementById('editToggle').addEventListener('click',function(){
-  editMode=!editMode;
-  this.classList.toggle('active',editMode);
-  gridEl.classList.toggle('edit-on',editMode);
-  saveEditMode();
-});
-
-function saveLayoutState(){
-  try{
-    var order=Array.prototype.slice.call(gridEl.querySelectorAll('.tile')).map(function(t){return t.getAttribute('data-tile');});
-    var sizes={};
-    gridEl.querySelectorAll('.tile').forEach(function(t){
-      sizes[t.getAttribute('data-tile')]=getTileSpan(t);
-    });
-    localStorage.setItem('cmp_layout_order',JSON.stringify(order));
-    localStorage.setItem('cmp_tile_sizes',JSON.stringify(sizes));
-  }catch(e){}
-}
-
-var DEF_ORDER=['params','equations','mosaic','kpis','presets','counts','rates','roc','pr'];
-var DEF_SIZES={
-  params:1,
-  equations:1,
-  mosaic:2,
-  kpis:2,
-  presets:1,
-  counts:1,
-  rates:1,
-  roc:1,
-  pr:1
-};
-
-function applyDefaultLayout(){
-  var tiles={};
-  gridEl.querySelectorAll('.tile').forEach(function(t){tiles[t.getAttribute('data-tile')]=t;});
-  DEF_ORDER.forEach(function(id){if(tiles[id])gridEl.appendChild(tiles[id]);});
-  Object.keys(tiles).forEach(function(id){
-    applyTileSpan(tiles[id],DEF_SIZES[id]||1);
-  });
-  updateAllSizeButtons();
-}
-
-function loadLayoutState(){
-  try{
-    var raw=localStorage.getItem('cmp_layout_order');
-    var sizeRaw=localStorage.getItem('cmp_tile_sizes');
-    var tiles={};
-    gridEl.querySelectorAll('.tile').forEach(function(t){tiles[t.getAttribute('data-tile')]=t;});
-
-    if(raw){
-      JSON.parse(raw).forEach(function(id){if(tiles[id])gridEl.appendChild(tiles[id]);});
-    }else{
-      DEF_ORDER.forEach(function(id){if(tiles[id])gridEl.appendChild(tiles[id]);});
-    }
-
-    if(sizeRaw){
-      var sizes=JSON.parse(sizeRaw);
-      Object.keys(tiles).forEach(function(id){
-        applyTileSpan(tiles[id],sizes[id]||1);
-      });
-    }else{
-      Object.keys(tiles).forEach(function(id){
-        applyTileSpan(tiles[id],DEF_SIZES[id]||1);
-      });
-    }
-
-    updateAllSizeButtons();
-  }catch(e){
-    applyDefaultLayout();
+function switchView(view) {
+  var cmView = document.getElementById('cmView');
+  var mosaicView = document.getElementById('mosaicView');
+  var btnCM = document.getElementById('btn_cm');
+  var btnMosaic = document.getElementById('btn_mosaic');
+  if (view === 'cm') {
+    cmView.classList.add('active');
+    mosaicView.classList.remove('active');
+    btnCM.classList.add('active');
+    btnMosaic.classList.remove('active');
+  } else {
+    cmView.classList.remove('active');
+    mosaicView.classList.add('active');
+    btnCM.classList.remove('active');
+    btnMosaic.classList.add('active');
   }
 }
+</script>
+<script>
+(function() {
+  'use strict';
 
-document.getElementById('resetLayout').addEventListener('click',function(){
-  applyDefaultLayout();
-  saveLayoutState();
-  setTimeout(function(){resizeCharts();render();},60);
-});
+  // ─── Helpers ───
+  const $ = id => document.getElementById(id);
+  const pf = (v, d=2) => v.toFixed(d);
 
-loadEditMode();
-document.getElementById('editToggle').classList.toggle('active',editMode);
-gridEl.classList.toggle('edit-on',editMode);
+  // Normal PDF
+  function normPDF(x, mu, sigma) {
+    const z = (x - mu) / sigma;
+    return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
+  }
 
-gridEl.querySelectorAll('[data-size-btn]').forEach(function(btn){
-  btn.addEventListener('click',function(e){
-    e.stopPropagation();
-    var tile=tileOf(btn);
-    if(!tile)return;
-    var nextSpan=getTileSpan(tile)+1;
-    if(nextSpan>4)nextSpan=1;
-    applyTileSpan(tile,nextSpan);
-    updateSizeButton(tile);
-    saveLayoutState();
-    setTimeout(function(){resizeCharts();render();},60);
-  });
-});
+  // Normal CDF via approximation (Abramowitz & Stegun)
+  function normCDF(x, mu, sigma) {
+    const z = (x - mu) / sigma;
+    return stdNormCDF(z);
+  }
 
-loadLayoutState();
+  function stdNormCDF(z) {
+    const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+    const sign = z < 0 ? -1 : 1;
+    const az = Math.abs(z);
+    const t = 1.0 / (1.0 + p * az);
+    const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-az*az/2);
+    return 0.5 * (1.0 + sign * y);
+  }
 
-function el(id){return document.getElementById(id);}
-var LOG_N_MIN=Math.log(100),LOG_N_MAX=Math.log(500000);
-function sliderToN(v){return Math.round(Math.exp(LOG_N_MIN+(v/1000)*(LOG_N_MAX-LOG_N_MIN)));}
-function nToSlider(v){return 1000*(Math.log(v)-LOG_N_MIN)/(LOG_N_MAX-LOG_N_MIN);}
-function sliderToPct(v){return 100/(1+Math.exp(-v));}
-function pctToSlider(v){var p=Math.max(1e-6,Math.min(1-1e-6,v/100));return Math.log(p/(1-p));}
-function fmtPct(x){return(x*100).toFixed(1)+'%';}
-function fmtInt(x){return Math.round(x).toLocaleString('en-US');}
-function clamp(x,a,b){return Math.min(b,Math.max(a,x));}
-function nearlyEqual(a,b){return Math.abs(a-b)<1e-12;}
+  // Inverse normal CDF (rational approximation)
+  function stdNormInvCDF(p) {
+    if (p <= 0) return -8;
+    if (p >= 1) return 8;
+    if (p < 0.5) return -stdNormInvCDF(1 - p);
+    // Rational approximation for 0.5 <= p < 1
+    const t = Math.sqrt(-2 * Math.log(1 - p));
+    const c0=2.515517, c1=0.802853, c2=0.010328;
+    const d1=1.432788, d2=0.189269, d3=0.001308;
+    return t - (c0 + c1*t + c2*t*t) / (1 + d1*t + d2*t*t + d3*t*t*t);
+  }
 
-function sameParams(a,b){
-  if(!a||!b)return false;
-  return nearlyEqual(a.N,b.N)&&nearlyEqual(a.pi,b.pi)&&nearlyEqual(a.tpr,b.tpr)&&nearlyEqual(a.fpr,b.fpr);
-}
-function readParams(){
-  return{
-    N:clamp(parseInt(el('nVal').value,10)||100,100,500000),
-    pi:clamp((parseFloat(el('piVal').value)||0)/100,0,1),
-    tpr:clamp((parseFloat(el('tprVal').value)||0)/100,0,1),
-    fpr:clamp((parseFloat(el('fprVal').value)||0)/100,0,1)
+  function normInvCDF(p, mu, sigma) {
+    return mu + sigma * stdNormInvCDF(p);
+  }
+
+  // ─── State ───
+  let state = {
+    mu_neg: 0, std_neg: 1,
+    mu_pos: 2, std_pos: 1,
+    N: 1000, bal: 0.3,
+    threshold: 1.0
   };
-}
-function compute(p){
-  var P=p.N*p.pi,Nn=p.N*(1-p.pi),TP=P*p.tpr,FN=P-TP,FP=Nn*p.fpr,TN=Nn-FP;
-  var PredP=TP+FP,PredN=TN+FN,prec=TP/(PredP+1e-15),acc=(TP+TN)/(p.N+1e-15);
-  var f1=2*prec*p.tpr/(prec+p.tpr+1e-15),tnr=1-p.fpr,npv=TN/(PredN+1e-15),bacc=.5*(p.tpr+tnr);
-  return{P:P,Nn:Nn,TP:TP,FP:FP,TN:TN,FN:FN,PredP:PredP,PredN:PredN,prec:prec,acc:acc,f1:f1,tnr:tnr,npv:npv,bacc:bacc};
-}
-function syncToSliders(){
-  el('nVal').value=sliderToN(el('n').value);
-  el('piVal').value=sliderToPct(el('pi').value).toFixed(2);
-  el('tprVal').value=sliderToPct(el('tpr').value).toFixed(2);
-  el('fprVal').value=sliderToPct(el('fpr').value).toFixed(2);
-}
 
-function drawMosaic(r){
-  var svg=el('mosaic');svg.innerHTML='';
-  var W=1000,H=500,TOP=40,iY=TOP,iH=H-TOP,tot=r.P+r.Nn;
-  var wNeg=W*(r.Nn/(tot+1e-15)),wPos=W-wNeg;
-  var hTN=iH*(r.TN/(r.Nn+1e-15)),hFP=iH-hTN;
-  var hFN=iH*(r.FN/(r.P+1e-15)),hTP=iH-hFN;
-  var NS='http://www.w3.org/2000/svg';
-  var bg=document.createElementNS(NS,'rect');
-  bg.setAttribute('width',W);bg.setAttribute('height',H);bg.setAttribute('fill','#0a0c10');svg.appendChild(bg);
-  var C={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'};
+  let updating = false; // reentrance guard
 
-  function rect(x,y,w,h,fill,lbl){
-    var R=document.createElementNS(NS,'rect');
-    R.setAttribute('x',x);R.setAttribute('y',y);R.setAttribute('width',Math.max(0,w));R.setAttribute('height',Math.max(0,h));
-    R.setAttribute('fill',fill);R.setAttribute('fill-opacity','0.85');R.setAttribute('stroke','#0a0c10');R.setAttribute('stroke-width','2');
-    svg.appendChild(R);
-    if(w>100&&h>50){
-      var T=document.createElementNS(NS,'text');
-      T.setAttribute('x',x+16);T.setAttribute('y',Math.min(y+h-18,y+46));T.setAttribute('font-size','38');
-      T.setAttribute('font-family','Space Mono,monospace');T.setAttribute('fill','rgba(0,0,0,0.7)');T.setAttribute('font-weight','700');
-      T.textContent=lbl;svg.appendChild(T);
+  // ─── Derived: from threshold → TPR, FPR ───
+  function threshToRates(t) {
+    // TPR = P(X > t | positive) = 1 - CDF(t, mu_pos, std_pos)
+    const tpr = 1 - normCDF(t, state.mu_pos, state.std_pos);
+    // FPR = P(X > t | negative) = 1 - CDF(t, mu_neg, std_neg)
+    const fpr = 1 - normCDF(t, state.mu_neg, state.std_neg);
+    return { tpr, fpr };
+  }
+
+  // ─── From TPR → threshold (given positive distribution) ───
+  function tprToThresh(tpr) {
+    // TPR = 1 - CDF(t) => CDF(t) = 1-TPR => t = invCDF(1-TPR)
+    return normInvCDF(1 - tpr, state.mu_pos, state.std_pos);
+  }
+
+  // ─── From FPR → threshold (given negative distribution) ───
+  function fprToThresh(fpr) {
+    return normInvCDF(1 - fpr, state.mu_neg, state.std_neg);
+  }
+
+  // ─── Generate ROC curve points ───
+  function generateROC(nPts) {
+    const pts = [];
+    for (let i = 0; i <= nPts; i++) {
+      const t = state.mu_neg - 4*state.std_neg + (state.mu_pos + 4*state.std_pos - state.mu_neg + 4*state.std_neg) * i / nPts;
+      const { tpr, fpr } = threshToRates(t);
+      pts.push({ fpr, tpr, t });
+    }
+    // sort by fpr
+    pts.sort((a, b) => a.fpr - b.fpr);
+    return pts;
+  }
+
+  // ─── AUC via trapezoidal ───
+  function computeAUC(rocPts) {
+    let auc = 0;
+    for (let i = 1; i < rocPts.length; i++) {
+      const dx = rocPts[i].fpr - rocPts[i-1].fpr;
+      const avgY = (rocPts[i].tpr + rocPts[i-1].tpr) / 2;
+      auc += dx * avgY;
+    }
+    return auc;
+  }
+
+  // ─── Slider read/write ───
+  function readSliders() {
+    return {
+      mu_neg: parseFloat($('s_mu_neg').value),
+      std_neg: parseFloat($('s_std_neg').value),
+      mu_pos: parseFloat($('s_mu_pos').value),
+      std_pos: parseFloat($('s_std_pos').value),
+      N: parseInt($('s_N').value),
+      bal: parseFloat($('s_bal').value),
+      threshold: parseFloat($('s_thresh').value)
+    };
+  }
+
+  function writeSlider(id, val) {
+    $(id).value = val;
+  }
+
+  function updateValueDisplays() {
+    const { tpr, fpr } = threshToRates(state.threshold);
+    $('v_mu_neg').textContent = pf(state.mu_neg, 1);
+    $('v_std_neg').textContent = pf(state.std_neg, 1);
+    $('v_mu_pos').textContent = pf(state.mu_pos, 1);
+    $('v_std_pos').textContent = pf(state.std_pos, 1);
+    $('v_N').textContent = state.N;
+    $('v_bal').textContent = pf(state.bal);
+    $('v_tpr').textContent = pf(tpr, 3);
+    $('v_fpr').textContent = pf(fpr, 3);
+    $('v_thresh').textContent = pf(state.threshold);
+  }
+
+  // ─── Plot Config ───
+  const plotBg = 'rgba(0,0,0,0)';
+  const paperBg = 'rgba(0,0,0,0)';
+  const gridColor = '#221d3a';
+  const fontColor = '#9088b0';
+  const isMobile = () => window.innerWidth <= 640;
+  function getBasePlotLayout() {
+    const mobile = isMobile();
+    return {
+      paper_bgcolor: paperBg,
+      plot_bgcolor: plotBg,
+      font: { family: 'JetBrains Mono, monospace', size: mobile ? 9 : 10, color: fontColor },
+      margin: mobile ? { l: 35, r: 8, t: 8, b: 32 } : { l: 45, r: 15, t: 10, b: 40 },
+      xaxis: { gridcolor: gridColor, zerolinecolor: '#2e2650' },
+      yaxis: { gridcolor: gridColor, zerolinecolor: '#2e2650' },
+    };
+  }
+
+  // ─── Render All ───
+  function render() {
+    const { tpr, fpr } = threshToRates(state.threshold);
+    updateValueDisplays();
+
+    // Sync TPR/FPR sliders
+    writeSlider('s_tpr', Math.max(0, Math.min(1, tpr)));
+    writeSlider('s_fpr', Math.max(0, Math.min(1, fpr)));
+
+    renderDistPlot(tpr, fpr);
+    renderTopView(tpr, fpr);
+    renderROCPlot(tpr, fpr);
+    renderCM(tpr, fpr);
+    renderMetrics(tpr, fpr);
+    renderMosaic(tpr, fpr);
+  }
+
+  function renderDistPlot(tpr, fpr) {
+    const xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
+    const xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
+    const xs = [];
+    const yNeg = [], yPos = [];
+    const steps = 300;
+    const wP = state.bal;       // prevalence weight for positives
+    const wN = 1 - state.bal;   // prevalence weight for negatives
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (xMax - xMin) * i / steps;
+      xs.push(x);
+      yNeg.push(wN * normPDF(x, state.mu_neg, state.std_neg));
+      yPos.push(wP * normPDF(x, state.mu_pos, state.std_pos));
+    }
+
+    // Fill areas for FP and FN (weighted by prevalence)
+    const t = state.threshold;
+    const xFP = [], yFP = [];  // neg distribution, x > t
+    const xFN = [], yFN = [];  // pos distribution, x < t
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (xMax - xMin) * i / steps;
+      if (x >= t) { xFP.push(x); yFP.push(wN * normPDF(x, state.mu_neg, state.std_neg)); }
+      if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
+    }
+
+    const traces = [
+      { x: xs, y: yNeg, name: 'Negative', line: { color: '#ff2d95', width: 2 }, type: 'scatter' },
+      { x: xs, y: yPos, name: 'Positive', line: { color: '#00f0ff', width: 2 }, type: 'scatter' },
+      { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,45,85,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+      { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,180,0,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+    ];
+
+    const base = getBasePlotLayout();
+    const layout = {
+      ...base,
+      xaxis: { ...base.xaxis, title: 'Score' },
+      yaxis: { ...base.yaxis, title: 'Weighted Density' },
+      legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
+      shapes: [{
+        type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
+        line: { color: '#fff', width: 2, dash: 'dot' }
+      }],
+      annotations: [{
+        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
+        font: { size: 10, color: '#fff' }
+      }]
+    };
+
+    Plotly.react('distPlot', traces, layout, { displayModeBar: false, responsive: true });
+  }
+
+  // ─── Top View: Scatter plot preview ───
+  // Seeded PRNG for deterministic dots
+  function mulberry32(a) {
+    return function() {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  // Box-Muller with seeded rng
+  function sampleNormal(mu, sigma, rng) {
+    const u1 = rng(), u2 = rng();
+    const z = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
+    return mu + sigma * z;
+  }
+
+  function renderTopView(tpr, fpr) {
+    const svg = $('topViewSVG');
+    const W = 700, H = 320;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    const pad = { l: 50, r: 15, t: 20, b: 40 };
+    const bW = W - pad.l - pad.r;
+    const bH = H - pad.t - pad.b;
+    const t = state.threshold;
+
+    // Sample counts
+    const nNeg = Math.round(state.N * (1 - state.bal));
+    const nPos = Math.round(state.N * state.bal);
+    // Cap dots for performance
+    const maxDots = 500;
+    const negCount = Math.min(nNeg, maxDots);
+    const posCount = Math.min(nPos, maxDots);
+
+    // Score range
+    const xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
+    const xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
+
+    // Y layout: neg dots in top band, pos dots in bottom band, with gap
+    const bandH = bH * 0.4;
+    const gap = bH * 0.2;
+    const y0neg = pad.t;
+    const y0pos = pad.t + bandH + gap;
+
+    const rng = mulberry32(42); // fixed seed for stable layout
+
+    let html = '';
+
+    // ── Background regions (threshold split) ──
+    const tX = pad.l + ((t - xMin) / (xMax - xMin)) * bW;
+    const tClamped = Math.max(pad.l, Math.min(pad.l + bW, tX));
+
+    // Neg band: left = TN region, right = FP region
+    html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(0,240,255,0.04)" rx="3"/>';
+    html += '<rect x="'+tClamped+'" y="'+y0neg+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(255,45,85,0.04)" rx="3"/>';
+    // Pos band: left = FN region, right = TP region
+    html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(255,180,0,0.04)" rx="3"/>';
+    html += '<rect x="'+tClamped+'" y="'+y0pos+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(57,255,20,0.04)" rx="3"/>';
+
+    // ── Sample & draw negative dots ──
+    for (let i = 0; i < negCount; i++) {
+      const val = sampleNormal(state.mu_neg, state.std_neg, rng);
+      if (val < xMin || val > xMax) continue;
+      const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
+      const cy = y0neg + bandH * 0.1 + rng() * bandH * 0.8;
+      const isRight = val >= t;
+      const color = isRight ? '#ff2d55' : '#00f0ff';
+      const opacity = isRight ? '0.7' : '0.55';
+      html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
+    }
+
+    // ── Sample & draw positive dots ──
+    for (let i = 0; i < posCount; i++) {
+      const val = sampleNormal(state.mu_pos, state.std_pos, rng);
+      if (val < xMin || val > xMax) continue;
+      const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
+      const cy = y0pos + bandH * 0.1 + rng() * bandH * 0.8;
+      const isRight = val >= t;
+      const color = isRight ? '#39ff14' : '#ffb400';
+      const opacity = isRight ? '0.7' : '0.55';
+      html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
+    }
+
+    // ── Threshold line ──
+    if (tX >= pad.l && tX <= pad.l + bW) {
+      html += '<line x1="'+tX+'" y1="'+(pad.t - 5)+'" x2="'+tX+'" y2="'+(y0pos + bandH + 5)+'" stroke="#fff" stroke-width="2" stroke-dasharray="6,3" opacity="0.9"/>';
+      html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace">t='+pf(t)+'</text>';
+    }
+
+    // ── Region labels ──
+    const tFrac = (Math.max(xMin, Math.min(xMax, t)) - xMin) / (xMax - xMin);
+    const leftMidX = pad.l + tFrac * bW / 2;
+    const rightMidX = pad.l + tFrac * bW + (1 - tFrac) * bW / 2;
+    if (tFrac > 0.1) {
+      html += '<text x="'+leftMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="#00f0ff" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TN</text>';
+      html += '<text x="'+leftMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FN</text>';
+    }
+    if (tFrac < 0.9) {
+      html += '<text x="'+rightMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="#ff2d55" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FP</text>';
+      html += '<text x="'+rightMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TP</text>';
+    }
+
+    // ── Row labels ──
+    html += '<text x="'+(pad.l - 8)+'" y="'+(y0neg + bandH/2)+'" text-anchor="end" fill="#ff2d95" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Neg</text>';
+    html += '<text x="'+(pad.l - 8)+'" y="'+(y0pos + bandH/2)+'" text-anchor="end" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Pos</text>';
+
+    // ── Score axis ──
+    const axisY = y0pos + bandH;
+    const nTicks = 7;
+    for (let i = 0; i <= nTicks; i++) {
+      const v = xMin + (xMax - xMin) * i / nTicks;
+      const ax = pad.l + (i / nTicks) * bW;
+      html += '<text x="'+ax+'" y="'+(axisY + 20)+'" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">'+pf(v,1)+'</text>';
+      html += '<line x1="'+ax+'" y1="'+(axisY + 2)+'" x2="'+ax+'" y2="'+(axisY + 7)+'" stroke="#7a6f99" stroke-width="1"/>';
+    }
+    html += '<text x="'+(pad.l + bW/2)+'" y="'+(H - 4)+'" text-anchor="middle" fill="#9088b0" font-size="10" font-family="JetBrains Mono, monospace">Score</text>';
+
+    svg.innerHTML = html;
+  }
+
+  function renderROCPlot(tpr, fpr) {
+    const rocPts = generateROC(500);
+
+    const traces = [
+      { x: [0, 1], y: [0, 1], name: 'Random', line: { color: '#333', dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
+      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: 'rgba(0,240,255,0.08)' },
+      { x: [fpr], y: [tpr], name: 'Operating Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: var_accent(), width: 2 } }, type: 'scatter' },
+    ];
+
+    const base = getBasePlotLayout();
+    const layout = {
+      ...base,
+      xaxis: { ...base.xaxis, title: 'FPR', range: [-0.02, 1.02] },
+      yaxis: { ...base.yaxis, title: 'TPR', range: [-0.02, 1.02] },
+      legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
+    };
+
+    Plotly.react('rocPlot', traces, layout, { displayModeBar: false, responsive: true });
+  }
+
+  function var_accent() { return '#00f0ff'; }
+
+  function renderCM(tpr, fpr) {
+    const P = Math.round(state.N * state.bal);
+    const N_neg = state.N - P;
+    const TP = Math.round(P * tpr);
+    const FN = P - TP;
+    const FP = Math.round(N_neg * fpr);
+    const TN = N_neg - FP;
+
+    setCM('cm_tp', TP, 'TP', P > 0 ? pf(TP/P*100,1)+'%' : '—');
+    setCM('cm_fn', FN, 'FN', P > 0 ? pf(FN/P*100,1)+'%' : '—');
+    setCM('cm_fp', FP, 'FP', N_neg > 0 ? pf(FP/N_neg*100,1)+'%' : '—');
+    setCM('cm_tn', TN, 'TN', N_neg > 0 ? pf(TN/N_neg*100,1)+'%' : '—');
+  }
+
+  function setCM(id, count, label, rate) {
+    const el = $(id);
+    el.querySelector('.count').textContent = count;
+    el.querySelector('.label').textContent = label;
+    el.querySelector('.rate').textContent = rate;
+  }
+
+  function renderMetrics(tpr, fpr) {
+    const P = Math.round(state.N * state.bal);
+    const N_neg = state.N - P;
+    const TP = Math.round(P * tpr);
+    const FN = P - TP;
+    const FP = Math.round(N_neg * fpr);
+    const TN = N_neg - FP;
+
+    const acc = state.N > 0 ? (TP+TN)/state.N : 0;
+    const prec = (TP+FP) > 0 ? TP/(TP+FP) : 0;
+    const rec = (TP+FN) > 0 ? TP/(TP+FN) : 0;
+    const spec = (TN+FP) > 0 ? TN/(TN+FP) : 0;
+    const f1 = (prec+rec) > 0 ? 2*prec*rec/(prec+rec) : 0;
+    const npv = (TN+FN) > 0 ? TN/(TN+FN) : 0;
+
+    const denom = Math.sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN));
+    const mcc = denom > 0 ? (TP*TN - FP*FN)/denom : 0;
+
+    const rocPts = generateROC(500);
+    const auc = computeAUC(rocPts);
+
+    $('m_acc').textContent = pf(acc, 3);
+    $('m_prec').textContent = pf(prec, 3);
+    $('m_rec').textContent = pf(rec, 3);
+    $('m_spec').textContent = pf(spec, 3);
+    $('m_f1').textContent = pf(f1, 3);
+    $('m_auc').textContent = pf(auc, 3);
+    $('m_npv').textContent = pf(npv, 3);
+    $('m_mcc').textContent = pf(mcc, 3);
+  }
+
+  // ─── Mosaic Plot (SVG) ───
+  function renderMosaic(tpr, fpr) {
+    const P = Math.round(state.N * state.bal);
+    const Nn = state.N - P;
+    const TP = Math.round(P * tpr);
+    const FN = P - TP;
+    const FP = Math.round(Nn * fpr);
+    const TN = Nn - FP;
+
+    const svg = $('mosaicSVG');
+    const mobile = isMobile();
+
+    if (mobile) {
+      renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr);
+    } else {
+      renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr);
     }
   }
 
-  rect(0,iY,wNeg,hTN,C.TN,'TN '+fmtInt(r.TN));
-  rect(0,iY+hTN,wNeg,hFP,C.FP,'FP '+fmtInt(r.FP));
-  rect(wNeg,iY,wPos,hFN,C.FN,'FN '+fmtInt(r.FN));
-  rect(wNeg,iY+hFN,wPos,hTP,C.TP,'TP '+fmtInt(r.TP));
+  function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
+    const W = 700, H = 320;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const pad = { l: 50, r: 20, t: 30, b: 40 };
+    const bW = W - pad.l - pad.r;
+    const bH = H - pad.t - pad.b;
 
-  var labels=[[0,wNeg,'Actual Neg'],[wNeg,wPos,'Actual Pos']];
-  for(var li=0;li<labels.length;li++){
-    var lx=labels[li][0],lw=labels[li][1],lt=labels[li][2];
-    if(lw<80)continue;
-    var lT=document.createElementNS(NS,'text');
-    lT.setAttribute('x',lx+lw/2);lT.setAttribute('y',28);lT.setAttribute('text-anchor','middle');
-    lT.setAttribute('font-size','30');lT.setAttribute('font-family','Syne,sans-serif');
-    lT.setAttribute('font-weight','700');lT.setAttribute('fill','rgba(255,255,255,0.5)');lT.textContent=lt;
-    svg.appendChild(lT);
+    const pW = state.bal * bW;
+    const nW = (1 - state.bal) * bW;
+
+    const tpH = P > 0 ? (TP / P) * bH : 0;
+    const fnH = bH - tpH;
+    const fpH = Nn > 0 ? (FP / Nn) * bH : 0;
+    const tnH = bH - fpH;
+
+    const x0 = pad.l;
+    const y0 = pad.t;
+
+    let html = '';
+    html += rect(x0, y0, pW, tpH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
+    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
+    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
+    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
+
+    const ppPoints = [
+      [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
+      [x0 + pW, y0 + fpH], [x0 + pW, y0 + tpH], [x0, y0 + tpH],
+    ].map(p => p.join(',')).join(' ');
+    html += '<polygon points="' + ppPoints + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.7">← Predicted Positive →</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff2d95" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
+    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+
+    svg.innerHTML = html;
   }
 
-  var path=document.createElementNS(NS,'path');
-  path.setAttribute('d','M 0,'+(iY+hTN)+' L '+wNeg+','+(iY+hTN)+' L '+wNeg+','+(iY+hFN)+' L '+W+','+(iY+hFN)+' L '+W+','+(iY+iH)+' L 0,'+(iY+iH)+' Z');
-  path.setAttribute('fill','rgba(255,255,255,0.03)');
-  path.setAttribute('stroke','rgba(255,255,255,0.7)');
-  path.setAttribute('stroke-width','3');
-  path.setAttribute('stroke-dasharray','8 4');
-  path.setAttribute('pointer-events','none');
-  svg.appendChild(path);
+  // Vertical mosaic for mobile: two rows (Actual P on top, Actual N below)
+  function renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
+    const W = 360, H = 340;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const pad = { l: 12, r: 12, t: 22, b: 8 };
+    const bW = W - pad.l - pad.r;  // full width for bars
+    const gap = 22; // gap between the two rows
+    const labelH = 18; // space for row label above each row
 
-  el('mosaicCaption').textContent='P='+fmtInt(r.P)+' N='+fmtInt(r.Nn)+' | TP='+fmtInt(r.TP)+' FP='+fmtInt(r.FP)+' TN='+fmtInt(r.TN)+' FN='+fmtInt(r.FN);
-}
+    // Row heights proportional to prevalence
+    const totalBarH = H - pad.t - pad.b - gap - labelH * 2;
+    const pRowH = state.bal * totalBarH;
+    const nRowH = (1 - state.bal) * totalBarH;
 
-function getPL(extra){
-  extra=extra||{};
-  var m=window.innerWidth<=500?{l:28,r:4,t:4,b:28}:window.innerWidth>900?{l:44,r:8,t:8,b:44}:{l:34,r:6,t:6,b:34};
-  var fs=window.innerWidth<=500?8:window.innerWidth>900?12:10;
-  var ax={gridcolor:'#1e2230',tickcolor:'#3a4060',linecolor:'#3a4060',tickfont:{color:'#b4bcd0'},zeroline:false};
-  var xax={},yax={},k;
-  for(k in ax){xax[k]=ax[k];yax[k]=ax[k];}
-  if(extra.xaxis)for(k in extra.xaxis)xax[k]=extra.xaxis[k];
-  if(extra.yaxis)for(k in extra.yaxis)yax[k]=extra.yaxis[k];
-  var out={paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{family:'Space Mono,monospace',size:fs,color:'#b4bcd0'},margin:m,xaxis:xax,yaxis:yax,showlegend:false};
-  for(k in extra){if(k!=='xaxis'&&k!=='yaxis')out[k]=extra[k];}
-  return out;
-}
+    const x0 = pad.l;
 
-var PC={displayModeBar:false,responsive:true};
-var rocHistory=[],lastP=null,lastHistoryP=null;
+    // ── Actual Positive row (top) ──
+    const y0p = pad.t + labelH;
+    // TP on left, FN on right — widths proportional to TPR/FNR
+    const tpW = P > 0 ? (TP / P) * bW : 0;
+    const fnW = bW - tpW;
 
-function render(){
-  var p=readParams(),r=compute(p);
+    // ── Actual Negative row (bottom) ──
+    const y0n = y0p + pRowH + gap + labelH;
+    // FP on left, TN on right — widths proportional to FPR/TNR
+    const fpW = Nn > 0 ? (FP / Nn) * bW : 0;
+    const tnW = bW - fpW;
 
-  function kc(v){return v>.75?'kpi-val good':v<.35?'kpi-val bad':'kpi-val warn';}
-  el('precKpi').textContent=fmtPct(r.prec);el('precKpi').className=kc(r.prec);
-  el('f1Kpi').textContent=fmtPct(r.f1);el('f1Kpi').className=kc(r.f1);
-  el('accKpi').textContent=fmtPct(r.acc);el('accKpi').className=kc(r.acc);
-  el('baccKpi').textContent=fmtPct(r.bacc);el('baccKpi').className=kc(r.bacc);
-  el('tnrKpi').textContent=fmtPct(r.tnr);el('tnrKpi').className=kc(r.tnr);
-  el('npvKpi').textContent=fmtPct(r.npv);el('npvKpi').className=kc(r.npv);
+    let html = '';
 
-  var msg='';
-  if(lastP){
-    var dN=!nearlyEqual(p.N,lastP.N),dPi=!nearlyEqual(p.pi,lastP.pi),dT=!nearlyEqual(p.tpr,lastP.tpr),dF=!nearlyEqual(p.fpr,lastP.fpr);
-    if(dN&&!dPi&&!dT&&!dF)msg='↕ N changed → rates fixed, counts scale.';
-    else if(dPi&&!dT&&!dF)msg='⚖ π changed → Precision shifts sharply.';
-    else if(dT&&!dF)msg='↑ TPR changed → TP/FN ratio shifts.';
-    else if(!dT&&dF)msg='→ FPR changed → FP/TN ratio shifts.';
-    else if(dT&&dF)msg='↑→ Both changed → moved in ROC space.';
-    else msg='Drag panels by ⠇ grip to rearrange.';
-  }else msg='Try: TPR=90%, FPR=5%, π=1% → watch Precision collapse.';
-  el('insight').textContent=msg;
-  lastP={N:p.N,pi:p.pi,tpr:p.tpr,fpr:p.fpr};
+    // Row labels
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#00f0ff" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff2d95" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
 
-  drawMosaic(r);
+    // Positive row cells
+    html += rect(x0, y0p, tpW, pRowH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
+    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
 
-  var CC={TP:'#4ade80',FP:'#fbbf24',TN:'#818cf8',FN:'#f87171',PredP:'#6b9cff',PredN:'#94a3b8'};
-  var tsz=window.innerWidth<=500?7:window.innerWidth>900?11:9;
+    // Negative row cells
+    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
+    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
 
-  Plotly.react('counts',[
-    {x:['TP','FP','TN','FN','Pred+','Pred-'],y:[r.TP,r.FP,r.TN,r.FN,r.PredP,r.PredN],type:'bar',
-    marker:{color:[CC.TP,CC.FP,CC.TN,CC.FN,CC.PredP,CC.PredN]},
-    texttemplate:'%{y:,.0f}',textposition:'auto',textfont:{size:tsz,color:'#fff'}}
-  ],getPL({yaxis:{title:{text:'count',font:{size:9,color:'#8a92ab'}}}}),PC);
+    // "Predicted Positive" outline: TP (top-left of P row) + FP (top-left of N row)
+    // Draw dashed outlines around TP and FP individually to indicate "predicted positive"
+    if (tpW > 1) html += '<rect x="'+x0+'" y="'+y0p+'" width="'+tpW+'" height="'+pRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
+    if (fpW > 1) html += '<rect x="'+x0+'" y="'+y0n+'" width="'+fpW+'" height="'+nRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
 
-  var rv=[p.tpr*100,p.fpr*100,r.prec*100,r.acc*100,r.f1*100,r.bacc*100,r.npv*100];
-  Plotly.react('metrics',[
-    {x:['TPR','FPR','Prec','Acc','F1','BAcc','NPV'],y:rv,type:'bar',
-    marker:{color:rv.map(function(v){return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';})},
-    texttemplate:'%{y:.1f}',textposition:'auto',textfont:{size:tsz,color:'#fff'}}
-  ],getPL({yaxis:{range:[0,100],title:{text:'%',font:{size:9,color:'#8a92ab'}}}}),PC);
+    // Predicted Positive label at top
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.6">⬜ dashed = Predicted Positive</text>';
 
-  var LR=p.fpr>1e-9?p.tpr/p.fpr:Infinity;
-  var rcx=[],rcy=[],i,fx;
-  for(i=0;i<=200;i++){fx=i/200;rcx.push(fx);rcy.push(Math.min(1,LR*fx));}
-  if(!sameParams(p,lastHistoryP)){
-    rocHistory.push({x:p.fpr,y:p.tpr});
-    if(rocHistory.length>80)rocHistory.shift();
-    lastHistoryP={N:p.N,pi:p.pi,tpr:p.tpr,fpr:p.fpr};
-  }
-  var rhx=rocHistory.map(function(d){return d.x;}),rhy=rocHistory.map(function(d){return d.y;});
-
-  Plotly.react('roc',[
-    {x:[0,1],y:[0,1],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
-    {x:rcx,y:rcy,mode:'lines',line:{color:'rgba(107,156,255,0.25)',width:1.5},fill:'tozeroy',fillcolor:'rgba(107,156,255,0.06)',hoverinfo:'skip'},
-    {x:rhx,y:rhy,mode:'lines+markers',line:{color:'rgba(107,156,255,0.3)',width:1},
-      marker:{color:rhx.map(function(_,i){return'rgba(107,156,255,'+(0.15+0.7*(i/Math.max(1,rhx.length)))+')';})},hoverinfo:'skip'},
-    {x:[p.fpr],y:[p.tpr],mode:'markers+text',marker:{color:'#6b9cff',size:11,line:{color:'#fff',width:2}},
-      text:['  LR⁺='+(LR===Infinity?'∞':LR.toFixed(1))],textposition:'middle right',textfont:{size:9,color:'#b4bcd0'},
-      hovertemplate:'FPR:%{x:.3f}<br>TPR:%{y:.3f}<extra></extra>'}
-  ],getPL({xaxis:{range:[0,1],title:{text:'FPR',font:{size:9,color:'#8a92ab'}}},yaxis:{range:[0,1],title:{text:'TPR',font:{size:9,color:'#8a92ab'}}}}),PC);
-
-  var prs=300,prRec=[],prPrec=[],prPi=[],pi2;
-  for(i=0;i<=prs;i++){
-    pi2=.001+.998*(i/prs);
-    prRec.push(p.tpr);
-    prPrec.push((p.tpr*pi2)/(p.tpr*pi2+p.fpr*(1-pi2)+1e-15));
-    prPi.push(pi2);
+    svg.innerHTML = html;
   }
 
-  Plotly.react('pr',[
-    {x:[0,1],y:[p.pi,p.pi],mode:'lines',line:{color:'#2a2f3e',dash:'dot',width:1.5},hoverinfo:'skip'},
-    {x:prRec,y:prPrec,mode:'lines',line:{color:'rgba(251,191,36,0.6)',width:2},text:prPi.map(function(v){return'π='+(v*100).toFixed(1)+'%';}),
-      hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<br>%{text}<extra></extra>'},
-    {x:[p.tpr],y:[r.prec],mode:'markers',marker:{color:'#fbbf24',size:11,line:{color:'#fff',width:2}},
-      hovertemplate:'Recall:%{x:.3f}<br>Prec:%{y:.3f}<extra></extra>'}
-  ],getPL({xaxis:{range:[0,1],title:{text:'Recall',font:{size:9,color:'#8a92ab'}}},yaxis:{range:[0,1],title:{text:'Precision',font:{size:9,color:'#8a92ab'}}}}),PC);
-
-  function ct(type){var col={TP:'#4ade80',FN:'#f87171',FP:'#fbbf24',TN:'#818cf8'}[type];return'<span style="color:'+col+';font-weight:700">'+type+'</span>';}
-  function st(type){var col={P:'#6b9cff',Neg:'#94a3b8','Pred+':'#6b9cff','Pred-':'#94a3b8'}[type]||'#b4bcd0';return'<span style="color:'+col+';font-weight:700">'+type+'</span>';}
-  function rc(v){return v>75?'#4ade80':v<35?'#f87171':'#fbbf24';}
-
-  var P=r.P,Nn=r.Nn;
-  var eqs=[
-    '__D__Counts',
-    ['N (Total)',ct('TP')+'+'+ct('FN')+'+'+ct('FP')+'+'+ct('TN'),fmtInt(p.N),null],
-    ['P (Actual)',st('P')+'='+ct('TP')+'+'+ct('FN'),fmtInt(P),null],
-    ['Neg (Actual)',st('Neg')+'='+ct('TN')+'+'+ct('FP'),fmtInt(Nn),null],
-    ['Pred+ (Predict+)',st('Pred+')+'='+ct('TP')+'+'+ct('FP'),fmtInt(r.PredP),null],
-    ['Pred- (Predict-)',st('Pred-')+'='+ct('TN')+'+'+ct('FN'),fmtInt(r.PredN),null],
-
-    '__D__Rates',
-    ['TPR (Recall)',ct('TP')+'/'+st('P')+'='+ct('TP')+'/('+ct('TP')+'+'+ct('FN')+')',(p.tpr*100).toFixed(2)+'%',p.tpr*100],
-    ['FNR (Miss)',ct('FN')+'/'+st('P')+'='+ct('FN')+'/('+ct('TP')+'+'+ct('FN')+')',((1-p.tpr)*100).toFixed(2)+'%',null],
-    ['TNR (Specificity)',ct('TN')+'/'+st('Neg')+'='+ct('TN')+'/('+ct('TN')+'+'+ct('FP')+')',(r.tnr*100).toFixed(2)+'%',r.tnr*100],
-    ['FPR (Fallout)',ct('FP')+'/'+st('Neg')+'='+ct('FP')+'/('+ct('TN')+'+'+ct('FP')+')',(p.fpr*100).toFixed(2)+'%',null],
-
-    '__D__Scores',
-    ['Prec (Prediction)',ct('TP')+'/'+st('Pred+')+'='+ct('TP')+'/('+ct('TP')+'+'+ct('FP')+')',(r.prec*100).toFixed(2)+'%',r.prec*100],
-    ['NPV (Prediction)',ct('TN')+'/'+st('Pred-')+'='+ct('TN')+'/('+ct('TN')+'+'+ct('FN')+')',(r.npv*100).toFixed(2)+'%',r.npv*100],
-    ['Acc (Overall)','('+ct('TP')+'+'+ct('TN')+')/N = ('+ct('TP')+'+'+ct('TN')+')/'+fmtInt(p.N),(r.acc*100).toFixed(2)+'%',r.acc*100],
-    ['F1 (Balance)','2'+ct('TP')+'/('+st('P')+'+'+st('Pred+')+') = 2'+ct('TP')+'/(2'+ct('TP')+'+'+ct('FP')+'+'+ct('FN')+')',(r.f1*100).toFixed(2)+'%',r.f1*100],
-    ['BAcc (Balanced)','½×('+ct('TP')+'/'+st('P')+' + '+ct('TN')+'/'+st('Neg')+')',(r.bacc*100).toFixed(2)+'%',r.bacc*100]
-  ];
-
-  var html='',item,l,f,res,cv,c,bc;
-  for(i=0;i<eqs.length;i++){
-    item=eqs[i];
-    if(typeof item==='string'&&item.indexOf('__D__')===0){
-      html+='<div class="eq-section-hdr">'+item.slice(5)+'</div>';
-      continue;
+  function rect(x, y, w, h, fill, label, count, textColor) {
+    if (w < 1 || h < 1) return '';
+    let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="rgba(255,255,255,0.08)" stroke-width="1" rx="3"/>';
+    // Only add labels if cell is big enough
+    if (w > 30 && h > 30) {
+      const cx = x + w/2, cy = y + h/2;
+      s += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" fill="'+textColor+'" font-size="13" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" fill="'+textColor+'" font-size="11" font-family="JetBrains Mono, monospace" opacity="0.8" dominant-baseline="middle">'+count+'</text>';
     }
-    l=item[0];f=item[1];res=item[2];cv=item[3];
-    c=cv!==null?rc(cv):'#fff';bc=cv!==null?c:'rgba(107,156,255,.25)';
-    html+='<div class="eq-card" style="border-left-color:'+bc+'"><span class="eq-lbl">'+l+'</span><span class="eq-result" style="color:'+c+'">'+res+'</span><span class="eq-formula">'+f+'</span></div>';
+    return s;
   }
-  el('liveEq').innerHTML=html;
-}
 
-function bind(sid,iid){
-  var s=el(sid),inp=el(iid),isN=(sid==='n');
-  function toD(v){return isN?sliderToN(v):sliderToPct(v);}
-  function toS(v){return isN?nToSlider(v):pctToSlider(v);}
-  s.addEventListener('input',function(){
-    inp.value=isN?Math.round(toD(s.value)):toD(s.value).toFixed(2);
-    render();
+  // ─── Event Wiring ───
+  // Distribution sliders → recompute threshold's TPR/FPR (threshold stays, rates change)
+  ['s_mu_neg','s_std_neg','s_mu_pos','s_std_pos'].forEach(id => {
+    $(id).addEventListener('input', () => {
+      if (updating) return;
+      updating = true;
+      state.mu_neg = parseFloat($('s_mu_neg').value);
+      state.std_neg = parseFloat($('s_std_neg').value);
+      state.mu_pos = parseFloat($('s_mu_pos').value);
+      state.std_pos = parseFloat($('s_std_pos').value);
+      // threshold stays, TPR/FPR update accordingly
+      render();
+      updating = false;
+    });
   });
-  function apply(){
-    var v=parseFloat(inp.value);
-    if(!isFinite(v))v=isN?100:50;
-    if(isN){v=clamp(v,100,500000);inp.value=Math.round(v);}
-    else{v=clamp(v,0,100);inp.value=v.toFixed(2);}
-    s.value=toS(v);
+
+  // TPR slider → compute new threshold from positive dist, update FPR
+  $('s_tpr').addEventListener('input', () => {
+    if (updating) return;
+    updating = true;
+    const newTPR = parseFloat($('s_tpr').value);
+    state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
+    writeSlider('s_thresh', state.threshold);
     render();
-  }
-  inp.addEventListener('change',apply);
-  inp.addEventListener('blur',apply);
-}
+    updating = false;
+  });
 
-var ids=['n','pi','tpr','fpr'],vals=['nVal','piVal','tprVal','fprVal'];
-for(var bi=0;bi<ids.length;bi++)bind(ids[bi],vals[bi]);
+  // FPR slider → compute new threshold from negative dist, update TPR
+  $('s_fpr').addEventListener('input', () => {
+    if (updating) return;
+    updating = true;
+    const newFPR = parseFloat($('s_fpr').value);
+    state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
+    writeSlider('s_thresh', state.threshold);
+    render();
+    updating = false;
+  });
 
-function setPi(p){el('pi').value=pctToSlider(p);el('piVal').value=p.toFixed(2);}
-function setTpr(p){el('tpr').value=pctToSlider(p);el('tprVal').value=p.toFixed(2);}
-function setFpr(p){el('fpr').value=pctToSlider(p);el('fprVal').value=p.toFixed(2);}
+  // Threshold slider → update TPR & FPR
+  $('s_thresh').addEventListener('input', () => {
+    if (updating) return;
+    updating = true;
+    state.threshold = parseFloat($('s_thresh').value);
+    render();
+    updating = false;
+  });
 
-el('bal').onclick=function(){setPi(50);render();};
-el('imb').onclick=function(){setPi(10);render();};
-el('vimb').onclick=function(){setPi(1);render();};
-el('perfect').onclick=function(){setTpr(99.99);setFpr(0.01);render();};
-el('random').onclick=function(){var v=parseFloat(el('tprVal').value)||50;setTpr(v);setFpr(v);render();};
-el('resetBtn').onclick=function(){
-  el('n').value='460';
-  el('pi').value='-0.847';
-  el('tpr').value='0.847';
-  el('fpr').value='-0.847';
-  rocHistory=[];
-  lastP=null;
-  lastHistoryP=null;
-  syncToSliders();
+  // N & Balance → just re-render CM & metrics
+  ['s_N','s_bal'].forEach(id => {
+    $(id).addEventListener('input', () => {
+      if (updating) return;
+      updating = true;
+      state.N = parseInt($('s_N').value);
+      state.bal = parseFloat($('s_bal').value);
+      render();
+      updating = false;
+    });
+  });
+
+  // ─── Init ───
   render();
-};
 
-syncToSliders();
-render();
+  // Re-render on resize/orientation change for mobile layout adjustments
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(render, 150);
+  });
 
-var rt=null;
-function doResize(){resizeCharts();render();}
-window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(doResize,150);});
-window.addEventListener('orientationchange',function(){clearTimeout(rt);rt=setTimeout(doResize,300);});
+})();
 </script>
 </body>
 </html>
