@@ -495,9 +495,10 @@ input[type=range]::-moz-range-thumb{
   .eq-inner{max-height:none;}
   header h1{font-size:14px;}
   /* Keep sliders + mosaic side by side even on small phones */
-  .tile[data-tile="params"]{order:-2 !important;width:calc(50% - 3px) !important;}
-  .tile[data-tile="mosaic"]{order:-1 !important;width:calc(50% - 3px) !important;}
-  .tile:not([data-tile="params"]):not([data-tile="mosaic"]){order:0 !important;width:100% !important;}
+  .tile[data-tile="params"]{order:-3 !important;width:calc(50% - 3px) !important;}
+  .tile[data-tile="mosaic"]{order:-2 !important;width:calc(50% - 3px) !important;}
+  .tile[data-tile="kpis"]{order:-1 !important;width:100% !important;}
+  .tile:not([data-tile="params"]):not([data-tile="mosaic"]):not([data-tile="kpis"]){order:0 !important;width:100% !important;}
   .ctrl{margin-bottom:3px;}
   .ctrl-row{margin-bottom:1px;}
   .ctrl-val{font-size:13px;font-weight:700;padding:2px 4px;min-width:40px;}
