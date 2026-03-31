@@ -342,20 +342,61 @@
   /* ── Mobile (iPhone 13 = 390px, covers most phones) ── */
   @media (max-width: 640px) {
     h1 {
-      font-size: 1rem;
-      padding: 14px 10px 8px;
+      font-size: 0.9rem;
+      padding: 10px 10px 6px;
     }
 
     .layout {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding: 8px 10px 16px;
+      gap: 8px;
+      padding: 6px 8px 14px;
     }
 
     .controls {
       order: 1;
-      display: block;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 12px;
+      padding: 8px !important;
+    }
+
+    .controls .panel-title {
+      grid-column: 1 / -1;
+      margin-bottom: 4px;
+      padding-bottom: 4px;
+    }
+
+    .controls .bidirectional-hint {
+      display: none;
+    }
+
+    .controls .section-label {
+      grid-column: 1 / -1;
+      margin: 4px 0 2px;
+    }
+
+    .controls .separator {
+      grid-column: 1 / -1;
+      margin: 4px 0;
+    }
+
+    .slider-group {
+      margin-bottom: 2px !important;
+    }
+
+    .slider-group label {
+      font-size: 0.68rem;
+      margin-bottom: 1px;
+    }
+
+    input[type="range"] {
+      height: 4px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 16px;
+      height: 16px;
     }
 
     .plot-cm-mosaic { order: 2; }
@@ -372,27 +413,14 @@
       height: 260px !important;
     }
 
-    .slider-group label {
-      font-size: 0.72rem;
-    }
-
-    input[type="range"] {
-      height: 6px;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      width: 18px;
-      height: 18px;
-    }
-
     .plot-cm-mosaic {
-      min-height: 200px;
+      min-height: 150px;
     }
 
     #mosaicSVG {
       width: 100%;
       height: auto;
-      min-height: 300px;
+      max-height: 320px;
     }
 
     .cm-grid {
@@ -958,12 +986,12 @@ function switchView(view) {
 
   // Vertical mosaic for mobile: two rows (Actual P on top, Actual N below)
   function renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
-    const W = 360, H = 520;
+    const W = 360, H = 340;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    const pad = { l: 12, r: 12, t: 28, b: 12 };
+    const pad = { l: 12, r: 12, t: 22, b: 8 };
     const bW = W - pad.l - pad.r;  // full width for bars
-    const gap = 32; // gap between the two rows
-    const labelH = 24; // space for row label above each row
+    const gap = 22; // gap between the two rows
+    const labelH = 18; // space for row label above each row
 
     // Row heights proportional to prevalence
     const totalBarH = H - pad.t - pad.b - gap - labelH * 2;
