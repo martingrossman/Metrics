@@ -56,7 +56,8 @@
     grid-template-rows: auto auto;
     gap: 14px;
     padding: 10px 16px 20px;
-    max-width: 1440px;
+    width: min(96vw, 1920px);
+    max-width: 1920px;
     margin: 0 auto;
   }
 
@@ -69,6 +70,12 @@
   .plot-roc { grid-column: 3; grid-row: 1; }
   .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
   .plot-metrics { grid-column: 3; grid-row: 2; }
+
+  #mosaicSVG {
+    width: 100%;
+    display: block;
+    aspect-ratio: 700 / 340;
+  }
 
   .panel {
     background: var(--bg2);
@@ -572,7 +579,8 @@
     #mosaicSVG {
       width: 100%;
       height: auto;
-      max-height: 320px;
+      aspect-ratio: 360 / 340;
+      max-height: none;
     }
 
     .cm-grid {
@@ -632,6 +640,17 @@
     .view-toggle button {
       font-size: 0.6rem;
       padding: 4px 8px;
+    }
+  }
+
+  @media (min-width: 1800px) {
+    .layout {
+      grid-template-columns: 320px 1fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 16px;
     }
   }
 </style>
@@ -1552,12 +1571,32 @@ function switchView(view) {
     }
   }
 
+  function getMosaicTypography(mobile) {
+    const vw = window.innerWidth;
+    let scale = mobile ? 1.14 : 1.0;
+    if (!mobile && vw >= 2200) scale = 1.28;
+    else if (!mobile && vw >= 1800) scale = 1.16;
+    else if (!mobile && vw >= 1400) scale = 1.08;
+
+    return {
+      banner: Math.round((mobile ? 11 : 11) * scale),
+      rowLabel: Math.round((mobile ? 16 : 13) * scale),
+      meta: Math.round((mobile ? 12 : 10) * scale),
+      side: Math.round((mobile ? 12 : 10) * scale),
+      cellLabel: Math.round((mobile ? 17 : 15) * scale),
+      cellCount: Math.round((mobile ? 14 : 12) * scale),
+      cellMinW: mobile ? 24 : 30,
+      cellMinH: mobile ? 24 : 30
+    };
+  }
+
   function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
-    const W = 700, H = 320;
+    const W = 700, H = 340;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     const pad = { l: 50, r: 20, t: 30, b: 40 };
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
+    const typo = getMosaicTypography(false);
 
     const pW = state.bal * bW;
     const nW = (1 - state.bal) * bW;
@@ -1571,10 +1610,10 @@ function switchView(view) {
     const y0 = pad.t;
 
     let html = '';
-    html += rect(x0, y0, pW, tpH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
-    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
-    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
-    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
+    html += rect(x0, y0, pW, tpH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14', typo);
+    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400', typo);
+    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55', typo);
+    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff', typo);
 
     const ppPoints = [
       [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
@@ -1582,13 +1621,13 @@ function switchView(view) {
     ].map(p => p.join(',')).join(' ');
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.7">← Predicted Positive →</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff2d95" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
-    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
-    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.72">← Predicted Positive →</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#00f0ff" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff2d95" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 36) + '" text-anchor="middle" fill="#7a6f99" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 36) + '" text-anchor="middle" fill="#7a6f99" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 - 10) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#39ff14" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
+    html += '<text x="' + (x0 - 10) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffb400" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
 
     svg.innerHTML = html;
   }
@@ -1601,6 +1640,7 @@ function switchView(view) {
     const bW = W - pad.l - pad.r;  // full width for bars
     const gap = 22; // gap between the two rows
     const labelH = 18; // space for row label above each row
+    const typo = getMosaicTypography(true);
 
     // Row heights proportional to prevalence
     const totalBarH = H - pad.t - pad.b - gap - labelH * 2;
@@ -1624,16 +1664,16 @@ function switchView(view) {
     let html = '';
 
     // Row labels
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#00f0ff" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff2d95" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#00f0ff" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff2d95" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
 
     // Positive row cells
-    html += rect(x0, y0p, tpW, pRowH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
-    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
+    html += rect(x0, y0p, tpW, pRowH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14', typo);
+    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400', typo);
 
     // Negative row cells
-    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
-    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
+    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55', typo);
+    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff', typo);
 
     // "Predicted Positive" outline: TP (top-left of P row) + FP (top-left of N row)
     // Draw dashed outlines around TP and FP individually to indicate "predicted positive"
@@ -1641,19 +1681,19 @@ function switchView(view) {
     if (fpW > 1) html += '<rect x="'+x0+'" y="'+y0n+'" width="'+fpW+'" height="'+nRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
 
     // Predicted Positive label at top
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.6">⬜ dashed = Predicted Positive</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="#fff" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.68">⬜ dashed = Predicted Positive</text>';
 
     svg.innerHTML = html;
   }
 
-  function rect(x, y, w, h, fill, label, count, textColor) {
+  function rect(x, y, w, h, fill, label, count, textColor, typo) {
     if (w < 1 || h < 1) return '';
     let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="rgba(255,255,255,0.08)" stroke-width="1" rx="3"/>';
     // Only add labels if cell is big enough
-    if (w > 30 && h > 30) {
+    if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
-      s += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" fill="'+textColor+'" font-size="13" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
-      s += '<text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" fill="'+textColor+'" font-size="11" font-family="JetBrains Mono, monospace" opacity="0.8" dominant-baseline="middle">'+count+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy-7)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+11)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
     }
     return s;
   }
