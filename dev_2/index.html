@@ -417,8 +417,15 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
-  .metrics-vals-view, .metrics-eqs-view { display: none; }
-  .metrics-vals-view.active, .metrics-eqs-view.active { display: block; }
+  .metrics-vals-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
+  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
+
+  .metrics-bar-frame {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+  }
 
   .equations-box {
     overflow-y: auto;
@@ -606,6 +613,10 @@
       font-size: 0.55rem;
     }
 
+    #metricsBarPlot {
+      height: 300px !important;
+    }
+
     .bidirectional-hint {
       font-size: 0.55rem;
     }
@@ -771,6 +782,7 @@
       <div class="panel-title">Derived Metrics</div>
       <div class="view-toggle">
         <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
+        <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
         <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Equations</button>
       </div>
     </div>
@@ -785,6 +797,12 @@
         <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
         <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
         <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+      </div>
+    </div>
+
+    <div class="metrics-bar-view" id="metricsBarView">
+      <div class="metrics-bar-frame">
+        <div id="metricsBarPlot" style="width:100%;height:340px;"></div>
       </div>
     </div>
 
@@ -854,18 +872,40 @@
 <script>
 function switchMetricsView(view) {
   var valsView = document.getElementById('metricsValsView');
+  var barView = document.getElementById('metricsBarView');
   var eqsView = document.getElementById('metricsEqsView');
   var btnVals = document.getElementById('btn_metrics_vals');
+  var btnBar = document.getElementById('btn_metrics_bar');
   var btnEqs = document.getElementById('btn_metrics_eqs');
+  function resizeMetricsBar() {
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        if (window.Plotly) Plotly.Plots.resize(document.getElementById('metricsBarPlot'));
+      });
+    });
+  }
   if (view === 'vals') {
     valsView.classList.add('active');
+    barView.classList.remove('active');
     eqsView.classList.remove('active');
     btnVals.classList.add('active');
+    btnBar.classList.remove('active');
     btnEqs.classList.remove('active');
+  } else if (view === 'bar') {
+    valsView.classList.remove('active');
+    barView.classList.add('active');
+    eqsView.classList.remove('active');
+    btnVals.classList.remove('active');
+    btnBar.classList.add('active');
+    btnEqs.classList.remove('active');
+    if (window.refreshMetricsBar) window.refreshMetricsBar();
+    resizeMetricsBar();
   } else {
     valsView.classList.remove('active');
+    barView.classList.remove('active');
     eqsView.classList.add('active');
     btnVals.classList.remove('active');
+    btnBar.classList.remove('active');
     btnEqs.classList.add('active');
   }
 }
@@ -963,6 +1003,7 @@ function switchView(view) {
   };
 
   let updating = false; // reentrance guard
+  let latestMetrics = null;
 
   // ─── Derived: from threshold → TPR, FPR ───
   function threshToRates(t) {
@@ -1383,6 +1424,18 @@ function switchView(view) {
     const rocPts = generateROC(500);
     const auc = computeAUC(rocPts);
 
+    const metrics = {
+      acc,
+      prec,
+      rec,
+      spec,
+      f1,
+      auc,
+      npv,
+      mcc
+    };
+    latestMetrics = metrics;
+
     $('m_acc').textContent = pf(acc, 3);
     $('m_prec').textContent = pf(prec, 3);
     $('m_rec').textContent = pf(rec, 3);
@@ -1391,7 +1444,89 @@ function switchView(view) {
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
     $('m_mcc').textContent = pf(mcc, 3);
+
+    if ($('metricsBarView').classList.contains('active')) {
+      renderMetricsBar(metrics);
+    }
   }
+
+  function renderMetricsBar(metrics) {
+    const rows = [
+      { label: 'Accuracy', value: metrics.acc, color: '#8af7ff' },
+      { label: 'Precision', value: metrics.prec, color: '#39ff14' },
+      { label: 'Recall', value: metrics.rec, color: '#00f0ff' },
+      { label: 'Specificity', value: metrics.spec, color: '#ff2d95' },
+      { label: 'F1 Score', value: metrics.f1, color: '#ffb400' },
+      { label: 'AUC', value: metrics.auc, color: '#7ee6ff' },
+      { label: 'NPV', value: metrics.npv, color: '#6af7c8' },
+      { label: 'MCC', value: metrics.mcc, color: metrics.mcc >= 0 ? '#ffd166' : '#ff6b6b' }
+    ].reverse();
+
+    const base = getBasePlotLayout();
+    const mobile = isMobile();
+    const trace = {
+      x: rows.map(r => r.value),
+      y: rows.map(r => r.label),
+      type: 'bar',
+      orientation: 'h',
+      marker: {
+        color: rows.map(r => r.color),
+        line: { color: 'rgba(255,255,255,0.18)', width: 1 }
+      },
+      text: rows.map(r => pf(r.value, 3)),
+      textposition: 'auto',
+      insidetextanchor: 'middle',
+      constraintext: 'both',
+      cliponaxis: true,
+      hovertemplate: '%{y}: %{x:.3f}<extra></extra>'
+    };
+
+    const layout = {
+      ...base,
+      margin: mobile ? { l: 86, r: 18, t: 16, b: 36 } : { l: 112, r: 20, t: 16, b: 38 },
+      xaxis: {
+        ...base.xaxis,
+        title: 'Metric Value',
+        range: [-1, 1.05],
+        tickvals: [-1, -0.5, 0, 0.5, 1],
+        automargin: true,
+        zeroline: true,
+        zerolinecolor: '#4a3c72'
+      },
+      yaxis: {
+        ...base.yaxis,
+        automargin: true
+      },
+      showlegend: false,
+      bargap: 0.28,
+      uniformtext: {
+        minsize: mobile ? 8 : 9,
+        mode: 'hide'
+      },
+      annotations: [{
+        x: 1,
+        y: 1.08,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Most metrics span 0 to 1; MCC spans -1 to 1',
+        showarrow: false,
+        xanchor: 'right',
+        font: { size: mobile ? 8 : 9, color: fontColor }
+      }]
+    };
+
+    Plotly.react('metricsBarPlot', [trace], layout, { displayModeBar: false, responsive: true });
+
+    if ($('metricsBarView').classList.contains('active')) {
+      requestAnimationFrame(() => {
+        if (window.Plotly) Plotly.Plots.resize($('metricsBarPlot'));
+      });
+    }
+  }
+
+  window.refreshMetricsBar = function() {
+    if (latestMetrics) renderMetricsBar(latestMetrics);
+  };
 
   // ─── Mosaic Plot (SVG) ───
   function renderMosaic(tpr, fpr) {
