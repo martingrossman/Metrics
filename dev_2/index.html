@@ -260,16 +260,109 @@
     margin-top: 2px;
   }
 
+  .mode-toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: rgba(0,240,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .mode-toggle-copy {
+    min-width: 0;
+  }
+
+  .mode-toggle-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .mode-toggle-state {
+    font-size: 0.68rem;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .switch {
+    position: relative;
+    width: 46px;
+    height: 24px;
+    flex: none;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .switch-slider {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    transition: 0.2s ease;
+  }
+
+  .switch-slider:before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: 0.2s ease;
+  }
+
+  .switch input:checked + .switch-slider {
+    background: rgba(0,240,255,0.18);
+    border-color: rgba(0,240,255,0.6);
+  }
+
+  .switch input:checked + .switch-slider:before {
+    transform: translateX(22px);
+    background: var(--accent);
+  }
+
   .bidirectional-hint {
     font-size: 0.6rem;
     color: var(--text-dim);
-    text-align: center;
+    text-align: left;
     padding: 6px;
     background: rgba(0,240,255,0.06);
     border-radius: 6px;
     margin-bottom: 10px;
     line-height: 1.4;
-    font-style: italic;
+    font-style: normal;
+  }
+
+  .bidirectional-hint.manual {
+    background: rgba(255,180,0,0.08);
+    color: #c9c1dc;
+  }
+
+  .slider-group.disabled {
+    opacity: 0.45;
+  }
+
+  .slider-group.disabled .val {
+    color: var(--text-dim);
+  }
+
+  .slider-group input:disabled {
+    cursor: not-allowed;
   }
 
   .panel-header {
@@ -413,8 +506,14 @@
       padding-bottom: 4px;
     }
 
+    .controls .mode-toggle-row,
     .controls .bidirectional-hint {
-      display: none;
+      grid-column: 1 / -1;
+    }
+
+    .controls .bidirectional-hint {
+      margin-bottom: 4px;
+      padding: 5px 6px;
     }
 
     .controls .section-label {
@@ -535,9 +634,18 @@
   <!-- CONTROLS -->
   <div class="controls panel">
     <div class="panel-title">Parameters</div>
-    <div class="bidirectional-hint">
-      ↔ Distribution params &amp; operating point (TPR/FPR) are bidirectionally linked.
-      Changing one updates the other.
+    <div class="mode-toggle-row">
+      <div class="mode-toggle-copy">
+        <div class="mode-toggle-label">Bidirectional Link</div>
+        <div class="mode-toggle-state" id="modeStateLabel">Linked</div>
+      </div>
+      <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
+        <input type="checkbox" id="toggle_bidirectional" checked>
+        <span class="switch-slider"></span>
+      </label>
+    </div>
+    <div class="bidirectional-hint" id="modeHint">
+      Linked mode: distributions, threshold, and TPR/FPR stay synchronized.
     </div>
 
     <div class="section-label">Class Distributions</div>
@@ -570,8 +678,8 @@
       <label>FPR (1 − Specificity) <span class="val" id="v_fpr">0.10</span></label>
       <input type="range" id="s_fpr" min="0" max="1" step="0.005" value="0.1">
     </div>
-    <div class="slider-group">
-      <label>Threshold <span class="val" id="v_thresh">—</span></label>
+    <div class="slider-group" id="g_thresh">
+      <label>Threshold (linked only) <span class="val" id="v_thresh">—</span></label>
       <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
     </div>
 
@@ -591,7 +699,7 @@
   <!-- DISTRIBUTION PLOT -->
   <div class="panel plot-distributions">
     <div class="panel-header">
-      <div class="panel-title">Class Distributions &amp; Threshold</div>
+      <div class="panel-title" id="distPanelTitle">Class Distributions &amp; Threshold</div>
       <div class="view-toggle">
         <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
         <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
@@ -848,7 +956,10 @@ function switchView(view) {
     mu_neg: 0, std_neg: 1,
     mu_pos: 2, std_pos: 1,
     N: 1000, bal: 0.3,
-    threshold: 1.0
+    threshold: 1.0,
+    manual_tpr: 0.8,
+    manual_fpr: 0.1,
+    linkedMode: true
   };
 
   let updating = false; // reentrance guard
@@ -871,6 +982,21 @@ function switchView(view) {
   // ─── From FPR → threshold (given negative distribution) ───
   function fprToThresh(fpr) {
     return normInvCDF(1 - fpr, state.mu_neg, state.std_neg);
+  }
+
+  function clamp01(x) {
+    return Math.max(0, Math.min(1, x));
+  }
+
+  function getActiveRates() {
+    if (state.linkedMode) return threshToRates(state.threshold);
+    return { tpr: state.manual_tpr, fpr: state.manual_fpr };
+  }
+
+  function syncManualRatesFromThreshold() {
+    const { tpr, fpr } = threshToRates(state.threshold);
+    state.manual_tpr = clamp01(tpr);
+    state.manual_fpr = clamp01(fpr);
   }
 
   // ─── Generate ROC curve points ───
@@ -914,17 +1040,29 @@ function switchView(view) {
     $(id).value = val;
   }
 
-  function updateValueDisplays() {
-    const { tpr, fpr } = threshToRates(state.threshold);
+  function updateModeUI() {
+    const linked = state.linkedMode;
+    $('toggle_bidirectional').checked = linked;
+    $('modeStateLabel').textContent = linked ? 'Linked' : 'Direct Rates';
+    $('modeHint').textContent = linked
+      ? 'Linked mode: distributions, threshold, and TPR/FPR stay synchronized.'
+      : 'Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.';
+    $('modeHint').classList.toggle('manual', !linked);
+    $('g_thresh').classList.toggle('disabled', !linked);
+    $('s_thresh').disabled = !linked;
+    $('distPanelTitle').textContent = linked ? 'Class Distributions & Threshold' : 'Class Distributions';
+  }
+
+  function updateValueDisplays(rates) {
     $('v_mu_neg').textContent = pf(state.mu_neg, 1);
     $('v_std_neg').textContent = pf(state.std_neg, 1);
     $('v_mu_pos').textContent = pf(state.mu_pos, 1);
     $('v_std_pos').textContent = pf(state.std_pos, 1);
     $('v_N').textContent = state.N;
     $('v_bal').textContent = pf(state.bal);
-    $('v_tpr').textContent = pf(tpr, 3);
-    $('v_fpr').textContent = pf(fpr, 3);
-    $('v_thresh').textContent = pf(state.threshold);
+    $('v_tpr').textContent = pf(rates.tpr, 3);
+    $('v_fpr').textContent = pf(rates.fpr, 3);
+    $('v_thresh').textContent = state.linkedMode ? pf(state.threshold) : 'manual';
   }
 
   // ─── Plot Config ───
@@ -947,12 +1085,19 @@ function switchView(view) {
 
   // ─── Render All ───
   function render() {
-    const { tpr, fpr } = threshToRates(state.threshold);
-    updateValueDisplays();
+    const rates = getActiveRates();
+    const { tpr, fpr } = rates;
+    updateModeUI();
+    updateValueDisplays(rates);
 
-    // Sync TPR/FPR sliders
-    writeSlider('s_tpr', Math.max(0, Math.min(1, tpr)));
-    writeSlider('s_fpr', Math.max(0, Math.min(1, fpr)));
+    // Sync TPR/FPR sliders to the active operating point
+    if (state.linkedMode) {
+      writeSlider('s_tpr', clamp01(tpr));
+      writeSlider('s_fpr', clamp01(fpr));
+    } else {
+      writeSlider('s_tpr', clamp01(state.manual_tpr));
+      writeSlider('s_fpr', clamp01(state.manual_fpr));
+    }
 
     renderDistPlot(tpr, fpr);
     renderTopView(tpr, fpr);
@@ -977,22 +1122,47 @@ function switchView(view) {
       yPos.push(wP * normPDF(x, state.mu_pos, state.std_pos));
     }
 
-    // Fill areas for FP and FN (weighted by prevalence)
-    const t = state.threshold;
-    const xFP = [], yFP = [];  // neg distribution, x > t
-    const xFN = [], yFN = [];  // pos distribution, x < t
-    for (let i = 0; i <= steps; i++) {
-      const x = xMin + (xMax - xMin) * i / steps;
-      if (x >= t) { xFP.push(x); yFP.push(wN * normPDF(x, state.mu_neg, state.std_neg)); }
-      if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
-    }
-
     const traces = [
       { x: xs, y: yNeg, name: 'Negative', line: { color: '#ff2d95', width: 2 }, type: 'scatter' },
       { x: xs, y: yPos, name: 'Positive', line: { color: '#00f0ff', width: 2 }, type: 'scatter' },
-      { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,45,85,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
-      { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,180,0,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
     ];
+
+    const shapes = [];
+    const annotations = [];
+
+    if (state.linkedMode) {
+      // Fill areas for FP and FN (weighted by prevalence)
+      const t = state.threshold;
+      const xFP = [], yFP = [];  // neg distribution, x > t
+      const xFN = [], yFN = [];  // pos distribution, x < t
+      for (let i = 0; i <= steps; i++) {
+        const x = xMin + (xMax - xMin) * i / steps;
+        if (x >= t) { xFP.push(x); yFP.push(wN * normPDF(x, state.mu_neg, state.std_neg)); }
+        if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
+      }
+      traces.push(
+        { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,45,85,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+        { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,180,0,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' }
+      );
+      shapes.push({
+        type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
+        line: { color: '#fff', width: 2, dash: 'dot' }
+      });
+      annotations.push({
+        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
+        font: { size: 10, color: '#fff' }
+      });
+    } else {
+      annotations.push({
+        x: 0.5,
+        y: 1.02,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Direct mode: threshold detached from TPR/FPR',
+        showarrow: false,
+        font: { size: 10, color: fontColor }
+      });
+    }
 
     const base = getBasePlotLayout();
     const layout = {
@@ -1000,14 +1170,8 @@ function switchView(view) {
       xaxis: { ...base.xaxis, title: 'Score' },
       yaxis: { ...base.yaxis, title: 'Weighted Density' },
       legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
-      shapes: [{
-        type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
-        line: { color: '#fff', width: 2, dash: 'dot' }
-      }],
-      annotations: [{
-        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
-        font: { size: 10, color: '#fff' }
-      }]
+      shapes,
+      annotations
     };
 
     Plotly.react('distPlot', traces, layout, { displayModeBar: true, responsive: true });
@@ -1040,6 +1204,7 @@ function switchView(view) {
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
     const t = state.threshold;
+    const linked = state.linkedMode;
 
     // Sample counts
     const nNeg = Math.round(state.N * (1 - state.bal));
@@ -1067,12 +1232,18 @@ function switchView(view) {
     const tX = pad.l + ((t - xMin) / (xMax - xMin)) * bW;
     const tClamped = Math.max(pad.l, Math.min(pad.l + bW, tX));
 
-    // Neg band: left = TN region, right = FP region
-    html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(0,240,255,0.04)" rx="3"/>';
-    html += '<rect x="'+tClamped+'" y="'+y0neg+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(255,45,85,0.04)" rx="3"/>';
-    // Pos band: left = FN region, right = TP region
-    html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(255,180,0,0.04)" rx="3"/>';
-    html += '<rect x="'+tClamped+'" y="'+y0pos+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(57,255,20,0.04)" rx="3"/>';
+    if (linked) {
+      // Neg band: left = TN region, right = FP region
+      html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(0,240,255,0.04)" rx="3"/>';
+      html += '<rect x="'+tClamped+'" y="'+y0neg+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(255,45,85,0.04)" rx="3"/>';
+      // Pos band: left = FN region, right = TP region
+      html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(255,180,0,0.04)" rx="3"/>';
+      html += '<rect x="'+tClamped+'" y="'+y0pos+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(57,255,20,0.04)" rx="3"/>';
+    } else {
+      html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+bW+'" height="'+bandH+'" fill="rgba(255,255,255,0.025)" rx="3"/>';
+      html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+bW+'" height="'+bandH+'" fill="rgba(255,255,255,0.025)" rx="3"/>';
+      html += '<text x="'+(pad.l + bW/2)+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="#9088b0" font-size="10" font-family="JetBrains Mono, monospace">Direct mode: dots show actual class only</text>';
+    }
 
     // ── Sample & draw negative dots ──
     for (let i = 0; i < negCount; i++) {
@@ -1081,8 +1252,8 @@ function switchView(view) {
       const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
       const cy = y0neg + bandH * 0.1 + rng() * bandH * 0.8;
       const isRight = val >= t;
-      const color = isRight ? '#ff2d55' : '#00f0ff';
-      const opacity = isRight ? '0.7' : '0.55';
+      const color = linked ? (isRight ? '#ff2d55' : '#00f0ff') : '#ff2d95';
+      const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
       html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
     }
 
@@ -1093,13 +1264,13 @@ function switchView(view) {
       const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
       const cy = y0pos + bandH * 0.1 + rng() * bandH * 0.8;
       const isRight = val >= t;
-      const color = isRight ? '#39ff14' : '#ffb400';
-      const opacity = isRight ? '0.7' : '0.55';
+      const color = linked ? (isRight ? '#39ff14' : '#ffb400') : '#00f0ff';
+      const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
       html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
     }
 
     // ── Threshold line ──
-    if (tX >= pad.l && tX <= pad.l + bW) {
+    if (linked && tX >= pad.l && tX <= pad.l + bW) {
       html += '<line x1="'+tX+'" y1="'+(pad.t - 5)+'" x2="'+tX+'" y2="'+(y0pos + bandH + 5)+'" stroke="#fff" stroke-width="2" stroke-dasharray="6,3" opacity="0.9"/>';
       html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace">t='+pf(t)+'</text>';
     }
@@ -1108,11 +1279,11 @@ function switchView(view) {
     const tFrac = (Math.max(xMin, Math.min(xMax, t)) - xMin) / (xMax - xMin);
     const leftMidX = pad.l + tFrac * bW / 2;
     const rightMidX = pad.l + tFrac * bW + (1 - tFrac) * bW / 2;
-    if (tFrac > 0.1) {
+    if (linked && tFrac > 0.1) {
       html += '<text x="'+leftMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="#00f0ff" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TN</text>';
       html += '<text x="'+leftMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FN</text>';
     }
-    if (tFrac < 0.9) {
+    if (linked && tFrac < 0.9) {
       html += '<text x="'+rightMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="#ff2d55" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FP</text>';
       html += '<text x="'+rightMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TP</text>';
     }
@@ -1141,15 +1312,28 @@ function switchView(view) {
     const traces = [
       { x: [0, 1], y: [0, 1], name: 'Random', line: { color: '#333', dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
       { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: 'rgba(0,240,255,0.08)' },
-      { x: [fpr], y: [tpr], name: 'Operating Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: var_accent(), width: 2 } }, type: 'scatter' },
+      { x: [fpr], y: [tpr], name: state.linkedMode ? 'Operating Pt' : 'Manual Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: state.linkedMode ? var_accent() : '#ffb400', width: 2 } }, type: 'scatter' },
     ];
 
     const base = getBasePlotLayout();
+    const annotations = [];
+    if (!state.linkedMode) {
+      annotations.push({
+        x: 0.5,
+        y: 1.02,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Direct mode: manual point may sit off the ROC curve',
+        showarrow: false,
+        font: { size: 10, color: fontColor }
+      });
+    }
     const layout = {
       ...base,
       xaxis: { ...base.xaxis, title: 'FPR', range: [-0.02, 1.02] },
       yaxis: { ...base.yaxis, title: 'TPR', range: [-0.02, 1.02] },
       legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
+      annotations,
     };
 
     Plotly.react('rocPlot', traces, layout, { displayModeBar: true, responsive: true });
@@ -1350,13 +1534,27 @@ function switchView(view) {
     });
   });
 
+  $('toggle_bidirectional').addEventListener('change', () => {
+    if (updating) return;
+    updating = true;
+    const linked = $('toggle_bidirectional').checked;
+    if (!linked && state.linkedMode) syncManualRatesFromThreshold();
+    state.linkedMode = linked;
+    render();
+    updating = false;
+  });
+
   // TPR slider → compute new threshold from positive dist, update FPR
   $('s_tpr').addEventListener('input', () => {
     if (updating) return;
     updating = true;
-    const newTPR = parseFloat($('s_tpr').value);
-    state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
-    writeSlider('s_thresh', state.threshold);
+    const newTPR = clamp01(parseFloat($('s_tpr').value));
+    if (state.linkedMode) {
+      state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
+      writeSlider('s_thresh', state.threshold);
+    } else {
+      state.manual_tpr = newTPR;
+    }
     render();
     updating = false;
   });
@@ -1365,9 +1563,13 @@ function switchView(view) {
   $('s_fpr').addEventListener('input', () => {
     if (updating) return;
     updating = true;
-    const newFPR = parseFloat($('s_fpr').value);
-    state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
-    writeSlider('s_thresh', state.threshold);
+    const newFPR = clamp01(parseFloat($('s_fpr').value));
+    if (state.linkedMode) {
+      state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
+      writeSlider('s_thresh', state.threshold);
+    } else {
+      state.manual_fpr = newFPR;
+    }
     render();
     updating = false;
   });
@@ -1376,6 +1578,10 @@ function switchView(view) {
   $('s_thresh').addEventListener('input', () => {
     if (updating) return;
     updating = true;
+    if (!state.linkedMode) {
+      updating = false;
+      return;
+    }
     state.threshold = parseFloat($('s_thresh').value);
     render();
     updating = false;
@@ -1394,6 +1600,7 @@ function switchView(view) {
   });
 
   // ─── Init ───
+  syncManualRatesFromThreshold();
   render();
 
   // Re-render on resize/orientation change for mobile layout adjustments
