@@ -17,6 +17,7 @@
     --text-dim: #7a6f99;
     --accent: #00f0ff;
     --accent2: #ff2d95;
+    --accent3: #b44dff;
     --green: #39ff14;
     --red: #ff2d55;
     --orange: #ffb400;
@@ -26,6 +27,23 @@
     --fp-color: #ff2d55;
     --tn-color: #00f0ff;
     --fn-color: #ffb400;
+    --cm-tp-bg: rgba(57,255,20,0.12);
+    --cm-fp-bg: rgba(255,45,85,0.15);
+    --cm-fn-bg: rgba(255,180,0,0.15);
+    --cm-tn-bg: rgba(0,240,255,0.12);
+    --soft-accent-bg: rgba(0,240,255,0.05);
+    --soft-accent-strong: rgba(0,240,255,0.18);
+    --soft-accent-border: rgba(0,240,255,0.6);
+    --hint-bg: rgba(0,240,255,0.06);
+    --hint-manual-bg: rgba(255,180,0,0.08);
+    --hint-manual-text: #c9c1dc;
+    --neutral-band-bg: rgba(255,255,255,0.025);
+    --cell-stroke: rgba(255,255,255,0.08);
+    --plot-grid: #221d3a;
+    --plot-font: #9088b0;
+    --plot-zero: #2e2650;
+    --good-color: #39ff14;
+    --bad-color: #ff2d55;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,9 +63,41 @@
     text-align: center;
     padding: 18px 0 10px;
     letter-spacing: -0.5px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2), #b44dff);
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  .global-toolbar {
+    display: flex;
+    justify-content: center;
+    padding: 0 16px 10px;
+  }
+
+  .theme-toggle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    box-shadow: inset 0 0 0 1px var(--soft-accent-bg);
+  }
+
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--soft-accent-border);
+    transform: translateY(-1px);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .layout {
@@ -56,7 +106,8 @@
     grid-template-rows: auto auto;
     gap: 14px;
     padding: 10px 16px 20px;
-    max-width: 1440px;
+    width: min(96vw, 1920px);
+    max-width: 1920px;
     margin: 0 auto;
   }
 
@@ -69,6 +120,12 @@
   .plot-roc { grid-column: 3; grid-row: 1; }
   .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
   .plot-metrics { grid-column: 3; grid-row: 2; }
+
+  #mosaicSVG {
+    width: 100%;
+    display: block;
+    aspect-ratio: 700 / 340;
+  }
 
   .panel {
     background: var(--bg2);
@@ -219,10 +276,10 @@
     margin-top: 2px;
   }
 
-  .cm-tp { background: rgba(57,255,20,0.12); color: var(--tp-color); }
-  .cm-fp { background: rgba(255,45,85,0.15); color: var(--fp-color); }
-  .cm-fn { background: rgba(255,180,0,0.15); color: var(--fn-color); }
-  .cm-tn { background: rgba(0,240,255,0.12); color: var(--tn-color); }
+  .cm-tp { background: var(--cm-tp-bg); color: var(--tp-color); }
+  .cm-fp { background: var(--cm-fp-bg); color: var(--fp-color); }
+  .cm-fn { background: var(--cm-fn-bg); color: var(--fn-color); }
+  .cm-tn { background: var(--cm-tn-bg); color: var(--tn-color); }
 
   .metrics-grid {
     display: grid;
@@ -260,16 +317,109 @@
     margin-top: 2px;
   }
 
+  .mode-toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: var(--soft-accent-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .mode-toggle-copy {
+    min-width: 0;
+  }
+
+  .mode-toggle-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .mode-toggle-state {
+    font-size: 0.68rem;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .switch {
+    position: relative;
+    width: 46px;
+    height: 24px;
+    flex: none;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .switch-slider {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    transition: 0.2s ease;
+  }
+
+  .switch-slider:before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: 0.2s ease;
+  }
+
+  .switch input:checked + .switch-slider {
+    background: var(--soft-accent-strong);
+    border-color: var(--soft-accent-border);
+  }
+
+  .switch input:checked + .switch-slider:before {
+    transform: translateX(22px);
+    background: var(--accent);
+  }
+
   .bidirectional-hint {
     font-size: 0.6rem;
     color: var(--text-dim);
-    text-align: center;
+    text-align: left;
     padding: 6px;
-    background: rgba(0,240,255,0.06);
+    background: var(--hint-bg);
     border-radius: 6px;
     margin-bottom: 10px;
     line-height: 1.4;
-    font-style: italic;
+    font-style: normal;
+  }
+
+  .bidirectional-hint.manual {
+    background: var(--hint-manual-bg);
+    color: var(--hint-manual-text);
+  }
+
+  .slider-group.disabled {
+    opacity: 0.45;
+  }
+
+  .slider-group.disabled .val {
+    color: var(--text-dim);
+  }
+
+  .slider-group input:disabled {
+    cursor: not-allowed;
   }
 
   .panel-header {
@@ -324,6 +474,56 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
+  .metrics-vals-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
+  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
+
+  .metrics-bar-frame {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .equations-box {
+    overflow-y: auto;
+    max-height: 340px;
+    padding-right: 4px;
+  }
+
+  .eq-section {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background: var(--bg3);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .eq-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .eq {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    padding: 4px 0;
+    line-height: 1.4;
+  }
+
+  .eq-desc {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
   @media (max-width: 1100px) {
     .layout {
       grid-template-columns: 1fr 1fr;
@@ -349,6 +549,17 @@
       padding: 10px 10px 6px;
     }
 
+    .global-toolbar {
+      padding: 0 8px 8px;
+    }
+
+    .theme-toggle {
+      width: 100%;
+      max-width: 360px;
+      font-size: 0.66rem;
+      padding: 8px 10px;
+    }
+
     .layout {
       display: flex;
       flex-direction: column;
@@ -370,8 +581,14 @@
       padding-bottom: 4px;
     }
 
+    .controls .mode-toggle-row,
     .controls .bidirectional-hint {
-      display: none;
+      grid-column: 1 / -1;
+    }
+
+    .controls .bidirectional-hint {
+      margin-bottom: 4px;
+      padding: 5px 6px;
     }
 
     .controls .section-label {
@@ -423,7 +640,8 @@
     #mosaicSVG {
       width: 100%;
       height: auto;
-      max-height: 320px;
+      aspect-ratio: 360 / 340;
+      max-height: none;
     }
 
     .cm-grid {
@@ -464,6 +682,10 @@
       font-size: 0.55rem;
     }
 
+    #metricsBarPlot {
+      height: 300px !important;
+    }
+
     .bidirectional-hint {
       font-size: 0.55rem;
     }
@@ -481,20 +703,43 @@
       padding: 4px 8px;
     }
   }
+
+  @media (min-width: 1800px) {
+    .layout {
+      grid-template-columns: 320px 1fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 16px;
+    }
+  }
 </style>
 </head>
 <body>
 
 <h1>ROC &amp; Confusion Matrix Playground</h1>
+<div class="global-toolbar">
+  <button class="theme-toggle" id="themeToggle" type="button" title="Cycle color themes">Theme: Neon Dark</button>
+</div>
 
 <div class="layout">
 
   <!-- CONTROLS -->
   <div class="controls panel">
     <div class="panel-title">Parameters</div>
-    <div class="bidirectional-hint">
-      ↔ Distribution params &amp; operating point (TPR/FPR) are bidirectionally linked.
-      Changing one updates the other.
+    <div class="mode-toggle-row">
+      <div class="mode-toggle-copy">
+        <div class="mode-toggle-label">Bidirectional Link</div>
+        <div class="mode-toggle-state" id="modeStateLabel">Linked</div>
+      </div>
+      <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
+        <input type="checkbox" id="toggle_bidirectional" checked>
+        <span class="switch-slider"></span>
+      </label>
+    </div>
+    <div class="bidirectional-hint" id="modeHint">
+      Linked mode: distributions, threshold, and TPR/FPR stay synchronized.
     </div>
 
     <div class="section-label">Class Distributions</div>
@@ -527,8 +772,8 @@
       <label>FPR (1 − Specificity) <span class="val" id="v_fpr">0.10</span></label>
       <input type="range" id="s_fpr" min="0" max="1" step="0.005" value="0.1">
     </div>
-    <div class="slider-group">
-      <label>Threshold <span class="val" id="v_thresh">—</span></label>
+    <div class="slider-group" id="g_thresh">
+      <label>Threshold (linked only) <span class="val" id="v_thresh">—</span></label>
       <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
     </div>
 
@@ -548,7 +793,7 @@
   <!-- DISTRIBUTION PLOT -->
   <div class="panel plot-distributions">
     <div class="panel-header">
-      <div class="panel-title">Class Distributions &amp; Threshold</div>
+      <div class="panel-title" id="distPanelTitle">Class Distributions &amp; Threshold</div>
       <div class="view-toggle">
         <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
         <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
@@ -616,22 +861,138 @@
 
   <!-- METRICS -->
   <div class="panel plot-metrics">
-    <div class="panel-title">Derived Metrics</div>
-    <div class="metrics-grid">
-      <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
-      <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
-      <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
-      <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
-      <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
-      <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
-      <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
-      <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+    <div class="panel-header">
+      <div class="panel-title">Derived Metrics</div>
+      <div class="view-toggle">
+        <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
+        <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
+        <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Equations</button>
+      </div>
+    </div>
+
+    <div class="metrics-vals-view active" id="metricsValsView">
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
+        <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
+        <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
+        <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
+        <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
+        <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
+        <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
+        <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+      </div>
+    </div>
+
+    <div class="metrics-bar-view" id="metricsBarView">
+      <div class="metrics-bar-frame">
+        <div id="metricsBarPlot" style="width:100%;height:340px;"></div>
+      </div>
+    </div>
+
+    <div class="metrics-eqs-view" id="metricsEqsView">
+      <div class="equations-box">
+        <div class="eq-section">
+          <div class="eq-title">Bayes' Theorem</div>
+          <div class="eq">P(D|+) = P(+|D) · P(D) / P(+)</div>
+          <div class="eq-desc">The foundation of probabilistic classification. Given a positive test result (+), what is the probability the patient actually has the disease (D)? The answer depends on three things: how good the test is at catching true cases (likelihood), how common the disease is (prior), and how often the test fires overall (evidence). This is why a 99% accurate test can still give mostly false positives for a rare disease.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Precision (PPV) via Bayes</div>
+          <div class="eq">PPV = TPR · Prev / (TPR · Prev + FPR · (1−Prev))</div>
+          <div class="eq-desc">Precision answers: "If the model says positive, how likely is it correct?" Rewritten via Bayes, it becomes clear that precision is not just about the model's quality (TPR and FPR) but is heavily influenced by prevalence. In a dataset where only 1% of samples are positive, even a good classifier will have many false positives drowning out the true ones. This is the base-rate fallacy in action. Increase prevalence (the Balance slider) and watch precision rise.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">NPV via Bayes</div>
+          <div class="eq">NPV = TNR · (1−Prev) / (TNR · (1−Prev) + FNR · Prev)</div>
+          <div class="eq-desc">The mirror of PPV: "If the model says negative, how likely is that correct?" When prevalence is low, most negative predictions are correct (high NPV) because negatives dominate the population. As prevalence increases, the fraction of missed positives (FN) grows relative to true negatives, and NPV drops. NPV and PPV move in opposite directions as you change prevalence, which is a key Bayesian insight.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Sensitivity (Recall / TPR)</div>
+          <div class="eq">TPR = P(+|D) = TP / (TP + FN)</div>
+          <div class="eq-desc">Of all the actual positives, how many did the model catch? A sensitivity of 0.95 means 95% of true cases are detected, but 5% are missed (false negatives). Critical in medical screening: missing a cancer diagnosis (FN) is usually worse than a false alarm (FP). Sensitivity is intrinsic to the model and threshold, not affected by prevalence. Moving the threshold left increases sensitivity but also increases false positives.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Specificity (TNR)</div>
+          <div class="eq">TNR = P(−|D̄) = TN / (TN + FP)</div>
+          <div class="eq-desc">Of all the actual negatives, how many did the model correctly identify? Specificity of 0.90 means 10% of healthy patients receive a false positive. Like sensitivity, specificity is independent of prevalence. It depends only on the negative class distribution and the chosen threshold. High specificity is important when false positives are costly, such as unnecessary surgeries or wrongful convictions.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Accuracy</div>
+          <div class="eq">Acc = (TP + TN) / N</div>
+          <div class="eq-desc">The most intuitive metric: what fraction of all predictions were correct? However, accuracy is misleading with imbalanced classes. A model that always predicts "negative" on a dataset with 95% negatives achieves 95% accuracy while catching zero true positives. This is why accuracy alone is never sufficient. Compare it with the Balance slider at extreme values to see this paradox in action.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">F1 Score</div>
+          <div class="eq">F1 = 2 · PPV · TPR / (PPV + TPR)</div>
+          <div class="eq-desc">The harmonic mean of precision and recall. Unlike the arithmetic mean, the harmonic mean punishes extreme imbalance: if either precision or recall is near zero, F1 collapses. An F1 of 0.8 guarantees that both precision and recall are at least 0.67. It is prevalence-dependent (through precision) and is most useful when you care equally about false positives and false negatives. For asymmetric costs, consider F-beta variants.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">AUC (Area Under ROC Curve)</div>
+          <div class="eq">AUC = integral of TPR d(FPR) over [0,1]</div>
+          <div class="eq-desc">AUC measures the model's ability to discriminate between classes across all possible thresholds. It equals the probability that a randomly chosen positive scores higher than a randomly chosen negative. AUC = 0.5 means random guessing (diagonal ROC), AUC = 1.0 means perfect separation. Unlike most other metrics, AUC is threshold-independent and prevalence-independent, making it ideal for comparing models. Try increasing the distance between the distribution means and watch AUC approach 1.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">MCC (Matthews Correlation Coefficient)</div>
+          <div class="eq">MCC = (TP·TN − FP·FN) / √((TP+FP)(TP+FN)(TN+FP)(TN+FN))</div>
+          <div class="eq-desc">MCC is a correlation coefficient between the observed and predicted binary classifications, ranging from −1 (total disagreement) through 0 (random) to +1 (perfect). Unlike F1 and accuracy, MCC uses all four confusion matrix quadrants and is considered the most informative single metric for binary classification. It remains reliable even with highly imbalanced datasets because it only achieves a high score if the model performs well on both the positive and negative class.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">Likelihood Ratios</div>
+          <div class="eq">LR+ = TPR / FPR &nbsp;&nbsp;|&nbsp;&nbsp; LR− = FNR / TNR</div>
+          <div class="eq-desc">Likelihood ratios express how much a test result shifts the odds. LR+ tells you how much more likely a positive result is in a true positive vs. a false positive. LR+ > 10 is considered strong diagnostic evidence. LR− tells you how much a negative result reduces the odds of disease. LR− < 0.1 is strong evidence for ruling out. Unlike PPV/NPV, likelihood ratios are independent of prevalence, making them portable across populations with different base rates.</div>
+        </div>
+        <div class="eq-section">
+          <div class="eq-title">The Prevalence Paradox</div>
+          <div class="eq">If Prev = 0.01, TPR = 0.99, FPR = 0.01: PPV = 0.50</div>
+          <div class="eq-desc">Even with 99% sensitivity and 99% specificity, half the positive predictions are wrong when the disease affects only 1% of the population. For every true positive caught, there is one false positive from the vast pool of healthy individuals. This is not a flaw in the test but a mathematical consequence of Bayes' theorem. It explains why population-wide screening for rare conditions produces so many false alarms, and why confirmatory tests exist.</div>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
+function switchMetricsView(view) {
+  var valsView = document.getElementById('metricsValsView');
+  var barView = document.getElementById('metricsBarView');
+  var eqsView = document.getElementById('metricsEqsView');
+  var btnVals = document.getElementById('btn_metrics_vals');
+  var btnBar = document.getElementById('btn_metrics_bar');
+  var btnEqs = document.getElementById('btn_metrics_eqs');
+  function resizeMetricsBar() {
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        if (window.Plotly) Plotly.Plots.resize(document.getElementById('metricsBarPlot'));
+      });
+    });
+  }
+  if (view === 'vals') {
+    valsView.classList.add('active');
+    barView.classList.remove('active');
+    eqsView.classList.remove('active');
+    btnVals.classList.add('active');
+    btnBar.classList.remove('active');
+    btnEqs.classList.remove('active');
+  } else if (view === 'bar') {
+    valsView.classList.remove('active');
+    barView.classList.add('active');
+    eqsView.classList.remove('active');
+    btnVals.classList.remove('active');
+    btnBar.classList.add('active');
+    btnEqs.classList.remove('active');
+    if (window.refreshMetricsBar) window.refreshMetricsBar();
+    resizeMetricsBar();
+  } else {
+    valsView.classList.remove('active');
+    barView.classList.remove('active');
+    eqsView.classList.add('active');
+    btnVals.classList.remove('active');
+    btnBar.classList.remove('active');
+    btnEqs.classList.add('active');
+  }
+}
+
 function switchDistView(view) {
   var curvesView = document.getElementById('distCurvesView');
   var topView = document.getElementById('distTopView');
@@ -675,6 +1036,63 @@ function switchView(view) {
   // ─── Helpers ───
   const $ = id => document.getElementById(id);
   const pf = (v, d=2) => v.toFixed(d);
+  const THEME_ORDER = ['neon-dark', 'light', 'colorblind', 'graphite'];
+  const THEME_LABELS = {
+    'neon-dark': 'Neon Dark',
+    'light': 'Light',
+    'colorblind': 'Colorblind',
+    'graphite': 'Graphite'
+  };
+  const THEME_PRESETS = {
+    'neon-dark': {
+      '--bg': '#0a0a12', '--bg2': '#12101e', '--bg3': '#1b1730', '--border': '#2e2650',
+      '--text': '#e0daf0', '--text-dim': '#7a6f99', '--accent': '#00f0ff', '--accent2': '#ff2d95', '--accent3': '#b44dff',
+      '--green': '#39ff14', '--red': '#ff2d55', '--orange': '#ffb400',
+      '--pos-color': '#00f0ff', '--neg-color': '#ff2d95', '--tp-color': '#39ff14', '--fp-color': '#ff2d55', '--tn-color': '#00f0ff', '--fn-color': '#ffb400',
+      '--cm-tp-bg': 'rgba(57,255,20,0.12)', '--cm-fp-bg': 'rgba(255,45,85,0.15)', '--cm-fn-bg': 'rgba(255,180,0,0.15)', '--cm-tn-bg': 'rgba(0,240,255,0.12)',
+      '--soft-accent-bg': 'rgba(0,240,255,0.05)', '--soft-accent-strong': 'rgba(0,240,255,0.18)', '--soft-accent-border': 'rgba(0,240,255,0.6)',
+      '--hint-bg': 'rgba(0,240,255,0.06)', '--hint-manual-bg': 'rgba(255,180,0,0.08)', '--hint-manual-text': '#c9c1dc',
+      '--neutral-band-bg': 'rgba(255,255,255,0.025)', '--cell-stroke': 'rgba(255,255,255,0.08)',
+      '--plot-grid': '#221d3a', '--plot-font': '#9088b0', '--plot-zero': '#2e2650',
+      '--good-color': '#39ff14', '--bad-color': '#ff2d55'
+    },
+    'light': {
+      '--bg': '#f5f7fb', '--bg2': '#ffffff', '--bg3': '#e9eef8', '--border': '#c8d2e3',
+      '--text': '#162033', '--text-dim': '#5f6e85', '--accent': '#0b6fff', '--accent2': '#d6457b', '--accent3': '#7b6dff',
+      '--green': '#1a9b4d', '--red': '#d33f49', '--orange': '#c97900',
+      '--pos-color': '#0b6fff', '--neg-color': '#c43e74', '--tp-color': '#1a9b4d', '--fp-color': '#d33f49', '--tn-color': '#0b6fff', '--fn-color': '#c97900',
+      '--cm-tp-bg': 'rgba(26,155,77,0.12)', '--cm-fp-bg': 'rgba(211,63,73,0.13)', '--cm-fn-bg': 'rgba(201,121,0,0.13)', '--cm-tn-bg': 'rgba(11,111,255,0.10)',
+      '--soft-accent-bg': 'rgba(11,111,255,0.08)', '--soft-accent-strong': 'rgba(11,111,255,0.18)', '--soft-accent-border': 'rgba(11,111,255,0.35)',
+      '--hint-bg': 'rgba(11,111,255,0.08)', '--hint-manual-bg': 'rgba(201,121,0,0.12)', '--hint-manual-text': '#6d5312',
+      '--neutral-band-bg': 'rgba(22,32,51,0.04)', '--cell-stroke': 'rgba(22,32,51,0.08)',
+      '--plot-grid': '#d6ddeb', '--plot-font': '#5f6e85', '--plot-zero': '#bcc8dd',
+      '--good-color': '#1a9b4d', '--bad-color': '#d33f49'
+    },
+    'colorblind': {
+      '--bg': '#11161c', '--bg2': '#182028', '--bg3': '#22303c', '--border': '#3a4b59',
+      '--text': '#eef3f7', '--text-dim': '#a7b4bf', '--accent': '#56b4e9', '--accent2': '#e69f00', '--accent3': '#cc79a7',
+      '--green': '#009e73', '--red': '#d55e00', '--orange': '#e69f00',
+      '--pos-color': '#56b4e9', '--neg-color': '#e69f00', '--tp-color': '#009e73', '--fp-color': '#d55e00', '--tn-color': '#56b4e9', '--fn-color': '#cc79a7',
+      '--cm-tp-bg': 'rgba(0,158,115,0.14)', '--cm-fp-bg': 'rgba(213,94,0,0.16)', '--cm-fn-bg': 'rgba(204,121,167,0.15)', '--cm-tn-bg': 'rgba(86,180,233,0.14)',
+      '--soft-accent-bg': 'rgba(86,180,233,0.08)', '--soft-accent-strong': 'rgba(86,180,233,0.18)', '--soft-accent-border': 'rgba(86,180,233,0.45)',
+      '--hint-bg': 'rgba(86,180,233,0.08)', '--hint-manual-bg': 'rgba(230,159,0,0.12)', '--hint-manual-text': '#f1d89b',
+      '--neutral-band-bg': 'rgba(238,243,247,0.035)', '--cell-stroke': 'rgba(238,243,247,0.10)',
+      '--plot-grid': '#30414e', '--plot-font': '#a7b4bf', '--plot-zero': '#425462',
+      '--good-color': '#009e73', '--bad-color': '#d55e00'
+    },
+    'graphite': {
+      '--bg': '#111417', '--bg2': '#171c21', '--bg3': '#202830', '--border': '#33414e',
+      '--text': '#edf3f7', '--text-dim': '#93a3b1', '--accent': '#67d3c5', '--accent2': '#f2b36f', '--accent3': '#8aa4ff',
+      '--green': '#7cd992', '--red': '#f26c6c', '--orange': '#f2b36f',
+      '--pos-color': '#67d3c5', '--neg-color': '#f2b36f', '--tp-color': '#7cd992', '--fp-color': '#f26c6c', '--tn-color': '#74b9ff', '--fn-color': '#f2b36f',
+      '--cm-tp-bg': 'rgba(124,217,146,0.14)', '--cm-fp-bg': 'rgba(242,108,108,0.15)', '--cm-fn-bg': 'rgba(242,179,111,0.15)', '--cm-tn-bg': 'rgba(116,185,255,0.14)',
+      '--soft-accent-bg': 'rgba(103,211,197,0.08)', '--soft-accent-strong': 'rgba(103,211,197,0.18)', '--soft-accent-border': 'rgba(103,211,197,0.42)',
+      '--hint-bg': 'rgba(103,211,197,0.08)', '--hint-manual-bg': 'rgba(242,179,111,0.12)', '--hint-manual-text': '#f0d8b8',
+      '--neutral-band-bg': 'rgba(237,243,247,0.03)', '--cell-stroke': 'rgba(237,243,247,0.09)',
+      '--plot-grid': '#293540', '--plot-font': '#93a3b1', '--plot-zero': '#3a4958',
+      '--good-color': '#7cd992', '--bad-color': '#f26c6c'
+    }
+  };
 
   // Normal PDF
   function normPDF(x, mu, sigma) {
@@ -713,15 +1131,77 @@ function switchView(view) {
     return mu + sigma * stdNormInvCDF(p);
   }
 
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function colorToRGBA(color, alpha) {
+    const c = color.trim();
+    if (c.startsWith('#')) {
+      let hex = c.slice(1);
+      if (hex.length === 3) hex = hex.split('').map(ch => ch + ch).join('');
+      const intVal = parseInt(hex, 16);
+      const r = (intVal >> 16) & 255;
+      const g = (intVal >> 8) & 255;
+      const b = intVal & 255;
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+    const match = c.match(/rgba?\(([^)]+)\)/);
+    if (match) {
+      const parts = match[1].split(',').map(p => p.trim());
+      return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
+    }
+    return c;
+  }
+
+  function themeColor(name) {
+    return cssVar(name);
+  }
+
+  function themeAlpha(name, alpha) {
+    return colorToRGBA(themeColor(name), alpha);
+  }
+
+  let currentThemeName = 'neon-dark';
+
+  function updateThemeButton() {
+    const btn = $('themeToggle');
+    if (!btn) return;
+    btn.textContent = `Theme: ${THEME_LABELS[currentThemeName]}`;
+  }
+
+  function applyTheme(name, shouldRender = true) {
+    const themeName = THEME_PRESETS[name] ? name : 'neon-dark';
+    Object.entries(THEME_PRESETS[themeName]).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
+    currentThemeName = themeName;
+    updateThemeButton();
+    try { localStorage.setItem('metrics-theme', themeName); } catch (e) {}
+    if (shouldRender) render();
+  }
+
+  function cycleTheme() {
+    const idx = THEME_ORDER.indexOf(currentThemeName);
+    const next = THEME_ORDER[(idx + 1) % THEME_ORDER.length];
+    applyTheme(next);
+  }
+
+  window.cycleTheme = cycleTheme;
+
   // ─── State ───
   let state = {
     mu_neg: 0, std_neg: 1,
     mu_pos: 2, std_pos: 1,
     N: 1000, bal: 0.3,
-    threshold: 1.0
+    threshold: 1.0,
+    manual_tpr: 0.8,
+    manual_fpr: 0.1,
+    linkedMode: true
   };
 
   let updating = false; // reentrance guard
+  let latestMetrics = null;
 
   // ─── Derived: from threshold → TPR, FPR ───
   function threshToRates(t) {
@@ -741,6 +1221,21 @@ function switchView(view) {
   // ─── From FPR → threshold (given negative distribution) ───
   function fprToThresh(fpr) {
     return normInvCDF(1 - fpr, state.mu_neg, state.std_neg);
+  }
+
+  function clamp01(x) {
+    return Math.max(0, Math.min(1, x));
+  }
+
+  function getActiveRates() {
+    if (state.linkedMode) return threshToRates(state.threshold);
+    return { tpr: state.manual_tpr, fpr: state.manual_fpr };
+  }
+
+  function syncManualRatesFromThreshold() {
+    const { tpr, fpr } = threshToRates(state.threshold);
+    state.manual_tpr = clamp01(tpr);
+    state.manual_fpr = clamp01(fpr);
   }
 
   // ─── Generate ROC curve points ───
@@ -784,45 +1279,62 @@ function switchView(view) {
     $(id).value = val;
   }
 
-  function updateValueDisplays() {
-    const { tpr, fpr } = threshToRates(state.threshold);
+  function updateModeUI() {
+    const linked = state.linkedMode;
+    $('toggle_bidirectional').checked = linked;
+    $('modeStateLabel').textContent = linked ? 'Linked' : 'Direct Rates';
+    $('modeHint').textContent = linked
+      ? 'Linked mode: distributions, threshold, and TPR/FPR stay synchronized.'
+      : 'Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.';
+    $('modeHint').classList.toggle('manual', !linked);
+    $('g_thresh').classList.toggle('disabled', !linked);
+    $('s_thresh').disabled = !linked;
+    $('distPanelTitle').textContent = linked ? 'Class Distributions & Threshold' : 'Class Distributions';
+  }
+
+  function updateValueDisplays(rates) {
     $('v_mu_neg').textContent = pf(state.mu_neg, 1);
     $('v_std_neg').textContent = pf(state.std_neg, 1);
     $('v_mu_pos').textContent = pf(state.mu_pos, 1);
     $('v_std_pos').textContent = pf(state.std_pos, 1);
     $('v_N').textContent = state.N;
     $('v_bal').textContent = pf(state.bal);
-    $('v_tpr').textContent = pf(tpr, 3);
-    $('v_fpr').textContent = pf(fpr, 3);
-    $('v_thresh').textContent = pf(state.threshold);
+    $('v_tpr').textContent = pf(rates.tpr, 3);
+    $('v_fpr').textContent = pf(rates.fpr, 3);
+    $('v_thresh').textContent = state.linkedMode ? pf(state.threshold) : 'manual';
   }
 
   // ─── Plot Config ───
   const plotBg = 'rgba(0,0,0,0)';
   const paperBg = 'rgba(0,0,0,0)';
-  const gridColor = '#221d3a';
-  const fontColor = '#9088b0';
   const isMobile = () => window.innerWidth <= 640;
   function getBasePlotLayout() {
     const mobile = isMobile();
     return {
       paper_bgcolor: paperBg,
       plot_bgcolor: plotBg,
-      font: { family: 'JetBrains Mono, monospace', size: mobile ? 9 : 10, color: fontColor },
+      font: { family: 'JetBrains Mono, monospace', size: mobile ? 9 : 10, color: themeColor('--plot-font') },
       margin: mobile ? { l: 35, r: 8, t: 8, b: 32 } : { l: 45, r: 15, t: 10, b: 40 },
-      xaxis: { gridcolor: gridColor, zerolinecolor: '#2e2650' },
-      yaxis: { gridcolor: gridColor, zerolinecolor: '#2e2650' },
+      xaxis: { gridcolor: themeColor('--plot-grid'), zerolinecolor: themeColor('--plot-zero') },
+      yaxis: { gridcolor: themeColor('--plot-grid'), zerolinecolor: themeColor('--plot-zero') },
     };
   }
 
   // ─── Render All ───
   function render() {
-    const { tpr, fpr } = threshToRates(state.threshold);
-    updateValueDisplays();
+    const rates = getActiveRates();
+    const { tpr, fpr } = rates;
+    updateModeUI();
+    updateValueDisplays(rates);
 
-    // Sync TPR/FPR sliders
-    writeSlider('s_tpr', Math.max(0, Math.min(1, tpr)));
-    writeSlider('s_fpr', Math.max(0, Math.min(1, fpr)));
+    // Sync TPR/FPR sliders to the active operating point
+    if (state.linkedMode) {
+      writeSlider('s_tpr', clamp01(tpr));
+      writeSlider('s_fpr', clamp01(fpr));
+    } else {
+      writeSlider('s_tpr', clamp01(state.manual_tpr));
+      writeSlider('s_fpr', clamp01(state.manual_fpr));
+    }
 
     renderDistPlot(tpr, fpr);
     renderTopView(tpr, fpr);
@@ -847,40 +1359,59 @@ function switchView(view) {
       yPos.push(wP * normPDF(x, state.mu_pos, state.std_pos));
     }
 
-    // Fill areas for FP and FN (weighted by prevalence)
-    const t = state.threshold;
-    const xFP = [], yFP = [];  // neg distribution, x > t
-    const xFN = [], yFN = [];  // pos distribution, x < t
-    for (let i = 0; i <= steps; i++) {
-      const x = xMin + (xMax - xMin) * i / steps;
-      if (x >= t) { xFP.push(x); yFP.push(wN * normPDF(x, state.mu_neg, state.std_neg)); }
-      if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
-    }
-
     const traces = [
-      { x: xs, y: yNeg, name: 'Negative', line: { color: '#ff2d95', width: 2 }, type: 'scatter' },
-      { x: xs, y: yPos, name: 'Positive', line: { color: '#00f0ff', width: 2 }, type: 'scatter' },
-      { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: 'rgba(255,45,85,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
-      { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: 'rgba(255,180,0,0.2)', line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+      { x: xs, y: yNeg, name: 'Negative', line: { color: themeColor('--neg-color'), width: 2 }, type: 'scatter' },
+      { x: xs, y: yPos, name: 'Positive', line: { color: themeColor('--pos-color'), width: 2 }, type: 'scatter' },
     ];
+
+    const shapes = [];
+    const annotations = [];
+
+    if (state.linkedMode) {
+      // Fill areas for FP and FN (weighted by prevalence)
+      const t = state.threshold;
+      const xFP = [], yFP = [];  // neg distribution, x > t
+      const xFN = [], yFN = [];  // pos distribution, x < t
+      for (let i = 0; i <= steps; i++) {
+        const x = xMin + (xMax - xMin) * i / steps;
+        if (x >= t) { xFP.push(x); yFP.push(wN * normPDF(x, state.mu_neg, state.std_neg)); }
+        if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
+      }
+      traces.push(
+        { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: themeAlpha('--fp-color', 0.2), line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
+        { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: themeAlpha('--fn-color', 0.2), line: { color: 'transparent' }, showlegend: true, type: 'scatter' }
+      );
+      shapes.push({
+        type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
+        line: { color: themeColor('--text'), width: 2, dash: 'dot' }
+      });
+      annotations.push({
+        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
+        font: { size: 10, color: themeColor('--text') }
+      });
+    } else {
+      annotations.push({
+        x: 0.5,
+        y: 1.02,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Direct mode: threshold detached from TPR/FPR',
+        showarrow: false,
+        font: { size: 10, color: themeColor('--plot-font') }
+      });
+    }
 
     const base = getBasePlotLayout();
     const layout = {
       ...base,
       xaxis: { ...base.xaxis, title: 'Score' },
       yaxis: { ...base.yaxis, title: 'Weighted Density' },
-      legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
-      shapes: [{
-        type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
-        line: { color: '#fff', width: 2, dash: 'dot' }
-      }],
-      annotations: [{
-        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
-        font: { size: 10, color: '#fff' }
-      }]
+      legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
+      shapes,
+      annotations
     };
 
-    Plotly.react('distPlot', traces, layout, { displayModeBar: false, responsive: true });
+    Plotly.react('distPlot', traces, layout, { displayModeBar: true, responsive: true });
   }
 
   // ─── Top View: Scatter plot preview ───
@@ -910,6 +1441,7 @@ function switchView(view) {
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
     const t = state.threshold;
+    const linked = state.linkedMode;
 
     // Sample counts
     const nNeg = Math.round(state.N * (1 - state.bal));
@@ -937,12 +1469,18 @@ function switchView(view) {
     const tX = pad.l + ((t - xMin) / (xMax - xMin)) * bW;
     const tClamped = Math.max(pad.l, Math.min(pad.l + bW, tX));
 
-    // Neg band: left = TN region, right = FP region
-    html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(0,240,255,0.04)" rx="3"/>';
-    html += '<rect x="'+tClamped+'" y="'+y0neg+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(255,45,85,0.04)" rx="3"/>';
-    // Pos band: left = FN region, right = TP region
-    html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="rgba(255,180,0,0.04)" rx="3"/>';
-    html += '<rect x="'+tClamped+'" y="'+y0pos+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="rgba(57,255,20,0.04)" rx="3"/>';
+    if (linked) {
+      // Neg band: left = TN region, right = FP region
+      html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="'+themeAlpha('--tn-color', 0.04)+'" rx="3"/>';
+      html += '<rect x="'+tClamped+'" y="'+y0neg+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="'+themeAlpha('--fp-color', 0.04)+'" rx="3"/>';
+      // Pos band: left = FN region, right = TP region
+      html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+(tClamped - pad.l)+'" height="'+bandH+'" fill="'+themeAlpha('--fn-color', 0.04)+'" rx="3"/>';
+      html += '<rect x="'+tClamped+'" y="'+y0pos+'" width="'+(pad.l + bW - tClamped)+'" height="'+bandH+'" fill="'+themeAlpha('--tp-color', 0.04)+'" rx="3"/>';
+    } else {
+      html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+bW+'" height="'+bandH+'" fill="'+themeColor('--neutral-band-bg')+'" rx="3"/>';
+      html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+bW+'" height="'+bandH+'" fill="'+themeColor('--neutral-band-bg')+'" rx="3"/>';
+      html += '<text x="'+(pad.l + bW/2)+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Direct mode: dots show actual class only</text>';
+    }
 
     // ── Sample & draw negative dots ──
     for (let i = 0; i < negCount; i++) {
@@ -951,8 +1489,8 @@ function switchView(view) {
       const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
       const cy = y0neg + bandH * 0.1 + rng() * bandH * 0.8;
       const isRight = val >= t;
-      const color = isRight ? '#ff2d55' : '#00f0ff';
-      const opacity = isRight ? '0.7' : '0.55';
+      const color = linked ? (isRight ? themeColor('--fp-color') : themeColor('--tn-color')) : themeColor('--neg-color');
+      const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
       html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
     }
 
@@ -963,33 +1501,33 @@ function switchView(view) {
       const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
       const cy = y0pos + bandH * 0.1 + rng() * bandH * 0.8;
       const isRight = val >= t;
-      const color = isRight ? '#39ff14' : '#ffb400';
-      const opacity = isRight ? '0.7' : '0.55';
+      const color = linked ? (isRight ? themeColor('--tp-color') : themeColor('--fn-color')) : themeColor('--pos-color');
+      const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
       html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
     }
 
     // ── Threshold line ──
-    if (tX >= pad.l && tX <= pad.l + bW) {
-      html += '<line x1="'+tX+'" y1="'+(pad.t - 5)+'" x2="'+tX+'" y2="'+(y0pos + bandH + 5)+'" stroke="#fff" stroke-width="2" stroke-dasharray="6,3" opacity="0.9"/>';
-      html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace">t='+pf(t)+'</text>';
+    if (linked && tX >= pad.l && tX <= pad.l + bW) {
+      html += '<line x1="'+tX+'" y1="'+(pad.t - 5)+'" x2="'+tX+'" y2="'+(y0pos + bandH + 5)+'" stroke="'+themeColor('--text')+'" stroke-width="2" stroke-dasharray="6,3" opacity="0.9"/>';
+      html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="10" font-family="JetBrains Mono, monospace">t='+pf(t)+'</text>';
     }
 
     // ── Region labels ──
     const tFrac = (Math.max(xMin, Math.min(xMax, t)) - xMin) / (xMax - xMin);
     const leftMidX = pad.l + tFrac * bW / 2;
     const rightMidX = pad.l + tFrac * bW + (1 - tFrac) * bW / 2;
-    if (tFrac > 0.1) {
-      html += '<text x="'+leftMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="#00f0ff" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TN</text>';
-      html += '<text x="'+leftMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FN</text>';
+    if (linked && tFrac > 0.1) {
+      html += '<text x="'+leftMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="'+themeColor('--tn-color')+'" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TN</text>';
+      html += '<text x="'+leftMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="'+themeColor('--fn-color')+'" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FN</text>';
     }
-    if (tFrac < 0.9) {
-      html += '<text x="'+rightMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="#ff2d55" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FP</text>';
-      html += '<text x="'+rightMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TP</text>';
+    if (linked && tFrac < 0.9) {
+      html += '<text x="'+rightMidX+'" y="'+(y0neg + bandH + 12)+'" text-anchor="middle" fill="'+themeColor('--fp-color')+'" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">FP</text>';
+      html += '<text x="'+rightMidX+'" y="'+(y0pos - 5)+'" text-anchor="middle" fill="'+themeColor('--tp-color')+'" font-size="9" font-family="JetBrains Mono, monospace" font-weight="700" opacity="0.6">TP</text>';
     }
 
     // ── Row labels ──
-    html += '<text x="'+(pad.l - 8)+'" y="'+(y0neg + bandH/2)+'" text-anchor="end" fill="#ff2d95" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Neg</text>';
-    html += '<text x="'+(pad.l - 8)+'" y="'+(y0pos + bandH/2)+'" text-anchor="end" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Pos</text>';
+    html += '<text x="'+(pad.l - 8)+'" y="'+(y0neg + bandH/2)+'" text-anchor="end" fill="'+themeColor('--neg-color')+'" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Neg</text>';
+    html += '<text x="'+(pad.l - 8)+'" y="'+(y0pos + bandH/2)+'" text-anchor="end" fill="'+themeColor('--pos-color')+'" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">Pos</text>';
 
     // ── Score axis ──
     const axisY = y0pos + bandH;
@@ -997,10 +1535,10 @@ function switchView(view) {
     for (let i = 0; i <= nTicks; i++) {
       const v = xMin + (xMax - xMin) * i / nTicks;
       const ax = pad.l + (i / nTicks) * bW;
-      html += '<text x="'+ax+'" y="'+(axisY + 20)+'" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">'+pf(v,1)+'</text>';
-      html += '<line x1="'+ax+'" y1="'+(axisY + 2)+'" x2="'+ax+'" y2="'+(axisY + 7)+'" stroke="#7a6f99" stroke-width="1"/>';
+      html += '<text x="'+ax+'" y="'+(axisY + 20)+'" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="9" font-family="JetBrains Mono, monospace">'+pf(v,1)+'</text>';
+      html += '<line x1="'+ax+'" y1="'+(axisY + 2)+'" x2="'+ax+'" y2="'+(axisY + 7)+'" stroke="'+themeColor('--text-dim')+'" stroke-width="1"/>';
     }
-    html += '<text x="'+(pad.l + bW/2)+'" y="'+(H - 4)+'" text-anchor="middle" fill="#9088b0" font-size="10" font-family="JetBrains Mono, monospace">Score</text>';
+    html += '<text x="'+(pad.l + bW/2)+'" y="'+(H - 4)+'" text-anchor="middle" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Score</text>';
 
     svg.innerHTML = html;
   }
@@ -1009,23 +1547,36 @@ function switchView(view) {
     const rocPts = generateROC(500);
 
     const traces = [
-      { x: [0, 1], y: [0, 1], name: 'Random', line: { color: '#333', dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
-      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: 'rgba(0,240,255,0.08)' },
-      { x: [fpr], y: [tpr], name: 'Operating Pt', mode: 'markers', marker: { size: 12, color: '#fff', symbol: 'cross', line: { color: var_accent(), width: 2 } }, type: 'scatter' },
+      { x: [0, 1], y: [0, 1], name: 'Random', line: { color: themeAlpha('--text-dim', 0.55), dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
+      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: themeAlpha('--accent', 0.08) },
+      { x: [fpr], y: [tpr], name: state.linkedMode ? 'Operating Pt' : 'Manual Pt', mode: 'markers', marker: { size: 12, color: themeColor('--text'), symbol: 'cross', line: { color: state.linkedMode ? var_accent() : themeColor('--fn-color'), width: 2 } }, type: 'scatter' },
     ];
 
     const base = getBasePlotLayout();
+    const annotations = [];
+    if (!state.linkedMode) {
+      annotations.push({
+        x: 0.5,
+        y: 1.02,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Direct mode: manual point may sit off the ROC curve',
+        showarrow: false,
+        font: { size: 10, color: themeColor('--plot-font') }
+      });
+    }
     const layout = {
       ...base,
       xaxis: { ...base.xaxis, title: 'FPR', range: [-0.02, 1.02] },
       yaxis: { ...base.yaxis, title: 'TPR', range: [-0.02, 1.02] },
-      legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: fontColor } },
+      legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
+      annotations,
     };
 
-    Plotly.react('rocPlot', traces, layout, { displayModeBar: false, responsive: true });
+    Plotly.react('rocPlot', traces, layout, { displayModeBar: true, responsive: true });
   }
 
-  function var_accent() { return '#00f0ff'; }
+  function var_accent() { return themeColor('--accent'); }
 
   function renderCM(tpr, fpr) {
     const P = Math.round(state.N * state.bal);
@@ -1069,6 +1620,18 @@ function switchView(view) {
     const rocPts = generateROC(500);
     const auc = computeAUC(rocPts);
 
+    const metrics = {
+      acc,
+      prec,
+      rec,
+      spec,
+      f1,
+      auc,
+      npv,
+      mcc
+    };
+    latestMetrics = metrics;
+
     $('m_acc').textContent = pf(acc, 3);
     $('m_prec').textContent = pf(prec, 3);
     $('m_rec').textContent = pf(rec, 3);
@@ -1077,7 +1640,94 @@ function switchView(view) {
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
     $('m_mcc').textContent = pf(mcc, 3);
+
+    if ($('metricsBarView').classList.contains('active')) {
+      renderMetricsBar(metrics);
+    }
   }
+
+  function renderMetricsBar(metrics) {
+    const goodColor = themeColor('--good-color');
+    const badColor = themeColor('--bad-color');
+    const defaultThreshold = 0.70;
+    const mccThreshold = 0.30;
+    const rows = [
+      { label: 'Accuracy', value: metrics.acc, threshold: defaultThreshold },
+      { label: 'Precision', value: metrics.prec, threshold: defaultThreshold },
+      { label: 'Recall', value: metrics.rec, threshold: defaultThreshold },
+      { label: 'Specificity', value: metrics.spec, threshold: defaultThreshold },
+      { label: 'F1 Score', value: metrics.f1, threshold: defaultThreshold },
+      { label: 'AUC', value: metrics.auc, threshold: defaultThreshold },
+      { label: 'NPV', value: metrics.npv, threshold: defaultThreshold },
+      { label: 'MCC', value: metrics.mcc, threshold: mccThreshold }
+    ].reverse();
+
+    const base = getBasePlotLayout();
+    const mobile = isMobile();
+    const trace = {
+      x: rows.map(r => r.value),
+      y: rows.map(r => r.label),
+      customdata: rows.map(r => r.threshold),
+      type: 'bar',
+      orientation: 'h',
+      marker: {
+        color: rows.map(r => r.value >= r.threshold ? goodColor : badColor),
+        line: { color: themeAlpha('--text', 0.18), width: 1 }
+      },
+      text: rows.map(r => pf(r.value, 3)),
+      textposition: 'auto',
+      insidetextanchor: 'middle',
+      constraintext: 'both',
+      cliponaxis: true,
+      hovertemplate: '%{y}: %{x:.3f}<br>Good threshold: %{customdata:.2f}<extra></extra>'
+    };
+
+    const layout = {
+      ...base,
+      margin: mobile ? { l: 86, r: 18, t: 16, b: 36 } : { l: 112, r: 20, t: 16, b: 38 },
+      xaxis: {
+        ...base.xaxis,
+        title: 'Metric Value',
+        range: [-1, 1.05],
+        tickvals: [-1, -0.5, 0, 0.5, 1],
+        automargin: true,
+        zeroline: true,
+        zerolinecolor: themeColor('--plot-zero')
+      },
+      yaxis: {
+        ...base.yaxis,
+        automargin: true
+      },
+      showlegend: false,
+      bargap: 0.28,
+      uniformtext: {
+        minsize: mobile ? 8 : 9,
+        mode: 'hide'
+      },
+      annotations: [{
+        x: 1,
+        y: 1.08,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Green >= 0.70, red < 0.70. MCC uses 0.30 instead.',
+        showarrow: false,
+        xanchor: 'right',
+        font: { size: mobile ? 8 : 9, color: themeColor('--plot-font') }
+      }]
+    };
+
+    Plotly.react('metricsBarPlot', [trace], layout, { displayModeBar: false, responsive: true });
+
+    if ($('metricsBarView').classList.contains('active')) {
+      requestAnimationFrame(() => {
+        if (window.Plotly) Plotly.Plots.resize($('metricsBarPlot'));
+      });
+    }
+  }
+
+  window.refreshMetricsBar = function() {
+    if (latestMetrics) renderMetricsBar(latestMetrics);
+  };
 
   // ─── Mosaic Plot (SVG) ───
   function renderMosaic(tpr, fpr) {
@@ -1098,12 +1748,32 @@ function switchView(view) {
     }
   }
 
+  function getMosaicTypography(mobile) {
+    const vw = window.innerWidth;
+    let scale = mobile ? 1.14 : 1.0;
+    if (!mobile && vw >= 2200) scale = 1.28;
+    else if (!mobile && vw >= 1800) scale = 1.16;
+    else if (!mobile && vw >= 1400) scale = 1.08;
+
+    return {
+      banner: Math.round((mobile ? 11 : 11) * scale),
+      rowLabel: Math.round((mobile ? 16 : 13) * scale),
+      meta: Math.round((mobile ? 12 : 10) * scale),
+      side: Math.round((mobile ? 12 : 10) * scale),
+      cellLabel: Math.round((mobile ? 17 : 15) * scale),
+      cellCount: Math.round((mobile ? 14 : 12) * scale),
+      cellMinW: mobile ? 24 : 30,
+      cellMinH: mobile ? 24 : 30
+    };
+  }
+
   function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
-    const W = 700, H = 320;
+    const W = 700, H = 340;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     const pad = { l: 50, r: 20, t: 30, b: 40 };
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
+    const typo = getMosaicTypography(false);
 
     const pW = state.bal * bW;
     const nW = (1 - state.bal) * bW;
@@ -1117,24 +1787,24 @@ function switchView(view) {
     const y0 = pad.t;
 
     let html = '';
-    html += rect(x0, y0, pW, tpH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
-    html += rect(x0, y0 + tpH, pW, fnH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
-    html += rect(x0 + pW, y0, nW, fpH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
-    html += rect(x0 + pW, y0 + fpH, nW, tnH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
+    html += rect(x0, y0, pW, tpH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo);
+    html += rect(x0, y0 + tpH, pW, fnH, themeAlpha('--fn-color', 0.3), 'FN', FN, themeColor('--fn-color'), typo);
+    html += rect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo);
+    html += rect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo);
 
     const ppPoints = [
       [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
       [x0 + pW, y0 + fpH], [x0 + pW, y0 + tpH], [x0, y0 + tpH],
     ].map(p => p.join(',')).join(' ');
-    html += '<polygon points="' + ppPoints + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+    html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.7">← Predicted Positive →</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#00f0ff" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="#ff2d95" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 34) + '" text-anchor="middle" fill="#7a6f99" font-size="9" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
-    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="#39ff14" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
-    html += '<text x="' + (x0 - 8) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="#ffb400" font-size="9" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.72">← Predicted Positive →</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 36) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 36) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 - 10) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="'+themeColor('--tp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
+    html += '<text x="' + (x0 - 10) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="'+themeColor('--fn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
 
     svg.innerHTML = html;
   }
@@ -1147,6 +1817,7 @@ function switchView(view) {
     const bW = W - pad.l - pad.r;  // full width for bars
     const gap = 22; // gap between the two rows
     const labelH = 18; // space for row label above each row
+    const typo = getMosaicTypography(true);
 
     // Row heights proportional to prevalence
     const totalBarH = H - pad.t - pad.b - gap - labelH * 2;
@@ -1170,41 +1841,43 @@ function switchView(view) {
     let html = '';
 
     // Row labels
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="#00f0ff" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="#ff2d95" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
 
     // Positive row cells
-    html += rect(x0, y0p, tpW, pRowH, 'rgba(57,255,20,0.3)', 'TP', TP, '#39ff14');
-    html += rect(x0 + tpW, y0p, fnW, pRowH, 'rgba(255,180,0,0.3)', 'FN', FN, '#ffb400');
+    html += rect(x0, y0p, tpW, pRowH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo);
+    html += rect(x0 + tpW, y0p, fnW, pRowH, themeAlpha('--fn-color', 0.3), 'FN', FN, themeColor('--fn-color'), typo);
 
     // Negative row cells
-    html += rect(x0, y0n, fpW, nRowH, 'rgba(255,45,85,0.3)', 'FP', FP, '#ff2d55');
-    html += rect(x0 + fpW, y0n, tnW, nRowH, 'rgba(0,240,255,0.3)', 'TN', TN, '#00f0ff');
+    html += rect(x0, y0n, fpW, nRowH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo);
+    html += rect(x0 + fpW, y0n, tnW, nRowH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo);
 
     // "Predicted Positive" outline: TP (top-left of P row) + FP (top-left of N row)
     // Draw dashed outlines around TP and FP individually to indicate "predicted positive"
-    if (tpW > 1) html += '<rect x="'+x0+'" y="'+y0p+'" width="'+tpW+'" height="'+pRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
-    if (fpW > 1) html += '<rect x="'+x0+'" y="'+y0n+'" width="'+fpW+'" height="'+nRowH+'" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
+    if (tpW > 1) html += '<rect x="'+x0+'" y="'+y0p+'" width="'+tpW+'" height="'+pRowH+'" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
+    if (fpW > 1) html += '<rect x="'+x0+'" y="'+y0n+'" width="'+fpW+'" height="'+nRowH+'" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
 
     // Predicted Positive label at top
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="#fff" font-size="10" font-family="JetBrains Mono, monospace" opacity="0.6">⬜ dashed = Predicted Positive</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.68">⬜ dashed = Predicted Positive</text>';
 
     svg.innerHTML = html;
   }
 
-  function rect(x, y, w, h, fill, label, count, textColor) {
+  function rect(x, y, w, h, fill, label, count, textColor, typo) {
     if (w < 1 || h < 1) return '';
-    let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="rgba(255,255,255,0.08)" stroke-width="1" rx="3"/>';
+    let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="'+themeColor('--cell-stroke')+'" stroke-width="1" rx="3"/>';
     // Only add labels if cell is big enough
-    if (w > 30 && h > 30) {
+    if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
-      s += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" fill="'+textColor+'" font-size="13" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
-      s += '<text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" fill="'+textColor+'" font-size="11" font-family="JetBrains Mono, monospace" opacity="0.8" dominant-baseline="middle">'+count+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy-7)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+11)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
     }
     return s;
   }
 
   // ─── Event Wiring ───
+  $('themeToggle').addEventListener('click', cycleTheme);
+
   // Distribution sliders → recompute threshold's TPR/FPR (threshold stays, rates change)
   ['s_mu_neg','s_std_neg','s_mu_pos','s_std_pos'].forEach(id => {
     $(id).addEventListener('input', () => {
@@ -1220,13 +1893,27 @@ function switchView(view) {
     });
   });
 
+  $('toggle_bidirectional').addEventListener('change', () => {
+    if (updating) return;
+    updating = true;
+    const linked = $('toggle_bidirectional').checked;
+    if (!linked && state.linkedMode) syncManualRatesFromThreshold();
+    state.linkedMode = linked;
+    render();
+    updating = false;
+  });
+
   // TPR slider → compute new threshold from positive dist, update FPR
   $('s_tpr').addEventListener('input', () => {
     if (updating) return;
     updating = true;
-    const newTPR = parseFloat($('s_tpr').value);
-    state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
-    writeSlider('s_thresh', state.threshold);
+    const newTPR = clamp01(parseFloat($('s_tpr').value));
+    if (state.linkedMode) {
+      state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
+      writeSlider('s_thresh', state.threshold);
+    } else {
+      state.manual_tpr = newTPR;
+    }
     render();
     updating = false;
   });
@@ -1235,9 +1922,13 @@ function switchView(view) {
   $('s_fpr').addEventListener('input', () => {
     if (updating) return;
     updating = true;
-    const newFPR = parseFloat($('s_fpr').value);
-    state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
-    writeSlider('s_thresh', state.threshold);
+    const newFPR = clamp01(parseFloat($('s_fpr').value));
+    if (state.linkedMode) {
+      state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
+      writeSlider('s_thresh', state.threshold);
+    } else {
+      state.manual_fpr = newFPR;
+    }
     render();
     updating = false;
   });
@@ -1246,6 +1937,10 @@ function switchView(view) {
   $('s_thresh').addEventListener('input', () => {
     if (updating) return;
     updating = true;
+    if (!state.linkedMode) {
+      updating = false;
+      return;
+    }
     state.threshold = parseFloat($('s_thresh').value);
     render();
     updating = false;
@@ -1264,6 +1959,10 @@ function switchView(view) {
   });
 
   // ─── Init ───
+  let storedTheme = null;
+  try { storedTheme = localStorage.getItem('metrics-theme'); } catch (e) {}
+  applyTheme(storedTheme || currentThemeName, false);
+  syncManualRatesFromThreshold();
   render();
 
   // Re-render on resize/orientation change for mobile layout adjustments
