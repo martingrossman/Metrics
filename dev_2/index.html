@@ -1451,15 +1451,19 @@ function switchView(view) {
   }
 
   function renderMetricsBar(metrics) {
+    const goodColor = '#39ff14';
+    const badColor = '#ff2d55';
+    const defaultThreshold = 0.70;
+    const mccThreshold = 0.30;
     const rows = [
-      { label: 'Accuracy', value: metrics.acc, color: '#8af7ff' },
-      { label: 'Precision', value: metrics.prec, color: '#39ff14' },
-      { label: 'Recall', value: metrics.rec, color: '#00f0ff' },
-      { label: 'Specificity', value: metrics.spec, color: '#ff2d95' },
-      { label: 'F1 Score', value: metrics.f1, color: '#ffb400' },
-      { label: 'AUC', value: metrics.auc, color: '#7ee6ff' },
-      { label: 'NPV', value: metrics.npv, color: '#6af7c8' },
-      { label: 'MCC', value: metrics.mcc, color: metrics.mcc >= 0 ? '#ffd166' : '#ff6b6b' }
+      { label: 'Accuracy', value: metrics.acc, threshold: defaultThreshold },
+      { label: 'Precision', value: metrics.prec, threshold: defaultThreshold },
+      { label: 'Recall', value: metrics.rec, threshold: defaultThreshold },
+      { label: 'Specificity', value: metrics.spec, threshold: defaultThreshold },
+      { label: 'F1 Score', value: metrics.f1, threshold: defaultThreshold },
+      { label: 'AUC', value: metrics.auc, threshold: defaultThreshold },
+      { label: 'NPV', value: metrics.npv, threshold: defaultThreshold },
+      { label: 'MCC', value: metrics.mcc, threshold: mccThreshold }
     ].reverse();
 
     const base = getBasePlotLayout();
@@ -1467,10 +1471,11 @@ function switchView(view) {
     const trace = {
       x: rows.map(r => r.value),
       y: rows.map(r => r.label),
+      customdata: rows.map(r => r.threshold),
       type: 'bar',
       orientation: 'h',
       marker: {
-        color: rows.map(r => r.color),
+        color: rows.map(r => r.value >= r.threshold ? goodColor : badColor),
         line: { color: 'rgba(255,255,255,0.18)', width: 1 }
       },
       text: rows.map(r => pf(r.value, 3)),
@@ -1478,7 +1483,7 @@ function switchView(view) {
       insidetextanchor: 'middle',
       constraintext: 'both',
       cliponaxis: true,
-      hovertemplate: '%{y}: %{x:.3f}<extra></extra>'
+      hovertemplate: '%{y}: %{x:.3f}<br>Good threshold: %{customdata:.2f}<extra></extra>'
     };
 
     const layout = {
@@ -1508,7 +1513,7 @@ function switchView(view) {
         y: 1.08,
         xref: 'paper',
         yref: 'paper',
-        text: 'Most metrics span 0 to 1; MCC spans -1 to 1',
+        text: 'Green >= 0.70, red < 0.70. MCC uses 0.30 instead.',
         showarrow: false,
         xanchor: 'right',
         font: { size: mobile ? 8 : 9, color: fontColor }
