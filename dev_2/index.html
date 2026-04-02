@@ -422,6 +422,236 @@
     cursor: not-allowed;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .panel-scroll-anchor {
+    scroll-margin-top: 28px;
+  }
+
+  .mobile-cockpit {
+    display: none;
+  }
+
+  .mobile-hero-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+    background:
+      radial-gradient(circle at top left, var(--soft-accent-strong), transparent 58%),
+      linear-gradient(145deg, var(--bg2), var(--bg3));
+    box-shadow: 0 18px 32px rgba(0, 0, 0, 0.18);
+  }
+
+  .mobile-hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .mobile-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    color: var(--accent);
+  }
+
+  .mobile-title {
+    margin-top: 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.03em;
+  }
+
+  .mobile-subtitle {
+    margin-top: 4px;
+    max-width: 42ch;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+
+  .mobile-status-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .mobile-badge,
+  .mobile-stat {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--soft-accent-bg);
+    padding: 10px 11px;
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-badge-label,
+  .mobile-stat-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+
+  .mobile-badge-value,
+  .mobile-stat-value {
+    display: block;
+    margin-top: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .mobile-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .mobile-preset-strip,
+  .mobile-quick-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .mobile-preset-strip::-webkit-scrollbar,
+  .mobile-quick-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-preset-strip {
+    margin-top: 12px;
+    padding-bottom: 2px;
+  }
+
+  .mobile-preset,
+  .mobile-nav-chip {
+    flex: none;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .mobile-preset {
+    padding: 9px 12px;
+  }
+
+  .mobile-nav-chip {
+    padding: 8px 12px;
+  }
+
+  .mobile-preset:hover,
+  .mobile-nav-chip:hover {
+    transform: translateY(-1px);
+    color: var(--text);
+    border-color: var(--soft-accent-border);
+  }
+
+  .mobile-preset.active,
+  .mobile-nav-chip.active {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .control-section {
+    margin-top: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--bg2), var(--bg3));
+    box-shadow: inset 0 0 0 1px var(--soft-accent-bg);
+  }
+
+  .control-section-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px 10px;
+    border: none;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: default;
+  }
+
+  .control-section-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .control-section-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--accent2);
+  }
+
+  .control-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text);
+  }
+
+  .control-section-summary {
+    font-size: 0.69rem;
+    line-height: 1.4;
+    color: var(--text-dim);
+  }
+
+  .control-section-icon {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg3);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .control-section-body {
+    padding: 0 14px 14px;
+  }
+
   .panel-header {
     display: flex;
     justify-content: space-between;
@@ -540,10 +770,25 @@
     .plot-cm-mosaic { grid-column: 2; grid-row: 2; }
     .plot-roc { grid-column: 1; grid-row: 3; }
     .plot-metrics { grid-column: 2; grid-row: 3; }
+
+    .controls .panel-title,
+    .controls .mode-toggle-row,
+    .controls .bidirectional-hint {
+      grid-column: 1 / -1;
+    }
+
+    .controls .control-section {
+      min-width: 0;
+      margin-top: 0;
+    }
   }
 
   /* ── Mobile (iPhone 13 = 390px, covers most phones) ── */
   @media (max-width: 640px) {
+    body {
+      scroll-snap-type: y proximity;
+    }
+
     h1 {
       font-size: 0.9rem;
       padding: 10px 10px 6px;
@@ -560,63 +805,132 @@
       padding: 8px 10px;
     }
 
+    .mobile-cockpit {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 0 8px 10px;
+      background: linear-gradient(180deg, var(--bg) 72%, transparent);
+    }
+
+    .mobile-hero-card {
+      padding: 14px 12px;
+      border-radius: 18px;
+    }
+
+    .mobile-title {
+      font-size: 1.05rem;
+    }
+
+    .mobile-subtitle {
+      font-size: 0.72rem;
+    }
+
+    .mobile-status-row,
+    .mobile-stat-grid {
+      gap: 7px;
+    }
+
+    .mobile-badge,
+    .mobile-stat {
+      padding: 9px 10px;
+    }
+
+    .mobile-badge-value,
+    .mobile-stat-value {
+      font-size: 0.95rem;
+    }
+
+    .mobile-quick-nav {
+      margin-top: 8px;
+      padding-bottom: 2px;
+    }
+
+    .panel-scroll-anchor {
+      scroll-margin-top: 220px;
+      scroll-snap-align: start;
+    }
+
     .layout {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      padding: 6px 8px 14px;
+      gap: 10px;
+      padding: 4px 8px 18px;
     }
 
     .controls {
       order: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px 12px;
-      padding: 8px !important;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px !important;
     }
 
     .controls .panel-title {
-      grid-column: 1 / -1;
-      margin-bottom: 4px;
+      margin-bottom: 0;
       padding-bottom: 4px;
     }
 
     .controls .mode-toggle-row,
     .controls .bidirectional-hint {
-      grid-column: 1 / -1;
+      margin-bottom: 0;
     }
 
     .controls .bidirectional-hint {
-      margin-bottom: 4px;
-      padding: 5px 6px;
-    }
-
-    .controls .section-label {
-      grid-column: 1 / -1;
-      margin: 4px 0 2px;
-    }
-
-    .controls .separator {
-      grid-column: 1 / -1;
-      margin: 4px 0;
+      padding: 8px 10px;
     }
 
     .slider-group {
-      margin-bottom: 2px !important;
+      margin-bottom: 0 !important;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .control-section:not(.is-open) .control-section-body {
+      display: none;
+    }
+
+    .control-section {
+      margin-top: 0;
+      border-radius: 14px;
+    }
+
+    .control-section-toggle {
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    .control-section.is-open .control-section-toggle {
+      padding-bottom: 8px;
+    }
+
+    .control-section-icon {
+      display: flex;
+    }
+
+    .control-section-body {
+      padding: 0 12px 12px;
+    }
+
+    .control-section-body .slider-group:first-child {
+      padding-top: 0;
+      border-top: none;
     }
 
     .slider-group label {
-      font-size: 0.68rem;
-      margin-bottom: 1px;
+      font-size: 0.72rem;
+      margin-bottom: 4px;
     }
 
     input[type="range"] {
-      height: 4px;
+      height: 6px;
     }
 
     input[type="range"]::-webkit-slider-thumb {
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
+      border-width: 3px;
     }
 
     .plot-cm-mosaic { order: 2; }
@@ -625,12 +939,19 @@
     .plot-roc { order: 5; }
 
     .panel {
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 14px;
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.16);
+    }
+
+    .panel-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
     }
 
     #distPlot, #rocPlot {
-      height: 260px !important;
+      height: 300px !important;
     }
 
     .plot-cm-mosaic {
@@ -667,11 +988,12 @@
     }
 
     .metric-card {
-      padding: 8px 10px;
+      min-height: 96px;
+      padding: 10px;
     }
 
     .metric-card .metric-val {
-      font-size: 1rem;
+      font-size: 1.04rem;
     }
 
     .metric-card .metric-name {
@@ -683,24 +1005,33 @@
     }
 
     #metricsBarPlot {
-      height: 300px !important;
+      height: 340px !important;
     }
 
     .bidirectional-hint {
-      font-size: 0.55rem;
+      font-size: 0.6rem;
     }
 
     .panel-title {
-      font-size: 0.65rem;
+      font-size: 0.68rem;
     }
 
-    .section-label {
-      font-size: 0.6rem;
+    .view-toggle {
+      width: 100%;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
     }
 
     .view-toggle button {
-      font-size: 0.6rem;
-      padding: 4px 8px;
+      font-size: 0.62rem;
+      padding: 8px 8px;
+    }
+
+    .equations-box {
+      max-height: none;
+      overflow: visible;
+      padding-right: 0;
     }
   }
 
@@ -723,10 +1054,62 @@
   <button class="theme-toggle" id="themeToggle" type="button" title="Cycle color themes">Theme: Neon Dark</button>
 </div>
 
+<div class="mobile-cockpit" id="mobileCockpit">
+  <div class="mobile-hero-card">
+    <div class="mobile-hero-copy">
+      <div class="mobile-kicker">Phone Flow</div>
+      <div class="mobile-title">Tune, inspect, compare.</div>
+      <div class="mobile-subtitle">Pick a preset, move one slider, then jump straight to the panel you care about.</div>
+    </div>
+    <div class="mobile-status-row">
+      <div class="mobile-badge">
+        <span class="mobile-badge-label">Mode</span>
+        <span class="mobile-badge-value" id="mobile_mode_state">Linked</span>
+      </div>
+      <div class="mobile-badge">
+        <span class="mobile-badge-label">Threshold</span>
+        <span class="mobile-badge-value" id="mobile_threshold">1.00</span>
+      </div>
+    </div>
+    <div class="mobile-stat-grid">
+      <div class="mobile-stat">
+        <span class="mobile-stat-label">TPR</span>
+        <span class="mobile-stat-value" id="mobile_tpr_card">0.800</span>
+      </div>
+      <div class="mobile-stat">
+        <span class="mobile-stat-label">FPR</span>
+        <span class="mobile-stat-value" id="mobile_fpr_card">0.100</span>
+      </div>
+      <div class="mobile-stat">
+        <span class="mobile-stat-label">Precision</span>
+        <span class="mobile-stat-value" id="mobile_prec_card">0.000</span>
+      </div>
+      <div class="mobile-stat">
+        <span class="mobile-stat-label">AUC</span>
+        <span class="mobile-stat-value" id="mobile_auc_card">0.000</span>
+      </div>
+    </div>
+    <div class="mobile-preset-strip" role="group" aria-label="Quick presets">
+      <button class="mobile-preset active" type="button" data-preset="starter">Starter</button>
+      <button class="mobile-preset" type="button" data-preset="separation">Separation</button>
+      <button class="mobile-preset" type="button" data-preset="overlap">Overlap</button>
+      <button class="mobile-preset" type="button" data-preset="rare">Rare Pos</button>
+      <button class="mobile-preset" type="button" data-preset="screening">Screening</button>
+    </div>
+  </div>
+  <div class="mobile-quick-nav" role="navigation" aria-label="Jump to sections">
+    <button class="mobile-nav-chip active" type="button" data-panel-target="controlsPanel">Controls</button>
+    <button class="mobile-nav-chip" type="button" data-panel-target="cmPanel">Outcome</button>
+    <button class="mobile-nav-chip" type="button" data-panel-target="metricsPanel">Metrics</button>
+    <button class="mobile-nav-chip" type="button" data-panel-target="distPanel">Distributions</button>
+    <button class="mobile-nav-chip" type="button" data-panel-target="rocPanel">ROC</button>
+  </div>
+</div>
+
 <div class="layout">
 
   <!-- CONTROLS -->
-  <div class="controls panel">
+  <div class="controls panel panel-scroll-anchor" id="controlsPanel">
     <div class="panel-title">Parameters</div>
     <div class="mode-toggle-row">
       <div class="mode-toggle-copy">
@@ -742,56 +1125,84 @@
       Linked mode: distributions, threshold, and TPR/FPR stay synchronized.
     </div>
 
-    <div class="section-label">Class Distributions</div>
+    <section class="control-section" data-mobile-section>
+      <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
+        <span class="control-section-copy">
+          <span class="control-section-kicker">Step 1</span>
+          <span class="control-section-title">Shape the classes</span>
+          <span class="control-section-summary" id="summary_distributions">Neg 0.0/1.0 | Pos 2.0/1.0</span>
+        </span>
+        <span class="control-section-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="control-section-body">
+        <div class="slider-group">
+          <label>μ Negative <span class="val" id="v_mu_neg">0.0</span></label>
+          <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0">
+        </div>
+        <div class="slider-group">
+          <label>σ Negative <span class="val" id="v_std_neg">1.0</span></label>
+          <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1">
+        </div>
+        <div class="slider-group">
+          <label>μ Positive <span class="val" id="v_mu_pos">2.0</span></label>
+          <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2">
+        </div>
+        <div class="slider-group">
+          <label>σ Positive <span class="val" id="v_std_pos">1.0</span></label>
+          <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1">
+        </div>
+      </div>
+    </section>
 
-    <div class="slider-group">
-      <label>μ Negative <span class="val" id="v_mu_neg">0.0</span></label>
-      <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0">
-    </div>
-    <div class="slider-group">
-      <label>σ Negative <span class="val" id="v_std_neg">1.0</span></label>
-      <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1">
-    </div>
-    <div class="slider-group">
-      <label>μ Positive <span class="val" id="v_mu_pos">2.0</span></label>
-      <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2">
-    </div>
-    <div class="slider-group">
-      <label>σ Positive <span class="val" id="v_std_pos">1.0</span></label>
-      <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1">
-    </div>
+    <section class="control-section is-open" data-mobile-section>
+      <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="true">
+        <span class="control-section-copy">
+          <span class="control-section-kicker">Step 2</span>
+          <span class="control-section-title">Choose the operating point</span>
+          <span class="control-section-summary" id="summary_operating">Linked | TPR 0.800 | FPR 0.100</span>
+        </span>
+        <span class="control-section-icon" aria-hidden="true">-</span>
+      </button>
+      <div class="control-section-body">
+        <div class="slider-group">
+          <label>TPR (Sensitivity) <span class="val" id="v_tpr">0.80</span></label>
+          <input type="range" id="s_tpr" min="0" max="1" step="0.005" value="0.8">
+        </div>
+        <div class="slider-group">
+          <label>FPR (1 − Specificity) <span class="val" id="v_fpr">0.10</span></label>
+          <input type="range" id="s_fpr" min="0" max="1" step="0.005" value="0.1">
+        </div>
+        <div class="slider-group" id="g_thresh">
+          <label>Threshold (linked only) <span class="val" id="v_thresh">—</span></label>
+          <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
+        </div>
+      </div>
+    </section>
 
-    <hr class="separator">
-    <div class="section-label">Operating Point</div>
-
-    <div class="slider-group">
-      <label>TPR (Sensitivity) <span class="val" id="v_tpr">0.80</span></label>
-      <input type="range" id="s_tpr" min="0" max="1" step="0.005" value="0.8">
-    </div>
-    <div class="slider-group">
-      <label>FPR (1 − Specificity) <span class="val" id="v_fpr">0.10</span></label>
-      <input type="range" id="s_fpr" min="0" max="1" step="0.005" value="0.1">
-    </div>
-    <div class="slider-group" id="g_thresh">
-      <label>Threshold (linked only) <span class="val" id="v_thresh">—</span></label>
-      <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
-    </div>
-
-    <hr class="separator">
-    <div class="section-label">Dataset</div>
-
-    <div class="slider-group">
-      <label>N (total samples) <span class="val" id="v_N">1000</span></label>
-      <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
-    </div>
-    <div class="slider-group">
-      <label>Balance (P prevalence) <span class="val" id="v_bal">0.30</span></label>
-      <input type="range" id="s_bal" min="0.01" max="0.99" step="0.01" value="0.30">
-    </div>
+    <section class="control-section" data-mobile-section>
+      <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
+        <span class="control-section-copy">
+          <span class="control-section-kicker">Step 3</span>
+          <span class="control-section-title">Size the dataset</span>
+          <span class="control-section-summary" id="summary_dataset">1000 samples | Prev 0.30</span>
+        </span>
+        <span class="control-section-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="control-section-body">
+        <div class="slider-group">
+          <label>N (total samples) <span class="val" id="v_N">1000</span></label>
+          <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
+        </div>
+        <div class="slider-group">
+          <label>Balance (P prevalence) <span class="val" id="v_bal">0.30</span></label>
+          <input type="range" id="s_bal" min="0.01" max="0.99" step="0.01" value="0.30">
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- DISTRIBUTION PLOT -->
-  <div class="panel plot-distributions">
+  <div class="panel plot-distributions panel-scroll-anchor" id="distPanel">
     <div class="panel-header">
       <div class="panel-title" id="distPanelTitle">Class Distributions &amp; Threshold</div>
       <div class="view-toggle">
@@ -808,13 +1219,13 @@
   </div>
 
   <!-- ROC PLOT -->
-  <div class="panel plot-roc">
+  <div class="panel plot-roc panel-scroll-anchor" id="rocPanel">
     <div class="panel-title">ROC Curve</div>
     <div id="rocPlot" style="width:100%;height:340px;"></div>
   </div>
 
   <!-- CONFUSION MATRIX / MOSAIC (toggled) -->
-  <div class="panel plot-cm-mosaic">
+  <div class="panel plot-cm-mosaic panel-scroll-anchor" id="cmPanel">
     <div class="panel-header">
       <div class="panel-title">Confusion Matrix</div>
       <div class="view-toggle">
@@ -860,7 +1271,7 @@
   </div>
 
   <!-- METRICS -->
-  <div class="panel plot-metrics">
+  <div class="panel plot-metrics panel-scroll-anchor" id="metricsPanel">
     <div class="panel-header">
       <div class="panel-title">Derived Metrics</div>
       <div class="view-toggle">
@@ -1202,6 +1613,46 @@ function switchView(view) {
 
   let updating = false; // reentrance guard
   let latestMetrics = null;
+  let activePresetKey = 'starter';
+  const panelVisibility = new Map();
+  const PANEL_IDS = ['controlsPanel', 'cmPanel', 'metricsPanel', 'distPanel', 'rocPanel'];
+  const PRESET_CONFIGS = {
+    starter: {
+      mu_neg: 0, std_neg: 1,
+      mu_pos: 2, std_pos: 1,
+      N: 1000, bal: 0.30,
+      threshold: 1.0,
+      linkedMode: true
+    },
+    separation: {
+      mu_neg: -1.0, std_neg: 0.9,
+      mu_pos: 3.1, std_pos: 0.85,
+      N: 1600, bal: 0.35,
+      threshold: 1.0,
+      linkedMode: true
+    },
+    overlap: {
+      mu_neg: 0.0, std_neg: 1.35,
+      mu_pos: 1.25, std_pos: 1.25,
+      N: 1400, bal: 0.50,
+      threshold: 0.9,
+      linkedMode: true
+    },
+    rare: {
+      mu_neg: 0.0, std_neg: 1.0,
+      mu_pos: 2.4, std_pos: 1.0,
+      N: 2200, bal: 0.08,
+      threshold: 1.35,
+      linkedMode: true
+    },
+    screening: {
+      mu_neg: 0.0, std_neg: 1.0,
+      mu_pos: 2.1, std_pos: 1.0,
+      N: 1800, bal: 0.18,
+      threshold: 0.45,
+      linkedMode: true
+    }
+  };
 
   // ─── Derived: from threshold → TPR, FPR ───
   function threshToRates(t) {
@@ -1279,6 +1730,141 @@ function switchView(view) {
     $(id).value = val;
   }
 
+  function syncStateToInputs() {
+    writeSlider('s_mu_neg', state.mu_neg);
+    writeSlider('s_std_neg', state.std_neg);
+    writeSlider('s_mu_pos', state.mu_pos);
+    writeSlider('s_std_pos', state.std_pos);
+    writeSlider('s_N', state.N);
+    writeSlider('s_bal', state.bal);
+    writeSlider('s_thresh', state.threshold);
+    $('toggle_bidirectional').checked = state.linkedMode;
+  }
+
+  function setActivePreset(name) {
+    activePresetKey = name || null;
+    document.querySelectorAll('.mobile-preset').forEach(btn => {
+      const isActive = !!name && btn.dataset.preset === name;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function clearPresetSelection() {
+    if (!activePresetKey) return;
+    setActivePreset(null);
+  }
+
+  function applyPreset(name) {
+    const preset = PRESET_CONFIGS[name];
+    if (!preset) return;
+    state = { ...state, ...preset };
+    syncManualRatesFromThreshold();
+    syncStateToInputs();
+    render();
+    setActivePreset(name);
+  }
+
+  function setControlSectionExpanded(section, expanded) {
+    if (!section) return;
+    section.classList.toggle('is-open', expanded);
+    const toggle = section.querySelector('[data-section-toggle]');
+    const icon = section.querySelector('.control-section-icon');
+    if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    if (icon) icon.textContent = expanded ? '-' : '+';
+  }
+
+  function updateControlSummaries(rates, metrics) {
+    const dist = $('summary_distributions');
+    const operating = $('summary_operating');
+    const dataset = $('summary_dataset');
+    if (dist) {
+      dist.textContent = `Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`;
+    }
+    if (operating) {
+      operating.textContent = state.linkedMode
+        ? `Linked | TPR ${pf(rates.tpr, 3)} | FPR ${pf(rates.fpr, 3)} | t ${pf(state.threshold, 2)}`
+        : `Direct | TPR ${pf(rates.tpr, 3)} | FPR ${pf(rates.fpr, 3)}`;
+    }
+    if (dataset) {
+      dataset.textContent = `${state.N} samples | Prev ${pf(state.bal, 2)} | PPV ${pf(metrics.prec, 3)}`;
+    }
+  }
+
+  function updateMobileSummary(rates, metrics) {
+    const modeEl = $('mobile_mode_state');
+    const thresholdEl = $('mobile_threshold');
+    const tprCard = $('mobile_tpr_card');
+    const fprCard = $('mobile_fpr_card');
+    const precCard = $('mobile_prec_card');
+    const aucCard = $('mobile_auc_card');
+
+    if (modeEl) modeEl.textContent = state.linkedMode ? 'Linked' : 'Direct';
+    if (thresholdEl) thresholdEl.textContent = state.linkedMode ? pf(state.threshold, 2) : 'Manual';
+    if (tprCard) tprCard.textContent = pf(rates.tpr, 3);
+    if (fprCard) fprCard.textContent = pf(rates.fpr, 3);
+    if (precCard) precCard.textContent = pf(metrics.prec, 3);
+    if (aucCard) aucCard.textContent = pf(metrics.auc, 3);
+  }
+
+  function setActiveMobileNav(targetId) {
+    document.querySelectorAll('.mobile-nav-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.panelTarget === targetId);
+    });
+  }
+
+  function initMobileUI() {
+    document.querySelectorAll('[data-mobile-section]').forEach(section => {
+      setControlSectionExpanded(section, section.classList.contains('is-open'));
+    });
+
+    document.querySelectorAll('[data-section-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!isMobile()) return;
+        const section = btn.closest('[data-mobile-section]');
+        if (!section) return;
+        setControlSectionExpanded(section, !section.classList.contains('is-open'));
+      });
+    });
+
+    document.querySelectorAll('.mobile-preset').forEach(btn => {
+      btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+    });
+
+    document.querySelectorAll('.mobile-nav-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = $(btn.dataset.panelTarget);
+        if (!target) return;
+        setActiveMobileNav(btn.dataset.panelTarget);
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          panelVisibility.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+        const activePanel = PANEL_IDS
+          .map(id => ({ id, ratio: panelVisibility.get(id) || 0 }))
+          .sort((a, b) => b.ratio - a.ratio)[0];
+        if (activePanel && activePanel.ratio > 0.05) {
+          setActiveMobileNav(activePanel.id);
+        }
+      }, {
+        threshold: [0.1, 0.25, 0.45, 0.7],
+        rootMargin: '-18% 0px -52% 0px'
+      });
+      PANEL_IDS.forEach(id => {
+        const panel = $(id);
+        if (panel) observer.observe(panel);
+      });
+    }
+
+    setActivePreset(activePresetKey);
+    setActiveMobileNav('controlsPanel');
+  }
+
   function updateModeUI() {
     const linked = state.linkedMode;
     $('toggle_bidirectional').checked = linked;
@@ -1340,7 +1926,9 @@ function switchView(view) {
     renderTopView(tpr, fpr);
     renderROCPlot(tpr, fpr);
     renderCM(tpr, fpr);
-    renderMetrics(tpr, fpr);
+    const metrics = renderMetrics(tpr, fpr);
+    updateControlSummaries(rates, metrics);
+    updateMobileSummary(rates, metrics);
     renderMosaic(tpr, fpr);
   }
 
@@ -1644,6 +2232,8 @@ function switchView(view) {
     if ($('metricsBarView').classList.contains('active')) {
       renderMetricsBar(metrics);
     }
+
+    return metrics;
   }
 
   function renderMetricsBar(metrics) {
@@ -1883,6 +2473,7 @@ function switchView(view) {
     $(id).addEventListener('input', () => {
       if (updating) return;
       updating = true;
+      clearPresetSelection();
       state.mu_neg = parseFloat($('s_mu_neg').value);
       state.std_neg = parseFloat($('s_std_neg').value);
       state.mu_pos = parseFloat($('s_mu_pos').value);
@@ -1896,6 +2487,7 @@ function switchView(view) {
   $('toggle_bidirectional').addEventListener('change', () => {
     if (updating) return;
     updating = true;
+    clearPresetSelection();
     const linked = $('toggle_bidirectional').checked;
     if (!linked && state.linkedMode) syncManualRatesFromThreshold();
     state.linkedMode = linked;
@@ -1907,6 +2499,7 @@ function switchView(view) {
   $('s_tpr').addEventListener('input', () => {
     if (updating) return;
     updating = true;
+    clearPresetSelection();
     const newTPR = clamp01(parseFloat($('s_tpr').value));
     if (state.linkedMode) {
       state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, newTPR)));
@@ -1922,6 +2515,7 @@ function switchView(view) {
   $('s_fpr').addEventListener('input', () => {
     if (updating) return;
     updating = true;
+    clearPresetSelection();
     const newFPR = clamp01(parseFloat($('s_fpr').value));
     if (state.linkedMode) {
       state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, newFPR)));
@@ -1937,6 +2531,7 @@ function switchView(view) {
   $('s_thresh').addEventListener('input', () => {
     if (updating) return;
     updating = true;
+    clearPresetSelection();
     if (!state.linkedMode) {
       updating = false;
       return;
@@ -1951,6 +2546,7 @@ function switchView(view) {
     $(id).addEventListener('input', () => {
       if (updating) return;
       updating = true;
+      clearPresetSelection();
       state.N = parseInt($('s_N').value);
       state.bal = parseFloat($('s_bal').value);
       render();
@@ -1962,7 +2558,9 @@ function switchView(view) {
   let storedTheme = null;
   try { storedTheme = localStorage.getItem('metrics-theme'); } catch (e) {}
   applyTheme(storedTheme || currentThemeName, false);
+  initMobileUI();
   syncManualRatesFromThreshold();
+  syncStateToInputs();
   render();
 
   // Re-render on resize/orientation change for mobile layout adjustments
