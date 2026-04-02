@@ -9,41 +9,41 @@
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
 
   :root {
-    --bg: #0a0a12;
-    --bg2: #12101e;
-    --bg3: #1b1730;
-    --border: #2e2650;
-    --text: #e0daf0;
-    --text-dim: #7a6f99;
-    --accent: #00f0ff;
-    --accent2: #ff2d95;
-    --accent3: #b44dff;
-    --green: #39ff14;
-    --red: #ff2d55;
-    --orange: #ffb400;
-    --pos-color: #00f0ff;
-    --neg-color: #ff2d95;
-    --tp-color: #39ff14;
-    --fp-color: #ff2d55;
-    --tn-color: #00f0ff;
-    --fn-color: #ffb400;
-    --cm-tp-bg: rgba(57,255,20,0.12);
-    --cm-fp-bg: rgba(255,45,85,0.15);
-    --cm-fn-bg: rgba(255,180,0,0.15);
-    --cm-tn-bg: rgba(0,240,255,0.12);
-    --soft-accent-bg: rgba(0,240,255,0.05);
-    --soft-accent-strong: rgba(0,240,255,0.18);
-    --soft-accent-border: rgba(0,240,255,0.6);
-    --hint-bg: rgba(0,240,255,0.06);
-    --hint-manual-bg: rgba(255,180,0,0.08);
-    --hint-manual-text: #c9c1dc;
-    --neutral-band-bg: rgba(255,255,255,0.025);
-    --cell-stroke: rgba(255,255,255,0.08);
-    --plot-grid: #221d3a;
-    --plot-font: #9088b0;
-    --plot-zero: #2e2650;
-    --good-color: #39ff14;
-    --bad-color: #ff2d55;
+    --bg: #f5f7fb;
+    --bg2: #ffffff;
+    --bg3: #e9eef8;
+    --border: #c8d2e3;
+    --text: #162033;
+    --text-dim: #5f6e85;
+    --accent: #0b6fff;
+    --accent2: #d6457b;
+    --accent3: #7b6dff;
+    --green: #1a9b4d;
+    --red: #d33f49;
+    --orange: #c97900;
+    --pos-color: #0b6fff;
+    --neg-color: #c43e74;
+    --tp-color: #1a9b4d;
+    --fp-color: #d33f49;
+    --tn-color: #0b6fff;
+    --fn-color: #c97900;
+    --cm-tp-bg: rgba(26,155,77,0.12);
+    --cm-fp-bg: rgba(211,63,73,0.13);
+    --cm-fn-bg: rgba(201,121,0,0.13);
+    --cm-tn-bg: rgba(11,111,255,0.10);
+    --soft-accent-bg: rgba(11,111,255,0.08);
+    --soft-accent-strong: rgba(11,111,255,0.18);
+    --soft-accent-border: rgba(11,111,255,0.35);
+    --hint-bg: rgba(11,111,255,0.08);
+    --hint-manual-bg: rgba(201,121,0,0.12);
+    --hint-manual-text: #6d5312;
+    --neutral-band-bg: rgba(22,32,51,0.04);
+    --cell-stroke: rgba(22,32,51,0.08);
+    --plot-grid: #d6ddeb;
+    --plot-font: #5f6e85;
+    --plot-zero: #bcc8dd;
+    --good-color: #1a9b4d;
+    --bad-color: #d33f49;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1051,7 +1051,7 @@
 
 <h1>ROC &amp; Confusion Matrix Playground</h1>
 <div class="global-toolbar">
-  <button class="theme-toggle" id="themeToggle" type="button" title="Cycle color themes">Theme: Neon Dark</button>
+  <button class="theme-toggle" id="themeToggle" type="button" title="Cycle color themes">Theme: Light</button>
 </div>
 
 <div class="mobile-cockpit" id="mobileCockpit">
@@ -1573,7 +1573,7 @@ function switchView(view) {
     return colorToRGBA(themeColor(name), alpha);
   }
 
-  let currentThemeName = 'neon-dark';
+  let currentThemeName = 'light';
 
   function updateThemeButton() {
     const btn = $('themeToggle');
@@ -1582,7 +1582,7 @@ function switchView(view) {
   }
 
   function applyTheme(name, shouldRender = true) {
-    const themeName = THEME_PRESETS[name] ? name : 'neon-dark';
+    const themeName = THEME_PRESETS[name] ? name : 'light';
     Object.entries(THEME_PRESETS[themeName]).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value);
     });
