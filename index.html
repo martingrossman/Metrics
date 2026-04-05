@@ -2204,16 +2204,16 @@
         </div>
       </div>
       <div class="metrics-vals-view active" id="metricsValsView">
-        <div class="metric-hover-hint">Hover a metric card to highlight the matching pieces in the mosaic.</div>
+        <div class="metric-hover-hint">Hover a metric card, or tap it on iPhone, to highlight the matching pieces in the mosaic. Tap the same card again to clear.</div>
         <div class="metrics-grid">
-          <div class="metric-card" data-metric="tpr" onmouseenter="setMosaicMetricHover('tpr')" onmouseleave="clearMosaicMetricHover('tpr')" onfocusin="setMosaicMetricHover('tpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'tpr')"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_tpr')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="fpr" onmouseenter="setMosaicMetricHover('fpr')" onmouseleave="clearMosaicMetricHover('fpr')" onfocusin="setMosaicMetricHover('fpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'fpr')"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_fpr')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="precision" onmouseenter="setMosaicMetricHover('precision')" onmouseleave="clearMosaicMetricHover('precision')" onfocusin="setMosaicMetricHover('precision')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'precision')"><div class="metric-name"><span class="metric-name-main">Precision</span><span class="metric-name-sub">(PPV)</span></div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_precision')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="accuracy" onmouseenter="setMosaicMetricHover('accuracy')" onmouseleave="clearMosaicMetricHover('accuracy')" onfocusin="setMosaicMetricHover('accuracy')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'accuracy')"><div class="metric-name"><span class="metric-name-main">Accuracy</span></div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_accuracy')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="f1" onmouseenter="setMosaicMetricHover('f1')" onmouseleave="clearMosaicMetricHover('f1')" onfocusin="setMosaicMetricHover('f1')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'f1')"><div class="metric-name"><span class="metric-name-main">F1 Score</span></div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_f1')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="auc" onmouseenter="setMosaicMetricHover('auc')" onmouseleave="clearMosaicMetricHover('auc')" onfocusin="setMosaicMetricHover('auc')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'auc')"><div class="metric-name"><span class="metric-name-main">AUC</span></div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_auc')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="npv" onmouseenter="setMosaicMetricHover('npv')" onmouseleave="clearMosaicMetricHover('npv')" onfocusin="setMosaicMetricHover('npv')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'npv')"><div class="metric-name"><span class="metric-name-main">NPV</span></div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_npv')">Equation &rarr;</button></div>
-          <div class="metric-card" data-metric="mcc" onmouseenter="setMosaicMetricHover('mcc')" onmouseleave="clearMosaicMetricHover('mcc')" onfocusin="setMosaicMetricHover('mcc')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'mcc')"><div class="metric-name"><span class="metric-name-main">MCC</span></div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_mcc')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="tpr" onmouseenter="setMosaicMetricHover('tpr')" onmouseleave="clearMosaicMetricHover('tpr')" onfocusin="setMosaicMetricHover('tpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'tpr')" onclick="toggleMosaicMetricTouch(event, 'tpr')"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_tpr')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="fpr" onmouseenter="setMosaicMetricHover('fpr')" onmouseleave="clearMosaicMetricHover('fpr')" onfocusin="setMosaicMetricHover('fpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'fpr')" onclick="toggleMosaicMetricTouch(event, 'fpr')"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_fpr')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="precision" onmouseenter="setMosaicMetricHover('precision')" onmouseleave="clearMosaicMetricHover('precision')" onfocusin="setMosaicMetricHover('precision')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'precision')" onclick="toggleMosaicMetricTouch(event, 'precision')"><div class="metric-name"><span class="metric-name-main">Precision</span><span class="metric-name-sub">(PPV)</span></div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_precision')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="accuracy" onmouseenter="setMosaicMetricHover('accuracy')" onmouseleave="clearMosaicMetricHover('accuracy')" onfocusin="setMosaicMetricHover('accuracy')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'accuracy')" onclick="toggleMosaicMetricTouch(event, 'accuracy')"><div class="metric-name"><span class="metric-name-main">Accuracy</span></div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_accuracy')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="f1" onmouseenter="setMosaicMetricHover('f1')" onmouseleave="clearMosaicMetricHover('f1')" onfocusin="setMosaicMetricHover('f1')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'f1')" onclick="toggleMosaicMetricTouch(event, 'f1')"><div class="metric-name"><span class="metric-name-main">F1 Score</span></div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_f1')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="auc" onmouseenter="setMosaicMetricHover('auc')" onmouseleave="clearMosaicMetricHover('auc')" onfocusin="setMosaicMetricHover('auc')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'auc')" onclick="toggleMosaicMetricTouch(event, 'auc')"><div class="metric-name"><span class="metric-name-main">AUC</span></div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_auc')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="npv" onmouseenter="setMosaicMetricHover('npv')" onmouseleave="clearMosaicMetricHover('npv')" onfocusin="setMosaicMetricHover('npv')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'npv')" onclick="toggleMosaicMetricTouch(event, 'npv')"><div class="metric-name"><span class="metric-name-main">NPV</span></div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_npv')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="mcc" onmouseenter="setMosaicMetricHover('mcc')" onmouseleave="clearMosaicMetricHover('mcc')" onfocusin="setMosaicMetricHover('mcc')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'mcc')" onclick="toggleMosaicMetricTouch(event, 'mcc')"><div class="metric-name"><span class="metric-name-main">MCC</span></div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_mcc')">Equation &rarr;</button></div>
         </div>
       </div>
       <div class="metrics-bar-view" id="metricsBarView">
@@ -2383,6 +2383,26 @@
 
 <script>
 window.activeMosaicMetricKey = null;
+window.pinnedMosaicMetricKey = null;
+
+function supportsTouchMetricToggle() {
+  return !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+}
+
+function syncMosaicMetricState(metricKey) {
+  if (window.activeMosaicMetricKey === metricKey) return;
+  window.activeMosaicMetricKey = metricKey;
+  updateMetricCardHoverState();
+  refreshMosaicMetricHover();
+}
+
+function resetMosaicMetricHover() {
+  if (!window.activeMosaicMetricKey && !window.pinnedMosaicMetricKey) return;
+  window.activeMosaicMetricKey = null;
+  window.pinnedMosaicMetricKey = null;
+  updateMetricCardHoverState();
+  refreshMosaicMetricHover();
+}
 
 function updateMetricCardHoverState() {
   var cards = document.querySelectorAll('#metricsValsView .metric-card[data-metric]');
@@ -2396,28 +2416,36 @@ function refreshMosaicMetricHover() {
 }
 
 function setMosaicMetricHover(metricKey) {
-  if (window.activeMosaicMetricKey === metricKey) return;
-  window.activeMosaicMetricKey = metricKey;
-  updateMetricCardHoverState();
-  refreshMosaicMetricHover();
+  if (supportsTouchMetricToggle() && window.pinnedMosaicMetricKey) return;
+  syncMosaicMetricState(metricKey);
 }
 
 function clearMosaicMetricHover(metricKey) {
+  if (supportsTouchMetricToggle() && window.pinnedMosaicMetricKey) return;
   if (metricKey && window.activeMosaicMetricKey !== metricKey) return;
-  if (!window.activeMosaicMetricKey) return;
-  window.activeMosaicMetricKey = null;
-  updateMetricCardHoverState();
-  refreshMosaicMetricHover();
+  resetMosaicMetricHover();
 }
 
 function clearMosaicMetricHoverIfOutside(event, metricKey) {
+  if (supportsTouchMetricToggle() && window.pinnedMosaicMetricKey) return;
   var nextTarget = event && event.relatedTarget;
   if (nextTarget && event.currentTarget && event.currentTarget.contains(nextTarget)) return;
   clearMosaicMetricHover(metricKey);
 }
 
+function toggleMosaicMetricTouch(event, metricKey) {
+  if (!supportsTouchMetricToggle()) return;
+  if (event && event.target && event.target.closest('.see-why-btn')) return;
+  if (window.pinnedMosaicMetricKey === metricKey) {
+    resetMosaicMetricHover();
+    return;
+  }
+  window.pinnedMosaicMetricKey = metricKey;
+  syncMosaicMetricState(metricKey);
+}
+
 function switchMetricsView(view) {
-  if (view !== 'vals') clearMosaicMetricHover();
+  if (view !== 'vals') resetMosaicMetricHover();
   var valsView = document.getElementById('metricsValsView');
   var barView = document.getElementById('metricsBarView');
   var formulasView = document.getElementById('metricsFormulasView');
