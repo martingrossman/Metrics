@@ -381,24 +381,6 @@
     margin-top: 2px;
   }
 
-  .metrics-story {
-    margin-bottom: 10px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--soft-accent-bg), transparent 82%);
-    box-shadow: inset 0 0 0 1px var(--soft-accent-bg);
-  }
-
-  .story-kicker {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--accent);
-  }
-
   .story-title {
     margin-top: 5px;
     font-family: 'JetBrains Mono', monospace;
@@ -495,9 +477,29 @@
     background: var(--soft-accent-bg);
   }
 
-  .control-story-card {
-    margin-top: 12px;
-    margin-bottom: 0;
+  .see-why-btn {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.58rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--accent);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    text-align: left;
+    opacity: 0.8;
+  }
+  .see-why-btn:hover { opacity: 1; text-decoration: underline; }
+
+  .story-cohort-note {
+    font-size: 0.58rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.72;
   }
 
   .mode-toggle-row {
@@ -1413,10 +1415,6 @@
       gap: 6px;
     }
 
-    .metrics-story {
-      padding: 10px;
-    }
-
     .story-title {
       font-size: 0.76rem;
     }
@@ -1507,394 +1505,482 @@
       padding: 16px;
     }
   }
+
+  /* ─── New clean layout ─── */
+  .app { max-width: 1400px; margin: 0 auto; padding: 16px 20px 40px; }
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .app-header h1 {
+    padding: 0;
+    text-align: left;
+    font-size: 1.1rem;
+  }
+  .app-header-right { display: flex; align-items: center; gap: 10px; }
+
+  .mode-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+  }
+  .mode-pill-name { font-weight: 700; color: var(--text); }
+
+  .hint-bar {
+    font-size: 0.63rem;
+    color: var(--text-dim);
+    background: var(--hint-bg);
+    border: 1px solid var(--soft-accent-border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.4;
+  }
+
+  .controls-strip {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .preset-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .preset-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.60rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .sliders-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px 20px;
+    align-items: end;
+  }
+  .slider-col { min-width: 0; }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .slider-label .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.70rem;
+    color: var(--accent);
+  }
+
+  .pct-chip {
+    display: block;
+    width: 72px;
+    margin-top: 5px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg3);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 7px;
+    text-align: right;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .pct-chip::-webkit-outer-spin-button,
+  .pct-chip::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .pct-chip:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--soft-accent-bg); }
+
+  .advanced-toggle {
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+  .advanced-toggle > summary {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.60rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .advanced-toggle > summary::-webkit-details-marker { display: none; }
+  .advanced-toggle > summary::after { content: '+'; font-size: 0.9rem; }
+  .advanced-toggle[open] > summary::after { content: '×'; }
+
+  .advanced-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px 20px;
+    margin-top: 12px;
+  }
+
+  .primary-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .primary-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+  }
+
+  .expand-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .expand-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+  }
+  .expand-summary::-webkit-details-marker { display: none; }
+  .expand-summary::marker { display: none; }
+  .expand-chevron {
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 0.18s ease;
+    font-weight: 400;
+  }
+  .expand-section[open] .expand-chevron { transform: rotate(45deg); }
+  .expand-body { padding: 0 16px 16px; }
+
+  @media (max-width: 960px) {
+    .primary-grid { grid-template-columns: 1fr; }
+    .sliders-row { grid-template-columns: 1fr 1fr; }
+    .advanced-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 520px) {
+    .app { padding: 10px 12px 30px; }
+    .sliders-row { grid-template-columns: 1fr; }
+    .advanced-grid { grid-template-columns: 1fr 1fr; }
+    .app-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
 </style>
 </head>
 <body>
 
-<h1>ROC &amp; Confusion Matrix Playground</h1>
-<div class="global-toolbar">
-  <button class="theme-toggle" id="themeToggle" type="button" title="Cycle color themes">Theme: Light</button>
+<!-- JS compatibility shim: legacy mobile/accordion IDs kept alive -->
+<div style="display:none" aria-hidden="true">
+  <input type="checkbox" id="mobile_toggle_bidirectional">
+  <input type="range" id="m_s_tpr" min="0" max="1" step="0.001" value="0.8">
+  <input type="range" id="m_s_fpr" min="0" max="1" step="0.001" value="0.1">
+  <input type="range" id="m_s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
+  <input type="range" id="m_s_thresh" min="-6" max="10" step="0.05" value="1">
+  <input type="text" id="m_i_tpr_pct" value="80">
+  <input type="text" id="m_i_fpr_pct" value="10">
+  <input type="text" id="m_i_bal_pct" value="30">
+  <span id="mobile_tpr_card"></span><span id="mobile_fpr_card"></span>
+  <span id="mobile_bal_card"></span><span id="mobile_threshold"></span>
+  <span id="mobile_mode_state"></span><span id="mobile_prec_card"></span>
+  <span id="mobile_auc_card"></span>
+  <div id="mobilePresetStrip"></div><div id="mobileCockpit"></div>
+  <span id="step1Kicker"></span><span id="step1Title"></span>
+  <span id="step2Kicker"></span><span id="step2Title"></span>
+  <span id="step3Kicker"></span><span id="step3Title"></span>
+  <span id="summary_distributions"></span><span id="summary_operating"></span>
+  <span id="summary_dataset"></span><span id="desktopPresetCopy"></span>
 </div>
 
-<div class="mobile-cockpit" id="mobileCockpit">
-  <div class="mobile-dock">
-    <div class="mobile-dock-header">
-      <div class="mobile-dock-copy">
-        <div class="mobile-dock-kicker">Quick Controls</div>
-        <div class="mobile-dock-title">Drag for rough changes, then type an exact percent when you need tail values.</div>
-      </div>
-      <div class="mobile-mode-inline">
-        <span class="mobile-inline-label">Link</span>
-        <label class="switch mobile-switch" for="mobile_toggle_bidirectional" aria-label="Toggle bidirectional link on mobile">
-          <input type="checkbox" id="mobile_toggle_bidirectional">
+<div class="app">
+
+  <div class="app-header">
+    <h1>ROC &amp; Confusion Matrix</h1>
+    <div class="app-header-right">
+      <div class="mode-pill">
+        <span id="modeStateLabel">Direct</span>
+        <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
+          <input type="checkbox" id="toggle_bidirectional">
           <span class="switch-slider"></span>
         </label>
+        <span class="mode-pill-name">Link</span>
       </div>
-    </div>
-    <div class="mobile-preset-strip" id="mobilePresetStrip" role="group" aria-label="Quick presets"></div>
-    <div class="mobile-slider-grid">
-      <div class="mobile-slider-group">
-        <label>TPR <span class="val" id="mobile_tpr_card">80%</span></label>
-        <input type="range" id="m_s_tpr" min="0" max="1" step="0.001" value="0.8">
-        <div class="slider-precision-row compact">
-          <label class="percent-input-shell" for="m_i_tpr_pct">
-            <input class="percent-input" type="text" id="m_i_tpr_pct" value="80" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="TPR exact percent on mobile">
-            <span>%</span>
-          </label>
-        </div>
-      </div>
-      <div class="mobile-slider-group">
-        <label>FPR <span class="val" id="mobile_fpr_card">10%</span></label>
-        <input type="range" id="m_s_fpr" min="0" max="1" step="0.001" value="0.1">
-        <div class="slider-precision-row compact">
-          <label class="percent-input-shell" for="m_i_fpr_pct">
-            <input class="percent-input" type="text" id="m_i_fpr_pct" value="10" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="FPR exact percent on mobile">
-            <span>%</span>
-          </label>
-        </div>
-      </div>
-      <div class="mobile-slider-group mobile-balance-group">
-        <label>Balance <span class="val" id="mobile_bal_card">30%</span></label>
-        <input type="range" id="m_s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
-        <div class="slider-precision-row">
-          <span class="slider-precision-hint">Type exact prevalence</span>
-          <label class="percent-input-shell" for="m_i_bal_pct">
-            <input class="percent-input" type="text" id="m_i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Balance exact percent on mobile">
-            <span>%</span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="mobile-slider-group mobile-threshold-group" id="mobileQuickThreshGroup">
-      <label>Threshold <span class="val" id="mobile_threshold">1.00</span></label>
-      <input type="range" id="m_s_thresh" min="-6" max="10" step="0.05" value="1">
+      <button class="theme-toggle" id="themeToggle" type="button">Theme</button>
     </div>
   </div>
-</div>
 
-<div class="mobile-overview">
-  <div class="mobile-summary-band">
-    <div class="mobile-summary-chip">
-      <span class="mobile-summary-label">Mode</span>
-      <strong class="mobile-summary-value" id="mobile_mode_state">Direct</strong>
-    </div>
-    <div class="mobile-summary-chip">
-      <span class="mobile-summary-label">Precision</span>
-      <strong class="mobile-summary-value" id="mobile_prec_card">0.000</strong>
-    </div>
-    <div class="mobile-summary-chip">
-      <span class="mobile-summary-label">AUC</span>
-      <strong class="mobile-summary-value" id="mobile_auc_card">0.000</strong>
-    </div>
-  </div>
-  <div class="mobile-quick-nav" role="navigation" aria-label="Jump to sections">
-    <button class="mobile-nav-chip active" type="button" data-panel-target="cmPanel">Outcome</button>
-    <button class="mobile-nav-chip" type="button" data-panel-target="controlsPanel">Controls</button>
-    <button class="mobile-nav-chip" type="button" data-panel-target="metricsPanel">Metrics</button>
-    <button class="mobile-nav-chip" type="button" data-panel-target="distPanel">Distributions</button>
-    <button class="mobile-nav-chip" type="button" data-panel-target="rocPanel">ROC</button>
-  </div>
-</div>
+  <div class="hint-bar" id="modeHint">Direct mode: TPR, FPR, and balance are set manually.</div>
 
-<div class="layout">
-
-  <!-- CONTROLS -->
-  <div class="controls panel panel-scroll-anchor" id="controlsPanel">
-    <div class="panel-title">Parameters</div>
-    <div class="mode-toggle-row">
-      <div class="mode-toggle-copy">
-        <div class="mode-toggle-label">Bidirectional Link</div>
-        <div class="mode-toggle-state" id="modeStateLabel">Direct Rates</div>
+  <div class="controls-strip" id="controlsPanel">
+    <div class="preset-row">
+      <span class="preset-label" id="desktopPresetLabel">Quick starts</span>
+      <div class="preset-chips" id="desktopPresetStrip" role="group" aria-label="Presets"></div>
+    </div>
+    <div class="sliders-row">
+      <div class="slider-col">
+        <div class="slider-label">TPR <span class="val" id="v_tpr">80%</span></div>
+        <input type="range" id="s_tpr" min="0" max="1" step="0.001" value="0.8">
+        <input class="pct-chip" type="text" id="i_tpr_pct" value="80" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="TPR exact percent">
       </div>
-      <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
-        <input type="checkbox" id="toggle_bidirectional">
-        <span class="switch-slider"></span>
-      </label>
-    </div>
-    <div class="bidirectional-hint" id="modeHint">
-      Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.
-    </div>
-    <div class="desktop-preset-zone">
-      <div class="desktop-preset-copy">
-        <div class="desktop-preset-label" id="desktopPresetLabel">Direct Quick Starts</div>
-        <div class="desktop-preset-subtitle" id="desktopPresetCopy">Start simple with ready-made TPR/FPR/Balance combinations.</div>
+      <div class="slider-col">
+        <div class="slider-label">FPR <span class="val" id="v_fpr">10%</span></div>
+        <input type="range" id="s_fpr" min="0" max="1" step="0.001" value="0.1">
+        <input class="pct-chip" type="text" id="i_fpr_pct" value="10" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="FPR exact percent">
       </div>
-      <div class="mobile-preset-strip desktop-preset-strip" id="desktopPresetStrip" role="group" aria-label="Desktop quick presets"></div>
+      <div class="slider-col">
+        <div class="slider-label">Prevalence <span class="val" id="v_bal">30%</span></div>
+        <input type="range" id="s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
+        <input class="pct-chip" type="text" id="i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Prevalence exact percent">
+      </div>
+      <div class="slider-col" id="g_thresh">
+        <div class="slider-label">Threshold <span class="val" id="v_thresh">&mdash;</span></div>
+        <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
+      </div>
     </div>
-
-    <section class="control-section" data-mobile-section>
-      <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
-        <span class="control-section-copy">
-          <span class="control-section-kicker" id="step1Kicker">Optional</span>
-          <span class="control-section-title" id="step1Title">Shape the score model</span>
-          <span class="control-section-summary" id="summary_distributions">Curves/AUC only • Neg 0.0/1.0 | Pos 2.0/1.0</span>
-        </span>
-        <span class="control-section-icon" aria-hidden="true">+</span>
-      </button>
-      <div class="control-section-body">
-        <div class="slider-group">
-          <label>μ Negative <span class="val" id="v_mu_neg">0.0</span></label>
+    <details class="advanced-toggle">
+      <summary>Advanced</summary>
+      <div class="advanced-grid">
+        <div class="slider-col">
+          <div class="slider-label">&mu; Neg <span class="val" id="v_mu_neg">0.0</span></div>
           <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0">
         </div>
-        <div class="slider-group">
-          <label>σ Negative <span class="val" id="v_std_neg">1.0</span></label>
+        <div class="slider-col">
+          <div class="slider-label">&sigma; Neg <span class="val" id="v_std_neg">1.0</span></div>
           <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1">
         </div>
-        <div class="slider-group">
-          <label>μ Positive <span class="val" id="v_mu_pos">2.0</span></label>
+        <div class="slider-col">
+          <div class="slider-label">&mu; Pos <span class="val" id="v_mu_pos">2.0</span></div>
           <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2">
         </div>
-        <div class="slider-group">
-          <label>σ Positive <span class="val" id="v_std_pos">1.0</span></label>
+        <div class="slider-col">
+          <div class="slider-label">&sigma; Pos <span class="val" id="v_std_pos">1.0</span></div>
           <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1">
         </div>
-      </div>
-    </section>
-
-    <section class="control-section is-open" data-mobile-section>
-      <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="true">
-        <span class="control-section-copy">
-          <span class="control-section-kicker" id="step2Kicker">Step 1</span>
-          <span class="control-section-title" id="step2Title">Choose TPR, FPR, and balance</span>
-          <span class="control-section-summary" id="summary_operating">Direct | TPR 90% | FPR 10% | Prev 50%</span>
-        </span>
-        <span class="control-section-icon" aria-hidden="true">-</span>
-      </button>
-      <div class="control-section-body">
-        <div class="slider-group">
-          <label>TPR (Sensitivity) <span class="val" id="v_tpr">80%</span></label>
-          <input type="range" id="s_tpr" min="0" max="1" step="0.001" value="0.8">
-          <div class="slider-precision-row">
-            <span class="slider-precision-hint">Type exact % for tails like 0.3 or 99.7</span>
-            <label class="percent-input-shell" for="i_tpr_pct">
-              <input class="percent-input" type="text" id="i_tpr_pct" value="80" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="TPR exact percent">
-              <span>%</span>
-            </label>
-          </div>
-        </div>
-        <div class="slider-group">
-          <label>FPR (1 − Specificity) <span class="val" id="v_fpr">10%</span></label>
-          <input type="range" id="s_fpr" min="0" max="1" step="0.001" value="0.1">
-          <div class="slider-precision-row">
-            <span class="slider-precision-hint">Type exact % for rare false-positive rates</span>
-            <label class="percent-input-shell" for="i_fpr_pct">
-              <input class="percent-input" type="text" id="i_fpr_pct" value="10" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="FPR exact percent">
-              <span>%</span>
-            </label>
-          </div>
-        </div>
-        <div class="slider-group">
-          <label>Balance (P prevalence) <span class="val" id="v_bal">30%</span></label>
-          <input type="range" id="s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
-          <div class="slider-precision-row">
-            <span class="slider-precision-hint">Use exact % when prevalence is tiny or near-certain</span>
-            <label class="percent-input-shell" for="i_bal_pct">
-              <input class="percent-input" type="text" id="i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Balance exact percent">
-              <span>%</span>
-            </label>
-          </div>
-        </div>
-        <div class="slider-group" id="g_thresh">
-          <label>Threshold (linked only) <span class="val" id="v_thresh">—</span></label>
-          <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
-        </div>
-      </div>
-    </section>
-
-    <section class="control-section" data-mobile-section>
-      <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
-        <span class="control-section-copy">
-          <span class="control-section-kicker" id="step3Kicker">Step 2</span>
-          <span class="control-section-title" id="step3Title">Choose sample count</span>
-          <span class="control-section-summary" id="summary_dataset">1000 samples | ~500 pos | ~500 neg</span>
-        </span>
-        <span class="control-section-icon" aria-hidden="true">+</span>
-      </button>
-      <div class="control-section-body">
-        <div class="slider-group">
-          <label>N (total samples) <span class="val" id="v_N">1000</span></label>
+        <div class="slider-col">
+          <div class="slider-label">N <span class="val" id="v_N">1000</span></div>
           <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
         </div>
       </div>
-    </section>
+    </details>
   </div>
 
-  <div class="dashboard-grid">
-  <!-- DISTRIBUTION PLOT -->
-  <div class="panel plot-distributions panel-scroll-anchor" id="distPanel">
-    <div class="panel-header">
-      <div class="panel-title" id="distPanelTitle">Class Distributions &amp; Threshold</div>
-      <div class="view-toggle">
+  <div class="primary-grid">
+
+    <div class="primary-card" id="cmPanel">
+      <div class="card-header">
+        <span class="card-title">Confusion Matrix</span>
+        <div class="view-toggle">
+          <button id="btn_cm" onclick="switchView('cm')">Matrix</button>
+          <button class="active" id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
+        </div>
+      </div>
+      <div class="cm-view" id="cmView">
+        <div class="cm-grid">
+          <div class="cm-corner"></div>
+          <div class="cm-header top-label">Predicted</div>
+          <div class="cm-corner"></div>
+          <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
+          <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
+          <div class="cm-header left-label">Actual</div>
+          <div class="cm-cell cm-tp" id="cm_tp">
+            <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
+          </div>
+          <div class="cm-cell cm-fn" id="cm_fn">
+            <span class="count">&mdash;</span><span class="label">FN</span><span class="rate"></span>
+          </div>
+          <div class="cm-cell cm-fp" id="cm_fp">
+            <span class="count">&mdash;</span><span class="label">FP</span><span class="rate"></span>
+          </div>
+          <div class="cm-cell cm-tn" id="cm_tn">
+            <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
+          </div>
+        </div>
+      </div>
+      <div class="mosaic-view active" id="mosaicView">
+        <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+
+    <div class="primary-card" id="metricsPanel">
+      <div class="card-header">
+        <span class="card-title">Metrics</span>
+        <div class="view-toggle">
+          <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
+          <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
+          <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Theory</button>
+        </div>
+      </div>
+      <div class="metrics-vals-view active" id="metricsValsView">
+        <div class="metrics-grid">
+          <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
+          <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="switchMetricsView('eqs');document.getElementById('precisionStoryCard').scrollIntoView({behavior:'smooth',block:'start'})">See why &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
+          <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">&mdash;</div><div class="metric-formula">TN/(TN+FP)</div></div>
+          <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div></div>
+          <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div></div>
+          <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div></div>
+          <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div></div>
+        </div>
+      </div>
+      <div class="metrics-bar-view" id="metricsBarView">
+        <div class="metrics-bar-frame">
+          <div id="metricsBarPlot" style="width:100%;height:300px;"></div>
+        </div>
+      </div>
+      <div class="metrics-eqs-view" id="metricsEqsView">
+        <div class="equations-box">
+          <div class="eq-section" id="precisionStoryCard">
+            <div class="eq-title">Live Precision Story</div>
+            <div class="story-title" id="storyTitle">Prevalence changes the group sizes, not the rates</div>
+            <div class="eq">PPV = TPR &middot; Prev / (TPR &middot; Prev + FPR &middot; (1&minus;Prev))</div>
+            <div class="story-intro" id="storyIntro">TPR and FPR are rates inside each class. Changing prevalence does not change those rates. It changes how many people those rates are applied to.</div>
+            <div class="story-cohort-note">Reference cohort of 10,000 &mdash; the mosaic above uses your N slider</div>
+            <div class="story-lines">
+              <div class="story-line"><span class="story-line-index">1</span><p id="storyLine1">Out of 10,000 people, split them into the actually positive group and the actually negative group.</p></div>
+              <div class="story-line"><span class="story-line-index">2</span><p id="storyLine2">TPR is measured only within the positive group &mdash; it is set by the model, not by how large that group is.</p></div>
+              <div class="story-line"><span class="story-line-index">3</span><p id="storyLine3">FPR is the share of actually negative cases wrongly flagged. FPR is measured only within the negative group &mdash; it also does not shift when prevalence changes.</p></div>
+              <div class="story-line"><span class="story-line-index">4</span><p id="storyLine4">Precision = TP / (TP + FP) &mdash; dividing true positives by all predicted positives.</p></div>
+            </div>
+            <div class="story-takeaway" id="storyTakeaway">What changes is precision, because the same rates are applied to bigger or smaller groups.</div>
+            <div class="story-actions">
+              <button class="story-button" type="button" id="storyLoadExample">Try the classic 1% example</button>
+            </div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">Bayes' Theorem</div>
+            <div class="eq">P(D|+) = P(+|D) &middot; P(D) / P(+)</div>
+            <div class="eq-desc">The foundation of probabilistic classification. Given a positive test result (+), what is the probability the patient actually has the disease (D)? The answer depends on three things: how good the test is at catching true cases (likelihood), how common the disease is (prior), and how often the test fires overall (evidence). This is why a 99% accurate test can still give mostly false positives for a rare disease.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">NPV via Bayes</div>
+            <div class="eq">NPV = TNR &middot; (1&minus;Prev) / (TNR &middot; (1&minus;Prev) + FNR &middot; Prev)</div>
+            <div class="eq-desc">The mirror of PPV: "If the model says negative, how likely is that correct?" When prevalence is low, most negative predictions are correct (high NPV) because negatives dominate the population. As prevalence increases, the fraction of missed positives (FN) grows relative to true negatives, and NPV drops. NPV and PPV move in opposite directions as you change prevalence, which is a key Bayesian insight.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">Sensitivity (Recall / TPR)</div>
+            <div class="eq">TPR = P(+|D) = TP / (TP + FN)</div>
+            <div class="eq-desc">Of all the actual positives, how many did the model catch? A sensitivity of 0.95 means 95% of true cases are detected, but 5% are missed (false negatives). Critical in medical screening: missing a cancer diagnosis (FN) is usually worse than a false alarm (FP). Sensitivity is intrinsic to the model and threshold, not affected by prevalence.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">Specificity (TNR)</div>
+            <div class="eq">TNR = P(&minus;|D&#772;) = TN / (TN + FP)</div>
+            <div class="eq-desc">Of all the actual negatives, how many did the model correctly identify? Specificity of 0.90 means 10% of healthy patients receive a false positive. Like sensitivity, specificity is independent of prevalence. High specificity is important when false positives are costly, such as unnecessary surgeries or wrongful convictions.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">Accuracy</div>
+            <div class="eq">Acc = (TP + TN) / N</div>
+            <div class="eq-desc">The most intuitive metric: what fraction of all predictions were correct? However, accuracy is misleading with imbalanced classes. A model that always predicts "negative" on a dataset with 95% negatives achieves 95% accuracy while catching zero true positives. Compare it with the Prevalence slider at extreme values to see this paradox in action.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">F1 Score</div>
+            <div class="eq">F1 = 2 &middot; PPV &middot; TPR / (PPV + TPR)</div>
+            <div class="eq-desc">The harmonic mean of precision and recall. The harmonic mean punishes extreme imbalance: if either precision or recall is near zero, F1 collapses. An F1 of 0.8 guarantees that both precision and recall are at least 0.67. It is prevalence-dependent (through precision) and is most useful when you care equally about false positives and false negatives.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">AUC (Area Under ROC Curve)</div>
+            <div class="eq">AUC = integral of TPR d(FPR) over [0,1]</div>
+            <div class="eq-desc">AUC measures the model's ability to discriminate between classes across all possible thresholds. It equals the probability that a randomly chosen positive scores higher than a randomly chosen negative. AUC = 0.5 means random guessing (diagonal ROC), AUC = 1.0 means perfect separation. AUC is threshold-independent and prevalence-independent, making it ideal for comparing models.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">MCC (Matthews Correlation Coefficient)</div>
+            <div class="eq">MCC = (TP&middot;TN &minus; FP&middot;FN) / &radic;((TP+FP)(TP+FN)(TN+FP)(TN+FN))</div>
+            <div class="eq-desc">MCC is a correlation coefficient between the observed and predicted binary classifications, ranging from &minus;1 (total disagreement) through 0 (random) to +1 (perfect). Unlike F1 and accuracy, MCC uses all four confusion matrix quadrants and remains reliable even with highly imbalanced datasets.</div>
+          </div>
+          <div class="eq-section">
+            <div class="eq-title">Likelihood Ratios</div>
+            <div class="eq">LR+ = TPR / FPR &nbsp;&nbsp;|&nbsp;&nbsp; LR&minus; = FNR / TNR</div>
+            <div class="eq-desc">Likelihood ratios express how much a test result shifts the odds. LR+ tells you how much more likely a positive result is in a true positive vs. a false positive. LR+ &gt; 10 is considered strong diagnostic evidence. LR&minus; &lt; 0.1 is strong evidence for ruling out. Unlike PPV/NPV, likelihood ratios are independent of prevalence.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <details class="expand-section" id="distPanel">
+    <summary class="expand-summary">
+      <span id="distPanelTitle">Class Distributions &amp; Threshold</span>
+      <span class="expand-chevron">+</span>
+    </summary>
+    <div class="expand-body">
+      <div class="view-toggle" style="margin-bottom:10px;">
         <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
         <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
       </div>
-    </div>
-    <div class="dist-curves-view active" id="distCurvesView">
-      <div id="distPlot" style="width:100%;height:320px;"></div>
-    </div>
-    <div class="dist-topview-view" id="distTopView">
-      <svg id="topViewSVG" viewBox="0 0 700 320" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
-    </div>
-  </div>
-
-  <!-- ROC PLOT -->
-  <div class="panel plot-roc panel-scroll-anchor" id="rocPanel">
-    <div class="panel-title">ROC Curve</div>
-    <div id="rocPlot" style="width:100%;height:340px;"></div>
-  </div>
-
-  <!-- CONFUSION MATRIX / MOSAIC (toggled) -->
-  <div class="panel plot-cm-mosaic panel-scroll-anchor" id="cmPanel">
-    <div class="panel-header">
-      <div class="panel-title">Confusion Matrix</div>
-      <div class="view-toggle">
-        <button id="btn_cm" onclick="switchView('cm')">Matrix</button>
-        <button class="active" id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
+      <div class="dist-curves-view active" id="distCurvesView">
+        <div id="distPlot" style="width:100%;height:300px;"></div>
+      </div>
+      <div class="dist-topview-view" id="distTopView">
+        <svg id="topViewSVG" viewBox="0 0 700 320" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
     </div>
+  </details>
 
-    <div class="cm-view" id="cmView">
-      <div class="cm-grid">
-        <div class="cm-corner"></div>
-        <div class="cm-header top-label">Predicted</div>
-        <div class="cm-corner"></div>
-        <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
-        <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
-        <div class="cm-header left-label">Actual</div>
-        <div class="cm-cell cm-tp" id="cm_tp">
-          <span class="count">—</span>
-          <span class="label">TP</span>
-          <span class="rate"></span>
-        </div>
-        <div class="cm-cell cm-fn" id="cm_fn">
-          <span class="count">—</span>
-          <span class="label">FN</span>
-          <span class="rate"></span>
-        </div>
-        <div class="cm-cell cm-fp" id="cm_fp">
-          <span class="count">—</span>
-          <span class="label">FP</span>
-          <span class="rate"></span>
-        </div>
-        <div class="cm-cell cm-tn" id="cm_tn">
-          <span class="count">—</span>
-          <span class="label">TN</span>
-          <span class="rate"></span>
-        </div>
-      </div>
+  <details class="expand-section" id="rocPanel">
+    <summary class="expand-summary">
+      <span>ROC Curve</span>
+      <span class="expand-chevron">+</span>
+    </summary>
+    <div class="expand-body">
+      <div id="rocPlot" style="width:100%;height:300px;"></div>
     </div>
-
-    <div class="mosaic-view active" id="mosaicView">
-      <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
-    </div>
-  </div>
-
-  <!-- METRICS -->
-  <div class="panel plot-metrics panel-scroll-anchor" id="metricsPanel">
-    <div class="panel-header">
-      <div class="panel-title">Derived Metrics</div>
-      <div class="view-toggle">
-        <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
-        <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
-        <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Theory</button>
-      </div>
-    </div>
-
-    <div class="metrics-vals-view active" id="metricsValsView">
-      <div class="metrics-grid">
-        <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">—</div><div class="metric-formula">(TP+TN)/N</div></div>
-        <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">—</div><div class="metric-formula">TP/(TP+FP)</div></div>
-        <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">—</div><div class="metric-formula">TP/(TP+FN)</div></div>
-        <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">—</div><div class="metric-formula">TN/(TN+FP)</div></div>
-        <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">—</div><div class="metric-formula">2·P·R/(P+R)</div></div>
-        <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
-        <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
-        <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
-      </div>
-    </div>
-
-    <div class="metrics-bar-view" id="metricsBarView">
-      <div class="metrics-bar-frame">
-        <div id="metricsBarPlot" style="width:100%;height:340px;"></div>
-      </div>
-    </div>
-
-    <div class="metrics-eqs-view" id="metricsEqsView">
-      <div class="equations-box">
-        <div class="eq-section" id="precisionStoryCard">
-          <div class="eq-title">Live Precision Story</div>
-          <div class="story-title" id="storyTitle">Prevalence changes the crowd sizes, not TPR or FPR</div>
-          <div class="eq">PPV = TPR · Prev / (TPR · Prev + FPR · (1−Prev))</div>
-          <div class="story-intro" id="storyIntro">TPR and FPR are rates inside each class. Changing prevalence does not change those rates. It changes how many people those rates are applied to.</div>
-          <div class="story-lines">
-            <div class="story-line">
-              <span class="story-line-index">1</span>
-              <p id="storyLine1">Start with 10,000 people and split them into the actually positive group and the actually negative group.</p>
-            </div>
-            <div class="story-line">
-              <span class="story-line-index">2</span>
-              <p id="storyLine2">TPR is the share of actually positive cases the test catches. That rate does not change just because prevalence changes.</p>
-            </div>
-            <div class="story-line">
-              <span class="story-line-index">3</span>
-              <p id="storyLine3">FPR is the share of actually negative cases wrongly flagged. That rate also stays the same when prevalence changes.</p>
-            </div>
-          </div>
-          <div class="story-takeaway" id="storyTakeaway">What changes is precision, because the same rates are applied to bigger or smaller groups.</div>
-          <div class="story-actions">
-            <button class="story-button" type="button" id="storyLoadExample">Try the classic 1% example</button>
-          </div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">Bayes' Theorem</div>
-          <div class="eq">P(D|+) = P(+|D) · P(D) / P(+)</div>
-          <div class="eq-desc">The foundation of probabilistic classification. Given a positive test result (+), what is the probability the patient actually has the disease (D)? The answer depends on three things: how good the test is at catching true cases (likelihood), how common the disease is (prior), and how often the test fires overall (evidence). This is why a 99% accurate test can still give mostly false positives for a rare disease.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">NPV via Bayes</div>
-          <div class="eq">NPV = TNR · (1−Prev) / (TNR · (1−Prev) + FNR · Prev)</div>
-          <div class="eq-desc">The mirror of PPV: "If the model says negative, how likely is that correct?" When prevalence is low, most negative predictions are correct (high NPV) because negatives dominate the population. As prevalence increases, the fraction of missed positives (FN) grows relative to true negatives, and NPV drops. NPV and PPV move in opposite directions as you change prevalence, which is a key Bayesian insight.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">Sensitivity (Recall / TPR)</div>
-          <div class="eq">TPR = P(+|D) = TP / (TP + FN)</div>
-          <div class="eq-desc">Of all the actual positives, how many did the model catch? A sensitivity of 0.95 means 95% of true cases are detected, but 5% are missed (false negatives). Critical in medical screening: missing a cancer diagnosis (FN) is usually worse than a false alarm (FP). Sensitivity is intrinsic to the model and threshold, not affected by prevalence. Moving the threshold left increases sensitivity but also increases false positives.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">Specificity (TNR)</div>
-          <div class="eq">TNR = P(−|D̄) = TN / (TN + FP)</div>
-          <div class="eq-desc">Of all the actual negatives, how many did the model correctly identify? Specificity of 0.90 means 10% of healthy patients receive a false positive. Like sensitivity, specificity is independent of prevalence. It depends only on the negative class distribution and the chosen threshold. High specificity is important when false positives are costly, such as unnecessary surgeries or wrongful convictions.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">Accuracy</div>
-          <div class="eq">Acc = (TP + TN) / N</div>
-          <div class="eq-desc">The most intuitive metric: what fraction of all predictions were correct? However, accuracy is misleading with imbalanced classes. A model that always predicts "negative" on a dataset with 95% negatives achieves 95% accuracy while catching zero true positives. This is why accuracy alone is never sufficient. Compare it with the Balance slider at extreme values to see this paradox in action.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">F1 Score</div>
-          <div class="eq">F1 = 2 · PPV · TPR / (PPV + TPR)</div>
-          <div class="eq-desc">The harmonic mean of precision and recall. Unlike the arithmetic mean, the harmonic mean punishes extreme imbalance: if either precision or recall is near zero, F1 collapses. An F1 of 0.8 guarantees that both precision and recall are at least 0.67. It is prevalence-dependent (through precision) and is most useful when you care equally about false positives and false negatives. For asymmetric costs, consider F-beta variants.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">AUC (Area Under ROC Curve)</div>
-          <div class="eq">AUC = integral of TPR d(FPR) over [0,1]</div>
-          <div class="eq-desc">AUC measures the model's ability to discriminate between classes across all possible thresholds. It equals the probability that a randomly chosen positive scores higher than a randomly chosen negative. AUC = 0.5 means random guessing (diagonal ROC), AUC = 1.0 means perfect separation. Unlike most other metrics, AUC is threshold-independent and prevalence-independent, making it ideal for comparing models. Try increasing the distance between the distribution means and watch AUC approach 1.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">MCC (Matthews Correlation Coefficient)</div>
-          <div class="eq">MCC = (TP·TN − FP·FN) / √((TP+FP)(TP+FN)(TN+FP)(TN+FN))</div>
-          <div class="eq-desc">MCC is a correlation coefficient between the observed and predicted binary classifications, ranging from −1 (total disagreement) through 0 (random) to +1 (perfect). Unlike F1 and accuracy, MCC uses all four confusion matrix quadrants and is considered the most informative single metric for binary classification. It remains reliable even with highly imbalanced datasets because it only achieves a high score if the model performs well on both the positive and negative class.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">Likelihood Ratios</div>
-          <div class="eq">LR+ = TPR / FPR &nbsp;&nbsp;|&nbsp;&nbsp; LR− = FNR / TNR</div>
-          <div class="eq-desc">Likelihood ratios express how much a test result shifts the odds. LR+ tells you how much more likely a positive result is in a true positive vs. a false positive. LR+ > 10 is considered strong diagnostic evidence. LR− tells you how much a negative result reduces the odds of disease. LR− < 0.1 is strong evidence for ruling out. Unlike PPV/NPV, likelihood ratios are independent of prevalence, making them portable across populations with different base rates.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  </div>
+  </details>
 
 </div>
 
@@ -2885,8 +2971,9 @@ function switchView(view) {
       : 'TPR is measured within positives, and FPR is measured within negatives. Changing prevalence leaves those rates alone and only changes the group sizes.';
 
     $('storyLine1').textContent = `Out of 10,000 people, about ${intf(positives)} truly are positive and ${intf(negatives)} truly are negative.`;
-    $('storyLine2').textContent = `TPR ${formatPercent(tpr, 1)} means the test catches about ${intf(truePositives)} of the ${intf(positives)} positives. If prevalence changed, that TPR would still be ${formatPercent(tpr, 1)}.`;
-    $('storyLine3').textContent = `FPR ${formatPercent(fpr, 1)} means about ${intf(falsePositives)} of the ${intf(negatives)} negatives are wrongly flagged. The FPR itself did not change; only the size of the negative group did.`;
+    $('storyLine2').textContent = `TPR ${formatPercent(tpr, 1)} means the test catches about ${intf(truePositives)} of the ${intf(positives)} positives. TPR is measured only within the positive group — it is set by the model, not by how large that group is.`;
+    $('storyLine3').textContent = `FPR ${formatPercent(fpr, 1)} means about ${intf(falsePositives)} of the ${intf(negatives)} negatives are wrongly flagged. FPR is measured only within the negative group — it also does not shift when prevalence changes.`;
+    $('storyLine4').textContent = `Precision = TP / (TP + FP) = ${intf(truePositives)} / (${intf(truePositives)} + ${intf(falsePositives)}) = ${intf(flaggedPositive)} positive calls total — ${formatPercent(precision, 1)} are real.`;
 
     const ending = precision <= 0.55
       ? 'A positive result is close to a coin flip.'
@@ -3104,67 +3191,15 @@ function switchView(view) {
     ].map(p => p.join(',')).join(' ');
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - (mobile ? 8 : 10)) + '" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.72">' + (mobile ? 'Predicted Positive' : '← Predicted Positive →') + '</text>';
+    const rEdge = x0 + bW + (mobile ? 8 : 10);
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
     html += '<text x="' + (x0 - (mobile ? 8 : 10)) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="'+themeColor('--tp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
     html += '<text x="' + (x0 - (mobile ? 8 : 10)) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="'+themeColor('--fn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
-
-    svg.innerHTML = html;
-  }
-
-  // Vertical mosaic for mobile: two rows (Actual P on top, Actual N below)
-  function renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
-    const W = 360, H = 340;
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    const pad = { l: 12, r: 12, t: 22, b: 8 };
-    const bW = W - pad.l - pad.r;  // full width for bars
-    const gap = 22; // gap between the two rows
-    const labelH = 18; // space for row label above each row
-    const typo = getMosaicTypography(true);
-
-    // Row heights proportional to prevalence
-    const totalBarH = H - pad.t - pad.b - gap - labelH * 2;
-    const pRowH = state.bal * totalBarH;
-    const nRowH = (1 - state.bal) * totalBarH;
-
-    const x0 = pad.l;
-
-    // ── Actual Positive row (top) ──
-    const y0p = pad.t + labelH;
-    // TP on left, FN on right — widths proportional to TPR/FNR
-    const tpW = P > 0 ? (TP / P) * bW : 0;
-    const fnW = bW - tpW;
-
-    // ── Actual Negative row (bottom) ──
-    const y0n = y0p + pRowH + gap + labelH;
-    // FP on left, TN on right — widths proportional to FPR/TNR
-    const fpW = Nn > 0 ? (FP / Nn) * bW : 0;
-    const tnW = bW - fpW;
-
-    let html = '';
-
-    // Row labels
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0p - 8) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual Positive (' + P + ') · ' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0n - 8) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual Negative (' + Nn + ') · ' + pf((1-state.bal)*100,0) + '%</text>';
-
-    // Positive row cells
-    html += rect(x0, y0p, tpW, pRowH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo);
-    html += rect(x0 + tpW, y0p, fnW, pRowH, themeAlpha('--fn-color', 0.3), 'FN', FN, themeColor('--fn-color'), typo);
-
-    // Negative row cells
-    html += rect(x0, y0n, fpW, nRowH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo);
-    html += rect(x0 + fpW, y0n, tnW, nRowH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo);
-
-    // "Predicted Positive" outline: TP (top-left of P row) + FP (top-left of N row)
-    // Draw dashed outlines around TP and FP individually to indicate "predicted positive"
-    if (tpW > 1) html += '<rect x="'+x0+'" y="'+y0p+'" width="'+tpW+'" height="'+pRowH+'" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
-    if (fpW > 1) html += '<rect x="'+x0+'" y="'+y0n+'" width="'+fpW+'" height="'+nRowH+'" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2" stroke-dasharray="5,3" opacity="0.7" rx="3"/>';
-
-    // Predicted Positive label at top
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (pad.t - 6) + '" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.68">⬜ dashed = Predicted Positive</text>';
+    html += '<text x="' + rEdge + '" y="' + (y0 + fpH/2) + '" text-anchor="start" fill="'+themeColor('--fp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FPR</text>';
+    html += '<text x="' + rEdge + '" y="' + (y0 + fpH + tnH/2) + '" text-anchor="start" fill="'+themeColor('--tn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TNR</text>';
 
     svg.innerHTML = html;
   }
@@ -3418,6 +3453,21 @@ function switchView(view) {
   });
 
 })();
+</script>
+<script>
+// Resize Plotly charts when expand sections open
+document.querySelectorAll('.expand-section').forEach(function(det) {
+  det.addEventListener('toggle', function() {
+    if (!det.open) return;
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        det.querySelectorAll('[id$="Plot"]').forEach(function(el) {
+          if (window.Plotly) Plotly.Plots.resize(el);
+        });
+      });
+    });
+  });
+});
 </script>
 </body>
 </html>

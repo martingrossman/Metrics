@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3)",
+      "Bash(python /tmp/redesign.py)",
+      "Bash(python \"C:/Users/martin/Documents/GitHub/Metrics/dev_2/redesign_body.py\")",
+      "Bash(grep -n \"^<body>\\\\|^</body>\\\\|^<div class=\\\\\"app\\\\\">\\\\|^</div>$\\\\|^<script>\\\\|^</script>\" \"C:/Users/martin/Documents/GitHub/Metrics/dev_2/index.html\")"
+    ]
+  }
+}
