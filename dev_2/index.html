@@ -711,6 +711,38 @@
     padding: 0 14px 14px;
   }
 
+  .desktop-preset-zone {
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--soft-accent-bg), transparent);
+  }
+
+  .desktop-preset-copy {
+    margin-bottom: 8px;
+  }
+
+  .desktop-preset-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    color: var(--accent);
+  }
+
+  .desktop-preset-subtitle {
+    margin-top: 4px;
+    font-size: 0.68rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+
+  .desktop-preset-strip {
+    flex-wrap: wrap;
+  }
+
   .mobile-dock {
     border: 1px solid var(--border);
     border-radius: 16px;
@@ -1031,6 +1063,10 @@
       padding: 0 8px 8px;
     }
 
+    .desktop-preset-zone {
+      display: none;
+    }
+
     .mobile-quick-nav {
       margin-top: 8px;
       padding-bottom: 2px;
@@ -1048,7 +1084,7 @@
     }
 
     .controls {
-      order: 1;
+      order: 2;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -1160,7 +1196,7 @@
       border-width: 3px;
     }
 
-    .plot-cm-mosaic { order: 2; }
+    .plot-cm-mosaic { order: 1; }
     .plot-metrics { order: 3; }
     .plot-distributions { order: 4; }
     .plot-roc { order: 5; }
@@ -1291,18 +1327,12 @@
       <div class="mobile-mode-inline">
         <span class="mobile-inline-label">Link</span>
         <label class="switch mobile-switch" for="mobile_toggle_bidirectional" aria-label="Toggle bidirectional link on mobile">
-          <input type="checkbox" id="mobile_toggle_bidirectional" checked>
+          <input type="checkbox" id="mobile_toggle_bidirectional">
           <span class="switch-slider"></span>
         </label>
       </div>
     </div>
-    <div class="mobile-preset-strip" role="group" aria-label="Quick presets">
-      <button class="mobile-preset active" type="button" data-preset="starter">Starter</button>
-      <button class="mobile-preset" type="button" data-preset="separation">Separation</button>
-      <button class="mobile-preset" type="button" data-preset="overlap">Overlap</button>
-      <button class="mobile-preset" type="button" data-preset="rare">Rare Pos</button>
-      <button class="mobile-preset" type="button" data-preset="screening">Screening</button>
-    </div>
+    <div class="mobile-preset-strip" id="mobilePresetStrip" role="group" aria-label="Quick presets"></div>
     <div class="mobile-slider-grid">
       <div class="mobile-slider-group">
         <label>TPR <span class="val" id="mobile_tpr_card">80%</span></label>
@@ -1347,7 +1377,7 @@
   <div class="mobile-summary-band">
     <div class="mobile-summary-chip">
       <span class="mobile-summary-label">Mode</span>
-      <strong class="mobile-summary-value" id="mobile_mode_state">Linked</strong>
+      <strong class="mobile-summary-value" id="mobile_mode_state">Direct</strong>
     </div>
     <div class="mobile-summary-chip">
       <span class="mobile-summary-label">Precision</span>
@@ -1359,8 +1389,8 @@
     </div>
   </div>
   <div class="mobile-quick-nav" role="navigation" aria-label="Jump to sections">
-    <button class="mobile-nav-chip active" type="button" data-panel-target="controlsPanel">Controls</button>
-    <button class="mobile-nav-chip" type="button" data-panel-target="cmPanel">Outcome</button>
+    <button class="mobile-nav-chip active" type="button" data-panel-target="cmPanel">Outcome</button>
+    <button class="mobile-nav-chip" type="button" data-panel-target="controlsPanel">Controls</button>
     <button class="mobile-nav-chip" type="button" data-panel-target="metricsPanel">Metrics</button>
     <button class="mobile-nav-chip" type="button" data-panel-target="distPanel">Distributions</button>
     <button class="mobile-nav-chip" type="button" data-panel-target="rocPanel">ROC</button>
@@ -1375,23 +1405,30 @@
     <div class="mode-toggle-row">
       <div class="mode-toggle-copy">
         <div class="mode-toggle-label">Bidirectional Link</div>
-        <div class="mode-toggle-state" id="modeStateLabel">Linked</div>
+        <div class="mode-toggle-state" id="modeStateLabel">Direct Rates</div>
       </div>
       <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
-        <input type="checkbox" id="toggle_bidirectional" checked>
+        <input type="checkbox" id="toggle_bidirectional">
         <span class="switch-slider"></span>
       </label>
     </div>
     <div class="bidirectional-hint" id="modeHint">
-      Linked mode: distributions, threshold, and TPR/FPR stay synchronized.
+      Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.
+    </div>
+    <div class="desktop-preset-zone">
+      <div class="desktop-preset-copy">
+        <div class="desktop-preset-label" id="desktopPresetLabel">Direct Quick Starts</div>
+        <div class="desktop-preset-subtitle" id="desktopPresetCopy">Start simple with ready-made TPR/FPR/Balance combinations.</div>
+      </div>
+      <div class="mobile-preset-strip desktop-preset-strip" id="desktopPresetStrip" role="group" aria-label="Desktop quick presets"></div>
     </div>
 
     <section class="control-section" data-mobile-section>
       <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
         <span class="control-section-copy">
-          <span class="control-section-kicker">Step 1</span>
-          <span class="control-section-title">Shape the classes</span>
-          <span class="control-section-summary" id="summary_distributions">Neg 0.0/1.0 | Pos 2.0/1.0</span>
+          <span class="control-section-kicker" id="step1Kicker">Optional</span>
+          <span class="control-section-title" id="step1Title">Shape the score model</span>
+          <span class="control-section-summary" id="summary_distributions">Curves/AUC only • Neg 0.0/1.0 | Pos 2.0/1.0</span>
         </span>
         <span class="control-section-icon" aria-hidden="true">+</span>
       </button>
@@ -1418,9 +1455,9 @@
     <section class="control-section is-open" data-mobile-section>
       <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="true">
         <span class="control-section-copy">
-          <span class="control-section-kicker">Step 2</span>
-          <span class="control-section-title">Choose the operating point</span>
-          <span class="control-section-summary" id="summary_operating">Linked | TPR 80% | FPR 10%</span>
+          <span class="control-section-kicker" id="step2Kicker">Step 1</span>
+          <span class="control-section-title" id="step2Title">Choose TPR, FPR, and balance</span>
+          <span class="control-section-summary" id="summary_operating">Direct | TPR 90% | FPR 10%</span>
         </span>
         <span class="control-section-icon" aria-hidden="true">-</span>
       </button>
@@ -1457,9 +1494,9 @@
     <section class="control-section" data-mobile-section>
       <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
         <span class="control-section-copy">
-          <span class="control-section-kicker">Step 3</span>
-          <span class="control-section-title">Size the dataset</span>
-          <span class="control-section-summary" id="summary_dataset">1000 samples | Prev 30% | PPV 0.000</span>
+          <span class="control-section-kicker" id="step3Kicker">Step 2</span>
+          <span class="control-section-title" id="step3Title">Size the dataset</span>
+          <span class="control-section-summary" id="summary_dataset">1000 samples | Prev 50% | PPV 0.000</span>
         </span>
         <span class="control-section-icon" aria-hidden="true">+</span>
       </button>
@@ -1893,16 +1930,16 @@ function switchView(view) {
   let state = {
     mu_neg: 0, std_neg: 1,
     mu_pos: 2, std_pos: 1,
-    N: 1000, bal: 0.3,
+    N: 1000, bal: 0.5,
     threshold: 1.0,
-    manual_tpr: 0.8,
+    manual_tpr: 0.9,
     manual_fpr: 0.1,
-    linkedMode: true
+    linkedMode: false
   };
 
   let updating = false; // reentrance guard
   let latestMetrics = null;
-  let activePresetKey = 'starter';
+  let activePresetKey = 'direct_balanced';
   const panelVisibility = new Map();
   const PANEL_IDS = ['controlsPanel', 'cmPanel', 'metricsPanel', 'distPanel', 'rocPanel'];
   const PRESET_CONFIGS = {
@@ -1940,7 +1977,48 @@ function switchView(view) {
       N: 1800, bal: 0.18,
       threshold: 0.45,
       linkedMode: true
+    },
+    direct_balanced: {
+      mu_neg: 0, std_neg: 1,
+      mu_pos: 2, std_pos: 1,
+      N: 1000, bal: 0.50,
+      threshold: 1.0,
+      manual_tpr: 0.90,
+      manual_fpr: 0.10,
+      linkedMode: false
+    },
+    direct_rare: {
+      mu_neg: 0, std_neg: 1,
+      mu_pos: 2, std_pos: 1,
+      N: 1600, bal: 0.05,
+      threshold: 1.0,
+      manual_tpr: 0.90,
+      manual_fpr: 0.10,
+      linkedMode: false
+    },
+    direct_screening: {
+      mu_neg: 0, std_neg: 1,
+      mu_pos: 2, std_pos: 1,
+      N: 2000, bal: 0.02,
+      threshold: 1.0,
+      manual_tpr: 0.98,
+      manual_fpr: 0.25,
+      linkedMode: false
     }
+  };
+  const PRESET_GROUPS = {
+    linked: [
+      { key: 'starter', label: 'Starter' },
+      { key: 'separation', label: 'Separation' },
+      { key: 'overlap', label: 'Overlap' },
+      { key: 'rare', label: 'Rare Pos' },
+      { key: 'screening', label: 'Screening' }
+    ],
+    direct: [
+      { key: 'direct_balanced', label: 'Balanced' },
+      { key: 'direct_rare', label: 'Rare 5%' },
+      { key: 'direct_screening', label: 'Screening' }
+    ]
   };
 
   // ─── Derived: from threshold → TPR, FPR ───
@@ -2060,13 +2138,24 @@ function switchView(view) {
     syncCheckbox('mobile_toggle_bidirectional', state.linkedMode);
   }
 
+  function getPresetGroup() {
+    return state.linkedMode ? PRESET_GROUPS.linked : PRESET_GROUPS.direct;
+  }
+
+  function renderPresetButtons() {
+    const html = getPresetGroup().map(preset => {
+      const active = activePresetKey === preset.key;
+      return `<button class="mobile-preset${active ? ' active' : ''}" type="button" data-preset="${preset.key}" aria-pressed="${active ? 'true' : 'false'}">${preset.label}</button>`;
+    }).join('');
+    ['mobilePresetStrip', 'desktopPresetStrip'].forEach(id => {
+      const el = $(id);
+      if (el) el.innerHTML = html;
+    });
+  }
+
   function setActivePreset(name) {
     activePresetKey = name || null;
-    document.querySelectorAll('.mobile-preset').forEach(btn => {
-      const isActive = !!name && btn.dataset.preset === name;
-      btn.classList.toggle('active', isActive);
-      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-    });
+    renderPresetButtons();
   }
 
   function clearPresetSelection() {
@@ -2078,10 +2167,10 @@ function switchView(view) {
     const preset = PRESET_CONFIGS[name];
     if (!preset) return;
     state = { ...state, ...preset };
-    syncManualRatesFromThreshold();
+    if (state.linkedMode) syncManualRatesFromThreshold();
     syncStateToInputs();
-    render();
     setActivePreset(name);
+    render();
   }
 
   function setControlSectionExpanded(section, expanded) {
@@ -2098,7 +2187,9 @@ function switchView(view) {
     const operating = $('summary_operating');
     const dataset = $('summary_dataset');
     if (dist) {
-      dist.textContent = `Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`;
+      dist.textContent = state.linkedMode
+        ? `Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`
+        : `Curves/AUC only • Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`;
     }
     if (operating) {
       operating.textContent = state.linkedMode
@@ -2156,8 +2247,14 @@ function switchView(view) {
       });
     });
 
-    document.querySelectorAll('.mobile-preset').forEach(btn => {
-      btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+    ['mobilePresetStrip', 'desktopPresetStrip'].forEach(id => {
+      const strip = $(id);
+      if (!strip) return;
+      strip.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-preset]');
+        if (!btn) return;
+        applyPreset(btn.dataset.preset);
+      });
     });
 
     document.querySelectorAll('.mobile-nav-chip').forEach(btn => {
@@ -2191,7 +2288,7 @@ function switchView(view) {
     }
 
     setActivePreset(activePresetKey);
-    setActiveMobileNav('controlsPanel');
+    setActiveMobileNav(isMobile() ? 'cmPanel' : 'controlsPanel');
   }
 
   function updateModeUI() {
@@ -2202,12 +2299,23 @@ function switchView(view) {
     $('modeHint').textContent = linked
       ? 'Linked mode: distributions, threshold, and TPR/FPR stay synchronized.'
       : 'Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.';
+    $('desktopPresetLabel').textContent = linked ? 'Linked Quick Starts' : 'Direct Quick Starts';
+    $('desktopPresetCopy').textContent = linked
+      ? 'Change the distributions and threshold together to see how the model itself changes.'
+      : 'Start simple with ready-made TPR/FPR/Balance combinations, then shape the score model only if you want more depth.';
+    $('step1Kicker').textContent = linked ? 'Step 1' : 'Optional';
+    $('step1Title').textContent = linked ? 'Shape the classes' : 'Shape the score model';
+    $('step2Kicker').textContent = linked ? 'Step 2' : 'Step 1';
+    $('step2Title').textContent = linked ? 'Choose the operating point' : 'Choose TPR, FPR, and balance';
+    $('step3Kicker').textContent = linked ? 'Step 3' : 'Step 2';
+    $('step3Title').textContent = 'Size the dataset';
     $('modeHint').classList.toggle('manual', !linked);
     $('g_thresh').classList.toggle('disabled', !linked);
     $('s_thresh').disabled = !linked;
     if ($('mobileQuickThreshGroup')) $('mobileQuickThreshGroup').classList.toggle('is-hidden', !linked);
     if ($('m_s_thresh')) $('m_s_thresh').disabled = !linked;
     $('distPanelTitle').textContent = linked ? 'Class Distributions & Threshold' : 'Class Distributions';
+    renderPresetButtons();
   }
 
   function updateValueDisplays(rates) {
@@ -3021,9 +3129,13 @@ function switchView(view) {
   try { storedTheme = localStorage.getItem('metrics-theme'); } catch (e) {}
   applyTheme(storedTheme || currentThemeName, false);
   initMobileUI();
-  syncManualRatesFromThreshold();
-  syncStateToInputs();
-  render();
+  if (PRESET_CONFIGS[activePresetKey]) {
+    applyPreset(activePresetKey);
+  } else {
+    if (state.linkedMode) syncManualRatesFromThreshold();
+    syncStateToInputs();
+    render();
+  }
 
   // Re-render on resize/orientation change for mobile layout adjustments
   let resizeTimer;
