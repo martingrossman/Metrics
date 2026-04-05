@@ -2092,10 +2092,10 @@
       </div>
       <div class="metrics-vals-view active" id="metricsValsView">
         <div class="metrics-grid">
-          <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
+          <div class="metric-card"><div class="metric-name">TPR (Recall)</div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
+          <div class="metric-card"><div class="metric-name">FPR</div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div></div>
           <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="switchMetricsView('eqs');document.getElementById('precisionStoryCard').scrollIntoView({behavior:'smooth',block:'start'})">See why &rarr;</button></div>
-          <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
-          <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">&mdash;</div><div class="metric-formula">TN/(TN+FP)</div></div>
+          <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
           <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div></div>
           <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div></div>
           <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div></div>
@@ -3225,7 +3225,7 @@ function switchView(view) {
     const acc = state.N > 0 ? (TP+TN)/state.N : 0;
     const prec = (TP+FP) > 0 ? TP/(TP+FP) : 0;
     const rec = (TP+FN) > 0 ? TP/(TP+FN) : 0;
-    const spec = (TN+FP) > 0 ? TN/(TN+FP) : 0;
+    const fprMetric = (FP+TN) > 0 ? FP/(FP+TN) : 0;
     const f1 = (prec+rec) > 0 ? 2*prec*rec/(prec+rec) : 0;
     const npv = (TN+FN) > 0 ? TN/(TN+FN) : 0;
 
@@ -3236,10 +3236,10 @@ function switchView(view) {
     const auc = computeAUC(rocPts);
 
     const metrics = {
-      acc,
-      prec,
       rec,
-      spec,
+      fpr: fprMetric,
+      prec,
+      acc,
       f1,
       auc,
       npv,
@@ -3247,10 +3247,10 @@ function switchView(view) {
     };
     latestMetrics = metrics;
 
-    $('m_acc').textContent = pf(acc, 3);
-    $('m_prec').textContent = pf(prec, 3);
     $('m_rec').textContent = pf(rec, 3);
-    $('m_spec').textContent = pf(spec, 3);
+    $('m_fpr').textContent = pf(fprMetric, 3);
+    $('m_prec').textContent = pf(prec, 3);
+    $('m_acc').textContent = pf(acc, 3);
     $('m_f1').textContent = pf(f1, 3);
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
@@ -3268,28 +3268,36 @@ function switchView(view) {
     const goodColor = themeColor('--good-color');
     const badColor = themeColor('--bad-color');
     const defaultThreshold = 0.70;
+    const fprThreshold = 0.10;
     const mccThreshold = 0.30;
     const rows = [
-      { label: 'Accuracy', value: metrics.acc, threshold: defaultThreshold },
-      { label: 'Precision', value: metrics.prec, threshold: defaultThreshold },
-      { label: 'Recall', value: metrics.rec, threshold: defaultThreshold },
-      { label: 'Specificity', value: metrics.spec, threshold: defaultThreshold },
+      { label: 'TPR', value: metrics.rec, threshold: defaultThreshold, higherIsBetter: true },
+      { label: 'FPR', value: metrics.fpr, threshold: fprThreshold, higherIsBetter: false },
+      { label: 'Precision', value: metrics.prec, threshold: defaultThreshold, higherIsBetter: true },
+      { label: 'Accuracy', value: metrics.acc, threshold: defaultThreshold, higherIsBetter: true },
       { label: 'F1 Score', value: metrics.f1, threshold: defaultThreshold },
       { label: 'AUC', value: metrics.auc, threshold: defaultThreshold },
       { label: 'NPV', value: metrics.npv, threshold: defaultThreshold },
       { label: 'MCC', value: metrics.mcc, threshold: mccThreshold }
-    ].reverse();
+    ].map(row => ({
+      ...row,
+      higherIsBetter: row.higherIsBetter !== false,
+      thresholdLabel: (row.higherIsBetter === false ? '<= ' : '>= ') + pf(row.threshold, 2)
+    })).reverse();
 
     const base = getBasePlotLayout();
     const mobile = isMobile();
     const trace = {
       x: rows.map(r => r.value),
       y: rows.map(r => r.label),
-      customdata: rows.map(r => r.threshold),
+      hovertext: rows.map(r => 'Good threshold: ' + r.thresholdLabel),
       type: 'bar',
       orientation: 'h',
       marker: {
-        color: rows.map(r => r.value >= r.threshold ? goodColor : badColor),
+        color: rows.map(r => {
+          const meetsTarget = r.higherIsBetter ? r.value >= r.threshold : r.value <= r.threshold;
+          return meetsTarget ? goodColor : badColor;
+        }),
         line: { color: themeAlpha('--text', 0.18), width: 1 }
       },
       text: rows.map(r => pf(r.value, 3)),
@@ -3297,7 +3305,7 @@ function switchView(view) {
       insidetextanchor: 'middle',
       constraintext: 'both',
       cliponaxis: true,
-      hovertemplate: '%{y}: %{x:.3f}<br>Good threshold: %{customdata:.2f}<extra></extra>'
+      hovertemplate: '%{y}: %{x:.3f}<br>%{hovertext}<extra></extra>'
     };
 
     const layout = {
@@ -3327,7 +3335,7 @@ function switchView(view) {
         y: 1.08,
         xref: 'paper',
         yref: 'paper',
-        text: 'Green >= 0.70, red < 0.70. MCC uses 0.30 instead.',
+        text: 'Green meets the target. Most metrics use >= 0.70; FPR uses <= 0.10, MCC uses >= 0.30.',
         showarrow: false,
         xanchor: 'right',
         font: { size: mobile ? 8 : 9, color: themeColor('--plot-font') }
