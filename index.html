@@ -3372,6 +3372,9 @@ function switchView(view) {
       banner: Math.round((mobile ? 11 : 11) * scale),
       rowLabel: Math.round((mobile ? 16 : 13) * scale),
       meta: Math.round((mobile ? 12 : 10) * scale),
+      sideLabel: Math.round((mobile ? 11 : 10) * scale),
+      sideGap: mobile ? 7 : 8,
+      sideLine: mobile ? 8 : 10,
       cellLabel: Math.round((mobile ? 17 : 15) * scale),
       cellCount: Math.round((mobile ? 14 : 12) * scale),
       cellMinW: mobile ? 24 : 30,
@@ -3383,13 +3386,16 @@ function switchView(view) {
     const W = mobile ? 360 : 700;
     const H = mobile ? 280 : 340;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    const pad = mobile ? { l: 32, r: 12, t: 30, b: 52 } : { l: 50, r: 20, t: 30, b: 40 };
+    const pad = mobile ? { l: 56, r: 56, t: 30, b: 52 } : { l: 72, r: 72, t: 30, b: 40 };
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
     const typo = mobile ? {
       banner: 10,
       rowLabel: 11,
       meta: 10,
+      sideLabel: 10,
+      sideGap: 6,
+      sideLine: 7,
       cellLabel: 13,
       cellCount: 11,
       cellMinW: 34,
@@ -3408,10 +3414,10 @@ function switchView(view) {
     const y0 = pad.t;
 
     let html = '';
-    html += rect(x0, y0, pW, tpH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo);
-    html += rect(x0, y0 + tpH, pW, fnH, themeAlpha('--fn-color', 0.3), 'FN', FN, themeColor('--fn-color'), typo);
-    html += rect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo);
-    html += rect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo);
+    html += rect(x0, y0, pW, tpH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo, 'left');
+    html += rect(x0, y0 + tpH, pW, fnH, themeAlpha('--fn-color', 0.3), 'FN', FN, themeColor('--fn-color'), typo, 'left');
+    html += rect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo, 'right');
+    html += rect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo, 'right');
 
     const ppPoints = [
       [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
@@ -3427,15 +3433,25 @@ function switchView(view) {
     svg.innerHTML = html;
   }
 
-  function rect(x, y, w, h, fill, label, count, textColor, typo) {
+  function rect(x, y, w, h, fill, label, count, textColor, typo, side) {
     if (w < 1 || h < 1) return '';
     let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="'+themeColor('--cell-stroke')+'" stroke-width="1" rx="3"/>';
-    // Only add labels if cell is big enough
+    // If a cell gets too small, move the label outside instead of hiding it.
     if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
       s += '<text x="'+cx+'" y="'+(cy-7)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
       s += '<text x="'+cx+'" y="'+(cy+11)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
+      return s;
     }
+
+    const cy = y + h/2;
+    const cellEdge = side === 'left' ? x : (x + w);
+    const lineEnd = side === 'left' ? (cellEdge - typo.sideLine) : (cellEdge + typo.sideLine);
+    const textX = side === 'left' ? (lineEnd - typo.sideGap) : (lineEnd + typo.sideGap);
+    const anchor = side === 'left' ? 'end' : 'start';
+
+    s += '<line x1="'+cellEdge+'" y1="'+cy+'" x2="'+lineEnd+'" y2="'+cy+'" stroke="'+textColor+'" stroke-width="1.5" opacity="0.65"/>';
+    s += '<text x="'+textX+'" y="'+cy+'" text-anchor="'+anchor+'" fill="'+textColor+'" font-size="'+typo.sideLabel+'" font-family="JetBrains Mono, monospace" font-weight="600" dominant-baseline="middle">'+label+' '+count+'</text>';
     return s;
   }
 
