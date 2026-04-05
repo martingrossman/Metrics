@@ -3678,22 +3678,6 @@ function switchView(view) {
     return html;
   }
 
-  function buildMosaicOverlayInfo(x, y, title, lines, mobile) {
-    const boxW = mobile ? 166 : 220;
-    const titleSize = mobile ? 9 : 10;
-    const bodySize = mobile ? 8 : 9;
-    const paddingX = mobile ? 9 : 11;
-    const paddingTop = mobile ? 10 : 11;
-    const lineH = mobile ? 11 : 12;
-    const boxH = paddingTop + 12 + (lines.length * lineH) + (mobile ? 8 : 10);
-    let html = '<rect x="'+x+'" y="'+y+'" width="'+boxW+'" height="'+boxH+'" fill="'+themeAlpha('--bg2', 0.94)+'" stroke="'+themeAlpha('--text', 0.18)+'" stroke-width="1.2" rx="8"/>';
-    html += '<text x="'+(x + paddingX)+'" y="'+(y + paddingTop)+'" text-anchor="start" fill="'+themeColor('--text')+'" font-size="'+titleSize+'" font-family="JetBrains Mono, monospace" font-weight="700">'+title+'</text>';
-    lines.forEach((line, index) => {
-      html += '<text x="'+(x + paddingX)+'" y="'+(y + paddingTop + 14 + ((index + 1) * lineH))+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="'+bodySize+'" font-family="JetBrains Mono, monospace">'+line+'</text>';
-    });
-    return html;
-  }
-
   function buildMosaicMetricOverlay(metricKey, geometry, mobile) {
     if (!metricKey) return '';
 
@@ -3701,70 +3685,49 @@ function switchView(view) {
       const outlineDash = mobile ? '7,4' : '8,5';
       const guideStroke = themeAlpha('--text', 0.72);
       const accentStroke = themeColor('--accent');
-      const boxX = mobile ? (geometry.wholeRect.x + geometry.wholeRect.w - 166) : (geometry.wholeRect.x + geometry.wholeRect.w - 220);
-      const boxY = geometry.wholeRect.y + 10;
       let html = '';
-      let title = '';
-      let lines = [];
 
       switch (metricKey) {
         case 'tpr':
           html += mosaicOverlayRect(geometry.actualPosRect, 'transparent', guideStroke, 2.4, outlineDash);
           html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
-          title = 'TPR (Recall)';
-          lines = ['TPR = TP / (TP + FN)', 'solid ring = TP', 'dashed ring = actual positives'];
           break;
         case 'fpr':
           html += mosaicOverlayRect(geometry.actualNegRect, 'transparent', guideStroke, 2.4, outlineDash);
           html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeColor('--fp-color'), 3.2);
-          title = 'FPR';
-          lines = ['FPR = FP / (FP + TN)', 'solid ring = FP', 'dashed ring = actual negatives'];
           break;
         case 'precision':
           html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, 2.6, outlineDash);
           html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
-          title = 'Precision (PPV)';
-          lines = ['Precision = TP / (TP + FP)', 'solid ring = TP', 'dashed ring = predicted positives'];
           break;
         case 'accuracy':
           html += mosaicOverlayRect(geometry.wholeRect, 'transparent', guideStroke, 2.4, outlineDash);
           html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.1);
           html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 3.1);
-          title = 'Accuracy';
-          lines = ['Accuracy = (TP + TN) / N', 'solid rings = TP and TN', 'dashed ring = all cases'];
           break;
         case 'f1':
           html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
           html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.82), 2.5, outlineDash);
           html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.82), 2.5, outlineDash);
-          title = 'F1 Score';
-          lines = ['F1 = 2TP / (2TP + FP + FN)', 'solid ring = TP', 'dashed rings = FP and FN'];
           break;
         case 'auc':
           html += mosaicOverlayRect(geometry.wholeRect, 'transparent', accentStroke, 2.5);
           html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, 2.4, outlineDash);
-          title = 'AUC';
-          lines = ['not one fixed region here', 'solid ring = current view', 'dashed ring = current boundary'];
           break;
         case 'npv':
           html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, 2.6, outlineDash);
           html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 3.2);
-          title = 'NPV';
-          lines = ['NPV = TN / (TN + FN)', 'solid ring = TN', 'dashed ring = predicted negatives'];
           break;
         case 'mcc':
           html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 2.9);
           html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 2.9);
           html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.85), 2.2, outlineDash);
           html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.85), 2.2, outlineDash);
-          title = 'MCC';
-          lines = ['uses TP, FP, FN, TN', 'solid rings = TP and TN', 'dashed rings = FP and FN'];
           break;
         default:
           return '';
       }
 
-      html += buildMosaicOverlayInfo(boxX, boxY, title, lines, mobile);
       return html;
     } catch (error) {
       console.error('buildMosaicMetricOverlay failed', error);
