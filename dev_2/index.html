@@ -495,6 +495,11 @@
     background: var(--soft-accent-bg);
   }
 
+  .control-story-card {
+    margin-top: 12px;
+    margin-bottom: 0;
+  }
+
   .mode-toggle-row {
     display: flex;
     justify-content: space-between;
@@ -1085,18 +1090,8 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
-  .metrics-vals-view, .metrics-story-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
-  .metrics-vals-view.active, .metrics-story-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
-
-  .plot-metrics .view-toggle {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .plot-metrics .view-toggle button {
-    padding-inline: 6px;
-  }
+  .metrics-vals-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
+  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
 
   .metrics-bar-frame {
     background: var(--bg3);
@@ -1499,7 +1494,12 @@
 
   @media (min-width: 1800px) {
     .layout {
-      grid-template-columns: 320px 1fr 1fr;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .dashboard-grid {
+      grid-template-columns: minmax(520px, 1.18fr) minmax(380px, 0.92fr);
       gap: 18px;
     }
 
@@ -1656,7 +1656,7 @@
         <span class="control-section-copy">
           <span class="control-section-kicker" id="step2Kicker">Step 1</span>
           <span class="control-section-title" id="step2Title">Choose TPR, FPR, and balance</span>
-          <span class="control-section-summary" id="summary_operating">Direct | TPR 90% | FPR 10%</span>
+          <span class="control-section-summary" id="summary_operating">Direct | TPR 90% | FPR 10% | Prev 50%</span>
         </span>
         <span class="control-section-icon" aria-hidden="true">-</span>
       </button>
@@ -1683,6 +1683,17 @@
             </label>
           </div>
         </div>
+        <div class="slider-group">
+          <label>Balance (P prevalence) <span class="val" id="v_bal">30%</span></label>
+          <input type="range" id="s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
+          <div class="slider-precision-row">
+            <span class="slider-precision-hint">Use exact % when prevalence is tiny or near-certain</span>
+            <label class="percent-input-shell" for="i_bal_pct">
+              <input class="percent-input" type="text" id="i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Balance exact percent">
+              <span>%</span>
+            </label>
+          </div>
+        </div>
         <div class="slider-group" id="g_thresh">
           <label>Threshold (linked only) <span class="val" id="v_thresh">—</span></label>
           <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
@@ -1694,8 +1705,8 @@
       <button class="control-section-toggle" type="button" data-section-toggle aria-expanded="false">
         <span class="control-section-copy">
           <span class="control-section-kicker" id="step3Kicker">Step 2</span>
-          <span class="control-section-title" id="step3Title">Size the dataset</span>
-          <span class="control-section-summary" id="summary_dataset">1000 samples | Prev 50% | PPV 0.000</span>
+          <span class="control-section-title" id="step3Title">Choose sample count</span>
+          <span class="control-section-summary" id="summary_dataset">1000 samples | ~500 pos | ~500 neg</span>
         </span>
         <span class="control-section-icon" aria-hidden="true">+</span>
       </button>
@@ -1703,17 +1714,6 @@
         <div class="slider-group">
           <label>N (total samples) <span class="val" id="v_N">1000</span></label>
           <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
-        </div>
-        <div class="slider-group">
-          <label>Balance (P prevalence) <span class="val" id="v_bal">30%</span></label>
-          <input type="range" id="s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
-          <div class="slider-precision-row">
-            <span class="slider-precision-hint">Use exact % when prevalence is tiny or near-certain</span>
-            <label class="percent-input-shell" for="i_bal_pct">
-              <input class="percent-input" type="text" id="i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Balance exact percent">
-              <span>%</span>
-            </label>
-          </div>
         </div>
       </div>
     </section>
@@ -1795,9 +1795,8 @@
       <div class="panel-title">Derived Metrics</div>
       <div class="view-toggle">
         <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
-        <button id="btn_metrics_story" onclick="switchMetricsView('story')">Story</button>
         <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
-        <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Equations</button>
+        <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Theory</button>
       </div>
     </div>
 
@@ -1814,32 +1813,6 @@
       </div>
     </div>
 
-    <div class="metrics-story-view" id="metricsStoryView">
-      <div class="metrics-story" id="precisionStoryCard">
-        <div class="story-kicker">Live Story</div>
-        <div class="story-title" id="storyTitle">Why precision can stay low even when the test looks strong</div>
-        <div class="story-intro" id="storyIntro">Precision depends on TPR, FPR, and balance together. The easiest way to grasp it is to think in people, not just percentages.</div>
-        <div class="story-lines">
-          <div class="story-line">
-            <span class="story-line-index">1</span>
-            <p id="storyLine1">Out of 10,000 people, only a small slice may actually be positive.</p>
-          </div>
-          <div class="story-line">
-            <span class="story-line-index">2</span>
-            <p id="storyLine2">A high TPR catches most of those real positives.</p>
-          </div>
-          <div class="story-line">
-            <span class="story-line-index">3</span>
-            <p id="storyLine3">But even a low FPR can still flag many negatives if the negative group is huge.</p>
-          </div>
-        </div>
-        <div class="story-takeaway" id="storyTakeaway">That is why precision can stay weak when balance is low.</div>
-        <div class="story-actions">
-          <button class="story-button" type="button" id="storyLoadExample">Load 1% paradox example</button>
-        </div>
-      </div>
-    </div>
-
     <div class="metrics-bar-view" id="metricsBarView">
       <div class="metrics-bar-frame">
         <div id="metricsBarPlot" style="width:100%;height:340px;"></div>
@@ -1848,15 +1821,34 @@
 
     <div class="metrics-eqs-view" id="metricsEqsView">
       <div class="equations-box">
+        <div class="eq-section" id="precisionStoryCard">
+          <div class="eq-title">Live Precision Story</div>
+          <div class="story-title" id="storyTitle">Prevalence changes the crowd sizes, not TPR or FPR</div>
+          <div class="eq">PPV = TPR · Prev / (TPR · Prev + FPR · (1−Prev))</div>
+          <div class="story-intro" id="storyIntro">TPR and FPR are rates inside each class. Changing prevalence does not change those rates. It changes how many people those rates are applied to.</div>
+          <div class="story-lines">
+            <div class="story-line">
+              <span class="story-line-index">1</span>
+              <p id="storyLine1">Start with 10,000 people and split them into the actually positive group and the actually negative group.</p>
+            </div>
+            <div class="story-line">
+              <span class="story-line-index">2</span>
+              <p id="storyLine2">TPR is the share of actually positive cases the test catches. That rate does not change just because prevalence changes.</p>
+            </div>
+            <div class="story-line">
+              <span class="story-line-index">3</span>
+              <p id="storyLine3">FPR is the share of actually negative cases wrongly flagged. That rate also stays the same when prevalence changes.</p>
+            </div>
+          </div>
+          <div class="story-takeaway" id="storyTakeaway">What changes is precision, because the same rates are applied to bigger or smaller groups.</div>
+          <div class="story-actions">
+            <button class="story-button" type="button" id="storyLoadExample">Try the classic 1% example</button>
+          </div>
+        </div>
         <div class="eq-section">
           <div class="eq-title">Bayes' Theorem</div>
           <div class="eq">P(D|+) = P(+|D) · P(D) / P(+)</div>
           <div class="eq-desc">The foundation of probabilistic classification. Given a positive test result (+), what is the probability the patient actually has the disease (D)? The answer depends on three things: how good the test is at catching true cases (likelihood), how common the disease is (prior), and how often the test fires overall (evidence). This is why a 99% accurate test can still give mostly false positives for a rare disease.</div>
-        </div>
-        <div class="eq-section">
-          <div class="eq-title">Precision (PPV) via Bayes</div>
-          <div class="eq">PPV = TPR · Prev / (TPR · Prev + FPR · (1−Prev))</div>
-          <div class="eq-desc">Precision answers: "If the model says positive, how likely is it correct?" Rewritten via Bayes, it becomes clear that precision is not just about the model's quality (TPR and FPR) but is heavily influenced by prevalence. In a dataset where only 1% of samples are positive, even a good classifier will have many false positives drowning out the true ones. This is the base-rate fallacy in action. Increase prevalence (the Balance slider) and watch precision rise.</div>
         </div>
         <div class="eq-section">
           <div class="eq-title">NPV via Bayes</div>
@@ -1898,11 +1890,6 @@
           <div class="eq">LR+ = TPR / FPR &nbsp;&nbsp;|&nbsp;&nbsp; LR− = FNR / TNR</div>
           <div class="eq-desc">Likelihood ratios express how much a test result shifts the odds. LR+ tells you how much more likely a positive result is in a true positive vs. a false positive. LR+ > 10 is considered strong diagnostic evidence. LR− tells you how much a negative result reduces the odds of disease. LR− < 0.1 is strong evidence for ruling out. Unlike PPV/NPV, likelihood ratios are independent of prevalence, making them portable across populations with different base rates.</div>
         </div>
-        <div class="eq-section">
-          <div class="eq-title">The Prevalence Paradox</div>
-          <div class="eq">If Prev = 0.01, TPR = 0.99, FPR = 0.01: PPV = 0.50</div>
-          <div class="eq-desc">Even with 99% sensitivity and 99% specificity, half the positive predictions are wrong when the disease affects only 1% of the population. For every true positive caught, there is one false positive from the vast pool of healthy individuals. This is not a flaw in the test but a mathematical consequence of Bayes' theorem. It explains why population-wide screening for rare conditions produces so many false alarms, and why confirmatory tests exist.</div>
-        </div>
       </div>
     </div>
   </div>
@@ -1914,11 +1901,9 @@
 <script>
 function switchMetricsView(view) {
   var valsView = document.getElementById('metricsValsView');
-  var storyView = document.getElementById('metricsStoryView');
   var barView = document.getElementById('metricsBarView');
   var eqsView = document.getElementById('metricsEqsView');
   var btnVals = document.getElementById('btn_metrics_vals');
-  var btnStory = document.getElementById('btn_metrics_story');
   var btnBar = document.getElementById('btn_metrics_bar');
   var btnEqs = document.getElementById('btn_metrics_eqs');
   function resizeMetricsBar() {
@@ -1930,40 +1915,25 @@ function switchMetricsView(view) {
   }
   if (view === 'vals') {
     valsView.classList.add('active');
-    storyView.classList.remove('active');
     barView.classList.remove('active');
     eqsView.classList.remove('active');
     btnVals.classList.add('active');
-    btnStory.classList.remove('active');
-    btnBar.classList.remove('active');
-    btnEqs.classList.remove('active');
-  } else if (view === 'story') {
-    valsView.classList.remove('active');
-    storyView.classList.add('active');
-    barView.classList.remove('active');
-    eqsView.classList.remove('active');
-    btnVals.classList.remove('active');
-    btnStory.classList.add('active');
     btnBar.classList.remove('active');
     btnEqs.classList.remove('active');
   } else if (view === 'bar') {
     valsView.classList.remove('active');
-    storyView.classList.remove('active');
     barView.classList.add('active');
     eqsView.classList.remove('active');
     btnVals.classList.remove('active');
-    btnStory.classList.remove('active');
     btnBar.classList.add('active');
     btnEqs.classList.remove('active');
     if (window.refreshMetricsBar) window.refreshMetricsBar();
     resizeMetricsBar();
   } else {
     valsView.classList.remove('active');
-    storyView.classList.remove('active');
     barView.classList.remove('active');
     eqsView.classList.add('active');
     btnVals.classList.remove('active');
-    btnStory.classList.remove('active');
     btnBar.classList.remove('active');
     btnEqs.classList.add('active');
   }
@@ -2442,6 +2412,8 @@ function switchView(view) {
     const dist = $('summary_distributions');
     const operating = $('summary_operating');
     const dataset = $('summary_dataset');
+    const posCount = Math.round(state.N * state.bal);
+    const negCount = state.N - posCount;
     if (dist) {
       dist.textContent = state.linkedMode
         ? `Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`
@@ -2449,11 +2421,11 @@ function switchView(view) {
     }
     if (operating) {
       operating.textContent = state.linkedMode
-        ? `Linked | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | t ${pf(state.threshold, 2)}`
-        : `Direct | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)}`;
+        ? `Linked | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)} | t ${pf(state.threshold, 2)}`
+        : `Direct | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)}`;
     }
     if (dataset) {
-      dataset.textContent = `${state.N} samples | Prev ${formatPercent(state.bal)} | PPV ${pf(metrics.prec, 3)}`;
+      dataset.textContent = `${state.N} samples | ~${intf(posCount)} pos | ~${intf(negCount)} neg`;
     }
   }
 
@@ -2561,9 +2533,9 @@ function switchView(view) {
     $('step1Kicker').textContent = linked ? 'Step 1' : 'Optional';
     $('step1Title').textContent = linked ? 'Shape the classes' : 'Shape the score model';
     $('step2Kicker').textContent = linked ? 'Step 2' : 'Step 1';
-    $('step2Title').textContent = linked ? 'Choose the operating point' : 'Choose TPR, FPR, and balance';
+    $('step2Title').textContent = linked ? 'Choose threshold and balance' : 'Choose TPR, FPR, and balance';
     $('step3Kicker').textContent = linked ? 'Step 3' : 'Step 2';
-    $('step3Title').textContent = 'Size the dataset';
+    $('step3Title').textContent = 'Choose sample count';
     $('modeHint').classList.toggle('manual', !linked);
     $('g_thresh').classList.toggle('disabled', !linked);
     $('s_thresh').disabled = !linked;
@@ -2905,24 +2877,24 @@ function switchView(view) {
     const strongRates = tpr >= 0.85 && fpr <= 0.10;
 
     $('storyTitle').textContent = rareSetting && strongRates && precision < 0.75
-      ? 'High TPR + low FPR can still give weak precision'
-      : 'Precision depends on balance, not just on TPR and FPR';
+      ? 'TPR and FPR stay the same, but rare positives change the result mix'
+      : 'Prevalence changes the group sizes, not the rates';
 
     $('storyIntro').textContent = rareSetting
-      ? 'When balance is low, the negative group is huge. Even a small FPR can create a pile of false alarms.'
-      : 'Think in people, not just percentages: TPR acts on positives, while FPR acts on the much larger negative group.';
+      ? 'The key idea: prevalence does not change TPR or FPR. It changes how many people sit in the positive group and the negative group, so the same rates create very different counts.'
+      : 'TPR is measured within positives, and FPR is measured within negatives. Changing prevalence leaves those rates alone and only changes the group sizes.';
 
-    $('storyLine1').textContent = `Out of 10,000 people, about ${intf(positives)} are actually positive and ${intf(negatives)} are actually negative.`;
-    $('storyLine2').textContent = `With TPR ${formatPercent(tpr, 1)}, the model catches about ${intf(truePositives)} of those ${intf(positives)} real positives.`;
-    $('storyLine3').textContent = `With FPR ${formatPercent(fpr, 1)}, it still wrongly flags about ${intf(falsePositives)} of the ${intf(negatives)} negatives.`;
+    $('storyLine1').textContent = `Out of 10,000 people, about ${intf(positives)} truly are positive and ${intf(negatives)} truly are negative.`;
+    $('storyLine2').textContent = `TPR ${formatPercent(tpr, 1)} means the test catches about ${intf(truePositives)} of the ${intf(positives)} positives. If prevalence changed, that TPR would still be ${formatPercent(tpr, 1)}.`;
+    $('storyLine3').textContent = `FPR ${formatPercent(fpr, 1)} means about ${intf(falsePositives)} of the ${intf(negatives)} negatives are wrongly flagged. The FPR itself did not change; only the size of the negative group did.`;
 
     const ending = precision <= 0.55
-      ? 'About half of the positive predictions are false alarms.'
+      ? 'A positive result is close to a coin flip.'
       : precision < 0.8
-        ? 'A big share of positive predictions are still false alarms.'
-        : 'Most positive predictions are now real.';
+        ? 'A large share of the positive results are still false alarms.'
+        : 'Most positive results are now real cases.';
 
-    $('storyTakeaway').textContent = `So you get about ${intf(flaggedPositive)} positive predictions in total, but only ${intf(truePositives)} are real. Precision is ${formatPercent(precision, 1)}. ${ending} Lower balance hurts precision fast unless FPR gets extremely small.`;
+    $('storyTakeaway').textContent = `So balance did not change TPR or FPR. It changed the sizes of the two groups. That leaves about ${intf(flaggedPositive)} positive results overall: ${intf(truePositives)} real positives and ${intf(falsePositives)} false positives. Precision is ${formatPercent(precision, 1)}. ${ending}`;
   }
 
   function renderMetrics(tpr, fpr) {
@@ -3408,7 +3380,7 @@ function switchView(view) {
     if (updating) return;
     updating = true;
     applyPreset('direct_precision_story');
-    switchMetricsView('story');
+    switchMetricsView('eqs');
     updating = false;
   });
 
