@@ -3424,6 +3424,11 @@ function switchView(view) {
       [x0 + pW, y0 + fpH], [x0 + pW, y0 + tpH], [x0, y0 + tpH],
     ].map(p => p.join(',')).join(' ');
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+    const legendY = mobile ? 15 : 16;
+    const legendLineLen = mobile ? 22 : 28;
+    const legendText = mobile ? 'Dashed outline = predicted +' : 'Dashed outline = positive predictions (TP + FP)';
+    html += '<line x1="'+x0+'" y1="'+legendY+'" x2="'+(x0 + legendLineLen)+'" y2="'+legendY+'" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+    html += '<text x="'+(x0 + legendLineLen + 8)+'" y="'+legendY+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">'+legendText+'</text>';
 
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
