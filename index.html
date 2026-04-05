@@ -3372,7 +3372,6 @@ function switchView(view) {
       banner: Math.round((mobile ? 11 : 11) * scale),
       rowLabel: Math.round((mobile ? 16 : 13) * scale),
       meta: Math.round((mobile ? 12 : 10) * scale),
-      side: Math.round((mobile ? 12 : 10) * scale),
       cellLabel: Math.round((mobile ? 17 : 15) * scale),
       cellCount: Math.round((mobile ? 14 : 12) * scale),
       cellMinW: mobile ? 24 : 30,
@@ -3391,7 +3390,6 @@ function switchView(view) {
       banner: 10,
       rowLabel: 11,
       meta: 10,
-      side: 10,
       cellLabel: 13,
       cellCount: 11,
       cellMinW: 34,
@@ -3421,15 +3419,10 @@ function switchView(view) {
     ].map(p => p.join(',')).join(' ');
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
-    const rEdge = x0 + bW + (mobile ? 8 : 10);
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
-    html += '<text x="' + (x0 - (mobile ? 8 : 10)) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="'+themeColor('--tp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
-    html += '<text x="' + (x0 - (mobile ? 8 : 10)) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="'+themeColor('--fn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
-    html += '<text x="' + rEdge + '" y="' + (y0 + fpH/2) + '" text-anchor="start" fill="'+themeColor('--fp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FPR</text>';
-    html += '<text x="' + rEdge + '" y="' + (y0 + fpH + tnH/2) + '" text-anchor="start" fill="'+themeColor('--tn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TNR</text>';
 
     svg.innerHTML = html;
   }
