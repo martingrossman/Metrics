@@ -1147,9 +1147,7 @@
     .dashboard-grid > .panel {
       align-self: start;
     }
-  }
 
-  @media (min-width: 1101px) {
     .controls {
       position: sticky;
       top: 12px;
@@ -1157,43 +1155,68 @@
       overflow-y: auto;
       scrollbar-gutter: stable both-edges;
     }
+
+    .metrics-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .metric-card {
+      min-height: 0;
+      padding: 9px 10px;
+    }
+
+    .metric-card .metric-val {
+      font-size: 1rem;
+    }
+
+    .metric-card .metric-name,
+    .metric-card .metric-formula {
+      font-size: 0.56rem;
+    }
+
+    #distPlot, #rocPlot, #metricsBarPlot {
+      height: 230px !important;
+    }
+
+    #mosaicSVG {
+      aspect-ratio: 700 / 280;
+    }
   }
 
-  @media (max-width: 1100px) {
+  @media (min-width: 1101px) {
+    .metrics-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    #distPlot, #rocPlot, #metricsBarPlot {
+      height: 250px !important;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1100px) {
     .layout {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
+      gap: 12px;
     }
     .controls {
       grid-column: 1;
       grid-row: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
     }
     .dashboard-grid {
-      grid-column: 1;
-      grid-row: 2;
+      grid-column: 2;
+      grid-row: 1;
       grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
     .plot-cm-mosaic { grid-column: 1; grid-row: 1; }
     .plot-metrics { grid-column: 2; grid-row: 1; }
     .plot-distributions { grid-column: 1; grid-row: 2; }
     .plot-roc { grid-column: 2; grid-row: 2; }
-
-    .controls .panel-title,
-    .controls .mode-toggle-row,
-    .controls .bidirectional-hint {
-      grid-column: 1 / -1;
-    }
-
-    .controls .control-section {
-      min-width: 0;
-      margin-top: 0;
-    }
   }
 
   /* ── Mobile (iPhone 13 = 390px, covers most phones) ── */
-  @media (max-width: 640px) {
+  @media (max-width: 640px) and (hover: none) and (pointer: coarse) {
     h1 {
       font-size: 0.9rem;
       padding: 10px 10px 6px;
@@ -1507,7 +1530,7 @@
   }
 
   /* ─── New clean layout ─── */
-  .app { max-width: 1400px; margin: 0 auto; padding: 16px 20px 40px; }
+  .app { max-width: 1760px; margin: 0 auto; padding: 16px 20px 40px; }
 
   .app-header {
     display: flex;
@@ -1697,7 +1720,7 @@
     .sliders-row { grid-template-columns: 1fr 1fr; }
     .advanced-grid { grid-template-columns: repeat(3, 1fr); }
   }
-  @media (max-width: 640px) {
+  @media (max-width: 640px) and (hover: none) and (pointer: coarse) {
     /* Layout */
     .app { padding: 8px 10px 30px; }
     .sticky-top { margin: -8px -10px 0; padding: 8px 10px 0; }
@@ -1820,6 +1843,102 @@
   }
   @media (max-width: 700px) {
     .secondary-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (min-width: 961px) {
+    .app {
+      display: grid;
+      grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .sticky-top {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      margin: 0;
+      padding: 0 6px 0 0;
+      border-bottom: none;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .sticky-top .app-header {
+      margin-bottom: 12px;
+    }
+
+    .sticky-top #hintBar {
+      border: 1px solid var(--soft-accent-border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sticky-top .controls-strip {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0;
+    }
+
+    .scroll-body {
+      min-width: 0;
+      padding-top: 0;
+    }
+
+    .preset-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .preset-chips {
+      width: 100%;
+    }
+
+    .sliders-row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .advanced-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .advanced-grid .slider-col:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .primary-grid,
+    .secondary-grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 14px;
+    }
+
+    .primary-card {
+      min-width: 0;
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    #distPlot,
+    #rocPlot,
+    #metricsBarPlot {
+      height: 250px !important;
+    }
+
+    #mosaicSVG {
+      aspect-ratio: 700 / 270;
+    }
+
+    .equations-box {
+      max-height: 300px;
+    }
   }
 </style>
 </head>
@@ -2760,7 +2879,10 @@ function switchView(view) {
   // ─── Plot Config ───
   const plotBg = 'rgba(0,0,0,0)';
   const paperBg = 'rgba(0,0,0,0)';
-  const isMobile = () => window.innerWidth <= 640;
+  const isMobile = () => (
+    window.innerWidth <= 640 &&
+    window.matchMedia('(hover: none) and (pointer: coarse)').matches
+  );
   function getBasePlotLayout() {
     const mobile = isMobile();
     return {
