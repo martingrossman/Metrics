@@ -3685,44 +3685,47 @@ function switchView(view) {
       const outlineDash = mobile ? '7,4' : '8,5';
       const guideStroke = themeAlpha('--text', 0.72);
       const accentStroke = themeColor('--accent');
+      const guideStrokeWidth = 4.1;
+      const focusStrokeWidth = 4.1;
       let html = '';
 
       switch (metricKey) {
         case 'tpr':
-          html += mosaicOverlayRect(geometry.actualPosRect, 'transparent', guideStroke, 2.4, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
+          // Draw the denominator first, then the numerator inside it.
+          html += mosaicOverlayRect(geometry.actualPosRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
           break;
         case 'fpr':
-          html += mosaicOverlayRect(geometry.actualNegRect, 'transparent', guideStroke, 2.4, outlineDash);
-          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeColor('--fp-color'), 3.2);
+          html += mosaicOverlayRect(geometry.actualNegRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeColor('--fp-color'), focusStrokeWidth);
           break;
         case 'precision':
-          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, 2.6, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
+          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
           break;
         case 'accuracy':
-          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', guideStroke, 2.4, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.1);
-          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 3.1);
+          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
           break;
         case 'f1':
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
-          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.82), 2.5, outlineDash);
-          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.82), 2.5, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.82), guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.82), guideStrokeWidth, outlineDash);
           break;
         case 'auc':
-          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', accentStroke, 2.5);
-          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, 2.4, outlineDash);
+          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', accentStroke, focusStrokeWidth);
+          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
           break;
         case 'npv':
-          html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, 2.6, outlineDash);
-          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 3.2);
+          html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
           break;
         case 'mcc':
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 2.9);
-          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 2.9);
-          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.85), 2.2, outlineDash);
-          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.85), 2.2, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.85), guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.85), guideStrokeWidth, outlineDash);
           break;
         default:
           return '';
