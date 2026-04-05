@@ -1224,7 +1224,7 @@
     #mosaicSVG {
       width: 100%;
       height: auto;
-      aspect-ratio: 360 / 340;
+      aspect-ratio: 360 / 280;
       max-height: none;
     }
 
@@ -2781,12 +2781,7 @@ function switchView(view) {
 
     const svg = $('mosaicSVG');
     const mobile = isMobile();
-
-    if (mobile) {
-      renderMosaicVertical(svg, P, Nn, TP, FN, FP, TN, tpr, fpr);
-    } else {
-      renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr);
-    }
+    renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr, mobile);
   }
 
   function getMosaicTypography(mobile) {
@@ -2808,13 +2803,23 @@ function switchView(view) {
     };
   }
 
-  function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr) {
-    const W = 700, H = 340;
+  function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr, mobile = false) {
+    const W = mobile ? 360 : 700;
+    const H = mobile ? 280 : 340;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    const pad = { l: 50, r: 20, t: 30, b: 40 };
+    const pad = mobile ? { l: 32, r: 12, t: 30, b: 52 } : { l: 50, r: 20, t: 30, b: 40 };
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
-    const typo = getMosaicTypography(false);
+    const typo = mobile ? {
+      banner: 10,
+      rowLabel: 11,
+      meta: 10,
+      side: 10,
+      cellLabel: 13,
+      cellCount: 11,
+      cellMinW: 34,
+      cellMinH: 28
+    } : getMosaicTypography(false);
 
     const pW = state.bal * bW;
     const nW = (1 - state.bal) * bW;
@@ -2839,13 +2844,13 @@ function switchView(view) {
     ].map(p => p.join(',')).join(' ');
     html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
 
-    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - 10) + '" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.72">← Predicted Positive →</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 18) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + 36) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + 36) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
-    html += '<text x="' + (x0 - 10) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="'+themeColor('--tp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
-    html += '<text x="' + (x0 - 10) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="'+themeColor('--fn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
+    html += '<text x="' + (x0 + bW/2) + '" y="' + (y0 - (mobile ? 8 : 10)) + '" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" opacity="0.72">' + (mobile ? 'Predicted Positive' : '← Predicted Positive →') + '</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 - (mobile ? 8 : 10)) + '" y="' + (y0 + tpH/2) + '" text-anchor="end" fill="'+themeColor('--tp-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">TPR</text>';
+    html += '<text x="' + (x0 - (mobile ? 8 : 10)) + '" y="' + (y0 + tpH + fnH/2) + '" text-anchor="end" fill="'+themeColor('--fn-color')+'" font-size="' + typo.side + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">FNR</text>';
 
     svg.innerHTML = html;
   }
