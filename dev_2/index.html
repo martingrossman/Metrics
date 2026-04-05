@@ -103,8 +103,7 @@
 
   .layout {
     display: grid;
-    grid-template-columns: minmax(300px, 330px) minmax(420px, 1.18fr) minmax(340px, 0.92fr);
-    grid-template-rows: auto auto;
+    grid-template-columns: minmax(300px, 330px) minmax(0, 1fr);
     gap: 14px;
     padding: 10px 16px 20px;
     width: min(96vw, 1920px);
@@ -114,14 +113,23 @@
   }
 
   .controls {
-    grid-row: 1 / 3;
     grid-column: 1;
+    grid-row: 1;
   }
 
-  .plot-cm-mosaic { grid-column: 2; grid-row: 1; }
-  .plot-metrics { grid-column: 3; grid-row: 1; }
-  .plot-distributions { grid-column: 2; grid-row: 2; }
-  .plot-roc { grid-column: 3; grid-row: 2; }
+  .dashboard-grid {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: minmax(420px, 1.18fr) minmax(340px, 0.92fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .plot-cm-mosaic { grid-column: 1; grid-row: 1; }
+  .plot-metrics { grid-column: 2; grid-row: 1; }
+  .plot-distributions { grid-column: 1; grid-row: 2; }
+  .plot-roc { grid-column: 2; grid-row: 2; }
 
   #mosaicSVG {
     width: 100%;
@@ -371,6 +379,120 @@
     font-family: 'JetBrains Mono', monospace;
     color: var(--text-dim);
     margin-top: 2px;
+  }
+
+  .metrics-story {
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--soft-accent-bg), transparent 82%);
+    box-shadow: inset 0 0 0 1px var(--soft-accent-bg);
+  }
+
+  .story-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+  }
+
+  .story-title {
+    margin-top: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--text);
+  }
+
+  .story-intro {
+    margin-top: 6px;
+    font-size: 0.69rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+
+  .story-lines {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .story-line {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 9px;
+    align-items: start;
+    padding: 8px 9px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--bg3);
+  }
+
+  .story-line-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .story-line p {
+    margin: 0;
+    font-size: 0.69rem;
+    line-height: 1.48;
+    color: var(--text);
+  }
+
+  .story-takeaway {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    border-left: 3px solid var(--accent);
+    background: rgba(11, 111, 255, 0.08);
+    font-size: 0.71rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .story-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .story-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: var(--bg2);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .story-button:hover {
+    transform: translateY(-1px);
+    border-color: var(--soft-accent-border);
+    background: var(--soft-accent-bg);
   }
 
   .mode-toggle-row {
@@ -963,8 +1085,18 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
-  .metrics-vals-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
-  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
+  .metrics-vals-view, .metrics-story-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
+  .metrics-vals-view.active, .metrics-story-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
+
+  .plot-metrics .view-toggle {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .plot-metrics .view-toggle button {
+    padding-inline: 6px;
+  }
 
   .metrics-bar-frame {
     background: var(--bg3);
@@ -1014,8 +1146,8 @@
   }
 
   @media (min-width: 641px) {
-    .layout > .panel,
-    .layout > .controls {
+    .layout > .controls,
+    .dashboard-grid > .panel {
       align-self: start;
     }
   }
@@ -1032,20 +1164,24 @@
 
   @media (max-width: 1100px) {
     .layout {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto;
+      grid-template-columns: 1fr;
     }
     .controls {
-      grid-column: 1 / 3;
+      grid-column: 1;
       grid-row: 1;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 14px;
     }
-    .plot-cm-mosaic { grid-column: 1; grid-row: 2; }
-    .plot-metrics { grid-column: 2; grid-row: 2; }
-    .plot-distributions { grid-column: 1; grid-row: 3; }
-    .plot-roc { grid-column: 2; grid-row: 3; }
+    .dashboard-grid {
+      grid-column: 1;
+      grid-row: 2;
+      grid-template-columns: 1fr 1fr;
+    }
+    .plot-cm-mosaic { grid-column: 1; grid-row: 1; }
+    .plot-metrics { grid-column: 2; grid-row: 1; }
+    .plot-distributions { grid-column: 1; grid-row: 2; }
+    .plot-roc { grid-column: 2; grid-row: 2; }
 
     .controls .panel-title,
     .controls .mode-toggle-row,
@@ -1109,6 +1245,10 @@
       flex-direction: column;
       gap: 10px;
       padding: 4px 8px 18px;
+    }
+
+    .dashboard-grid {
+      display: contents;
     }
 
     .controls {
@@ -1276,6 +1416,37 @@
     .metrics-grid {
       grid-template-columns: 1fr 1fr;
       gap: 6px;
+    }
+
+    .metrics-story {
+      padding: 10px;
+    }
+
+    .story-title {
+      font-size: 0.76rem;
+    }
+
+    .story-intro,
+    .story-line p,
+    .story-takeaway {
+      font-size: 0.65rem;
+    }
+
+    .story-line {
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .story-line-index {
+      width: 22px;
+      height: 22px;
+      font-size: 0.6rem;
+    }
+
+    .story-button {
+      width: 100%;
+      justify-content: center;
     }
 
     .metric-card {
@@ -1548,6 +1719,7 @@
     </section>
   </div>
 
+  <div class="dashboard-grid">
   <!-- DISTRIBUTION PLOT -->
   <div class="panel plot-distributions panel-scroll-anchor" id="distPanel">
     <div class="panel-header">
@@ -1623,6 +1795,7 @@
       <div class="panel-title">Derived Metrics</div>
       <div class="view-toggle">
         <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
+        <button id="btn_metrics_story" onclick="switchMetricsView('story')">Story</button>
         <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
         <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Equations</button>
       </div>
@@ -1638,6 +1811,32 @@
         <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">—</div><div class="metric-formula">Area under ROC</div></div>
         <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">—</div><div class="metric-formula">TN/(TN+FN)</div></div>
         <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">—</div><div class="metric-formula">Matthews corr.</div></div>
+      </div>
+    </div>
+
+    <div class="metrics-story-view" id="metricsStoryView">
+      <div class="metrics-story" id="precisionStoryCard">
+        <div class="story-kicker">Live Story</div>
+        <div class="story-title" id="storyTitle">Why precision can stay low even when the test looks strong</div>
+        <div class="story-intro" id="storyIntro">Precision depends on TPR, FPR, and balance together. The easiest way to grasp it is to think in people, not just percentages.</div>
+        <div class="story-lines">
+          <div class="story-line">
+            <span class="story-line-index">1</span>
+            <p id="storyLine1">Out of 10,000 people, only a small slice may actually be positive.</p>
+          </div>
+          <div class="story-line">
+            <span class="story-line-index">2</span>
+            <p id="storyLine2">A high TPR catches most of those real positives.</p>
+          </div>
+          <div class="story-line">
+            <span class="story-line-index">3</span>
+            <p id="storyLine3">But even a low FPR can still flag many negatives if the negative group is huge.</p>
+          </div>
+        </div>
+        <div class="story-takeaway" id="storyTakeaway">That is why precision can stay weak when balance is low.</div>
+        <div class="story-actions">
+          <button class="story-button" type="button" id="storyLoadExample">Load 1% paradox example</button>
+        </div>
       </div>
     </div>
 
@@ -1708,14 +1907,18 @@
     </div>
   </div>
 
+  </div>
+
 </div>
 
 <script>
 function switchMetricsView(view) {
   var valsView = document.getElementById('metricsValsView');
+  var storyView = document.getElementById('metricsStoryView');
   var barView = document.getElementById('metricsBarView');
   var eqsView = document.getElementById('metricsEqsView');
   var btnVals = document.getElementById('btn_metrics_vals');
+  var btnStory = document.getElementById('btn_metrics_story');
   var btnBar = document.getElementById('btn_metrics_bar');
   var btnEqs = document.getElementById('btn_metrics_eqs');
   function resizeMetricsBar() {
@@ -1727,25 +1930,40 @@ function switchMetricsView(view) {
   }
   if (view === 'vals') {
     valsView.classList.add('active');
+    storyView.classList.remove('active');
     barView.classList.remove('active');
     eqsView.classList.remove('active');
     btnVals.classList.add('active');
+    btnStory.classList.remove('active');
+    btnBar.classList.remove('active');
+    btnEqs.classList.remove('active');
+  } else if (view === 'story') {
+    valsView.classList.remove('active');
+    storyView.classList.add('active');
+    barView.classList.remove('active');
+    eqsView.classList.remove('active');
+    btnVals.classList.remove('active');
+    btnStory.classList.add('active');
     btnBar.classList.remove('active');
     btnEqs.classList.remove('active');
   } else if (view === 'bar') {
     valsView.classList.remove('active');
+    storyView.classList.remove('active');
     barView.classList.add('active');
     eqsView.classList.remove('active');
     btnVals.classList.remove('active');
+    btnStory.classList.remove('active');
     btnBar.classList.add('active');
     btnEqs.classList.remove('active');
     if (window.refreshMetricsBar) window.refreshMetricsBar();
     resizeMetricsBar();
   } else {
     valsView.classList.remove('active');
+    storyView.classList.remove('active');
     barView.classList.remove('active');
     eqsView.classList.add('active');
     btnVals.classList.remove('active');
+    btnStory.classList.remove('active');
     btnBar.classList.remove('active');
     btnEqs.classList.add('active');
   }
@@ -1794,6 +2012,7 @@ function switchView(view) {
   // ─── Helpers ───
   const $ = id => document.getElementById(id);
   const pf = (v, d=2) => v.toFixed(d);
+  const intf = v => Math.round(v).toLocaleString();
   const trimTrailingZeros = str => {
     if (!str.includes('.')) return str;
     const trimmed = str.replace(/\.?0+$/, '');
@@ -2031,6 +2250,15 @@ function switchView(view) {
       threshold: 1.0,
       manual_tpr: 0.98,
       manual_fpr: 0.25,
+      linkedMode: false
+    },
+    direct_precision_story: {
+      mu_neg: 0, std_neg: 1,
+      mu_pos: 2, std_pos: 1,
+      N: 10000, bal: 0.01,
+      threshold: 1.0,
+      manual_tpr: 0.99,
+      manual_fpr: 0.01,
       linkedMode: false
     }
   };
@@ -2665,6 +2893,38 @@ function switchView(view) {
     el.querySelector('.rate').textContent = rate;
   }
 
+  function renderPrecisionStory(tpr, fpr) {
+    const cohort = 10000;
+    const positives = Math.round(cohort * state.bal);
+    const negatives = cohort - positives;
+    const truePositives = Math.round(positives * tpr);
+    const falsePositives = Math.round(negatives * fpr);
+    const flaggedPositive = truePositives + falsePositives;
+    const precision = flaggedPositive > 0 ? truePositives / flaggedPositive : 0;
+    const rareSetting = state.bal <= 0.05;
+    const strongRates = tpr >= 0.85 && fpr <= 0.10;
+
+    $('storyTitle').textContent = rareSetting && strongRates && precision < 0.75
+      ? 'High TPR + low FPR can still give weak precision'
+      : 'Precision depends on balance, not just on TPR and FPR';
+
+    $('storyIntro').textContent = rareSetting
+      ? 'When balance is low, the negative group is huge. Even a small FPR can create a pile of false alarms.'
+      : 'Think in people, not just percentages: TPR acts on positives, while FPR acts on the much larger negative group.';
+
+    $('storyLine1').textContent = `Out of 10,000 people, about ${intf(positives)} are actually positive and ${intf(negatives)} are actually negative.`;
+    $('storyLine2').textContent = `With TPR ${formatPercent(tpr, 1)}, the model catches about ${intf(truePositives)} of those ${intf(positives)} real positives.`;
+    $('storyLine3').textContent = `With FPR ${formatPercent(fpr, 1)}, it still wrongly flags about ${intf(falsePositives)} of the ${intf(negatives)} negatives.`;
+
+    const ending = precision <= 0.55
+      ? 'About half of the positive predictions are false alarms.'
+      : precision < 0.8
+        ? 'A big share of positive predictions are still false alarms.'
+        : 'Most positive predictions are now real.';
+
+    $('storyTakeaway').textContent = `So you get about ${intf(flaggedPositive)} positive predictions in total, but only ${intf(truePositives)} are real. Precision is ${formatPercent(precision, 1)}. ${ending} Lower balance hurts precision fast unless FPR gets extremely small.`;
+  }
+
   function renderMetrics(tpr, fpr) {
     const P = Math.round(state.N * state.bal);
     const N_neg = state.N - P;
@@ -2706,6 +2966,7 @@ function switchView(view) {
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
     $('m_mcc').textContent = pf(mcc, 3);
+    renderPrecisionStory(tpr, fpr);
 
     if ($('metricsBarView').classList.contains('active')) {
       renderMetricsBar(metrics);
@@ -3141,6 +3402,14 @@ function switchView(view) {
       render();
       updating = false;
     });
+  });
+
+  $('storyLoadExample').addEventListener('click', () => {
+    if (updating) return;
+    updating = true;
+    applyPreset('direct_precision_story');
+    switchMetricsView('story');
+    updating = false;
   });
 
   // N & Balance → just re-render CM & metrics
