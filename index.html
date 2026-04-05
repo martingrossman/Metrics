@@ -351,20 +351,67 @@
     gap: 8px;
   }
 
+  .metric-hover-hint {
+    margin-bottom: 8px;
+    font-size: 0.66rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+
   .metric-card {
     background: var(--bg3);
     border-radius: 8px;
     padding: 10px 12px;
     border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  }
+
+  .metric-card[data-metric] {
+    cursor: default;
+  }
+
+  .metric-card[data-metric]:hover,
+  .metric-card[data-metric]:focus-within {
+    border-color: var(--soft-accent-border);
+    box-shadow: 0 0 0 2px var(--soft-accent-bg);
+    transform: translateY(-1px);
+  }
+
+  .metric-card.metric-card-active {
+    background: var(--bg2);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--soft-accent-bg);
+  }
+
+  .metric-card.metric-card-active .metric-formula {
+    background: var(--soft-accent-bg);
+    border-color: var(--soft-accent-border);
   }
 
   .metric-card .metric-name {
-    font-size: 0.65rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 5px;
+    font-size: 0.66rem;
     font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 5px;
+    line-height: 1.25;
+  }
+
+  .metric-card .metric-name-main {
+    color: var(--text);
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.6px;
+  }
+
+  .metric-card .metric-name-sub {
     color: var(--text-dim);
-    margin-bottom: 4px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
   }
 
   .metric-card .metric-val {
@@ -372,13 +419,21 @@
     font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
     color: var(--accent);
+    line-height: 1.1;
   }
 
   .metric-card .metric-formula {
-    font-size: 0.6rem;
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    font-size: 0.66rem;
     font-family: 'JetBrains Mono', monospace;
-    color: var(--text-dim);
-    margin-top: 2px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text);
+    background: rgba(22,32,51,0.05);
+    border: 1px solid rgba(22,32,51,0.08);
   }
 
   .story-title {
@@ -479,7 +534,8 @@
 
   .see-why-btn {
     display: block;
-    margin-top: 6px;
+    margin-top: auto;
+    padding-top: 8px;
     font-size: 0.58rem;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
@@ -1092,8 +1148,8 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
-  .metrics-vals-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
-  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
+  .metrics-vals-view, .metrics-bar-view, .metrics-formulas-view, .metrics-theory-view { display: none; }
+  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-formulas-view.active, .metrics-theory-view.active { display: block; }
 
   .metrics-bar-frame {
     background: var(--bg3);
@@ -1142,6 +1198,57 @@
     line-height: 1.5;
   }
 
+  .formula-intro {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background: var(--soft-accent-bg);
+    border: 1px solid var(--soft-accent-border);
+    border-radius: 8px;
+    font-size: 0.68rem;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .formula-section {
+    scroll-margin-top: 8px;
+  }
+
+  .formula-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .formula-main {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--soft-accent-border);
+    background: var(--bg2);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .formula-alt {
+    margin-top: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
+  .formula-note {
+    margin-top: 6px;
+    font-size: 0.67rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
   @media (min-width: 641px) {
     .layout > .controls,
     .dashboard-grid > .panel {
@@ -1170,9 +1277,13 @@
       font-size: 1rem;
     }
 
-    .metric-card .metric-name,
-    .metric-card .metric-formula {
+    .metric-card .metric-name {
       font-size: 0.56rem;
+    }
+
+    .metric-card .metric-formula {
+      font-size: 0.6rem;
+      padding: 3px 6px;
     }
 
     #distPlot, #rocPlot, #metricsBarPlot {
@@ -1479,7 +1590,8 @@
     }
 
     .metric-card .metric-formula {
-      font-size: 0.55rem;
+      font-size: 0.58rem;
+      padding: 3px 6px;
     }
 
     #metricsBarPlot {
@@ -2087,19 +2199,21 @@
         <div class="view-toggle">
           <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
           <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
-          <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Theory</button>
+          <button id="btn_metrics_formulas" onclick="switchMetricsView('formulas')">Equations</button>
+          <button id="btn_metrics_theory" onclick="switchMetricsView('theory')">Theory</button>
         </div>
       </div>
       <div class="metrics-vals-view active" id="metricsValsView">
+        <div class="metric-hover-hint">Hover a metric card, or tap it on iPhone, to highlight the matching pieces in the mosaic. Tap the same card again to clear.</div>
         <div class="metrics-grid">
-          <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
-          <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="switchMetricsView('eqs');document.getElementById('precisionStoryCard').scrollIntoView({behavior:'smooth',block:'start'})">See why &rarr;</button></div>
-          <div class="metric-card"><div class="metric-name">Recall (TPR)</div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
-          <div class="metric-card"><div class="metric-name">Specificity (TNR)</div><div class="metric-val" id="m_spec">&mdash;</div><div class="metric-formula">TN/(TN+FP)</div></div>
-          <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div></div>
-          <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div></div>
-          <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div></div>
-          <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div></div>
+          <div class="metric-card" data-metric="tpr" onmouseenter="setMosaicMetricHover('tpr')" onmouseleave="clearMosaicMetricHover('tpr')" onfocusin="setMosaicMetricHover('tpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'tpr')" onclick="toggleMosaicMetricTouch(event, 'tpr')"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_tpr')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="fpr" onmouseenter="setMosaicMetricHover('fpr')" onmouseleave="clearMosaicMetricHover('fpr')" onfocusin="setMosaicMetricHover('fpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'fpr')" onclick="toggleMosaicMetricTouch(event, 'fpr')"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_fpr')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="precision" onmouseenter="setMosaicMetricHover('precision')" onmouseleave="clearMosaicMetricHover('precision')" onfocusin="setMosaicMetricHover('precision')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'precision')" onclick="toggleMosaicMetricTouch(event, 'precision')"><div class="metric-name"><span class="metric-name-main">Precision</span><span class="metric-name-sub">(PPV)</span></div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_precision')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="accuracy" onmouseenter="setMosaicMetricHover('accuracy')" onmouseleave="clearMosaicMetricHover('accuracy')" onfocusin="setMosaicMetricHover('accuracy')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'accuracy')" onclick="toggleMosaicMetricTouch(event, 'accuracy')"><div class="metric-name"><span class="metric-name-main">Accuracy</span></div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_accuracy')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="f1" onmouseenter="setMosaicMetricHover('f1')" onmouseleave="clearMosaicMetricHover('f1')" onfocusin="setMosaicMetricHover('f1')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'f1')" onclick="toggleMosaicMetricTouch(event, 'f1')"><div class="metric-name"><span class="metric-name-main">F1 Score</span></div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_f1')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="auc" onmouseenter="setMosaicMetricHover('auc')" onmouseleave="clearMosaicMetricHover('auc')" onfocusin="setMosaicMetricHover('auc')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'auc')" onclick="toggleMosaicMetricTouch(event, 'auc')"><div class="metric-name"><span class="metric-name-main">AUC</span></div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_auc')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="npv" onmouseenter="setMosaicMetricHover('npv')" onmouseleave="clearMosaicMetricHover('npv')" onfocusin="setMosaicMetricHover('npv')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'npv')" onclick="toggleMosaicMetricTouch(event, 'npv')"><div class="metric-name"><span class="metric-name-main">NPV</span></div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_npv')">Equation &rarr;</button></div>
+          <div class="metric-card" data-metric="mcc" onmouseenter="setMosaicMetricHover('mcc')" onmouseleave="clearMosaicMetricHover('mcc')" onfocusin="setMosaicMetricHover('mcc')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'mcc')" onclick="toggleMosaicMetricTouch(event, 'mcc')"><div class="metric-name"><span class="metric-name-main">MCC</span></div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_mcc')">Equation &rarr;</button></div>
         </div>
       </div>
       <div class="metrics-bar-view" id="metricsBarView">
@@ -2107,7 +2221,68 @@
           <div id="metricsBarPlot" style="width:100%;height:300px;"></div>
         </div>
       </div>
-      <div class="metrics-eqs-view" id="metricsEqsView">
+      <div class="metrics-formulas-view" id="metricsFormulasView">
+        <div class="equations-box" id="metricsFormulasBox">
+          <div class="formula-intro">Click any metric card in <strong>Values</strong> to jump here. These are the standard formulas written in the usual notation.</div>
+          <div class="eq-section formula-section" id="formula_tpr">
+            <div class="eq-title">TPR (Recall)</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">TPR = TP / (TP + FN)</div>
+            <div class="formula-alt">Also written as: Recall = TP / (TP + FN)</div>
+            <div class="formula-note">Among the actual positives, what fraction did the model catch?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_fpr">
+            <div class="eq-title">FPR</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">FPR = FP / (FP + TN)</div>
+            <div class="formula-alt">Also written as: FPR = 1 - TNR</div>
+            <div class="formula-note">Among the actual negatives, what fraction were wrongly predicted positive?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_precision">
+            <div class="eq-title">Precision (PPV)</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">Precision = TP / (TP + FP)</div>
+            <div class="formula-alt">Also written as: PPV = TP / (TP + FP)</div>
+            <div class="formula-note">Among the predicted positives, what fraction are truly positive?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_accuracy">
+            <div class="eq-title">Accuracy</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">Accuracy = (TP + TN) / (TP + TN + FP + FN)</div>
+            <div class="formula-alt">Also written as: Accuracy = (TP + TN) / N</div>
+            <div class="formula-note">Out of all predictions, what fraction were correct?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_f1">
+            <div class="eq-title">F1 Score</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">F1 = 2TP / (2TP + FP + FN)</div>
+            <div class="formula-alt">Also written as: F1 = 2 &middot; Precision &middot; Recall / (Precision + Recall)</div>
+            <div class="formula-note">A balanced score that gets high only when both precision and recall are high.</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_auc">
+            <div class="eq-title">AUC</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">AUC = &int;<sub>0</sub><sup>1</sup> TPR(FPR) d(FPR)</div>
+            <div class="formula-alt">Also written as: area under the ROC curve</div>
+            <div class="formula-note">It summarizes performance across all thresholds, not just the current one.</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_npv">
+            <div class="eq-title">NPV</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">NPV = TN / (TN + FN)</div>
+            <div class="formula-alt">NPV = negative predictive value</div>
+            <div class="formula-note">Among the predicted negatives, what fraction are truly negative?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_mcc">
+            <div class="eq-title">MCC</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">MCC = (TP &middot; TN - FP &middot; FN) / &radic;((TP+FP)(TP+FN)(TN+FP)(TN+FN))</div>
+            <div class="formula-alt">Range: -1 to 1</div>
+            <div class="formula-note">Uses all four confusion-matrix cells, which makes it robust under class imbalance.</div>
+          </div>
+        </div>
+      </div>
+      <div class="metrics-theory-view" id="metricsTheoryView">
         <div class="equations-box">
           <div class="eq-section" id="precisionStoryCard">
             <div class="eq-title">Live Precision Story</div>
@@ -2207,13 +2382,78 @@
 </div>
 
 <script>
+window.activeMosaicMetricKey = null;
+window.pinnedMosaicMetricKey = null;
+
+function supportsTouchMetricToggle() {
+  return !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+}
+
+function syncMosaicMetricState(metricKey) {
+  if (window.activeMosaicMetricKey === metricKey) return;
+  window.activeMosaicMetricKey = metricKey;
+  updateMetricCardHoverState();
+  refreshMosaicMetricHover();
+}
+
+function resetMosaicMetricHover() {
+  if (!window.activeMosaicMetricKey && !window.pinnedMosaicMetricKey) return;
+  window.activeMosaicMetricKey = null;
+  window.pinnedMosaicMetricKey = null;
+  updateMetricCardHoverState();
+  refreshMosaicMetricHover();
+}
+
+function updateMetricCardHoverState() {
+  var cards = document.querySelectorAll('#metricsValsView .metric-card[data-metric]');
+  cards.forEach(function(card) {
+    card.classList.toggle('metric-card-active', card.dataset.metric === window.activeMosaicMetricKey);
+  });
+}
+
+function refreshMosaicMetricHover() {
+  if (window.refreshMosaicMetricOverlay) window.refreshMosaicMetricOverlay();
+}
+
+function setMosaicMetricHover(metricKey) {
+  if (supportsTouchMetricToggle() && window.pinnedMosaicMetricKey) return;
+  syncMosaicMetricState(metricKey);
+}
+
+function clearMosaicMetricHover(metricKey) {
+  if (supportsTouchMetricToggle() && window.pinnedMosaicMetricKey) return;
+  if (metricKey && window.activeMosaicMetricKey !== metricKey) return;
+  resetMosaicMetricHover();
+}
+
+function clearMosaicMetricHoverIfOutside(event, metricKey) {
+  if (supportsTouchMetricToggle() && window.pinnedMosaicMetricKey) return;
+  var nextTarget = event && event.relatedTarget;
+  if (nextTarget && event.currentTarget && event.currentTarget.contains(nextTarget)) return;
+  clearMosaicMetricHover(metricKey);
+}
+
+function toggleMosaicMetricTouch(event, metricKey) {
+  if (!supportsTouchMetricToggle()) return;
+  if (event && event.target && event.target.closest('.see-why-btn')) return;
+  if (window.pinnedMosaicMetricKey === metricKey) {
+    resetMosaicMetricHover();
+    return;
+  }
+  window.pinnedMosaicMetricKey = metricKey;
+  syncMosaicMetricState(metricKey);
+}
+
 function switchMetricsView(view) {
+  if (view !== 'vals') resetMosaicMetricHover();
   var valsView = document.getElementById('metricsValsView');
   var barView = document.getElementById('metricsBarView');
-  var eqsView = document.getElementById('metricsEqsView');
+  var formulasView = document.getElementById('metricsFormulasView');
+  var theoryView = document.getElementById('metricsTheoryView');
   var btnVals = document.getElementById('btn_metrics_vals');
   var btnBar = document.getElementById('btn_metrics_bar');
-  var btnEqs = document.getElementById('btn_metrics_eqs');
+  var btnFormulas = document.getElementById('btn_metrics_formulas');
+  var btnTheory = document.getElementById('btn_metrics_theory');
   function resizeMetricsBar() {
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
@@ -2224,27 +2464,54 @@ function switchMetricsView(view) {
   if (view === 'vals') {
     valsView.classList.add('active');
     barView.classList.remove('active');
-    eqsView.classList.remove('active');
+    formulasView.classList.remove('active');
+    theoryView.classList.remove('active');
     btnVals.classList.add('active');
     btnBar.classList.remove('active');
-    btnEqs.classList.remove('active');
+    btnFormulas.classList.remove('active');
+    btnTheory.classList.remove('active');
   } else if (view === 'bar') {
     valsView.classList.remove('active');
     barView.classList.add('active');
-    eqsView.classList.remove('active');
+    formulasView.classList.remove('active');
+    theoryView.classList.remove('active');
     btnVals.classList.remove('active');
     btnBar.classList.add('active');
-    btnEqs.classList.remove('active');
+    btnFormulas.classList.remove('active');
+    btnTheory.classList.remove('active');
     if (window.refreshMetricsBar) window.refreshMetricsBar();
     resizeMetricsBar();
+  } else if (view === 'formulas') {
+    valsView.classList.remove('active');
+    barView.classList.remove('active');
+    formulasView.classList.add('active');
+    theoryView.classList.remove('active');
+    btnVals.classList.remove('active');
+    btnBar.classList.remove('active');
+    btnFormulas.classList.add('active');
+    btnTheory.classList.remove('active');
   } else {
     valsView.classList.remove('active');
     barView.classList.remove('active');
-    eqsView.classList.add('active');
+    formulasView.classList.remove('active');
+    theoryView.classList.add('active');
     btnVals.classList.remove('active');
     btnBar.classList.remove('active');
-    btnEqs.classList.add('active');
+    btnFormulas.classList.remove('active');
+    btnTheory.classList.add('active');
   }
+}
+
+function openMetricFormula(targetId) {
+  switchMetricsView('formulas');
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      var target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 }
 
 function switchDistView(view) {
@@ -2923,6 +3190,7 @@ function switchView(view) {
     updateControlSummaries(rates, metrics);
     updateMobileSummary(rates, metrics);
     renderMosaic(tpr, fpr);
+    if (window.updateMetricCardHoverState) updateMetricCardHoverState();
     syncMobileDockOffset();
   }
 
@@ -3225,7 +3493,7 @@ function switchView(view) {
     const acc = state.N > 0 ? (TP+TN)/state.N : 0;
     const prec = (TP+FP) > 0 ? TP/(TP+FP) : 0;
     const rec = (TP+FN) > 0 ? TP/(TP+FN) : 0;
-    const spec = (TN+FP) > 0 ? TN/(TN+FP) : 0;
+    const fprMetric = (FP+TN) > 0 ? FP/(FP+TN) : 0;
     const f1 = (prec+rec) > 0 ? 2*prec*rec/(prec+rec) : 0;
     const npv = (TN+FN) > 0 ? TN/(TN+FN) : 0;
 
@@ -3236,10 +3504,10 @@ function switchView(view) {
     const auc = computeAUC(rocPts);
 
     const metrics = {
-      acc,
-      prec,
       rec,
-      spec,
+      fpr: fprMetric,
+      prec,
+      acc,
       f1,
       auc,
       npv,
@@ -3247,10 +3515,10 @@ function switchView(view) {
     };
     latestMetrics = metrics;
 
-    $('m_acc').textContent = pf(acc, 3);
-    $('m_prec').textContent = pf(prec, 3);
     $('m_rec').textContent = pf(rec, 3);
-    $('m_spec').textContent = pf(spec, 3);
+    $('m_fpr').textContent = pf(fprMetric, 3);
+    $('m_prec').textContent = pf(prec, 3);
+    $('m_acc').textContent = pf(acc, 3);
     $('m_f1').textContent = pf(f1, 3);
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
@@ -3268,28 +3536,36 @@ function switchView(view) {
     const goodColor = themeColor('--good-color');
     const badColor = themeColor('--bad-color');
     const defaultThreshold = 0.70;
+    const fprThreshold = 0.10;
     const mccThreshold = 0.30;
     const rows = [
-      { label: 'Accuracy', value: metrics.acc, threshold: defaultThreshold },
-      { label: 'Precision', value: metrics.prec, threshold: defaultThreshold },
-      { label: 'Recall', value: metrics.rec, threshold: defaultThreshold },
-      { label: 'Specificity', value: metrics.spec, threshold: defaultThreshold },
+      { label: 'TPR', value: metrics.rec, threshold: defaultThreshold, higherIsBetter: true },
+      { label: 'FPR', value: metrics.fpr, threshold: fprThreshold, higherIsBetter: false },
+      { label: 'Precision', value: metrics.prec, threshold: defaultThreshold, higherIsBetter: true },
+      { label: 'Accuracy', value: metrics.acc, threshold: defaultThreshold, higherIsBetter: true },
       { label: 'F1 Score', value: metrics.f1, threshold: defaultThreshold },
       { label: 'AUC', value: metrics.auc, threshold: defaultThreshold },
       { label: 'NPV', value: metrics.npv, threshold: defaultThreshold },
       { label: 'MCC', value: metrics.mcc, threshold: mccThreshold }
-    ].reverse();
+    ].map(row => ({
+      ...row,
+      higherIsBetter: row.higherIsBetter !== false,
+      thresholdLabel: (row.higherIsBetter === false ? '<= ' : '>= ') + pf(row.threshold, 2)
+    })).reverse();
 
     const base = getBasePlotLayout();
     const mobile = isMobile();
     const trace = {
       x: rows.map(r => r.value),
       y: rows.map(r => r.label),
-      customdata: rows.map(r => r.threshold),
+      hovertext: rows.map(r => 'Good threshold: ' + r.thresholdLabel),
       type: 'bar',
       orientation: 'h',
       marker: {
-        color: rows.map(r => r.value >= r.threshold ? goodColor : badColor),
+        color: rows.map(r => {
+          const meetsTarget = r.higherIsBetter ? r.value >= r.threshold : r.value <= r.threshold;
+          return meetsTarget ? goodColor : badColor;
+        }),
         line: { color: themeAlpha('--text', 0.18), width: 1 }
       },
       text: rows.map(r => pf(r.value, 3)),
@@ -3297,7 +3573,7 @@ function switchView(view) {
       insidetextanchor: 'middle',
       constraintext: 'both',
       cliponaxis: true,
-      hovertemplate: '%{y}: %{x:.3f}<br>Good threshold: %{customdata:.2f}<extra></extra>'
+      hovertemplate: '%{y}: %{x:.3f}<br>%{hovertext}<extra></extra>'
     };
 
     const layout = {
@@ -3327,7 +3603,7 @@ function switchView(view) {
         y: 1.08,
         xref: 'paper',
         yref: 'paper',
-        text: 'Green >= 0.70, red < 0.70. MCC uses 0.30 instead.',
+        text: 'Green meets the target. Most metrics use >= 0.70; FPR uses <= 0.10, MCC uses >= 0.30.',
         showarrow: false,
         xanchor: 'right',
         font: { size: mobile ? 8 : 9, color: themeColor('--plot-font') }
@@ -3361,6 +3637,12 @@ function switchView(view) {
     renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr, mobile);
   }
 
+  window.refreshMosaicMetricOverlay = function() {
+    const { tpr, fpr } = getActiveRates();
+    renderMosaic(tpr, fpr);
+    if (window.updateMetricCardHoverState) updateMetricCardHoverState();
+  };
+
   function getMosaicTypography(mobile) {
     const vw = window.innerWidth;
     let scale = mobile ? 1.14 : 1.0;
@@ -3380,6 +3662,108 @@ function switchView(view) {
       cellMinW: mobile ? 24 : 30,
       cellMinH: mobile ? 24 : 30
     };
+  }
+
+  function mosaicPointsToString(points) {
+    return points.map(point => point.join(',')).join(' ');
+  }
+
+  function mosaicOverlayRect(shape, fill, stroke, strokeWidth = 2.5, dashArray = '') {
+    if (!shape || shape.w < 1 || shape.h < 1) return '';
+    let html = '';
+    if (stroke && stroke !== 'none') {
+      html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="transparent" stroke="'+themeAlpha('--bg2', 0.96)+'" stroke-width="'+(strokeWidth + 4)+'"';
+      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+      html += ' rx="5"/>';
+    }
+    html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="'+fill+'"';
+    if (stroke && stroke !== 'none') {
+      html += ' stroke="'+stroke+'" stroke-width="'+strokeWidth+'"';
+      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+    } else {
+      html += ' stroke="none"';
+    }
+    html += ' rx="5"/>';
+    return html;
+  }
+
+  function mosaicOverlayPolygon(points, fill, stroke, strokeWidth = 2.5, dashArray = '') {
+    if (!points || !points.length) return '';
+    let html = '';
+    if (stroke && stroke !== 'none') {
+      html += '<polygon points="'+mosaicPointsToString(points)+'" fill="transparent" stroke="'+themeAlpha('--bg2', 0.96)+'" stroke-width="'+(strokeWidth + 4)+'"';
+      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+      html += ' stroke-linejoin="round"/>';
+    }
+    html += '<polygon points="'+mosaicPointsToString(points)+'" fill="'+fill+'"';
+    if (stroke && stroke !== 'none') {
+      html += ' stroke="'+stroke+'" stroke-width="'+strokeWidth+'"';
+      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+    } else {
+      html += ' stroke="none"';
+    }
+    html += ' stroke-linejoin="round"/>';
+    return html;
+  }
+
+  function buildMosaicMetricOverlay(metricKey, geometry, mobile) {
+    if (!metricKey) return '';
+
+    try {
+      const outlineDash = mobile ? '7,4' : '8,5';
+      const guideStroke = themeAlpha('--text', 0.72);
+      const accentStroke = themeColor('--accent');
+      const guideStrokeWidth = 4.1;
+      const focusStrokeWidth = 4.1;
+      let html = '';
+
+      switch (metricKey) {
+        case 'tpr':
+          // Draw the denominator first, then the numerator inside it.
+          html += mosaicOverlayRect(geometry.actualPosRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          break;
+        case 'fpr':
+          html += mosaicOverlayRect(geometry.actualNegRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeColor('--fp-color'), focusStrokeWidth);
+          break;
+        case 'precision':
+          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          break;
+        case 'accuracy':
+          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          break;
+        case 'f1':
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.82), guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.82), guideStrokeWidth, outlineDash);
+          break;
+        case 'auc':
+          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', accentStroke, focusStrokeWidth);
+          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          break;
+        case 'npv':
+          html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          break;
+        case 'mcc':
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.85), guideStrokeWidth, outlineDash);
+          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.85), guideStrokeWidth, outlineDash);
+          break;
+        default:
+          return '';
+      }
+
+      return html;
+    } catch (error) {
+      console.error('buildMosaicMetricOverlay failed', error);
+      return '';
+    }
   }
 
   function renderMosaicHorizontal(svg, P, Nn, TP, FN, FP, TN, tpr, fpr, mobile = false) {
@@ -3412,6 +3796,21 @@ function switchView(view) {
 
     const x0 = pad.l;
     const y0 = pad.t;
+    const tpRect = { x: x0, y: y0, w: pW, h: tpH };
+    const fnRect = { x: x0, y: y0 + tpH, w: pW, h: fnH };
+    const fpRect = { x: x0 + pW, y: y0, w: nW, h: fpH };
+    const tnRect = { x: x0 + pW, y: y0 + fpH, w: nW, h: tnH };
+    const wholeRect = { x: x0, y: y0, w: bW, h: bH };
+    const actualPosRect = { x: x0, y: y0, w: pW, h: bH };
+    const actualNegRect = { x: x0 + pW, y: y0, w: nW, h: bH };
+    const predictedPosPoints = [
+      [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
+      [x0 + pW, y0 + fpH], [x0 + pW, y0 + tpH], [x0, y0 + tpH]
+    ];
+    const predictedNegPoints = [
+      [x0, y0 + tpH], [x0 + pW, y0 + tpH], [x0 + pW, y0 + fpH],
+      [x0 + pW + nW, y0 + fpH], [x0 + pW + nW, y0 + bH], [x0, y0 + bH]
+    ];
 
     let html = '';
     html += rect(x0, y0, pW, tpH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo, 'left');
@@ -3419,21 +3818,31 @@ function switchView(view) {
     html += rect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo, 'right');
     html += rect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo, 'right');
 
-    const ppPoints = [
-      [x0, y0], [x0 + pW + nW, y0], [x0 + pW + nW, y0 + fpH],
-      [x0 + pW, y0 + fpH], [x0 + pW, y0 + tpH], [x0, y0 + tpH],
-    ].map(p => p.join(',')).join(' ');
-    html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
-    const legendY = mobile ? 15 : 16;
-    const legendLineLen = mobile ? 22 : 28;
-    const legendText = mobile ? 'Dashed outline = predicted +' : 'Dashed outline = positive predictions (TP + FP)';
-    html += '<line x1="'+x0+'" y1="'+legendY+'" x2="'+(x0 + legendLineLen)+'" y2="'+legendY+'" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
-    html += '<text x="'+(x0 + legendLineLen + 8)+'" y="'+legendY+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">'+legendText+'</text>';
+    if (!window.activeMosaicMetricKey) {
+      const ppPoints = mosaicPointsToString(predictedPosPoints);
+      html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+      const legendY = mobile ? 15 : 16;
+      const legendLineLen = mobile ? 22 : 28;
+      const legendText = mobile ? 'Dashed outline = predicted +' : 'Dashed outline = positive predictions (TP + FP)';
+      html += '<line x1="'+x0+'" y1="'+legendY+'" x2="'+(x0 + legendLineLen)+'" y2="'+legendY+'" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+      html += '<text x="'+(x0 + legendLineLen + 8)+'" y="'+legendY+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">'+legendText+'</text>';
+    }
 
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += buildMosaicMetricOverlay(window.activeMosaicMetricKey, {
+      tpRect,
+      fnRect,
+      fpRect,
+      tnRect,
+      wholeRect,
+      actualPosRect,
+      actualNegRect,
+      predictedPosPoints,
+      predictedNegPoints
+    }, mobile);
 
     svg.innerHTML = html;
   }
@@ -3664,7 +4073,7 @@ function switchView(view) {
     if (updating) return;
     updating = true;
     applyPreset('direct_precision_story');
-    switchMetricsView('eqs');
+    switchMetricsView('theory');
     updating = false;
   });
 
