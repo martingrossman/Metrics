@@ -1625,7 +1625,7 @@
   }
   .advanced-header {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 10px;
     margin-bottom: 10px;
   }
@@ -1774,14 +1774,6 @@
   <div class="app-header">
     <h1>ROC &amp; Confusion Matrix</h1>
     <div class="app-header-right">
-      <div class="mode-pill">
-        <span id="modeStateLabel">Direct</span>
-        <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
-          <input type="checkbox" id="toggle_bidirectional">
-          <span class="switch-slider"></span>
-        </label>
-        <span class="mode-pill-name">Link</span>
-      </div>
       <button class="theme-toggle" id="themeToggle" type="button">Theme</button>
     </div>
   </div>
@@ -1818,6 +1810,14 @@
       <div class="advanced-header">
         <span class="advanced-label">Score Model</span>
         <span class="advanced-note" id="advancedNote">Score model only — affects distributions &amp; AUC in direct mode</span>
+        <div class="mode-pill" style="margin-left:auto;">
+          <span id="modeStateLabel">Direct</span>
+          <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
+            <input type="checkbox" id="toggle_bidirectional">
+            <span class="switch-slider"></span>
+          </label>
+          <span class="mode-pill-name">Link</span>
+        </div>
       </div>
       <div class="advanced-grid">
         <div class="slider-col">
