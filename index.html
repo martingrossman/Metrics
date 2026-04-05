@@ -359,12 +359,27 @@
   }
 
   .metric-card .metric-name {
-    font-size: 0.65rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 5px;
+    font-size: 0.66rem;
     font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 5px;
+    line-height: 1.25;
+  }
+
+  .metric-card .metric-name-main {
+    color: var(--text);
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.6px;
+  }
+
+  .metric-card .metric-name-sub {
     color: var(--text-dim);
-    margin-bottom: 4px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
   }
 
   .metric-card .metric-val {
@@ -372,13 +387,21 @@
     font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
     color: var(--accent);
+    line-height: 1.1;
   }
 
   .metric-card .metric-formula {
-    font-size: 0.6rem;
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    font-size: 0.66rem;
     font-family: 'JetBrains Mono', monospace;
-    color: var(--text-dim);
-    margin-top: 2px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text);
+    background: rgba(22,32,51,0.05);
+    border: 1px solid rgba(22,32,51,0.08);
   }
 
   .story-title {
@@ -1170,9 +1193,13 @@
       font-size: 1rem;
     }
 
-    .metric-card .metric-name,
-    .metric-card .metric-formula {
+    .metric-card .metric-name {
       font-size: 0.56rem;
+    }
+
+    .metric-card .metric-formula {
+      font-size: 0.6rem;
+      padding: 3px 6px;
     }
 
     #distPlot, #rocPlot, #metricsBarPlot {
@@ -1479,7 +1506,8 @@
     }
 
     .metric-card .metric-formula {
-      font-size: 0.55rem;
+      font-size: 0.58rem;
+      padding: 3px 6px;
     }
 
     #metricsBarPlot {
@@ -2092,14 +2120,14 @@
       </div>
       <div class="metrics-vals-view active" id="metricsValsView">
         <div class="metrics-grid">
-          <div class="metric-card"><div class="metric-name">TPR (Recall)</div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
-          <div class="metric-card"><div class="metric-name">FPR</div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div></div>
-          <div class="metric-card"><div class="metric-name">Precision (PPV)</div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="switchMetricsView('eqs');document.getElementById('precisionStoryCard').scrollIntoView({behavior:'smooth',block:'start'})">See why &rarr;</button></div>
-          <div class="metric-card"><div class="metric-name">Accuracy</div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
-          <div class="metric-card"><div class="metric-name">F1 Score</div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div></div>
-          <div class="metric-card"><div class="metric-name">AUC</div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div></div>
-          <div class="metric-card"><div class="metric-name">NPV</div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div></div>
-          <div class="metric-card"><div class="metric-name">MCC</div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">Precision</span></div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="switchMetricsView('eqs');document.getElementById('precisionStoryCard').scrollIntoView({behavior:'smooth',block:'start'})">See why &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">Accuracy</span></div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">F1 Score</span></div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">AUC</span></div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">NPV</span></div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">MCC</span></div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div></div>
         </div>
       </div>
       <div class="metrics-bar-view" id="metricsBarView">
