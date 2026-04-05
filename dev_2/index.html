@@ -1678,38 +1678,6 @@
     color: var(--text-dim);
   }
 
-  .expand-section {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 8px;
-    overflow: hidden;
-  }
-  .expand-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-  }
-  .expand-summary::-webkit-details-marker { display: none; }
-  .expand-summary::marker { display: none; }
-  .expand-chevron {
-    font-size: 1rem;
-    line-height: 1;
-    transition: transform 0.18s ease;
-    font-weight: 400;
-  }
-  .expand-section[open] .expand-chevron { transform: rotate(45deg); }
-  .expand-body { padding: 0 16px 16px; }
 
   @media (max-width: 960px) {
     .primary-grid { grid-template-columns: 1fr; }
@@ -1752,6 +1720,16 @@
   }
   .sticky-top .app-header { margin-bottom: 10px; }
   .scroll-body { padding-top: 16px; }
+  .secondary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .secondary-grid .expand-section { margin-bottom: 0; }
+  @media (max-width: 700px) {
+    .secondary-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -1986,15 +1964,14 @@
 
   </div>
 
-  <details class="expand-section" id="distPanel">
-    <summary class="expand-summary">
-      <span id="distPanelTitle">Class Distributions &amp; Threshold</span>
-      <span class="expand-chevron">+</span>
-    </summary>
-    <div class="expand-body">
-      <div class="view-toggle" style="margin-bottom:10px;">
-        <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
-        <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
+  <div class="secondary-grid">
+    <div class="primary-card" id="distPanel">
+      <div class="card-header">
+        <span class="card-title" id="distPanelTitle">Class Distributions &amp; Threshold</span>
+        <div class="view-toggle">
+          <button class="active" id="btn_dist_curves" onclick="switchDistView('curves')">Curves</button>
+          <button id="btn_dist_topview" onclick="switchDistView('topview')">Top View</button>
+        </div>
       </div>
       <div class="dist-curves-view active" id="distCurvesView">
         <div id="distPlot" style="width:100%;height:300px;"></div>
@@ -2003,17 +1980,14 @@
         <svg id="topViewSVG" viewBox="0 0 700 320" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
     </div>
-  </details>
 
-  <details class="expand-section" id="rocPanel">
-    <summary class="expand-summary">
-      <span>ROC Curve</span>
-      <span class="expand-chevron">+</span>
-    </summary>
-    <div class="expand-body">
+    <div class="primary-card" id="rocPanel">
+      <div class="card-header">
+        <span class="card-title">ROC Curve</span>
+      </div>
       <div id="rocPlot" style="width:100%;height:300px;"></div>
     </div>
-  </details>
+  </div>
 
   </div><!-- /.scroll-body -->
 
@@ -3488,21 +3462,6 @@ function switchView(view) {
   });
 
 })();
-</script>
-<script>
-// Resize Plotly charts when expand sections open
-document.querySelectorAll('.expand-section').forEach(function(det) {
-  det.addEventListener('toggle', function() {
-    if (!det.open) return;
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        det.querySelectorAll('[id$="Plot"]').forEach(function(el) {
-          if (window.Plotly) Plotly.Plots.resize(el);
-        });
-      });
-    });
-  });
-});
 </script>
 </body>
 </html>
