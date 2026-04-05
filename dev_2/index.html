@@ -1721,7 +1721,37 @@
     .sliders-row { grid-template-columns: 1fr; }
     .advanced-grid { grid-template-columns: 1fr 1fr; }
     .app-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .sticky-top { margin: -10px -12px 0; padding: 10px 12px 0; }
   }
+
+  /* ─── Sticky top / scrollable body ─── */
+  .sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    /* extend flush to viewport edges by negating .app padding */
+    margin: -16px -20px 0;
+    padding: 16px 20px 0;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .sticky-top .controls-strip {
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  .sticky-top .hint-bar {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+  .sticky-top .app-header { margin-bottom: 10px; }
+  .scroll-body { padding-top: 16px; }
 </style>
 </head>
 <body>
@@ -1750,6 +1780,7 @@
 
 <div class="app">
 
+  <div class="sticky-top">
   <div class="app-header">
     <h1>ROC &amp; Confusion Matrix</h1>
     <div class="app-header-right">
@@ -1819,7 +1850,9 @@
       </div>
     </details>
   </div>
+  </div><!-- /.sticky-top -->
 
+  <div class="scroll-body">
   <div class="primary-grid">
 
     <div class="primary-card" id="cmPanel">
@@ -1981,6 +2014,8 @@
       <div id="rocPlot" style="width:100%;height:300px;"></div>
     </div>
   </details>
+
+  </div><!-- /.scroll-body -->
 
 </div>
 
