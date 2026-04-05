@@ -356,6 +356,8 @@
     border-radius: 8px;
     padding: 10px 12px;
     border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
   }
 
   .metric-card .metric-name {
@@ -502,7 +504,8 @@
 
   .see-why-btn {
     display: block;
-    margin-top: 6px;
+    margin-top: auto;
+    padding-top: 8px;
     font-size: 0.58rem;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
@@ -1115,8 +1118,8 @@
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
 
-  .metrics-vals-view, .metrics-bar-view, .metrics-eqs-view { display: none; }
-  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-eqs-view.active { display: block; }
+  .metrics-vals-view, .metrics-bar-view, .metrics-formulas-view, .metrics-theory-view { display: none; }
+  .metrics-vals-view.active, .metrics-bar-view.active, .metrics-formulas-view.active, .metrics-theory-view.active { display: block; }
 
   .metrics-bar-frame {
     background: var(--bg3);
@@ -1163,6 +1166,57 @@
     color: var(--text-dim);
     margin-top: 5px;
     line-height: 1.5;
+  }
+
+  .formula-intro {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background: var(--soft-accent-bg);
+    border: 1px solid var(--soft-accent-border);
+    border-radius: 8px;
+    font-size: 0.68rem;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .formula-section {
+    scroll-margin-top: 8px;
+  }
+
+  .formula-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .formula-main {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--soft-accent-border);
+    background: var(--bg2);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .formula-alt {
+    margin-top: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
+  .formula-note {
+    margin-top: 6px;
+    font-size: 0.67rem;
+    color: var(--text-dim);
+    line-height: 1.45;
   }
 
   @media (min-width: 641px) {
@@ -2115,19 +2169,20 @@
         <div class="view-toggle">
           <button class="active" id="btn_metrics_vals" onclick="switchMetricsView('vals')">Values</button>
           <button id="btn_metrics_bar" onclick="switchMetricsView('bar')">Bars</button>
-          <button id="btn_metrics_eqs" onclick="switchMetricsView('eqs')">Theory</button>
+          <button id="btn_metrics_formulas" onclick="switchMetricsView('formulas')">Equations</button>
+          <button id="btn_metrics_theory" onclick="switchMetricsView('theory')">Theory</button>
         </div>
       </div>
       <div class="metrics-vals-view active" id="metricsValsView">
         <div class="metrics-grid">
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">Precision</span></div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="switchMetricsView('eqs');document.getElementById('precisionStoryCard').scrollIntoView({behavior:'smooth',block:'start'})">See why &rarr;</button></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">Accuracy</span></div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">F1 Score</span></div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">AUC</span></div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">NPV</span></div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div></div>
-          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">MCC</span></div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_tpr')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_fpr')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">Precision</span><span class="metric-name-sub">(PPV)</span></div><div class="metric-val" id="m_prec">&mdash;</div><div class="metric-formula">TP/(TP+FP)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_precision')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">Accuracy</span></div><div class="metric-val" id="m_acc">&mdash;</div><div class="metric-formula">(TP+TN)/N</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_accuracy')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">F1 Score</span></div><div class="metric-val" id="m_f1">&mdash;</div><div class="metric-formula">2&middot;P&middot;R/(P+R)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_f1')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">AUC</span></div><div class="metric-val" id="m_auc">&mdash;</div><div class="metric-formula">Area under ROC</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_auc')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">NPV</span></div><div class="metric-val" id="m_npv">&mdash;</div><div class="metric-formula">TN/(TN+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_npv')">Equation &rarr;</button></div>
+          <div class="metric-card"><div class="metric-name"><span class="metric-name-main">MCC</span></div><div class="metric-val" id="m_mcc">&mdash;</div><div class="metric-formula">Matthews corr.</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_mcc')">Equation &rarr;</button></div>
         </div>
       </div>
       <div class="metrics-bar-view" id="metricsBarView">
@@ -2135,7 +2190,68 @@
           <div id="metricsBarPlot" style="width:100%;height:300px;"></div>
         </div>
       </div>
-      <div class="metrics-eqs-view" id="metricsEqsView">
+      <div class="metrics-formulas-view" id="metricsFormulasView">
+        <div class="equations-box" id="metricsFormulasBox">
+          <div class="formula-intro">Click any metric card in <strong>Values</strong> to jump here. These are the standard formulas written in the usual notation.</div>
+          <div class="eq-section formula-section" id="formula_tpr">
+            <div class="eq-title">TPR (Recall)</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">TPR = TP / (TP + FN)</div>
+            <div class="formula-alt">Also written as: Recall = TP / (TP + FN)</div>
+            <div class="formula-note">Among the actual positives, what fraction did the model catch?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_fpr">
+            <div class="eq-title">FPR</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">FPR = FP / (FP + TN)</div>
+            <div class="formula-alt">Also written as: FPR = 1 - TNR</div>
+            <div class="formula-note">Among the actual negatives, what fraction were wrongly predicted positive?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_precision">
+            <div class="eq-title">Precision (PPV)</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">Precision = TP / (TP + FP)</div>
+            <div class="formula-alt">Also written as: PPV = TP / (TP + FP)</div>
+            <div class="formula-note">Among the predicted positives, what fraction are truly positive?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_accuracy">
+            <div class="eq-title">Accuracy</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">Accuracy = (TP + TN) / (TP + TN + FP + FN)</div>
+            <div class="formula-alt">Also written as: Accuracy = (TP + TN) / N</div>
+            <div class="formula-note">Out of all predictions, what fraction were correct?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_f1">
+            <div class="eq-title">F1 Score</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">F1 = 2TP / (2TP + FP + FN)</div>
+            <div class="formula-alt">Also written as: F1 = 2 &middot; Precision &middot; Recall / (Precision + Recall)</div>
+            <div class="formula-note">A balanced score that gets high only when both precision and recall are high.</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_auc">
+            <div class="eq-title">AUC</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">AUC = &int;<sub>0</sub><sup>1</sup> TPR(FPR) d(FPR)</div>
+            <div class="formula-alt">Also written as: area under the ROC curve</div>
+            <div class="formula-note">It summarizes performance across all thresholds, not just the current one.</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_npv">
+            <div class="eq-title">NPV</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">NPV = TN / (TN + FN)</div>
+            <div class="formula-alt">NPV = negative predictive value</div>
+            <div class="formula-note">Among the predicted negatives, what fraction are truly negative?</div>
+          </div>
+          <div class="eq-section formula-section" id="formula_mcc">
+            <div class="eq-title">MCC</div>
+            <div class="formula-kicker">Traditional Formula</div>
+            <div class="eq formula-main">MCC = (TP &middot; TN - FP &middot; FN) / &radic;((TP+FP)(TP+FN)(TN+FP)(TN+FN))</div>
+            <div class="formula-alt">Range: -1 to 1</div>
+            <div class="formula-note">Uses all four confusion-matrix cells, which makes it robust under class imbalance.</div>
+          </div>
+        </div>
+      </div>
+      <div class="metrics-theory-view" id="metricsTheoryView">
         <div class="equations-box">
           <div class="eq-section" id="precisionStoryCard">
             <div class="eq-title">Live Precision Story</div>
@@ -2238,10 +2354,12 @@
 function switchMetricsView(view) {
   var valsView = document.getElementById('metricsValsView');
   var barView = document.getElementById('metricsBarView');
-  var eqsView = document.getElementById('metricsEqsView');
+  var formulasView = document.getElementById('metricsFormulasView');
+  var theoryView = document.getElementById('metricsTheoryView');
   var btnVals = document.getElementById('btn_metrics_vals');
   var btnBar = document.getElementById('btn_metrics_bar');
-  var btnEqs = document.getElementById('btn_metrics_eqs');
+  var btnFormulas = document.getElementById('btn_metrics_formulas');
+  var btnTheory = document.getElementById('btn_metrics_theory');
   function resizeMetricsBar() {
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
@@ -2252,27 +2370,54 @@ function switchMetricsView(view) {
   if (view === 'vals') {
     valsView.classList.add('active');
     barView.classList.remove('active');
-    eqsView.classList.remove('active');
+    formulasView.classList.remove('active');
+    theoryView.classList.remove('active');
     btnVals.classList.add('active');
     btnBar.classList.remove('active');
-    btnEqs.classList.remove('active');
+    btnFormulas.classList.remove('active');
+    btnTheory.classList.remove('active');
   } else if (view === 'bar') {
     valsView.classList.remove('active');
     barView.classList.add('active');
-    eqsView.classList.remove('active');
+    formulasView.classList.remove('active');
+    theoryView.classList.remove('active');
     btnVals.classList.remove('active');
     btnBar.classList.add('active');
-    btnEqs.classList.remove('active');
+    btnFormulas.classList.remove('active');
+    btnTheory.classList.remove('active');
     if (window.refreshMetricsBar) window.refreshMetricsBar();
     resizeMetricsBar();
+  } else if (view === 'formulas') {
+    valsView.classList.remove('active');
+    barView.classList.remove('active');
+    formulasView.classList.add('active');
+    theoryView.classList.remove('active');
+    btnVals.classList.remove('active');
+    btnBar.classList.remove('active');
+    btnFormulas.classList.add('active');
+    btnTheory.classList.remove('active');
   } else {
     valsView.classList.remove('active');
     barView.classList.remove('active');
-    eqsView.classList.add('active');
+    formulasView.classList.remove('active');
+    theoryView.classList.add('active');
     btnVals.classList.remove('active');
     btnBar.classList.remove('active');
-    btnEqs.classList.add('active');
+    btnFormulas.classList.remove('active');
+    btnTheory.classList.add('active');
   }
+}
+
+function openMetricFormula(targetId) {
+  switchMetricsView('formulas');
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      var target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 }
 
 function switchDistView(view) {
@@ -3700,7 +3845,7 @@ function switchView(view) {
     if (updating) return;
     updating = true;
     applyPreset('direct_precision_story');
-    switchMetricsView('eqs');
+    switchMetricsView('theory');
     updating = false;
   });
 
