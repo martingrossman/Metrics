@@ -103,13 +103,14 @@
 
   .layout {
     display: grid;
-    grid-template-columns: 280px 1fr 1fr;
+    grid-template-columns: minmax(300px, 330px) minmax(420px, 1.18fr) minmax(340px, 0.92fr);
     grid-template-rows: auto auto;
     gap: 14px;
     padding: 10px 16px 20px;
     width: min(96vw, 1920px);
     max-width: 1920px;
     margin: 0 auto;
+    align-items: start;
   }
 
   .controls {
@@ -657,7 +658,12 @@
     background: transparent;
     color: inherit;
     text-align: left;
-    cursor: default;
+    cursor: pointer;
+  }
+
+  .control-section-toggle:focus-visible {
+    outline: 2px solid var(--soft-accent-border);
+    outline-offset: -2px;
   }
 
   .control-section-copy {
@@ -694,7 +700,7 @@
     flex: none;
     width: 34px;
     height: 34px;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--border);
@@ -705,6 +711,10 @@
     font-size: 1rem;
     font-weight: 700;
     line-height: 1;
+  }
+
+  .control-section:not(.is-open) .control-section-body {
+    display: none;
   }
 
   .control-section-body {
@@ -740,6 +750,7 @@
   }
 
   .desktop-preset-strip {
+    overflow: visible;
     flex-wrap: wrap;
   }
 
@@ -1000,6 +1011,23 @@
     color: var(--text-dim);
     margin-top: 5px;
     line-height: 1.5;
+  }
+
+  @media (min-width: 641px) {
+    .layout > .panel,
+    .layout > .controls {
+      align-self: start;
+    }
+  }
+
+  @media (min-width: 1101px) {
+    .controls {
+      position: sticky;
+      top: 12px;
+      max-height: calc(100vh - 24px);
+      overflow-y: auto;
+      scrollbar-gutter: stable both-edges;
+    }
   }
 
   @media (max-width: 1100px) {
@@ -2240,7 +2268,6 @@ function switchView(view) {
 
     document.querySelectorAll('[data-section-toggle]').forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!isMobile()) return;
         const section = btn.closest('[data-mobile-section]');
         if (!section) return;
         setControlSectionExpanded(section, !section.classList.contains('is-open'));
