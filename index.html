@@ -3642,7 +3642,13 @@ function switchView(view) {
 
   function mosaicOverlayRect(shape, fill, stroke, strokeWidth = 2.5, dashArray = '') {
     if (!shape || shape.w < 1 || shape.h < 1) return '';
-    let html = '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="'+fill+'"';
+    let html = '';
+    if (stroke && stroke !== 'none') {
+      html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="transparent" stroke="'+themeAlpha('--bg2', 0.96)+'" stroke-width="'+(strokeWidth + 4)+'"';
+      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+      html += ' rx="5"/>';
+    }
+    html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="'+fill+'"';
     if (stroke && stroke !== 'none') {
       html += ' stroke="'+stroke+'" stroke-width="'+strokeWidth+'"';
       if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
@@ -3655,7 +3661,13 @@ function switchView(view) {
 
   function mosaicOverlayPolygon(points, fill, stroke, strokeWidth = 2.5, dashArray = '') {
     if (!points || !points.length) return '';
-    let html = '<polygon points="'+mosaicPointsToString(points)+'" fill="'+fill+'"';
+    let html = '';
+    if (stroke && stroke !== 'none') {
+      html += '<polygon points="'+mosaicPointsToString(points)+'" fill="transparent" stroke="'+themeAlpha('--bg2', 0.96)+'" stroke-width="'+(strokeWidth + 4)+'"';
+      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+      html += ' stroke-linejoin="round"/>';
+    }
+    html += '<polygon points="'+mosaicPointsToString(points)+'" fill="'+fill+'"';
     if (stroke && stroke !== 'none') {
       html += ' stroke="'+stroke+'" stroke-width="'+strokeWidth+'"';
       if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
@@ -3687,65 +3699,66 @@ function switchView(view) {
 
     try {
       const outlineDash = mobile ? '7,4' : '8,5';
-      const dimFill = themeAlpha('--text', 0.08);
+      const guideStroke = themeAlpha('--text', 0.72);
+      const accentStroke = themeColor('--accent');
       const boxX = mobile ? (geometry.wholeRect.x + geometry.wholeRect.w - 166) : (geometry.wholeRect.x + geometry.wholeRect.w - 220);
       const boxY = geometry.wholeRect.y + 10;
-      let html = mosaicOverlayRect(geometry.wholeRect, dimFill, 'none', 0);
+      let html = '';
       let title = '';
       let lines = [];
 
       switch (metricKey) {
         case 'tpr':
-          html += mosaicOverlayRect(geometry.actualPosRect, themeAlpha('--tp-color', 0.08), themeAlpha('--tp-color', 0.78), 2.5, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, themeAlpha('--tp-color', 0.36), themeColor('--tp-color'), 3);
+          html += mosaicOverlayRect(geometry.actualPosRect, 'transparent', guideStroke, 2.4, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
           title = 'TPR (Recall)';
-          lines = ['TPR = TP / (TP + FN)', 'fill = TP', 'outline = actual positives'];
+          lines = ['TPR = TP / (TP + FN)', 'solid ring = TP', 'dashed ring = actual positives'];
           break;
         case 'fpr':
-          html += mosaicOverlayRect(geometry.actualNegRect, themeAlpha('--fp-color', 0.08), themeAlpha('--fp-color', 0.78), 2.5, outlineDash);
-          html += mosaicOverlayRect(geometry.fpRect, themeAlpha('--fp-color', 0.34), themeColor('--fp-color'), 3);
+          html += mosaicOverlayRect(geometry.actualNegRect, 'transparent', guideStroke, 2.4, outlineDash);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeColor('--fp-color'), 3.2);
           title = 'FPR';
-          lines = ['FPR = FP / (FP + TN)', 'fill = FP', 'outline = actual negatives'];
+          lines = ['FPR = FP / (FP + TN)', 'solid ring = FP', 'dashed ring = actual negatives'];
           break;
         case 'precision':
-          html += mosaicOverlayPolygon(geometry.predictedPosPoints, themeAlpha('--accent', 0.08), themeAlpha('--text', 0.82), 2.8, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, themeAlpha('--tp-color', 0.38), themeColor('--tp-color'), 3);
+          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, 2.6, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
           title = 'Precision (PPV)';
-          lines = ['Precision = TP / (TP + FP)', 'fill = TP', 'outline = predicted positives'];
+          lines = ['Precision = TP / (TP + FP)', 'solid ring = TP', 'dashed ring = predicted positives'];
           break;
         case 'accuracy':
-          html += mosaicOverlayRect(geometry.wholeRect, themeAlpha('--accent', 0.04), themeAlpha('--text', 0.68), 2.5, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, themeAlpha('--tp-color', 0.34), themeColor('--tp-color'), 3);
-          html += mosaicOverlayRect(geometry.tnRect, themeAlpha('--tn-color', 0.24), themeColor('--tn-color'), 3);
+          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', guideStroke, 2.4, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.1);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 3.1);
           title = 'Accuracy';
-          lines = ['Accuracy = (TP + TN) / N', 'fill = TP + TN', 'outline = all cases'];
+          lines = ['Accuracy = (TP + TN) / N', 'solid rings = TP and TN', 'dashed ring = all cases'];
           break;
         case 'f1':
-          html += mosaicOverlayRect(geometry.tpRect, themeAlpha('--tp-color', 0.38), themeColor('--tp-color'), 3);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 3.2);
           html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.82), 2.5, outlineDash);
           html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.82), 2.5, outlineDash);
           title = 'F1 Score';
-          lines = ['F1 = 2TP / (2TP + FP + FN)', 'TP counts twice', 'FP and FN are the penalties'];
+          lines = ['F1 = 2TP / (2TP + FP + FN)', 'solid ring = TP', 'dashed rings = FP and FN'];
           break;
         case 'auc':
-          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', themeAlpha('--accent', 0.52), 2.5);
-          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', themeAlpha('--text', 0.62), 2.5, outlineDash);
+          html += mosaicOverlayRect(geometry.wholeRect, 'transparent', accentStroke, 2.5);
+          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, 2.4, outlineDash);
           title = 'AUC';
-          lines = ['not one fixed region here', 'it tracks this boundary', 'across many thresholds'];
+          lines = ['not one fixed region here', 'solid ring = current view', 'dashed ring = current boundary'];
           break;
         case 'npv':
-          html += mosaicOverlayPolygon(geometry.predictedNegPoints, themeAlpha('--tn-color', 0.08), themeAlpha('--text', 0.82), 2.8, outlineDash);
-          html += mosaicOverlayRect(geometry.tnRect, themeAlpha('--tn-color', 0.28), themeColor('--tn-color'), 3);
+          html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, 2.6, outlineDash);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 3.2);
           title = 'NPV';
-          lines = ['NPV = TN / (TN + FN)', 'fill = TN', 'outline = predicted negatives'];
+          lines = ['NPV = TN / (TN + FN)', 'solid ring = TN', 'dashed ring = predicted negatives'];
           break;
         case 'mcc':
-          html += mosaicOverlayRect(geometry.tpRect, themeAlpha('--tp-color', 0.24), themeColor('--tp-color'), 2.5);
-          html += mosaicOverlayRect(geometry.tnRect, themeAlpha('--tn-color', 0.18), themeColor('--tn-color'), 2.5);
-          html += mosaicOverlayRect(geometry.fpRect, themeAlpha('--fp-color', 0.12), themeAlpha('--fp-color', 0.85), 2.2, outlineDash);
-          html += mosaicOverlayRect(geometry.fnRect, themeAlpha('--fn-color', 0.12), themeAlpha('--fn-color', 0.85), 2.2, outlineDash);
+          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), 2.9);
+          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), 2.9);
+          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.85), 2.2, outlineDash);
+          html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.85), 2.2, outlineDash);
           title = 'MCC';
-          lines = ['uses TP, FP, FN, TN', 'all four cells matter'];
+          lines = ['uses TP, FP, FN, TN', 'solid rings = TP and TN', 'dashed rings = FP and FN'];
           break;
         default:
           return '';
@@ -3811,13 +3824,15 @@ function switchView(view) {
     html += rect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo, 'right');
     html += rect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo, 'right');
 
-    const ppPoints = mosaicPointsToString(predictedPosPoints);
-    html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
-    const legendY = mobile ? 15 : 16;
-    const legendLineLen = mobile ? 22 : 28;
-    const legendText = mobile ? 'Dashed outline = predicted +' : 'Dashed outline = positive predictions (TP + FP)';
-    html += '<line x1="'+x0+'" y1="'+legendY+'" x2="'+(x0 + legendLineLen)+'" y2="'+legendY+'" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
-    html += '<text x="'+(x0 + legendLineLen + 8)+'" y="'+legendY+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">'+legendText+'</text>';
+    if (!window.activeMosaicMetricKey) {
+      const ppPoints = mosaicPointsToString(predictedPosPoints);
+      html += '<polygon points="' + ppPoints + '" fill="none" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+      const legendY = mobile ? 15 : 16;
+      const legendLineLen = mobile ? 22 : 28;
+      const legendText = mobile ? 'Dashed outline = predicted +' : 'Dashed outline = positive predictions (TP + FP)';
+      html += '<line x1="'+x0+'" y1="'+legendY+'" x2="'+(x0 + legendLineLen)+'" y2="'+legendY+'" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
+      html += '<text x="'+(x0 + legendLineLen + 8)+'" y="'+legendY+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">'+legendText+'</text>';
+    }
 
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
