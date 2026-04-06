@@ -238,12 +238,25 @@
   }
 
   /* Plotly toolbar tweaks */
-  .modebar {
+  .modebar,
+  .modebar-group,
+  .modebar-container {
     background: transparent !important;
     box-shadow: none !important;
+    top: 6px !important;
+    right: 6px !important;
   }
-  .modebar-btn {
+  .modebar-btn,
+  .modebar-btn:hover,
+  .modebar-btn:active {
     background: transparent !important;
+  }
+  .modebar-btn svg path {
+    fill: var(--text) !important;
+  }
+
+  .js-plotly-plot .plot-container {
+    overflow: visible !important;
   }
 
   input[type="range"] {
@@ -3656,7 +3669,7 @@ function switchView(view) {
     Plotly.react('distPlot', traces, layout, {
       displayModeBar: true,
       displaylogo: false,
-      modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d']],
+      modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d', 'pan2d']],
       responsive: true
     });
   }
@@ -3823,7 +3836,7 @@ function switchView(view) {
     Plotly.react('rocPlot', traces, layout, {
       displayModeBar: true,
       displaylogo: false,
-      modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d']],
+      modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d', 'pan2d']],
       responsive: true
     });
   }
