@@ -402,6 +402,52 @@
     background: transparent;
   }
 
+  .cm-hover-legend {
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 9px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg2) 92%, transparent);
+    box-shadow: 0 6px 18px rgba(22, 32, 51, 0.08);
+    pointer-events: none;
+    z-index: 5;
+    backdrop-filter: blur(4px);
+  }
+
+  .cm-hover-legend.active {
+    display: flex;
+  }
+
+  .cm-hover-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--text-dim);
+    line-height: 1.1;
+  }
+
+  .cm-hover-legend-sample {
+    width: 22px;
+    height: 0;
+    border-top: 3px solid var(--text);
+    border-radius: 999px;
+    opacity: 0.92;
+    flex: 0 0 auto;
+  }
+
+  .cm-hover-legend-sample.dashed {
+    border-top-style: dashed;
+    opacity: 0.78;
+  }
+
   .cm-cell > * {
     position: relative;
     z-index: 2;
@@ -2930,6 +2976,7 @@ label,score
             </div>
             <div class="cm-group-overlay" id="cmGroupOverlay" aria-hidden="true"></div>
           </div>
+          <div class="cm-hover-legend" id="cmHoverLegend" aria-hidden="true"></div>
           <div class="cm-axis-bottom">Actual</div>
         </div>
         <div class="mosaic-view active" id="mosaicView">
@@ -4717,6 +4764,7 @@ function applyPreset(name) {
     });
     const overlay = document.getElementById('cmGroupOverlay');
     if (overlay) overlay.innerHTML = '';
+    updateCMMetricLegend(null);
   }
 
   function getCMCell(cellKey) {
@@ -4842,6 +4890,8 @@ function applyPreset(name) {
       default:
         break;
     }
+
+    updateCMMetricLegend(metricKey);
   }
 
   window.refreshCMMetricOverlay = function() {
@@ -5140,6 +5190,86 @@ function applyPreset(name) {
     return html;
   }
 
+  function getMetricLegendRows(metricKey) {
+    switch (metricKey) {
+      case 'tpr':
+      case 'fpr':
+      case 'precision':
+      case 'accuracy':
+      case 'npv':
+        return [
+          { dashed: false, text: 'Solid = numerator' },
+          { dashed: true, text: 'Dashed = denominator' }
+        ];
+      case 'f1':
+        return [
+          { dashed: false, text: 'Solid = TP term' },
+          { dashed: true, text: 'Dashed = FP/FN terms' }
+        ];
+      case 'mcc':
+        return [
+          { dashed: false, text: 'Solid = TP/TN terms' },
+          { dashed: true, text: 'Dashed = FP/FN terms' }
+        ];
+      case 'auc':
+        return [
+          { dashed: false, text: 'Solid = whole area' }
+        ];
+      default:
+        return null;
+    }
+  }
+
+  function buildMosaicMetricLegend(metricKey, x, mobile, typo) {
+    const rows = getMetricLegendRows(metricKey);
+    if (!rows || !rows.length) return '';
+
+    const sampleLen = mobile ? 18 : 24;
+    const startY = mobile ? 7 : 9;
+    const rowGap = mobile ? 11 : 12;
+    const fontSize = Math.max(8, typo.banner - 1);
+    const solidStroke = themeAlpha('--text', 0.92);
+    const dashedStroke = themeAlpha('--text', 0.78);
+    let html = '';
+
+    rows.forEach(function(row, index) {
+      const y = startY + (index * rowGap);
+      const stroke = row.dashed ? dashedStroke : solidStroke;
+      const dashArray = row.dashed ? '6,4' : '';
+      html += '<line x1="' + x + '" y1="' + y + '" x2="' + (x + sampleLen) + '" y2="' + y + '" stroke="' + stroke + '" stroke-width="3"';
+      if (dashArray) html += ' stroke-dasharray="' + dashArray + '"';
+      html += ' stroke-linecap="round"/>';
+      html += '<text x="' + (x + sampleLen + 8) + '" y="' + y + '" text-anchor="start" fill="' + themeColor('--text-dim') + '" font-size="' + fontSize + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">' + row.text + '</text>';
+    });
+
+    return html;
+  }
+
+  function updateCMMetricLegend(metricKey) {
+    const legend = document.getElementById('cmHoverLegend');
+    if (!legend) return;
+
+    const rows = getMetricLegendRows(metricKey);
+    if (!rows || !rows.length) {
+      legend.innerHTML = '';
+      legend.classList.remove('active');
+      legend.setAttribute('aria-hidden', 'true');
+      return;
+    }
+
+    let html = '';
+    rows.forEach(function(row) {
+      html += '<div class="cm-hover-legend-row">';
+      html += '<span class="cm-hover-legend-sample' + (row.dashed ? ' dashed' : '') + '"></span>';
+      html += '<span>' + row.text + '</span>';
+      html += '</div>';
+    });
+
+    legend.innerHTML = html;
+    legend.classList.add('active');
+    legend.setAttribute('aria-hidden', 'false');
+  }
+
   function buildMosaicMetricOverlay(metricKey, geometry, mobile) {
     if (!metricKey) return '';
 
@@ -5272,6 +5402,8 @@ function applyPreset(name) {
       const legendText = mobile ? 'Dashed outline = predicted +' : 'Dashed outline = positive predictions (TP + FP)';
       html += '<line x1="'+x0+'" y1="'+legendY+'" x2="'+(x0 + legendLineLen)+'" y2="'+legendY+'" stroke="'+themeColor('--text')+'" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.8"/>';
       html += '<text x="'+(x0 + legendLineLen + 8)+'" y="'+legendY+'" text-anchor="start" fill="'+themeColor('--text-dim')+'" font-size="' + typo.banner + '" font-family="JetBrains Mono, monospace" dominant-baseline="middle">'+legendText+'</text>';
+    } else {
+      html += buildMosaicMetricLegend(window.activeMosaicMetricKey, x0, mobile, typo);
     }
 
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
