@@ -1807,6 +1807,9 @@
   }
   .landscape-controls-popover {
     display: block;
+    position: relative;
+    z-index: 5;
+    overflow: visible;
   }
   #landscapeControlsBackdrop {
     display: none;
@@ -1844,6 +1847,9 @@
     border-radius: 10px;
     padding: 14px 16px;
     margin-bottom: 12px;
+    position: relative;
+    z-index: 5;
+    overflow: visible;
   }
 
   .preset-row {
@@ -1901,12 +1907,98 @@
     box-shadow: 0 0 6px rgba(0, 234, 255, 0.4);
   }
 
-  .data-import {
-    display: flex;
+  .custom-data-toggle {
+    margin: 10px 0;
+  }
+
+  .custom-data-toggle summary {
+    list-style: none;
+  }
+
+  .custom-data-toggle summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .custom-data-toggle-btn {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg3);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.68rem;
+    font-weight: 700;
+    transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+    box-shadow: inset 0 0 0 1px var(--soft-accent-bg);
+  }
+
+  .custom-data-toggle-btn:hover,
+  .custom-data-toggle:focus-within .custom-data-toggle-btn,
+  .custom-data-toggle[open] .custom-data-toggle-btn {
+    border-color: var(--soft-accent-border);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .custom-data-toggle-btn::after {
+    content: '▾';
+    font-size: 0.62rem;
+    opacity: 0.72;
+  }
+
+  .custom-data-toggle[open] .custom-data-toggle-btn::after {
+    content: '▴';
+  }
+
+  .custom-data-toggle.is-loaded .custom-data-toggle-btn {
+    border-color: var(--soft-accent-border);
+    color: var(--accent);
+    background: linear-gradient(180deg, var(--bg2), var(--bg3));
+  }
+
+  .custom-data-toggle-state {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+  }
+
+  .custom-data-toggle.is-loaded .custom-data-toggle-state {
+    color: var(--accent);
+    border-color: var(--soft-accent-border);
+    background: var(--soft-accent-bg);
+  }
+
+  .custom-data-panel {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--bg2), var(--bg3));
+    box-shadow: inset 0 0 0 1px var(--soft-accent-bg);
+    display: grid;
+    gap: 8px;
+  }
+
+  .data-import {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    position: relative;
+    overflow: visible;
+  }
+
+  .data-import-head {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     flex-wrap: wrap;
-    margin: 10px 0;
   }
 
   .data-import label {
@@ -1916,8 +2008,128 @@
     color: var(--text-dim);
   }
 
-  .data-import input[type="file"] {
+  .data-import-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .data-action-item {
+    justify-content: center;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .data-hidden-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .data-help {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .data-help summary {
+    list-style: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 1px solid var(--soft-accent-border);
+    background: var(--soft-accent-bg);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+  }
+
+  .data-help summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .data-help summary:hover,
+  .data-help[open] summary,
+  .data-help:focus-within summary {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: var(--soft-accent-strong);
+  }
+
+  .data-help-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: min(360px, calc(100vw - 32px));
+    max-width: calc(100% - 2px);
+    padding: 10px 12px;
+    border: 1px solid var(--soft-accent-border);
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--bg2), var(--bg3));
+    box-shadow: 0 14px 32px rgba(0,0,0,0.18);
+    color: var(--text);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity 0.14s ease, transform 0.14s ease, visibility 0.14s ease;
+    z-index: 220;
+  }
+
+  .data-help:hover .data-help-popover,
+  .data-help:focus-within .data-help-popover,
+  .data-help[open] .data-help-popover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .data-help-title {
     font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .data-help-copy {
+    font-size: 0.66rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .data-help-copy code {
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+  }
+
+  .data-help-example {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
   }
 
   .data-import .data-btn {
@@ -2176,7 +2388,7 @@
   .sticky-top {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 260;
     background: var(--bg);
     /* extend flush to viewport edges by negating .app padding */
     margin: -16px -20px 0;
@@ -2331,7 +2543,7 @@
       border-bottom: none;
       box-shadow: none;
       background: transparent;
-      z-index: 120;
+      z-index: 280;
     }
 
     .app-header {
@@ -2568,12 +2780,46 @@
       <span class="preset-label" id="desktopPresetLabel">Quick starts</span>
       <div class="preset-chips" id="desktopPresetStrip" role="group" aria-label="Presets"></div>
     </div>
-    <div class="data-import">
-      <label for="file_custom_data">Custom data (CSV/JSON, max 1000 rows):</label>
-      <input type="file" id="file_custom_data" accept=".csv,.json">
-      <button type="button" class="data-btn" id="btn_reset_data">Reset to built-in</button>
-      <span class="data-status" id="dataStatus">Using built-in simulator.</span>
-    </div>
+    <details class="custom-data-toggle" id="customDataToggle">
+      <summary class="custom-data-toggle-btn" id="customDataToggleBtn" aria-label="Open custom data controls">
+        <span>Custom data</span>
+        <span class="custom-data-toggle-state" id="customDataToggleState">Built-in</span>
+      </summary>
+      <div class="custom-data-panel">
+        <div class="data-import">
+          <div class="data-import-head">
+            <label for="file_custom_data">Custom data (CSV/JSON, max 1000 rows):</label>
+            <details class="data-help">
+              <summary aria-label="Show expected custom data format">i</summary>
+              <div class="data-help-popover">
+                <div class="data-help-title">Expected file shape</div>
+                <div class="data-help-copy">
+                  Use one row per example. Required fields are <code>label</code> and <code>score</code>.
+                  <code>label</code> must be <code>0</code> or <code>1</code>. <code>score</code> should be between <code>0</code> and <code>1</code>.
+                  JSON also accepts aliases like <code>y_true</code>/<code>target</code> and <code>prob</code>/<code>pred</code>.
+                </div>
+                <pre class="data-help-example">CSV
+label,score
+1,0.97
+0,0.32
+1,0.88</pre>
+                <pre class="data-help-example">JSON
+[
+  {"label": 1, "score": 0.97},
+  {"label": 0, "score": 0.32}
+]</pre>
+              </div>
+            </details>
+          </div>
+          <div class="data-import-actions">
+            <label class="data-btn data-action-item" for="file_custom_data">Load data</label>
+            <button type="button" class="data-btn data-action-item" id="btn_reset_data">Reset</button>
+          </div>
+          <input class="data-hidden-input" type="file" id="file_custom_data" accept=".csv,.json">
+          <span class="data-status" id="dataStatus">Using built-in simulator.</span>
+        </div>
+      </div>
+    </details>
     <div class="sliders-row">
       <div class="slider-col">
         <div class="slider-label">TPR <span class="val" id="v_tpr">85%</span></div>
@@ -3221,11 +3467,29 @@ function updateThemeButton() {
   function updateDataStatus(msg) {
     const el = $('dataStatus');
     if (el) el.textContent = msg;
+    updateCustomDataToggleUI();
   }
 
   function clearCustomFileInput() {
     const el = $('file_custom_data');
     if (el) el.value = '';
+  }
+
+  function updateCustomDataToggleUI() {
+    const toggle = $('customDataToggle');
+    const label = $('customDataToggleState');
+    const button = $('customDataToggleBtn');
+    const hasCustom = !!(state && state.customData && state.customData.length);
+    if (toggle) toggle.classList.toggle('is-loaded', hasCustom);
+    if (label) label.textContent = hasCustom ? `${state.customData.length} rows` : 'Built-in';
+    if (button) {
+      button.setAttribute(
+        'aria-label',
+        hasCustom
+          ? `Custom data controls, ${state.customData.length} rows loaded`
+          : 'Open custom data controls'
+      );
+    }
   }
 
   function resetThresholdRange() {
@@ -3329,7 +3593,7 @@ function updateThemeButton() {
       const { tpr, fpr } = threshToRates(state.threshold);
       state.manual_tpr = tpr;
       state.manual_fpr = fpr;
-      updateDataStatus(`Loaded ${state.customData.length} rows from ${file.name}. Move Threshold to walk the ROC.`);
+      updateDataStatus(`Loaded ${state.customData.length} rows from ${file.name}. Move Threshold (below) to walk the ROC.`);
       render();
       switchDistView('topview');
       clearCustomFileInput();
@@ -3838,6 +4102,7 @@ function applyPreset(name) {
   function updateModeUI() {
     const hasCustom = hasCustomDataset();
     const linked = state.linkedMode;
+    updateCustomDataToggleUI();
     syncCheckbox('toggle_bidirectional', hasCustom ? true : linked);
     syncCheckbox('mobile_toggle_bidirectional', hasCustom ? true : linked);
 
