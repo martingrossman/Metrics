@@ -2430,8 +2430,8 @@
 <!-- JS compatibility shim: legacy mobile/accordion IDs kept alive -->
 <div style="display:none" aria-hidden="true">
   <input type="checkbox" id="mobile_toggle_bidirectional">
-  <input type="range" id="m_s_tpr" min="0" max="1" step="0.001" value="0.8">
-  <input type="range" id="m_s_fpr" min="0" max="1" step="0.001" value="0.1">
+  <input type="range" id="m_s_tpr" min="0" max="1" step="0.001" value="0.85">
+  <input type="range" id="m_s_fpr" min="0" max="1" step="0.001" value="0.2">
   <input type="range" id="m_s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
   <input type="range" id="m_s_thresh" min="-6" max="10" step="0.05" value="1">
   <input type="text" id="m_i_tpr_pct" value="80">
@@ -2470,13 +2470,13 @@
     </div>
     <div class="sliders-row">
       <div class="slider-col">
-        <div class="slider-label">TPR <span class="val" id="v_tpr">80%</span></div>
-        <input type="range" id="s_tpr" min="0" max="1" step="0.001" value="0.8">
+        <div class="slider-label">TPR <span class="val" id="v_tpr">85%</span></div>
+        <input type="range" id="s_tpr" min="0" max="1" step="0.001" value="0.85">
         <input class="pct-chip" type="text" id="i_tpr_pct" value="80" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="TPR exact percent">
       </div>
       <div class="slider-col">
-        <div class="slider-label">FPR <span class="val" id="v_fpr">10%</span></div>
-        <input type="range" id="s_fpr" min="0" max="1" step="0.001" value="0.1">
+        <div class="slider-label">FPR <span class="val" id="v_fpr">20%</span></div>
+        <input type="range" id="s_fpr" min="0" max="1" step="0.001" value="0.2">
         <input class="pct-chip" type="text" id="i_fpr_pct" value="10" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="FPR exact percent">
       </div>
       <div class="slider-col">
@@ -3129,8 +3129,8 @@ function switchView(view) {
     mu_pos: 2, std_pos: 1,
     N: 1000, bal: 0.5,
     threshold: 1.0,
-    manual_tpr: 0.9,
-    manual_fpr: 0.1,
+    manual_tpr: 0.85,
+    manual_fpr: 0.20,
     linkedMode: false
   };
 
@@ -3180,8 +3180,8 @@ function switchView(view) {
       mu_pos: 2, std_pos: 1,
       N: 1000, bal: 0.50,
       threshold: 1.0,
-      manual_tpr: 0.90,
-      manual_fpr: 0.10,
+      manual_tpr: 0.85,
+      manual_fpr: 0.20,
       linkedMode: false
     },
     direct_rare: {
@@ -3189,8 +3189,8 @@ function switchView(view) {
       mu_pos: 2, std_pos: 1,
       N: 1600, bal: 0.05,
       threshold: 1.0,
-      manual_tpr: 0.90,
-      manual_fpr: 0.10,
+      manual_tpr: 0.85,
+      manual_fpr: 0.20,
       linkedMode: false
     },
     direct_screening: {
@@ -3198,8 +3198,8 @@ function switchView(view) {
       mu_pos: 2, std_pos: 1,
       N: 2000, bal: 0.02,
       threshold: 1.0,
-      manual_tpr: 0.98,
-      manual_fpr: 0.25,
+      manual_tpr: 0.85,
+      manual_fpr: 0.20,
       linkedMode: false
     },
     direct_precision_story: {
@@ -3207,8 +3207,8 @@ function switchView(view) {
       mu_pos: 2, std_pos: 1,
       N: 10000, bal: 0.01,
       threshold: 1.0,
-      manual_tpr: 0.99,
-      manual_fpr: 0.01,
+      manual_tpr: 0.85,
+      manual_fpr: 0.20,
       linkedMode: false
     }
   };
@@ -4378,8 +4378,8 @@ function switchView(view) {
     // If a cell gets too small, move the label outside instead of hiding it.
     if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
-      s += '<text x="'+cx+'" y="'+(cy-8)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
-      s += '<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
       return s;
     }
 
