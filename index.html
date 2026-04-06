@@ -3462,7 +3462,7 @@ let state = {
   };
 
   // ─── Derived: from threshold → TPR, FPR ───
-function threshToRates(t) {
+function threshToRates(t, storeCustomCounts = true) {
   if (!state.customData) {
     const tpr = 1 - normCDF(t, state.mu_pos, state.std_pos);
     const fpr = 1 - normCDF(t, state.mu_neg, state.std_neg);
@@ -3480,7 +3480,9 @@ function threshToRates(t) {
   }
   const P = tp + fn;
   const N = fp + tn;
-  state.customCounts = { tp, fp, fn, tn, P, N };
+  if (storeCustomCounts) {
+    state.customCounts = { tp, fp, fn, tn, P, N };
+  }
   return {
     tpr: P > 0 ? tp / P : 0,
     fpr: N > 0 ? fp / N : 0
@@ -3553,7 +3555,7 @@ function threshToRates(t) {
       const pts = [];
       for (let i = 0; i < scores.length; i++) {
         const t = scores[i];
-        const { tpr, fpr } = threshToRates(t);
+        const { tpr, fpr } = threshToRates(t, false);
         pts.push({ fpr, tpr, t });
       }
       if (scores.length < nPts) {
