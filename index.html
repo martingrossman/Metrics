@@ -5181,7 +5181,6 @@ function applyPreset(name) {
           break;
         case 'auc':
           html += mosaicOverlayRect(geometry.wholeRect, 'transparent', accentStroke, focusStrokeWidth);
-          html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
           break;
         case 'npv':
           html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
