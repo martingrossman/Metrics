@@ -4179,7 +4179,7 @@ function switchView(view) {
       sideLabel: Math.round((mobile ? 12 : 11) * scale),
       sideGap: mobile ? 7 : 8,
       sideLine: mobile ? 8 : 10,
-      cellLabel: Math.round((mobile ? 20 : 18) * scale),
+      cellLabel: Math.round((mobile ? 19 : 17) * scale),
       cellCount: Math.round((mobile ? 16 : 14) * scale),
       cellMinW: mobile ? 24 : 30,
       cellMinH: mobile ? 24 : 30
@@ -4305,7 +4305,7 @@ function switchView(view) {
       sideLabel: mobileLandscape ? 9 : 11,
       sideGap: mobileLandscape ? 8 : 6,
       sideLine: mobileLandscape ? 6 : 7,
-      cellLabel: mobileLandscape ? 12 : 14,
+      cellLabel: mobileLandscape ? 11 : 13,
       cellCount: mobileLandscape ? 11 : 12,
       cellMinW: mobileLandscape ? 44 : 34,
       cellMinH: mobileLandscape ? 34 : 28
@@ -4378,8 +4378,8 @@ function switchView(view) {
     // If a cell gets too small, move the label outside instead of hiding it.
     if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
-      s += '<text x="'+cx+'" y="'+(cy-9)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
-      s += '<text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy-8)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
       return s;
     }
 
