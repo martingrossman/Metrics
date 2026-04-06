@@ -729,7 +729,20 @@
     color: var(--text-dim);
   }
 
+  .slider-col.disabled {
+    opacity: 0.45;
+  }
+
+  .slider-col.disabled .slider-label,
+  .slider-col.disabled .val {
+    color: var(--text-dim);
+  }
+
   .slider-group input:disabled {
+    cursor: not-allowed;
+  }
+
+  .slider-col input:disabled {
     cursor: not-allowed;
   }
 
@@ -3180,6 +3193,7 @@ function switchView(view) {
 
   let currentThemeName = 'light';
   const ORIGINAL_THRESH = { min: -6, max: 10, step: 0.05 };
+  const ORIGINAL_SAMPLE_SIZE = { min: 50, max: 10000, step: 50 };
 
 function updateThemeButton() {
   const btn = $('themeToggle');
@@ -3228,10 +3242,28 @@ function updateThemeButton() {
       if (!el) return;
       el.min = 0;
       el.max = 1;
-      el.step = 0.01;
+      el.step = 0.001;
       el.value = 0.5;
     });
     state.threshold = 0.5;
+  }
+
+  function resetSampleSizeRange() {
+    const el = $('s_N');
+    if (!el) return;
+    el.min = ORIGINAL_SAMPLE_SIZE.min;
+    el.max = ORIGINAL_SAMPLE_SIZE.max;
+    el.step = ORIGINAL_SAMPLE_SIZE.step;
+    el.value = state.N;
+  }
+
+  function setCustomSampleSizeRange(totalRows) {
+    const el = $('s_N');
+    if (!el) return;
+    el.min = 1;
+    el.max = Math.max(1000, totalRows);
+    el.step = 1;
+    el.value = totalRows;
   }
 
   function parseCSV(text) {
@@ -3283,13 +3315,17 @@ function updateThemeButton() {
       state.customData = rows.slice(0, 1000);
       state.customCounts = null;
       state.linkedMode = true;
+      activePresetKey = null;
+      renderPresetButtons();
       setCustomThresholdRange();
+      setCustomSampleSizeRange(state.customData.length);
       syncStateToInputs();
       const { tpr, fpr } = threshToRates(state.threshold);
       state.manual_tpr = tpr;
       state.manual_fpr = fpr;
-      updateDataStatus(`Loaded ${state.customData.length} rows from ${file.name}.`);
+      updateDataStatus(`Loaded ${state.customData.length} rows from ${file.name}. Move Threshold to walk the ROC.`);
       render();
+      switchDistView('topview');
     };
     reader.readAsText(file);
   }
@@ -3298,12 +3334,14 @@ function updateThemeButton() {
     state.customData = null;
     state.customCounts = null;
     resetThresholdRange();
+    resetSampleSizeRange();
     state.linkedMode = false;
     state.manual_tpr = 0.85;
     state.manual_fpr = 0.20;
     syncStateToInputs();
     updateDataStatus('Using built-in simulator.');
     render();
+    switchDistView('curves');
   }
 
   // ─── State ───
@@ -3452,6 +3490,38 @@ function threshToRates(t) {
     return Math.max(0, Math.min(1, x));
   }
 
+  function hasCustomDataset() {
+    return !!(state.customData && state.customData.length);
+  }
+
+  function formatThresholdValue(value = state.threshold) {
+    return pf(value, hasCustomDataset() ? 3 : 2);
+  }
+
+  function getDatasetStats() {
+    if (!hasCustomDataset()) {
+      const P = Math.round(state.N * state.bal);
+      return {
+        total: state.N,
+        P,
+        N: state.N - P,
+        bal: state.bal
+      };
+    }
+
+    let P = 0;
+    for (let i = 0; i < state.customData.length; i++) {
+      if (state.customData[i].label === 1) P++;
+    }
+    const total = state.customData.length;
+    return {
+      total,
+      P,
+      N: total - P,
+      bal: total > 0 ? P / total : 0
+    };
+  }
+
   function getActiveRates() {
     if (state.customData) return threshToRates(state.threshold);
     if (state.linkedMode) return threshToRates(state.threshold);
@@ -3530,6 +3600,29 @@ function threshToRates(t) {
     if (el) el.checked = checked;
   }
 
+  function setControlDisabled(id, disabled) {
+    const el = $(id);
+    if (!el) return;
+    el.disabled = disabled;
+    const col = el.closest('.slider-col');
+    if (col) col.classList.toggle('disabled', disabled);
+  }
+
+  function syncEmpiricalControlLocks(enabled) {
+    const disabled = !!enabled;
+    [
+      's_tpr', 'm_s_tpr', 'i_tpr_pct', 'm_i_tpr_pct',
+      's_fpr', 'm_s_fpr', 'i_fpr_pct', 'm_i_fpr_pct',
+      's_bal', 'm_s_bal', 'i_bal_pct', 'm_i_bal_pct',
+      's_mu_neg', 's_std_neg', 's_mu_pos', 's_std_pos', 's_N'
+    ].forEach(id => setControlDisabled(id, disabled));
+
+    ['toggle_bidirectional', 'mobile_toggle_bidirectional'].forEach(id => {
+      const el = $(id);
+      if (el) el.disabled = disabled;
+    });
+  }
+
   function readPercentInput(id) {
     const el = $(id);
     if (!el) return null;
@@ -3545,17 +3638,18 @@ function threshToRates(t) {
   }
 
   function syncStateToInputs() {
+    const stats = getDatasetStats();
     writeSlider('s_mu_neg', state.mu_neg);
     writeSlider('s_std_neg', state.std_neg);
     writeSlider('s_mu_pos', state.mu_pos);
     writeSlider('s_std_pos', state.std_pos);
-    writeSlider('s_N', state.N);
-    writeSlider('s_bal', state.bal);
-    writeSlider('m_s_bal', state.bal);
+    writeSlider('s_N', hasCustomDataset() ? stats.total : state.N);
+    writeSlider('s_bal', stats.bal);
+    writeSlider('m_s_bal', stats.bal);
     writeSlider('s_thresh', state.threshold);
     writeSlider('m_s_thresh', state.threshold);
-    writePercentInput('i_bal_pct', state.bal);
-    writePercentInput('m_i_bal_pct', state.bal);
+    writePercentInput('i_bal_pct', stats.bal);
+    writePercentInput('m_i_bal_pct', stats.bal);
     syncCheckbox('toggle_bidirectional', state.linkedMode);
     syncCheckbox('mobile_toggle_bidirectional', state.linkedMode);
   }
@@ -3578,15 +3672,6 @@ function threshToRates(t) {
   function setActivePreset(name) {
     activePresetKey = name || null;
     renderPresetButtons();
-    if (state.customData && !name) {
-      state.customData = null;
-      state.customCounts = null;
-      state.linkedMode = false;
-      state.manual_tpr = 0.85;
-      state.manual_fpr = 0.20;
-      $('dataStatus').textContent = 'Using built-in simulator.';
-      render();
-    }
   }
 
   function clearPresetSelection() {
@@ -3600,8 +3685,11 @@ function applyPreset(name) {
   state.customData = null;
   state.customCounts = null;
   state = { ...state, ...preset };
+  resetThresholdRange();
+  resetSampleSizeRange();
   if (state.linkedMode) syncManualRatesFromThreshold();
   syncStateToInputs();
+  updateDataStatus('Using built-in simulator.');
   setActivePreset(name);
   render();
   }
@@ -3616,27 +3704,35 @@ function applyPreset(name) {
   }
 
   function updateControlSummaries(rates, metrics) {
+    const hasCustom = hasCustomDataset();
+    const stats = getDatasetStats();
     const dist = $('summary_distributions');
     const operating = $('summary_operating');
     const dataset = $('summary_dataset');
-    const posCount = Math.round(state.N * state.bal);
-    const negCount = state.N - posCount;
     if (dist) {
-      dist.textContent = state.linkedMode
+      dist.textContent = hasCustom
+        ? `Empirical scores | ${intf(stats.P)} pos | ${intf(stats.N)} neg`
+        : state.linkedMode
         ? `Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`
         : `Curves/AUC only • Neg ${pf(state.mu_neg, 1)}/${pf(state.std_neg, 1)} | Pos ${pf(state.mu_pos, 1)}/${pf(state.std_pos, 1)}`;
     }
     if (operating) {
-      operating.textContent = state.linkedMode
-        ? `Linked | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)} | t ${pf(state.threshold, 2)}`
-        : `Direct | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)}`;
+      operating.textContent = hasCustom
+        ? `Custom ROC | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(stats.bal)} | t ${formatThresholdValue()}`
+        : state.linkedMode
+          ? `Linked | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)} | t ${formatThresholdValue()}`
+          : `Direct | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)}`;
     }
     if (dataset) {
-      dataset.textContent = `${state.N} samples | ~${intf(posCount)} pos | ~${intf(negCount)} neg`;
+      dataset.textContent = hasCustom
+        ? `${stats.total} rows | ${intf(stats.P)} pos | ${intf(stats.N)} neg`
+        : `${state.N} samples | ~${intf(stats.P)} pos | ~${intf(stats.N)} neg`;
     }
   }
 
   function updateMobileSummary(rates, metrics) {
+    const hasCustom = hasCustomDataset();
+    const stats = getDatasetStats();
     const modeEl = $('mobile_mode_state');
     const thresholdEl = $('mobile_threshold');
     const tprCard = $('mobile_tpr_card');
@@ -3645,11 +3741,11 @@ function applyPreset(name) {
     const precCard = $('mobile_prec_card');
     const aucCard = $('mobile_auc_card');
 
-    if (modeEl) modeEl.textContent = state.linkedMode ? 'Linked' : 'Direct';
-    if (thresholdEl) thresholdEl.textContent = state.linkedMode ? pf(state.threshold, 2) : 'Manual';
+    if (modeEl) modeEl.textContent = hasCustom ? 'Custom' : (state.linkedMode ? 'Linked' : 'Direct');
+    if (thresholdEl) thresholdEl.textContent = (state.linkedMode || hasCustom) ? formatThresholdValue() : 'Manual';
     if (tprCard) tprCard.textContent = formatPercent(rates.tpr);
     if (fprCard) fprCard.textContent = formatPercent(rates.fpr);
-    if (balCard) balCard.textContent = formatPercent(state.bal);
+    if (balCard) balCard.textContent = formatPercent(hasCustom ? stats.bal : state.bal);
     if (precCard) precCard.textContent = pf(metrics.prec, 3);
     if (aucCard) aucCard.textContent = pf(metrics.auc, 3);
   }
@@ -3726,53 +3822,73 @@ function applyPreset(name) {
   }
 
   function updateModeUI() {
+    const hasCustom = hasCustomDataset();
     const linked = state.linkedMode;
-    syncCheckbox('toggle_bidirectional', linked);
-    syncCheckbox('mobile_toggle_bidirectional', linked);
-    $('modeStateLabel').textContent = linked ? 'Linked' : 'Direct Rates';
-    $('modeHint').textContent = linked
-      ? 'Linked mode: distributions, threshold, and TPR/FPR stay synchronized.'
-      : 'Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.';
-    $('desktopPresetLabel').textContent = linked ? 'Linked Quick Starts' : 'Direct Quick Starts';
-    $('desktopPresetCopy').textContent = linked
-      ? 'Change the distributions and threshold together to see how the model itself changes.'
-      : 'Start simple with ready-made TPR/FPR/Balance combinations, then shape the score model only if you want more depth.';
-    $('step1Kicker').textContent = linked ? 'Step 1' : 'Optional';
-    $('step1Title').textContent = linked ? 'Shape the classes' : 'Shape the score model';
-    $('step2Kicker').textContent = linked ? 'Step 2' : 'Step 1';
-    $('step2Title').textContent = linked ? 'Choose threshold and balance' : 'Choose TPR, FPR, and balance';
-    $('step3Kicker').textContent = linked ? 'Step 3' : 'Step 2';
-    $('step3Title').textContent = 'Choose sample count';
-    $('modeHint').classList.toggle('manual', !linked);
-    $('advancedSection').classList.toggle('is-direct', !linked);
-    $('modeStateLabel').classList.toggle('is-direct', !linked);
-    $('advancedNote').textContent = linked
-      ? 'Drives TPR/FPR via threshold'
-      : 'Score model only — affects distributions & AUC in direct mode';
-    $('g_thresh').classList.toggle('disabled', !linked);
-    $('s_thresh').disabled = !linked;
-    if ($('mobileQuickThreshGroup')) $('mobileQuickThreshGroup').classList.toggle('is-hidden', !linked);
-    if ($('m_s_thresh')) $('m_s_thresh').disabled = !linked;
-    $('distPanelTitle').textContent = linked ? 'Class Distributions & Threshold' : 'Class Distributions';
+    syncCheckbox('toggle_bidirectional', hasCustom ? true : linked);
+    syncCheckbox('mobile_toggle_bidirectional', hasCustom ? true : linked);
+
+    if (hasCustom) {
+      $('modeStateLabel').textContent = 'Custom Data';
+      $('modeHint').textContent = 'Custom data mode: move Threshold to step along the empirical ROC and update the matrix.';
+      $('desktopPresetLabel').textContent = 'Built-in Quick Starts';
+      $('desktopPresetCopy').textContent = 'Presets switch back to the simulator. Uploaded rows keep the threshold as the main control.';
+      $('step1Kicker').textContent = 'Data';
+      $('step1Title').textContent = 'Upload labeled scores';
+      $('step2Kicker').textContent = 'Step 1';
+      $('step2Title').textContent = 'Move threshold';
+      $('step3Kicker').textContent = 'Readout';
+      $('step3Title').textContent = 'Watch ROC and the confusion matrix';
+      $('advancedNote').textContent = 'Uploaded rows fix prevalence, ROC, and AUC. Threshold is the active control.';
+      $('distPanelTitle').textContent = 'Custom Scores & Threshold';
+    } else {
+      $('modeStateLabel').textContent = linked ? 'Linked' : 'Direct Rates';
+      $('modeHint').textContent = linked
+        ? 'Linked mode: distributions, threshold, and TPR/FPR stay synchronized.'
+        : 'Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.';
+      $('desktopPresetLabel').textContent = linked ? 'Linked Quick Starts' : 'Direct Quick Starts';
+      $('desktopPresetCopy').textContent = linked
+        ? 'Change the distributions and threshold together to see how the model itself changes.'
+        : 'Start simple with ready-made TPR/FPR/Balance combinations, then shape the score model only if you want more depth.';
+      $('step1Kicker').textContent = linked ? 'Step 1' : 'Optional';
+      $('step1Title').textContent = linked ? 'Shape the classes' : 'Shape the score model';
+      $('step2Kicker').textContent = linked ? 'Step 2' : 'Step 1';
+      $('step2Title').textContent = linked ? 'Choose threshold and balance' : 'Choose TPR, FPR, and balance';
+      $('step3Kicker').textContent = linked ? 'Step 3' : 'Step 2';
+      $('step3Title').textContent = 'Choose sample count';
+      $('advancedNote').textContent = linked
+        ? 'Drives TPR/FPR via threshold'
+        : 'Score model only — affects distributions & AUC in direct mode';
+      $('distPanelTitle').textContent = linked ? 'Class Distributions & Threshold' : 'Class Distributions';
+    }
+
+    $('modeHint').classList.toggle('manual', !linked && !hasCustom);
+    $('advancedSection').classList.toggle('is-direct', !linked && !hasCustom);
+    $('modeStateLabel').classList.toggle('is-direct', !linked && !hasCustom);
+    $('g_thresh').classList.toggle('disabled', !linked && !hasCustom);
+    $('s_thresh').disabled = !linked && !hasCustom;
+    if ($('mobileQuickThreshGroup')) $('mobileQuickThreshGroup').classList.toggle('is-hidden', !linked && !hasCustom);
+    if ($('m_s_thresh')) $('m_s_thresh').disabled = !linked && !hasCustom;
+    syncEmpiricalControlLocks(hasCustom);
     renderPresetButtons();
   }
 
   function updateValueDisplays(rates) {
+    const stats = getDatasetStats();
     $('v_mu_neg').textContent = pf(state.mu_neg, 1);
     $('v_std_neg').textContent = pf(state.std_neg, 1);
     $('v_mu_pos').textContent = pf(state.mu_pos, 1);
     $('v_std_pos').textContent = pf(state.std_pos, 1);
-    $('v_N').textContent = state.N;
-    $('v_bal').textContent = formatPercent(state.bal);
+    $('v_N').textContent = stats.total;
+    $('v_bal').textContent = formatPercent(stats.bal);
     $('v_tpr').textContent = formatPercent(rates.tpr);
     $('v_fpr').textContent = formatPercent(rates.fpr);
-    $('v_thresh').textContent = state.linkedMode ? pf(state.threshold) : 'manual';
+    $('v_thresh').textContent = (state.linkedMode || hasCustomDataset()) ? formatThresholdValue() : 'manual';
     writePercentInput('i_tpr_pct', rates.tpr);
     writePercentInput('m_i_tpr_pct', rates.tpr);
     writePercentInput('i_fpr_pct', rates.fpr);
     writePercentInput('m_i_fpr_pct', rates.fpr);
-    writePercentInput('i_bal_pct', state.bal);
-    writePercentInput('m_i_bal_pct', state.bal);
+    writePercentInput('i_bal_pct', stats.bal);
+    writePercentInput('m_i_bal_pct', stats.bal);
   }
 
   // ─── Plot Config ───
@@ -3797,6 +3913,7 @@ function applyPreset(name) {
   // ─── Render All ───
   function render() {
     const rates = getActiveRates();
+    const stats = getDatasetStats();
     const { tpr, fpr } = rates;
     updateModeUI();
     updateValueDisplays(rates);
@@ -3811,7 +3928,7 @@ function applyPreset(name) {
     }
     writeSlider('m_s_tpr', clamp01(tpr));
     writeSlider('m_s_fpr', clamp01(fpr));
-    writeSlider('m_s_bal', state.bal);
+    writeSlider('m_s_bal', stats.bal);
     writeSlider('m_s_thresh', state.threshold);
 
     renderDistPlot(tpr, fpr);
@@ -3827,6 +3944,83 @@ function applyPreset(name) {
   }
 
   function renderDistPlot(tpr, fpr) {
+    if (hasCustomDataset()) {
+      const negScores = [];
+      const posScores = [];
+      for (let i = 0; i < state.customData.length; i++) {
+        if (state.customData[i].label === 1) posScores.push(state.customData[i].score);
+        else negScores.push(state.customData[i].score);
+      }
+
+      const bins = Math.max(10, Math.min(32, Math.round(Math.sqrt(state.customData.length))));
+      const binSize = 1 / bins;
+      const t = state.threshold;
+      const traces = [
+        {
+          x: negScores,
+          name: 'Negative',
+          type: 'histogram',
+          opacity: 0.65,
+          xbins: { start: 0, end: 1, size: binSize },
+          marker: {
+            color: themeAlpha('--neg-color', 0.55),
+            line: { color: themeColor('--neg-color'), width: 1 }
+          },
+          hovertemplate: 'Negative<br>Score %{x:.3f}<br>Count %{y}<extra></extra>'
+        },
+        {
+          x: posScores,
+          name: 'Positive',
+          type: 'histogram',
+          opacity: 0.65,
+          xbins: { start: 0, end: 1, size: binSize },
+          marker: {
+            color: themeAlpha('--pos-color', 0.55),
+            line: { color: themeColor('--pos-color'), width: 1 }
+          },
+          hovertemplate: 'Positive<br>Score %{x:.3f}<br>Count %{y}<extra></extra>'
+        }
+      ];
+
+      const base = getBasePlotLayout();
+      const layout = {
+        ...base,
+        barmode: 'overlay',
+        xaxis: { ...base.xaxis, title: 'Score', range: [-0.02, 1.02] },
+        yaxis: { ...base.yaxis, title: 'Row Count', rangemode: 'tozero' },
+        legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
+        shapes: [{
+          type: 'line',
+          x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
+          line: { color: themeColor('--text'), width: 2, dash: 'dot' }
+        }],
+        annotations: [{
+          x: t,
+          y: 1.02,
+          yref: 'paper',
+          text: `t=${formatThresholdValue(t)}`,
+          showarrow: false,
+          font: { size: 10, color: themeColor('--text') }
+        }, {
+          x: 0.5,
+          y: 1.11,
+          xref: 'paper',
+          yref: 'paper',
+          text: 'Empirical score histogram from uploaded data',
+          showarrow: false,
+          font: { size: 10, color: themeColor('--plot-font') }
+        }]
+      };
+
+      Plotly.react('distPlot', traces, layout, {
+        displayModeBar: true,
+        displaylogo: false,
+        modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d', 'pan2d']],
+        responsive: true
+      });
+      return;
+    }
+
     const xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
     const xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
     const xs = [];
@@ -3868,7 +4062,7 @@ function applyPreset(name) {
         line: { color: themeColor('--text'), width: 2, dash: 'dot' }
       });
       annotations.push({
-        x: t, y: 1.02, yref: 'paper', text: `t=${pf(t)}`, showarrow: false,
+        x: t, y: 1.02, yref: 'paper', text: `t=${formatThresholdValue(t)}`, showarrow: false,
         font: { size: 10, color: themeColor('--text') }
       });
     } else {
@@ -3928,19 +4122,47 @@ function applyPreset(name) {
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
     const t = state.threshold;
-    const linked = state.linkedMode;
+    const hasCustom = !!(state.customData && state.customData.length);
+    const linked = state.linkedMode || hasCustom; // always show threshold split for custom data
 
     // Sample counts
-    const nNeg = Math.round(state.N * (1 - state.bal));
-    const nPos = Math.round(state.N * state.bal);
-    // Cap dots for performance
-    const maxDots = 500;
+    let nNeg, nPos;
+    if (hasCustom && state.customCounts) {
+      nNeg = state.customCounts.N;
+      nPos = state.customCounts.P;
+    } else if (hasCustom) {
+      nPos = state.customData.filter(d => d.label === 1).length;
+      nNeg = state.customData.length - nPos;
+    } else {
+      nNeg = Math.round(state.N * (1 - state.bal));
+      nPos = Math.round(state.N * state.bal);
+    }
+
+    // Cap dots for performance (custom data already limited to 1000 rows)
+    const maxDots = hasCustom ? Math.min(state.customData.length, 1000) : 500;
     const negCount = Math.min(nNeg, maxDots);
     const posCount = Math.min(nPos, maxDots);
 
     // Score range
-    const xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
-    const xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
+    let xMin, xMax;
+    if (hasCustom) {
+      const scores = state.customData.map(d => d.score);
+      xMin = Math.min(...scores);
+      xMax = Math.max(...scores);
+      if (!isFinite(xMin) || !isFinite(xMax)) { xMin = 0; xMax = 1; }
+      const span = Math.max(1e-3, xMax - xMin);
+      const padSpan = Math.max(span * 0.08, 0.02);
+      xMin = Math.max(0, xMin - padSpan);
+      xMax = Math.min(1, xMax + padSpan);
+      if (xMax - xMin < 0.05) {
+        const mid = (xMin + xMax) / 2;
+        xMin = Math.max(0, mid - 0.05);
+        xMax = Math.min(1, mid + 0.05);
+      }
+    } else {
+      xMin = Math.min(state.mu_neg - 4*state.std_neg, state.mu_pos - 4*state.std_pos);
+      xMax = Math.max(state.mu_neg + 4*state.std_neg, state.mu_pos + 4*state.std_pos);
+    }
 
     // Y layout: neg dots in top band, pos dots in bottom band, with gap
     const bandH = bH * 0.4;
@@ -3969,34 +4191,53 @@ function applyPreset(name) {
       html += '<text x="'+(pad.l + bW/2)+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Direct mode: dots show actual class only</text>';
     }
 
-    // ── Sample & draw negative dots ──
-    for (let i = 0; i < negCount; i++) {
-      const val = sampleNormal(state.mu_neg, state.std_neg, rng);
-      if (val < xMin || val > xMax) continue;
-      const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
-      const cy = y0neg + bandH * 0.1 + rng() * bandH * 0.8;
-      const isRight = val >= t;
-      const color = linked ? (isRight ? themeColor('--fp-color') : themeColor('--tn-color')) : themeColor('--neg-color');
-      const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
-      html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
-    }
-
-    // ── Sample & draw positive dots ──
-    for (let i = 0; i < posCount; i++) {
-      const val = sampleNormal(state.mu_pos, state.std_pos, rng);
-      if (val < xMin || val > xMax) continue;
-      const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
-      const cy = y0pos + bandH * 0.1 + rng() * bandH * 0.8;
-      const isRight = val >= t;
-      const color = linked ? (isRight ? themeColor('--tp-color') : themeColor('--fn-color')) : themeColor('--pos-color');
-      const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
-      html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
+    // ── Draw dots ──
+    if (hasCustom) {
+      const dots = state.customData.slice(0, maxDots);
+      for (let i = 0; i < dots.length; i++) {
+        const row = dots[i];
+        const cx = pad.l + ((row.score - xMin) / (xMax - xMin)) * bW;
+        const baseY = row.label === 1 ? y0pos : y0neg;
+        const cy = baseY + bandH * 0.1 + rng() * bandH * 0.8;
+        const predPos = row.score >= t;
+        let color;
+        if (row.label === 1) {
+          color = predPos ? themeColor('--tp-color') : themeColor('--fn-color');
+        } else {
+          color = predPos ? themeColor('--fp-color') : themeColor('--tn-color');
+        }
+        const opacity = predPos ? '0.85' : '0.7';
+        html += '<circle cx="'+cx.toFixed(3)+'" cy="'+cy.toFixed(3)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
+      }
+      html += '<text x="'+(pad.l + bW - 4)+'" y="'+(pad.t - 6)+'" text-anchor="end" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Custom data · '+state.customData.length+' rows</text>';
+    } else {
+      // Simulated dots
+      for (let i = 0; i < negCount; i++) {
+        const val = sampleNormal(state.mu_neg, state.std_neg, rng);
+        if (val < xMin || val > xMax) continue;
+        const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
+        const cy = y0neg + bandH * 0.1 + rng() * bandH * 0.8;
+        const isRight = val >= t;
+        const color = linked ? (isRight ? themeColor('--fp-color') : themeColor('--tn-color')) : themeColor('--neg-color');
+        const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
+        html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
+      }
+      for (let i = 0; i < posCount; i++) {
+        const val = sampleNormal(state.mu_pos, state.std_pos, rng);
+        if (val < xMin || val > xMax) continue;
+        const cx = pad.l + ((val - xMin) / (xMax - xMin)) * bW;
+        const cy = y0pos + bandH * 0.1 + rng() * bandH * 0.8;
+        const isRight = val >= t;
+        const color = linked ? (isRight ? themeColor('--tp-color') : themeColor('--fn-color')) : themeColor('--pos-color');
+        const opacity = linked ? (isRight ? '0.7' : '0.55') : '0.65';
+        html += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="2.5" fill="'+color+'" opacity="'+opacity+'"/>';
+      }
     }
 
     // ── Threshold line ──
     if (linked && tX >= pad.l && tX <= pad.l + bW) {
       html += '<line x1="'+tX+'" y1="'+(pad.t - 5)+'" x2="'+tX+'" y2="'+(y0pos + bandH + 5)+'" stroke="'+themeColor('--text')+'" stroke-width="2" stroke-dasharray="6,3" opacity="0.9"/>';
-      html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="10" font-family="JetBrains Mono, monospace">t='+pf(t)+'</text>';
+      html += '<text x="'+tX+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--text')+'" font-size="10" font-family="JetBrains Mono, monospace">t='+formatThresholdValue(t)+'</text>';
     }
 
     // ── Region labels ──
@@ -4019,10 +4260,11 @@ function applyPreset(name) {
     // ── Score axis ──
     const axisY = y0pos + bandH;
     const nTicks = 7;
+    const tickDecimals = hasCustom && (xMax - xMin < 0.5) ? 2 : 1;
     for (let i = 0; i <= nTicks; i++) {
       const v = xMin + (xMax - xMin) * i / nTicks;
       const ax = pad.l + (i / nTicks) * bW;
-      html += '<text x="'+ax+'" y="'+(axisY + 20)+'" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="9" font-family="JetBrains Mono, monospace">'+pf(v,1)+'</text>';
+      html += '<text x="'+ax+'" y="'+(axisY + 20)+'" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="9" font-family="JetBrains Mono, monospace">'+pf(v, tickDecimals)+'</text>';
       html += '<line x1="'+ax+'" y1="'+(axisY + 2)+'" x2="'+ax+'" y2="'+(axisY + 7)+'" stroke="'+themeColor('--text-dim')+'" stroke-width="1"/>';
     }
     html += '<text x="'+(pad.l + bW/2)+'" y="'+(H - 4)+'" text-anchor="middle" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Score</text>';
@@ -4031,17 +4273,79 @@ function applyPreset(name) {
   }
 
   function renderROCPlot(tpr, fpr) {
+    const hasCustom = hasCustomDataset();
     const rocPts = generateROC(500);
+    const markerName = hasCustom ? 'Threshold' : (state.linkedMode ? 'Operating Pt' : 'Manual Pt');
+    const markerColor = hasCustom ? var_accent() : themeColor('--text');
+    const markerLineColor = hasCustom ? themeColor('--text') : (state.linkedMode ? var_accent() : themeColor('--fn-color'));
 
     const traces = [
       { x: [0, 1], y: [0, 1], name: 'Random', line: { color: themeAlpha('--text-dim', 0.55), dash: 'dash', width: 1 }, type: 'scatter', showlegend: false },
-      { x: rocPts.map(p => p.fpr), y: rocPts.map(p => p.tpr), name: 'ROC', line: { color: var_accent(), width: 2.5 }, type: 'scatter', fill: 'tozeroy', fillcolor: themeAlpha('--accent', 0.08) },
-      { x: [fpr], y: [tpr], name: state.linkedMode ? 'Operating Pt' : 'Manual Pt', mode: 'markers', marker: { size: 12, color: themeColor('--text'), symbol: 'cross', line: { color: state.linkedMode ? var_accent() : themeColor('--fn-color'), width: 2 } }, type: 'scatter' },
+      {
+        x: rocPts.map(p => p.fpr),
+        y: rocPts.map(p => p.tpr),
+        name: 'ROC',
+        line: { color: var_accent(), width: 2.5, shape: hasCustom ? 'hv' : 'linear' },
+        type: 'scatter',
+        fill: 'tozeroy',
+        fillcolor: themeAlpha('--accent', hasCustom ? 0.05 : 0.08)
+      },
+      {
+        x: [fpr],
+        y: [tpr],
+        name: markerName,
+        mode: 'markers',
+        marker: {
+          size: hasCustom ? 13 : 12,
+          color: markerColor,
+          symbol: hasCustom ? 'circle' : 'cross',
+          line: { color: markerLineColor, width: 2 }
+        },
+        hovertemplate: `${markerName}<br>FPR %{x:.3f}<br>TPR %{y:.3f}<extra></extra>`,
+        type: 'scatter'
+      },
     ];
 
     const base = getBasePlotLayout();
     const annotations = [];
-    if (!state.linkedMode) {
+    const shapes = [];
+    if (hasCustom) {
+      shapes.push(
+        {
+          type: 'line',
+          x0: fpr, x1: fpr, y0: 0, y1: tpr,
+          line: { color: themeAlpha('--accent', 0.45), width: 1.5, dash: 'dot' }
+        },
+        {
+          type: 'line',
+          x0: 0, x1: fpr, y0: tpr, y1: tpr,
+          line: { color: themeAlpha('--accent', 0.45), width: 1.5, dash: 'dot' }
+        }
+      );
+      annotations.push(
+        {
+          x: 0.5,
+          y: 1.02,
+          xref: 'paper',
+          yref: 'paper',
+          text: 'Custom data: move Threshold to step along the empirical ROC.',
+          showarrow: false,
+          font: { size: 10, color: themeColor('--plot-font') }
+        },
+        {
+          x: fpr,
+          y: tpr,
+          text: `t=${formatThresholdValue()}`,
+          showarrow: true,
+          arrowhead: 2,
+          ax: fpr > 0.72 ? -58 : 58,
+          ay: tpr > 0.72 ? 26 : -26,
+          bgcolor: themeAlpha('--bg2', 0.92),
+          bordercolor: var_accent(),
+          font: { size: 10, color: themeColor('--text') }
+        }
+      );
+    } else if (!state.linkedMode) {
       annotations.push({
         x: 0.5,
         y: 1.02,
@@ -4058,6 +4362,7 @@ function applyPreset(name) {
       yaxis: { ...base.yaxis, title: 'TPR', range: [-0.02, 1.02] },
       legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
       annotations,
+      shapes,
     };
 
     Plotly.react('rocPlot', traces, layout, {
@@ -4205,13 +4510,14 @@ function applyPreset(name) {
 
   function renderPrecisionStory(tpr, fpr) {
     const cohort = 10000;
-    const positives = Math.round(cohort * state.bal);
+    const stats = getDatasetStats();
+    const positives = Math.round(cohort * stats.bal);
     const negatives = cohort - positives;
     const truePositives = Math.round(positives * tpr);
     const falsePositives = Math.round(negatives * fpr);
     const flaggedPositive = truePositives + falsePositives;
     const precision = flaggedPositive > 0 ? truePositives / flaggedPositive : 0;
-    const rareSetting = state.bal <= 0.05;
+    const rareSetting = stats.bal <= 0.05;
     const strongRates = tpr >= 0.85 && fpr <= 0.10;
 
     $('storyTitle').textContent = rareSetting && strongRates && precision < 0.75
@@ -4554,8 +4860,9 @@ function applyPreset(name) {
       cellMinH: mobileLandscape ? 34 : 28
     } : getMosaicTypography(false);
 
-    const pW = state.bal * bW;
-    const nW = (1 - state.bal) * bW;
+    const prevalence = (P + Nn) > 0 ? P / (P + Nn) : 0;
+    const pW = prevalence * bW;
+    const nW = (1 - prevalence) * bW;
 
     const tpH = P > 0 ? (TP / P) * bH : 0;
     const fnH = bH - tpH;
@@ -4598,8 +4905,8 @@ function applyPreset(name) {
 
     html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--pos-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual P (' + P + ')</text>';
     html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 17 : 18)) + '" text-anchor="middle" fill="'+themeColor('--neg-color')+'" font-size="' + typo.rowLabel + '" font-family="JetBrains Mono, monospace" font-weight="600">Actual N (' + Nn + ')</text>';
-    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(state.bal*100,0) + '%</text>';
-    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-state.bal)*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf(prevalence*100,0) + '%</text>';
+    html += '<text x="' + (x0 + pW + nW/2) + '" y="' + (y0 + bH + (mobile ? 34 : 36)) + '" text-anchor="middle" fill="'+themeColor('--text-dim')+'" font-size="' + typo.meta + '" font-family="JetBrains Mono, monospace">' + pf((1-prevalence)*100,0) + '%</text>';
     html += buildMosaicMetricOverlay(window.activeMosaicMetricKey, {
       tpRect,
       fnRect,
@@ -4638,6 +4945,7 @@ function applyPreset(name) {
   }
 
   function applyTPRValue(newTPR) {
+    if (hasCustomDataset()) return false;
     const nextTPR = clamp01(newTPR);
     if (state.linkedMode) {
       state.threshold = tprToThresh(Math.max(0.001, Math.min(0.999, nextTPR)));
@@ -4646,9 +4954,11 @@ function applyPreset(name) {
     } else {
       state.manual_tpr = nextTPR;
     }
+    return true;
   }
 
   function applyFPRValue(newFPR) {
+    if (hasCustomDataset()) return false;
     const nextFPR = clamp01(newFPR);
     if (state.linkedMode) {
       state.threshold = fprToThresh(Math.max(0.001, Math.min(0.999, nextFPR)));
@@ -4657,6 +4967,7 @@ function applyPreset(name) {
     } else {
       state.manual_fpr = nextFPR;
     }
+    return true;
   }
 
   function applyThresholdValue(newThreshold) {
@@ -4666,9 +4977,11 @@ function applyPreset(name) {
   }
 
   function applyBalanceValue(newBalance) {
+    if (hasCustomDataset()) return false;
     state.bal = Math.max(0.001, Math.min(0.999, newBalance));
     writeSlider('s_bal', state.bal);
     writeSlider('m_s_bal', state.bal);
+    return true;
   }
 
   // ─── Event Wiring ───
@@ -4714,6 +5027,10 @@ function applyPreset(name) {
 
   $('toggle_bidirectional').addEventListener('change', () => {
     if (updating) return;
+    if (hasCustomDataset()) {
+      syncCheckbox('toggle_bidirectional', true);
+      return;
+    }
     updating = true;
     clearPresetSelection();
     const linked = $('toggle_bidirectional').checked;
@@ -4725,6 +5042,10 @@ function applyPreset(name) {
 
   $('mobile_toggle_bidirectional').addEventListener('change', () => {
     if (updating) return;
+    if (hasCustomDataset()) {
+      syncCheckbox('mobile_toggle_bidirectional', true);
+      return;
+    }
     updating = true;
     clearPresetSelection();
     const linked = $('mobile_toggle_bidirectional').checked;
@@ -4739,7 +5060,11 @@ function applyPreset(name) {
     if (updating) return;
     updating = true;
     clearPresetSelection();
-    applyTPRValue(parseFloat($('s_tpr').value));
+    if (!applyTPRValue(parseFloat($('s_tpr').value))) {
+      render();
+      updating = false;
+      return;
+    }
     render();
     updating = false;
   });
@@ -4748,7 +5073,11 @@ function applyPreset(name) {
     if (updating) return;
     updating = true;
     clearPresetSelection();
-    applyTPRValue(parseFloat($('m_s_tpr').value));
+    if (!applyTPRValue(parseFloat($('m_s_tpr').value))) {
+      render();
+      updating = false;
+      return;
+    }
     render();
     updating = false;
   });
@@ -4758,7 +5087,11 @@ function applyPreset(name) {
     if (updating) return;
     updating = true;
     clearPresetSelection();
-    applyFPRValue(parseFloat($('s_fpr').value));
+    if (!applyFPRValue(parseFloat($('s_fpr').value))) {
+      render();
+      updating = false;
+      return;
+    }
     render();
     updating = false;
   });
@@ -4767,7 +5100,11 @@ function applyPreset(name) {
     if (updating) return;
     updating = true;
     clearPresetSelection();
-    applyFPRValue(parseFloat($('m_s_fpr').value));
+    if (!applyFPRValue(parseFloat($('m_s_fpr').value))) {
+      render();
+      updating = false;
+      return;
+    }
     render();
     updating = false;
   });
@@ -4801,7 +5138,11 @@ function applyPreset(name) {
     if (updating) return;
     updating = true;
     clearPresetSelection();
-    applyBalanceValue(parseFloat($('m_s_bal').value));
+    if (!applyBalanceValue(parseFloat($('m_s_bal').value))) {
+      render();
+      updating = false;
+      return;
+    }
     render();
     updating = false;
   });
@@ -4816,7 +5157,11 @@ function applyPreset(name) {
       }
       updating = true;
       clearPresetSelection();
-      applyTPRValue(prob);
+      if (!applyTPRValue(prob)) {
+        render();
+        updating = false;
+        return;
+      }
       render();
       updating = false;
     });
@@ -4832,7 +5177,11 @@ function applyPreset(name) {
       }
       updating = true;
       clearPresetSelection();
-      applyFPRValue(prob);
+      if (!applyFPRValue(prob)) {
+        render();
+        updating = false;
+        return;
+      }
       render();
       updating = false;
     });
@@ -4848,7 +5197,11 @@ function applyPreset(name) {
       }
       updating = true;
       clearPresetSelection();
-      applyBalanceValue(prob);
+      if (!applyBalanceValue(prob)) {
+        render();
+        updating = false;
+        return;
+      }
       render();
       updating = false;
     });
@@ -4869,7 +5222,11 @@ function applyPreset(name) {
       updating = true;
       clearPresetSelection();
       state.N = parseInt($('s_N').value);
-      applyBalanceValue(parseFloat($('s_bal').value));
+      if (!applyBalanceValue(parseFloat($('s_bal').value))) {
+        render();
+        updating = false;
+        return;
+      }
       render();
       updating = false;
     });
