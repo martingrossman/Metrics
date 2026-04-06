@@ -324,6 +324,43 @@
     transition: all 0.3s;
   }
 
+  .cm-cell::before,
+  .cm-cell::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 10px;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .cm-cell::before {
+    border: 0 dashed transparent;
+  }
+
+  .cm-cell.cm-metric-guide::before {
+    opacity: 1;
+    border-color: var(--cm-guide-color, var(--text-dim));
+  }
+
+  .cm-cell.cm-guide-top::before { border-top-width: 4px; }
+  .cm-cell.cm-guide-right::before { border-right-width: 4px; }
+  .cm-cell.cm-guide-bottom::before { border-bottom-width: 4px; }
+  .cm-cell.cm-guide-left::before { border-left-width: 4px; }
+
+  .cm-cell.cm-metric-focus::after {
+    opacity: 1;
+    border: 4px solid var(--cm-focus-color, var(--accent));
+    box-shadow: 0 0 0 3px var(--bg2);
+  }
+
+  .cm-cell > * {
+    position: relative;
+    z-index: 2;
+  }
+
   .cm-cell .count {
     font-size: 1.5rem;
     font-weight: 700;
@@ -2449,16 +2486,16 @@
           <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
           <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
           <div class="cm-header left-label">Actual</div>
-          <div class="cm-cell cm-tp" id="cm_tp">
+          <div class="cm-cell cm-tp" id="cm_tp" data-cm-cell="tp">
             <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
           </div>
-          <div class="cm-cell cm-fn" id="cm_fn">
+          <div class="cm-cell cm-fn" id="cm_fn" data-cm-cell="fn">
             <span class="count">&mdash;</span><span class="label">FN</span><span class="rate"></span>
           </div>
-          <div class="cm-cell cm-fp" id="cm_fp">
+          <div class="cm-cell cm-fp" id="cm_fp" data-cm-cell="fp">
             <span class="count">&mdash;</span><span class="label">FP</span><span class="rate"></span>
           </div>
-          <div class="cm-cell cm-tn" id="cm_tn">
+          <div class="cm-cell cm-tn" id="cm_tn" data-cm-cell="tn">
             <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
           </div>
         </div>
@@ -2479,7 +2516,7 @@
         </div>
       </div>
       <div class="metrics-vals-view active" id="metricsValsView">
-        <div class="metric-hover-hint">Hover a metric card, or tap it on iPhone, to highlight the matching pieces in the mosaic. Tap the same card again to clear.</div>
+        <div class="metric-hover-hint">Hover a metric card, or tap it on iPhone, to highlight the matching pieces in the mosaic and confusion matrix. Tap the same card again to clear.</div>
         <div class="metrics-grid">
           <div class="metric-card" data-metric="tpr" onmouseenter="setMosaicMetricHover('tpr')" onmouseleave="clearMosaicMetricHover('tpr')" onfocusin="setMosaicMetricHover('tpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'tpr')" onclick="toggleMosaicMetricTouch(event, 'tpr')"><div class="metric-name"><span class="metric-name-main">TPR</span><span class="metric-name-sub">(Recall)</span></div><div class="metric-val" id="m_rec">&mdash;</div><div class="metric-formula">TP/(TP+FN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_tpr')">Equation &rarr;</button></div>
           <div class="metric-card" data-metric="fpr" onmouseenter="setMosaicMetricHover('fpr')" onmouseleave="clearMosaicMetricHover('fpr')" onfocusin="setMosaicMetricHover('fpr')" onfocusout="clearMosaicMetricHoverIfOutside(event, 'fpr')" onclick="toggleMosaicMetricTouch(event, 'fpr')"><div class="metric-name"><span class="metric-name-main">FPR</span></div><div class="metric-val" id="m_fpr">&mdash;</div><div class="metric-formula">FP/(FP+TN)</div><button class="see-why-btn" type="button" onclick="openMetricFormula('formula_fpr')">Equation &rarr;</button></div>
@@ -2691,6 +2728,7 @@ function updateMetricCardHoverState() {
 
 function refreshMosaicMetricHover() {
   if (window.refreshMosaicMetricOverlay) window.refreshMosaicMetricOverlay();
+  if (window.refreshCMMetricOverlay) window.refreshCMMetricOverlay();
 }
 
 function setMosaicMetricHover(metricKey) {
@@ -2820,11 +2858,13 @@ function switchView(view) {
     mosaicView.classList.remove('active');
     btnCM.classList.add('active');
     btnMosaic.classList.remove('active');
+    if (window.refreshCMMetricOverlay) window.refreshCMMetricOverlay();
   } else {
     cmView.classList.remove('active');
     mosaicView.classList.add('active');
     btnCM.classList.remove('active');
     btnMosaic.classList.add('active');
+    if (window.refreshMosaicMetricOverlay) window.refreshMosaicMetricOverlay();
   }
 }
 </script>
@@ -3741,6 +3781,7 @@ function switchView(view) {
     setCM('cm_fn', FN, 'FN', P > 0 ? pf(FN/P*100,1)+'%' : '—');
     setCM('cm_fp', FP, 'FP', N_neg > 0 ? pf(FP/N_neg*100,1)+'%' : '—');
     setCM('cm_tn', TN, 'TN', N_neg > 0 ? pf(TN/N_neg*100,1)+'%' : '—');
+    applyCMMetricOverlay(window.activeMosaicMetricKey);
   }
 
   function setCM(id, count, label, rate) {
@@ -3749,6 +3790,112 @@ function switchView(view) {
     el.querySelector('.label').textContent = label;
     el.querySelector('.rate').textContent = rate;
   }
+
+  const cmMetricOverlayClasses = [
+    'cm-metric-guide',
+    'cm-metric-focus',
+    'cm-guide-top',
+    'cm-guide-right',
+    'cm-guide-bottom',
+    'cm-guide-left'
+  ];
+
+  function clearCMMetricOverlay() {
+    document.querySelectorAll('.cm-cell[data-cm-cell]').forEach(function(cell) {
+      cmMetricOverlayClasses.forEach(function(className) {
+        cell.classList.remove(className);
+      });
+      cell.style.removeProperty('--cm-guide-color');
+      cell.style.removeProperty('--cm-focus-color');
+    });
+  }
+
+  function getCMCell(cellKey) {
+    return document.querySelector('.cm-cell[data-cm-cell="' + cellKey + '"]');
+  }
+
+  function addCMGuide(cellKey, sides, color) {
+    const cell = getCMCell(cellKey);
+    if (!cell) return;
+    cell.classList.add('cm-metric-guide');
+    cell.style.setProperty('--cm-guide-color', color);
+    sides.forEach(function(side) {
+      cell.classList.add('cm-guide-' + side);
+    });
+  }
+
+  function addCMFocus(cellKey, color) {
+    const cell = getCMCell(cellKey);
+    if (!cell) return;
+    cell.classList.add('cm-metric-focus');
+    cell.style.setProperty('--cm-focus-color', color);
+  }
+
+  function applyCMMetricOverlay(metricKey) {
+    clearCMMetricOverlay();
+    if (!metricKey) return;
+
+    const guideStroke = themeAlpha('--text', 0.72);
+    const accentStroke = themeColor('--accent');
+    const tpStroke = themeColor('--tp-color');
+    const fpStroke = themeAlpha('--fp-color', 0.85);
+    const fnStroke = themeAlpha('--fn-color', 0.85);
+    const tnStroke = themeColor('--tn-color');
+
+    switch (metricKey) {
+      case 'tpr':
+        addCMGuide('tp', ['top', 'left', 'bottom'], guideStroke);
+        addCMGuide('fn', ['top', 'right', 'bottom'], guideStroke);
+        addCMFocus('tp', tpStroke);
+        break;
+      case 'fpr':
+        addCMGuide('fp', ['top', 'left', 'bottom'], guideStroke);
+        addCMGuide('tn', ['top', 'right', 'bottom'], guideStroke);
+        addCMFocus('fp', themeColor('--fp-color'));
+        break;
+      case 'precision':
+        addCMGuide('tp', ['top', 'left', 'right'], guideStroke);
+        addCMGuide('fp', ['left', 'right', 'bottom'], guideStroke);
+        addCMFocus('tp', tpStroke);
+        break;
+      case 'accuracy':
+        addCMGuide('tp', ['top', 'left'], guideStroke);
+        addCMGuide('fn', ['top', 'right'], guideStroke);
+        addCMGuide('fp', ['left', 'bottom'], guideStroke);
+        addCMGuide('tn', ['right', 'bottom'], guideStroke);
+        addCMFocus('tp', tpStroke);
+        addCMFocus('tn', tnStroke);
+        break;
+      case 'f1':
+        addCMFocus('tp', tpStroke);
+        addCMGuide('fp', ['top', 'right', 'bottom', 'left'], fpStroke);
+        addCMGuide('fn', ['top', 'right', 'bottom', 'left'], fnStroke);
+        break;
+      case 'auc':
+        addCMGuide('tp', ['top', 'left'], accentStroke);
+        addCMGuide('fn', ['top', 'right'], accentStroke);
+        addCMGuide('fp', ['left', 'bottom'], accentStroke);
+        addCMGuide('tn', ['right', 'bottom'], accentStroke);
+        break;
+      case 'npv':
+        addCMGuide('fn', ['top', 'left', 'right'], guideStroke);
+        addCMGuide('tn', ['left', 'right', 'bottom'], guideStroke);
+        addCMFocus('tn', tnStroke);
+        break;
+      case 'mcc':
+        addCMFocus('tp', tpStroke);
+        addCMFocus('tn', tnStroke);
+        addCMGuide('fp', ['top', 'right', 'bottom', 'left'], fpStroke);
+        addCMGuide('fn', ['top', 'right', 'bottom', 'left'], fnStroke);
+        break;
+      default:
+        break;
+    }
+  }
+
+  window.refreshCMMetricOverlay = function() {
+    applyCMMetricOverlay(window.activeMosaicMetricKey);
+  };
 
   function renderPrecisionStory(tpr, fpr) {
     const cohort = 10000;
