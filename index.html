@@ -1212,6 +1212,11 @@
     color: var(--text);
   }
 
+  [data-theme="neon-dark"] .view-toggle button.active {
+    color: #0a0a12;
+    border-color: var(--accent);
+  }
+
   .cm-stage {
     position: relative;
     width: 100%;
@@ -2978,16 +2983,18 @@ function switchView(view) {
   };
   const THEME_PRESETS = {
     'neon-dark': {
-      '--bg': '#0a0a12', '--bg2': '#12101e', '--bg3': '#1b1730', '--border': '#2e2650',
-      '--text': '#e0daf0', '--text-dim': '#7a6f99', '--accent': '#00f0ff', '--accent2': '#ff2d95', '--accent3': '#b44dff',
-      '--green': '#39ff14', '--red': '#ff2d55', '--orange': '#ffb400',
-      '--pos-color': '#00f0ff', '--neg-color': '#ff2d95', '--tp-color': '#39ff14', '--fp-color': '#ff2d55', '--tn-color': '#00f0ff', '--fn-color': '#ffb400',
-      '--cm-tp-bg': 'rgba(57,255,20,0.12)', '--cm-fp-bg': 'rgba(255,45,85,0.15)', '--cm-fn-bg': 'rgba(255,180,0,0.15)', '--cm-tn-bg': 'rgba(0,240,255,0.12)',
-      '--soft-accent-bg': 'rgba(0,240,255,0.05)', '--soft-accent-strong': 'rgba(0,240,255,0.18)', '--soft-accent-border': 'rgba(0,240,255,0.6)',
-      '--hint-bg': 'rgba(0,240,255,0.06)', '--hint-manual-bg': 'rgba(255,180,0,0.08)', '--hint-manual-text': '#c9c1dc',
-      '--neutral-band-bg': 'rgba(255,255,255,0.025)', '--cell-stroke': 'rgba(255,255,255,0.08)',
-      '--plot-grid': '#221d3a', '--plot-font': '#9088b0', '--plot-zero': '#2e2650',
-      '--good-color': '#39ff14', '--bad-color': '#ff2d55'
+      '--bg': '#0b0b0f', '--bg2': '#11121a', '--bg3': '#181b23', '--border': '#252a36',
+      '--text': '#eef3f7', '--text-dim': '#a0acba',
+      '--accent': '#00eaff', '--accent2': '#00eaff', '--accent3': '#00eaff',
+      '--green': '#3bff6a', '--red': '#ff4d6d', '--orange': '#f2a900',
+      '--pos-color': '#00eaff', '--neg-color': '#ff4d6d',
+      '--tp-color': '#3bff6a', '--fp-color': '#ff4d6d', '--tn-color': '#00eaff', '--fn-color': '#f2a900',
+      '--cm-tp-bg': 'rgba(59,255,106,0.12)', '--cm-fp-bg': 'rgba(255,77,109,0.14)', '--cm-fn-bg': 'rgba(242,169,0,0.14)', '--cm-tn-bg': 'rgba(0,234,255,0.12)',
+      '--soft-accent-bg': 'rgba(0,234,255,0.06)', '--soft-accent-strong': 'rgba(0,234,255,0.18)', '--soft-accent-border': 'rgba(0,234,255,0.45)',
+      '--hint-bg': 'rgba(0,234,255,0.06)', '--hint-manual-bg': 'rgba(242,169,0,0.10)', '--hint-manual-text': '#d9e7ef',
+      '--neutral-band-bg': 'rgba(255,255,255,0.02)', '--cell-stroke': 'rgba(255,255,255,0.08)',
+      '--plot-grid': '#232835', '--plot-font': '#a0acba', '--plot-zero': '#2f3645',
+      '--good-color': '#3bff6a', '--bad-color': '#ff4d6d'
     },
     'light': {
       '--bg': '#f5f7fb', '--bg2': '#ffffff', '--bg3': '#e9eef8', '--border': '#c8d2e3',
@@ -3096,6 +3103,7 @@ function switchView(view) {
     Object.entries(THEME_PRESETS[themeName]).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value);
     });
+    document.documentElement.setAttribute('data-theme', themeName);
     currentThemeName = themeName;
     updateThemeButton();
     try { localStorage.setItem('metrics-theme', themeName); } catch (e) {}
