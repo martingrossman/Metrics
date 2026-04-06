@@ -2481,19 +2481,19 @@
       <div class="cm-view" id="cmView">
         <div class="cm-grid">
           <div class="cm-corner"></div>
-          <div class="cm-header top-label">Predicted</div>
+          <div class="cm-header top-label">Actual</div>
           <div class="cm-corner"></div>
           <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
           <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
-          <div class="cm-header left-label">Actual</div>
+          <div class="cm-header left-label">Predicted</div>
           <div class="cm-cell cm-tp" id="cm_tp" data-cm-cell="tp">
             <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
           </div>
-          <div class="cm-cell cm-fn" id="cm_fn" data-cm-cell="fn">
-            <span class="count">&mdash;</span><span class="label">FN</span><span class="rate"></span>
-          </div>
           <div class="cm-cell cm-fp" id="cm_fp" data-cm-cell="fp">
             <span class="count">&mdash;</span><span class="label">FP</span><span class="rate"></span>
+          </div>
+          <div class="cm-cell cm-fn" id="cm_fn" data-cm-cell="fn">
+            <span class="count">&mdash;</span><span class="label">FN</span><span class="rate"></span>
           </div>
           <div class="cm-cell cm-tn" id="cm_tn" data-cm-cell="tn">
             <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
@@ -3844,24 +3844,24 @@ function switchView(view) {
 
     switch (metricKey) {
       case 'tpr':
-        addCMGuide('tp', ['top', 'left', 'bottom'], guideStroke);
-        addCMGuide('fn', ['top', 'right', 'bottom'], guideStroke);
+        addCMGuide('tp', ['top', 'left', 'right'], guideStroke);
+        addCMGuide('fn', ['left', 'right', 'bottom'], guideStroke);
         addCMFocus('tp', tpStroke);
         break;
       case 'fpr':
-        addCMGuide('fp', ['top', 'left', 'bottom'], guideStroke);
-        addCMGuide('tn', ['top', 'right', 'bottom'], guideStroke);
+        addCMGuide('fp', ['top', 'left', 'right'], guideStroke);
+        addCMGuide('tn', ['left', 'right', 'bottom'], guideStroke);
         addCMFocus('fp', themeColor('--fp-color'));
         break;
       case 'precision':
-        addCMGuide('tp', ['top', 'left', 'right'], guideStroke);
-        addCMGuide('fp', ['left', 'right', 'bottom'], guideStroke);
+        addCMGuide('tp', ['top', 'left', 'bottom'], guideStroke);
+        addCMGuide('fp', ['top', 'right', 'bottom'], guideStroke);
         addCMFocus('tp', tpStroke);
         break;
       case 'accuracy':
         addCMGuide('tp', ['top', 'left'], guideStroke);
-        addCMGuide('fn', ['top', 'right'], guideStroke);
-        addCMGuide('fp', ['left', 'bottom'], guideStroke);
+        addCMGuide('fp', ['top', 'right'], guideStroke);
+        addCMGuide('fn', ['left', 'bottom'], guideStroke);
         addCMGuide('tn', ['right', 'bottom'], guideStroke);
         addCMFocus('tp', tpStroke);
         addCMFocus('tn', tnStroke);
@@ -3873,13 +3873,13 @@ function switchView(view) {
         break;
       case 'auc':
         addCMGuide('tp', ['top', 'left'], accentStroke);
-        addCMGuide('fn', ['top', 'right'], accentStroke);
-        addCMGuide('fp', ['left', 'bottom'], accentStroke);
+        addCMGuide('fp', ['top', 'right'], accentStroke);
+        addCMGuide('fn', ['left', 'bottom'], accentStroke);
         addCMGuide('tn', ['right', 'bottom'], accentStroke);
         break;
       case 'npv':
-        addCMGuide('fn', ['top', 'left', 'right'], guideStroke);
-        addCMGuide('tn', ['left', 'right', 'bottom'], guideStroke);
+        addCMGuide('fn', ['left', 'bottom'], guideStroke);
+        addCMGuide('tn', ['right', 'bottom'], guideStroke);
         addCMFocus('tn', tnStroke);
         break;
       case 'mcc':
