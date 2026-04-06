@@ -281,7 +281,7 @@
   .cm-grid {
     display: grid;
     grid-template-columns: auto 1fr 1fr;
-    grid-template-rows: auto auto 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
     gap: 3px;
     width: 100%;
     aspect-ratio: 1.15;
@@ -302,15 +302,21 @@
     letter-spacing: 1px;
     padding: 4px;
   }
-  .cm-header.top-label {
-    grid-column: 2 / 4;
-    grid-row: 1;
-  }
   .cm-header.left-label {
     grid-column: 1;
-    grid-row: 3 / 5;
+    grid-row: 2 / 4;
     writing-mode: vertical-lr;
     transform: rotate(180deg);
+  }
+
+  .cm-axis-bottom {
+    text-align: center;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
   }
 
   .cm-cell {
@@ -2481,10 +2487,8 @@
       <div class="cm-view" id="cmView">
         <div class="cm-grid">
           <div class="cm-corner"></div>
-          <div class="cm-header top-label">Actual</div>
-          <div class="cm-corner"></div>
-          <div class="cm-header" style="grid-column:2;grid-row:2;">Positive</div>
-          <div class="cm-header" style="grid-column:3;grid-row:2;">Negative</div>
+          <div class="cm-header" style="grid-column:2;grid-row:1;">Positive</div>
+          <div class="cm-header" style="grid-column:3;grid-row:1;">Negative</div>
           <div class="cm-header left-label">Predicted</div>
           <div class="cm-cell cm-tp" id="cm_tp" data-cm-cell="tp">
             <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
@@ -2499,6 +2503,7 @@
             <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
           </div>
         </div>
+        <div class="cm-axis-bottom">Actual</div>
       </div>
       <div class="mosaic-view active" id="mosaicView">
         <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
