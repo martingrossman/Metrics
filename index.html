@@ -3633,8 +3633,8 @@ function switchView(view) {
         if (x <= t) { xFN.push(x); yFN.push(wP * normPDF(x, state.mu_pos, state.std_pos)); }
       }
       traces.push(
-        { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: themeAlpha('--fp-color', 0.2), line: { color: 'transparent' }, showlegend: true, type: 'scatter' },
-        { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: themeAlpha('--fn-color', 0.2), line: { color: 'transparent' }, showlegend: true, type: 'scatter' }
+        { x: xFP, y: yFP, name: 'FP region', fill: 'tozeroy', fillcolor: themeAlpha('--fp-color', 0.55), line: { color: themeAlpha('--fp-color', 0.9), width: 1.6, dash: 'dot' }, showlegend: true, type: 'scatter' },
+        { x: xFN, y: yFN, name: 'FN region', fill: 'tozeroy', fillcolor: themeAlpha('--fn-color', 0.55), line: { color: themeAlpha('--fn-color', 0.9), width: 1.6, dash: 'dot' }, showlegend: true, type: 'scatter' }
       );
       shapes.push({
         type: 'line', x0: t, x1: t, y0: 0, y1: 1, yref: 'paper',
