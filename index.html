@@ -136,6 +136,7 @@
 
   #mosaicSVG {
     width: 100%;
+    height: 100%;
     display: block;
     aspect-ratio: 700 / 340;
   }
@@ -1188,8 +1189,28 @@
     color: var(--text);
   }
 
-  .cm-view, .mosaic-view { display: none; }
-  .cm-view.active, .mosaic-view.active { display: block; }
+  .cm-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 700 / 360;
+  }
+
+  .cm-view, .mosaic-view {
+    display: none;
+    position: absolute;
+    inset: 0;
+  }
+  .cm-view.active { display: flex; align-items: center; justify-content: center; }
+  .mosaic-view.active { display: block; }
+
+  .cm-view .cm-grid {
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .cm-view .cm-grid {
+    height: 100%;
+  }
 
   .dist-curves-view, .dist-topview-view { display: none; }
   .dist-curves-view.active, .dist-topview-view.active { display: block; }
@@ -1568,9 +1589,13 @@
 
     #mosaicSVG {
       width: 100%;
-      height: auto;
-      aspect-ratio: 360 / 280;
+      height: 100%;
+      aspect-ratio: 360 / 320;
       max-height: none;
+    }
+
+    .cm-stage {
+      aspect-ratio: 360 / 320;
     }
 
     .cm-grid {
@@ -2484,29 +2509,31 @@
           <button class="active" id="btn_mosaic" onclick="switchView('mosaic')">Mosaic</button>
         </div>
       </div>
-      <div class="cm-view" id="cmView">
-        <div class="cm-grid">
-          <div class="cm-corner"></div>
-          <div class="cm-header" style="grid-column:2;grid-row:1;">Positive</div>
-          <div class="cm-header" style="grid-column:3;grid-row:1;">Negative</div>
-          <div class="cm-header left-label">Predicted</div>
-          <div class="cm-cell cm-tp" id="cm_tp" data-cm-cell="tp">
-            <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
+      <div class="cm-stage">
+        <div class="cm-view" id="cmView">
+          <div class="cm-grid">
+            <div class="cm-corner"></div>
+            <div class="cm-header" style="grid-column:2;grid-row:1;">Positive</div>
+            <div class="cm-header" style="grid-column:3;grid-row:1;">Negative</div>
+            <div class="cm-header left-label">Predicted</div>
+            <div class="cm-cell cm-tp" id="cm_tp" data-cm-cell="tp">
+              <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
+            </div>
+            <div class="cm-cell cm-fp" id="cm_fp" data-cm-cell="fp">
+              <span class="count">&mdash;</span><span class="label">FP</span><span class="rate"></span>
+            </div>
+            <div class="cm-cell cm-fn" id="cm_fn" data-cm-cell="fn">
+              <span class="count">&mdash;</span><span class="label">FN</span><span class="rate"></span>
+            </div>
+            <div class="cm-cell cm-tn" id="cm_tn" data-cm-cell="tn">
+              <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
+            </div>
           </div>
-          <div class="cm-cell cm-fp" id="cm_fp" data-cm-cell="fp">
-            <span class="count">&mdash;</span><span class="label">FP</span><span class="rate"></span>
-          </div>
-          <div class="cm-cell cm-fn" id="cm_fn" data-cm-cell="fn">
-            <span class="count">&mdash;</span><span class="label">FN</span><span class="rate"></span>
-          </div>
-          <div class="cm-cell cm-tn" id="cm_tn" data-cm-cell="tn">
-            <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
-          </div>
+          <div class="cm-axis-bottom">Actual</div>
         </div>
-        <div class="cm-axis-bottom">Actual</div>
-      </div>
-      <div class="mosaic-view active" id="mosaicView">
-        <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="mosaic-view active" id="mosaicView">
+          <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
       </div>
     </div>
 
