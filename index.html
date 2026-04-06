@@ -4104,14 +4104,14 @@ function switchView(view) {
     else if (!mobile && vw >= 1400) scale = 1.08;
 
     return {
-      banner: Math.round((mobile ? 11 : 11) * scale),
-      rowLabel: Math.round((mobile ? 16 : 13) * scale),
-      meta: Math.round((mobile ? 12 : 10) * scale),
-      sideLabel: Math.round((mobile ? 11 : 10) * scale),
+      banner: Math.round((mobile ? 12 : 12) * scale),
+      rowLabel: Math.round((mobile ? 18 : 15) * scale),
+      meta: Math.round((mobile ? 13 : 11) * scale),
+      sideLabel: Math.round((mobile ? 12 : 11) * scale),
       sideGap: mobile ? 7 : 8,
       sideLine: mobile ? 8 : 10,
-      cellLabel: Math.round((mobile ? 17 : 15) * scale),
-      cellCount: Math.round((mobile ? 14 : 12) * scale),
+      cellLabel: Math.round((mobile ? 20 : 18) * scale),
+      cellCount: Math.round((mobile ? 16 : 14) * scale),
       cellMinW: mobile ? 24 : 30,
       cellMinH: mobile ? 24 : 30
     };
@@ -4230,14 +4230,14 @@ function switchView(view) {
     const bW = W - pad.l - pad.r;
     const bH = H - pad.t - pad.b;
     const typo = mobile ? {
-      banner: mobileLandscape ? 8 : 10,
-      rowLabel: mobileLandscape ? 9 : 11,
-      meta: mobileLandscape ? 8 : 10,
-      sideLabel: mobileLandscape ? 8 : 10,
+      banner: mobileLandscape ? 9 : 11,
+      rowLabel: mobileLandscape ? 11 : 13,
+      meta: mobileLandscape ? 9 : 11,
+      sideLabel: mobileLandscape ? 9 : 11,
       sideGap: mobileLandscape ? 8 : 6,
       sideLine: mobileLandscape ? 6 : 7,
-      cellLabel: mobileLandscape ? 10 : 13,
-      cellCount: mobileLandscape ? 9 : 11,
+      cellLabel: mobileLandscape ? 12 : 14,
+      cellCount: mobileLandscape ? 11 : 12,
       cellMinW: mobileLandscape ? 44 : 34,
       cellMinH: mobileLandscape ? 34 : 28
     } : getMosaicTypography(false);
@@ -4309,8 +4309,8 @@ function switchView(view) {
     // If a cell gets too small, move the label outside instead of hiding it.
     if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
-      s += '<text x="'+cx+'" y="'+(cy-7)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
-      s += '<text x="'+cx+'" y="'+(cy+11)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy-9)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellLabel+'" font-family="JetBrains Mono, monospace" font-weight="700" dominant-baseline="middle">'+label+'</text>';
+      s += '<text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" fill="'+textColor+'" font-size="'+typo.cellCount+'" font-family="JetBrains Mono, monospace" opacity="0.82" dominant-baseline="middle">'+count+'</text>';
       return s;
     }
 
