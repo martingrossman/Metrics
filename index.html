@@ -311,6 +311,7 @@
     max-width: 360px;
     margin: 0 auto;
     font-family: 'JetBrains Mono', monospace;
+    position: relative;
   }
 
   .cm-corner { }
@@ -384,6 +385,21 @@
     opacity: 1;
     border: 4px solid var(--cm-focus-color, var(--accent));
     box-shadow: 0 0 0 3px var(--bg2);
+  }
+
+  .cm-group-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .cm-group-outline {
+    position: absolute;
+    border: 4px dashed var(--cm-group-color, var(--text-dim));
+    border-radius: 12px;
+    box-shadow: 0 0 0 3px var(--bg2);
+    background: transparent;
   }
 
   .cm-cell > * {
@@ -2912,6 +2928,7 @@ label,score
             <div class="cm-cell cm-tn" id="cm_tn" data-cm-cell="tn">
               <span class="count">&mdash;</span><span class="label">TN</span><span class="rate"></span>
             </div>
+            <div class="cm-group-overlay" id="cmGroupOverlay" aria-hidden="true"></div>
           </div>
           <div class="cm-axis-bottom">Actual</div>
         </div>
@@ -4698,10 +4715,64 @@ function applyPreset(name) {
       cell.style.removeProperty('--cm-guide-color');
       cell.style.removeProperty('--cm-focus-color');
     });
+    const overlay = document.getElementById('cmGroupOverlay');
+    if (overlay) overlay.innerHTML = '';
   }
 
   function getCMCell(cellKey) {
     return document.querySelector('.cm-cell[data-cm-cell="' + cellKey + '"]');
+  }
+
+  function getCMGroupBounds(cellKeys) {
+    const grid = document.querySelector('#cmView .cm-grid');
+    if (!grid) return null;
+
+    const gridRect = grid.getBoundingClientRect();
+    if (!gridRect.width || !gridRect.height) return null;
+
+    let minLeft = Infinity;
+    let minTop = Infinity;
+    let maxRight = -Infinity;
+    let maxBottom = -Infinity;
+
+    for (let i = 0; i < cellKeys.length; i++) {
+      const cell = getCMCell(cellKeys[i]);
+      if (!cell) continue;
+      const rect = cell.getBoundingClientRect();
+      if (!rect.width || !rect.height) continue;
+      minLeft = Math.min(minLeft, rect.left);
+      minTop = Math.min(minTop, rect.top);
+      maxRight = Math.max(maxRight, rect.right);
+      maxBottom = Math.max(maxBottom, rect.bottom);
+    }
+
+    if (!isFinite(minLeft) || !isFinite(minTop) || !isFinite(maxRight) || !isFinite(maxBottom)) {
+      return null;
+    }
+
+    return {
+      left: minLeft - gridRect.left,
+      top: minTop - gridRect.top,
+      width: maxRight - minLeft,
+      height: maxBottom - minTop
+    };
+  }
+
+  function addCMGroupOutline(cellKeys, color) {
+    const overlay = document.getElementById('cmGroupOverlay');
+    if (!overlay) return;
+
+    const bounds = getCMGroupBounds(cellKeys);
+    if (!bounds) return;
+
+    const outline = document.createElement('div');
+    outline.className = 'cm-group-outline';
+    outline.style.setProperty('--cm-group-color', color);
+    outline.style.left = bounds.left + 'px';
+    outline.style.top = bounds.top + 'px';
+    outline.style.width = bounds.width + 'px';
+    outline.style.height = bounds.height + 'px';
+    overlay.appendChild(outline);
   }
 
   function addCMGuide(cellKey, sides, color) {
@@ -4734,25 +4805,19 @@ function applyPreset(name) {
 
     switch (metricKey) {
       case 'tpr':
-        addCMGuide('tp', ['top', 'left', 'right'], guideStroke);
-        addCMGuide('fn', ['left', 'right', 'bottom'], guideStroke);
+        addCMGroupOutline(['tp', 'fn'], guideStroke);
         addCMFocus('tp', tpStroke);
         break;
       case 'fpr':
-        addCMGuide('fp', ['top', 'left', 'right'], guideStroke);
-        addCMGuide('tn', ['left', 'right', 'bottom'], guideStroke);
+        addCMGroupOutline(['fp', 'tn'], guideStroke);
         addCMFocus('fp', themeColor('--fp-color'));
         break;
       case 'precision':
-        addCMGuide('tp', ['top', 'left', 'bottom'], guideStroke);
-        addCMGuide('fp', ['top', 'right', 'bottom'], guideStroke);
+        addCMGroupOutline(['tp', 'fp'], guideStroke);
         addCMFocus('tp', tpStroke);
         break;
       case 'accuracy':
-        addCMGuide('tp', ['top', 'left'], guideStroke);
-        addCMGuide('fp', ['top', 'right'], guideStroke);
-        addCMGuide('fn', ['left', 'bottom'], guideStroke);
-        addCMGuide('tn', ['right', 'bottom'], guideStroke);
+        addCMGroupOutline(['tp', 'fp', 'fn', 'tn'], guideStroke);
         addCMFocus('tp', tpStroke);
         addCMFocus('tn', tnStroke);
         break;
@@ -4762,14 +4827,10 @@ function applyPreset(name) {
         addCMGuide('fn', ['top', 'right', 'bottom', 'left'], fnStroke);
         break;
       case 'auc':
-        addCMGuide('tp', ['top', 'left'], accentStroke);
-        addCMGuide('fp', ['top', 'right'], accentStroke);
-        addCMGuide('fn', ['left', 'bottom'], accentStroke);
-        addCMGuide('tn', ['right', 'bottom'], accentStroke);
+        addCMGroupOutline(['tp', 'fp', 'fn', 'tn'], accentStroke);
         break;
       case 'npv':
-        addCMGuide('fn', ['left', 'bottom'], guideStroke);
-        addCMGuide('tn', ['right', 'bottom'], guideStroke);
+        addCMGroupOutline(['fn', 'tn'], guideStroke);
         addCMFocus('tn', tnStroke);
         break;
       case 'mcc':
