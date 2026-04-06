@@ -1213,6 +1213,10 @@
   }
 
   [data-theme="neon-dark"] .view-toggle button.active {
+    color: #0b0b0f;
+  }
+
+  [data-theme="neon-dark"] .view-toggle button.active {
     color: #0a0a12;
     border-color: var(--accent);
   }
@@ -1881,7 +1885,48 @@
     background: #00eaff;
     color: #0b0b0f;
     border-color: #00c2cf;
-    box-shadow: 0 0 10px rgba(0, 234, 255, 0.55);
+    box-shadow: 0 0 6px rgba(0, 234, 255, 0.4);
+  }
+
+  .data-import {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+
+  .data-import label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: var(--text-dim);
+  }
+
+  .data-import input[type="file"] {
+    font-size: 0.7rem;
+  }
+
+  .data-import .data-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg3);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 700;
+    transition: all 0.12s ease;
+  }
+
+  .data-import .data-btn:hover {
+    border-color: var(--soft-accent-border);
+    color: var(--accent);
+  }
+
+  .data-import .data-status {
+    font-size: 0.68rem;
+    color: var(--text-dim);
   }
 
   .sliders-row {
@@ -2510,6 +2555,12 @@
       <span class="preset-label" id="desktopPresetLabel">Quick starts</span>
       <div class="preset-chips" id="desktopPresetStrip" role="group" aria-label="Presets"></div>
     </div>
+    <div class="data-import">
+      <label for="file_custom_data">Custom data (CSV/JSON, max 1000 rows):</label>
+      <input type="file" id="file_custom_data" accept=".csv,.json">
+      <button type="button" class="data-btn" id="btn_reset_data">Reset to built-in</button>
+      <span class="data-status" id="dataStatus">Using built-in simulator.</span>
+    </div>
     <div class="sliders-row">
       <div class="slider-col">
         <div class="slider-label">TPR <span class="val" id="v_tpr">85%</span></div>
@@ -3128,12 +3179,12 @@ function switchView(view) {
   }
 
   let currentThemeName = 'light';
+  const ORIGINAL_THRESH = { min: -6, max: 10, step: 0.05 };
 
-  function updateThemeButton() {
-    const btn = $('themeToggle');
-    if (!btn) return;
-    btn.textContent = `Theme: ${THEME_LABELS[currentThemeName]}`;
-  }
+function updateThemeButton() {
+  const btn = $('themeToggle');
+  if (btn) btn.textContent = `Theme: ${THEME_LABELS[currentThemeName]}`;
+}
 
   function applyTheme(name, shouldRender = true) {
     const themeName = THEME_PRESETS[name] ? name : 'light';
@@ -3153,18 +3204,119 @@ function switchView(view) {
     applyTheme(next);
   }
 
-  window.cycleTheme = cycleTheme;
+  function updateDataStatus(msg) {
+    const el = $('dataStatus');
+    if (el) el.textContent = msg;
+  }
+
+  function resetThresholdRange() {
+    const ids = ['s_thresh', 'm_s_thresh'];
+    ids.forEach(id => {
+      const el = $(id);
+      if (!el) return;
+      el.min = ORIGINAL_THRESH.min;
+      el.max = ORIGINAL_THRESH.max;
+      el.step = ORIGINAL_THRESH.step;
+      el.value = state.threshold;
+    });
+  }
+
+  function setCustomThresholdRange() {
+    const ids = ['s_thresh', 'm_s_thresh'];
+    ids.forEach(id => {
+      const el = $(id);
+      if (!el) return;
+      el.min = 0;
+      el.max = 1;
+      el.step = 0.01;
+      el.value = 0.5;
+    });
+    state.threshold = 0.5;
+  }
+
+  function parseCSV(text) {
+    const lines = text.trim().split(/\r?\n/);
+    let start = 0;
+    const first = lines[0].split(/,|\s+/);
+    const hasHeader = isNaN(parseFloat(first[0])) || isNaN(parseFloat(first[1]));
+    if (hasHeader) start = 1;
+    const rows = [];
+    for (let i = start; i < lines.length && rows.length < 1000; i++) {
+      const parts = lines[i].split(/,|\s+/).map(s => s.trim());
+      if (parts.length < 2) continue;
+      const label = parseInt(parts[0], 10);
+      const score = parseFloat(parts[1]);
+      if ((label === 0 || label === 1) && isFinite(score)) {
+        rows.push({ label, score: Math.max(0, Math.min(1, score)) });
+      }
+    }
+    return rows;
+  }
+
+  function parseJSON(text) {
+    let data;
+    try { data = JSON.parse(text); } catch (e) { return []; }
+    if (!Array.isArray(data)) return [];
+    const rows = [];
+    for (let i = 0; i < data.length && rows.length < 1000; i++) {
+      const row = data[i] || {};
+      const label = parseInt(row.label ?? row.y_true ?? row.y ?? row.target, 10);
+      const score = parseFloat(row.score ?? row.prob ?? row.p ?? row.pred);
+      if ((label === 0 || label === 1) && isFinite(score)) {
+        rows.push({ label, score: Math.max(0, Math.min(1, score)) });
+      }
+    }
+    return rows;
+  }
+
+  function loadCustomData(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const text = e.target.result || '';
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      const rows = ext === 'json' ? parseJSON(text) : parseCSV(text);
+      if (!rows.length) {
+        updateDataStatus('Invalid data: need label,score rows.');
+        return;
+      }
+      state.customData = rows.slice(0, 1000);
+      state.customCounts = null;
+      state.linkedMode = true;
+      setCustomThresholdRange();
+      syncStateToInputs();
+      const { tpr, fpr } = threshToRates(state.threshold);
+      state.manual_tpr = tpr;
+      state.manual_fpr = fpr;
+      updateDataStatus(`Loaded ${state.customData.length} rows from ${file.name}.`);
+      render();
+    };
+    reader.readAsText(file);
+  }
+
+  function resetCustomData() {
+    state.customData = null;
+    state.customCounts = null;
+    resetThresholdRange();
+    state.linkedMode = false;
+    state.manual_tpr = 0.85;
+    state.manual_fpr = 0.20;
+    syncStateToInputs();
+    updateDataStatus('Using built-in simulator.');
+    render();
+  }
 
   // ─── State ───
-  let state = {
-    mu_neg: 0, std_neg: 1,
-    mu_pos: 2, std_pos: 1,
-    N: 1000, bal: 0.5,
-    threshold: 1.0,
-    manual_tpr: 0.85,
-    manual_fpr: 0.20,
-    linkedMode: false
-  };
+let state = {
+  mu_neg: 0, std_neg: 1,
+  mu_pos: 2, std_pos: 1,
+  N: 1000, bal: 0.5,
+  threshold: 1.0,
+  manual_tpr: 0.85,
+  manual_fpr: 0.20,
+  linkedMode: false,
+  customData: null
+};
 
   let updating = false; // reentrance guard
   let latestMetrics = null;
@@ -3260,13 +3412,30 @@ function switchView(view) {
   };
 
   // ─── Derived: from threshold → TPR, FPR ───
-  function threshToRates(t) {
-    // TPR = P(X > t | positive) = 1 - CDF(t, mu_pos, std_pos)
+function threshToRates(t) {
+  if (!state.customData) {
     const tpr = 1 - normCDF(t, state.mu_pos, state.std_pos);
-    // FPR = P(X > t | negative) = 1 - CDF(t, mu_neg, std_neg)
     const fpr = 1 - normCDF(t, state.mu_neg, state.std_neg);
     return { tpr, fpr };
   }
+
+  let tp = 0, fp = 0, fn = 0, tn = 0;
+  const data = state.customData;
+  for (let i = 0; i < data.length; i++) {
+    const predPos = data[i].score >= t;
+    if (predPos && data[i].label === 1) tp++;
+    else if (predPos && data[i].label === 0) fp++;
+    else if (!predPos && data[i].label === 1) fn++;
+    else tn++;
+  }
+  const P = tp + fn;
+  const N = fp + tn;
+  state.customCounts = { tp, fp, fn, tn, P, N };
+  return {
+    tpr: P > 0 ? tp / P : 0,
+    fpr: N > 0 ? fp / N : 0
+  };
+}
 
   // ─── From TPR → threshold (given positive distribution) ───
   function tprToThresh(tpr) {
@@ -3284,6 +3453,7 @@ function switchView(view) {
   }
 
   function getActiveRates() {
+    if (state.customData) return threshToRates(state.threshold);
     if (state.linkedMode) return threshToRates(state.threshold);
     return { tpr: state.manual_tpr, fpr: state.manual_fpr };
   }
@@ -3296,13 +3466,27 @@ function switchView(view) {
 
   // ─── Generate ROC curve points ───
   function generateROC(nPts) {
+    if (state.customData) {
+      const scores = Array.from(new Set(state.customData.map(d => d.score))).sort((a, b) => b - a);
+      const pts = [];
+      for (let i = 0; i < scores.length; i++) {
+        const t = scores[i];
+        const { tpr, fpr } = threshToRates(t);
+        pts.push({ fpr, tpr, t });
+      }
+      if (scores.length < nPts) {
+        const extra = [0, 1].map(t => ({ fpr: t, tpr: t === 0 ? 0 : 1, t }));
+        pts.push(...extra);
+      }
+      pts.sort((a, b) => a.fpr - b.fpr);
+      return pts;
+    }
     const pts = [];
     for (let i = 0; i <= nPts; i++) {
       const t = state.mu_neg - 4*state.std_neg + (state.mu_pos + 4*state.std_pos - state.mu_neg + 4*state.std_neg) * i / nPts;
       const { tpr, fpr } = threshToRates(t);
       pts.push({ fpr, tpr, t });
     }
-    // sort by fpr
     pts.sort((a, b) => a.fpr - b.fpr);
     return pts;
   }
@@ -3385,7 +3569,7 @@ function switchView(view) {
       const active = activePresetKey === preset.key;
       return `<button class="mobile-preset${active ? ' active' : ''}" type="button" data-preset="${preset.key}" aria-pressed="${active ? 'true' : 'false'}">${preset.label}</button>`;
     }).join('');
-    ['mobilePresetStrip', 'desktopPresetStrip'].forEach(id => {
+  ['mobilePresetStrip', 'desktopPresetStrip'].forEach(id => {
       const el = $(id);
       if (el) el.innerHTML = html;
     });
@@ -3394,6 +3578,15 @@ function switchView(view) {
   function setActivePreset(name) {
     activePresetKey = name || null;
     renderPresetButtons();
+    if (state.customData && !name) {
+      state.customData = null;
+      state.customCounts = null;
+      state.linkedMode = false;
+      state.manual_tpr = 0.85;
+      state.manual_fpr = 0.20;
+      $('dataStatus').textContent = 'Using built-in simulator.';
+      render();
+    }
   }
 
   function clearPresetSelection() {
@@ -3401,14 +3594,16 @@ function switchView(view) {
     setActivePreset(null);
   }
 
-  function applyPreset(name) {
-    const preset = PRESET_CONFIGS[name];
-    if (!preset) return;
-    state = { ...state, ...preset };
-    if (state.linkedMode) syncManualRatesFromThreshold();
-    syncStateToInputs();
-    setActivePreset(name);
-    render();
+function applyPreset(name) {
+  const preset = PRESET_CONFIGS[name];
+  if (!preset) return;
+  state.customData = null;
+  state.customCounts = null;
+  state = { ...state, ...preset };
+  if (state.linkedMode) syncManualRatesFromThreshold();
+  syncStateToInputs();
+  setActivePreset(name);
+  render();
   }
 
   function setControlSectionExpanded(section, expanded) {
@@ -3876,12 +4071,17 @@ function switchView(view) {
   function var_accent() { return themeColor('--accent'); }
 
   function renderCM(tpr, fpr) {
-    const P = Math.round(state.N * state.bal);
-    const N_neg = state.N - P;
-    const TP = Math.round(P * tpr);
-    const FN = P - TP;
-    const FP = Math.round(N_neg * fpr);
-    const TN = N_neg - FP;
+    let TP, FN, FP, TN, P, N_neg;
+    if (state.customData && state.customCounts) {
+      ({ tp: TP, fn: FN, fp: FP, tn: TN, P, N: N_neg } = state.customCounts);
+    } else {
+      P = Math.round(state.N * state.bal);
+      N_neg = state.N - P;
+      TP = Math.round(P * tpr);
+      FN = P - TP;
+      FP = Math.round(N_neg * fpr);
+      TN = N_neg - FP;
+    }
 
     setCM('cm_tp', TP, 'TP', P > 0 ? pf(TP/P*100,1)+'%' : '—');
     setCM('cm_fn', FN, 'FN', P > 0 ? pf(FN/P*100,1)+'%' : '—');
@@ -4037,14 +4237,20 @@ function switchView(view) {
   }
 
   function renderMetrics(tpr, fpr) {
-    const P = Math.round(state.N * state.bal);
-    const N_neg = state.N - P;
-    const TP = Math.round(P * tpr);
-    const FN = P - TP;
-    const FP = Math.round(N_neg * fpr);
-    const TN = N_neg - FP;
+    let TP, FN, FP, TN, P, N_neg;
+    if (state.customData && state.customCounts) {
+      ({ tp: TP, fn: FN, fp: FP, tn: TN, P, N: N_neg } = state.customCounts);
+    } else {
+      P = Math.round(state.N * state.bal);
+      N_neg = state.N - P;
+      TP = Math.round(P * tpr);
+      FN = P - TP;
+      FP = Math.round(N_neg * fpr);
+      TN = N_neg - FP;
+    }
 
-    const acc = state.N > 0 ? (TP+TN)/state.N : 0;
+    const total = TP + TN + FP + FN;
+    const acc = total > 0 ? (TP+TN)/total : 0;
     const prec = (TP+FP) > 0 ? TP/(TP+FP) : 0;
     const rec = (TP+FN) > 0 ? TP/(TP+FN) : 0;
     const fprMetric = (FP+TN) > 0 ? FP/(FP+TN) : 0;
@@ -4179,12 +4385,17 @@ function switchView(view) {
 
   // ─── Mosaic Plot (SVG) ───
   function renderMosaic(tpr, fpr) {
-    const P = Math.round(state.N * state.bal);
-    const Nn = state.N - P;
-    const TP = Math.round(P * tpr);
-    const FN = P - TP;
-    const FP = Math.round(Nn * fpr);
-    const TN = Nn - FP;
+    let TP, FN, FP, TN, P, Nn;
+    if (state.customData && state.customCounts) {
+      ({ tp: TP, fn: FN, fp: FP, tn: TN, P, N: Nn } = state.customCounts);
+    } else {
+      P = Math.round(state.N * state.bal);
+      Nn = state.N - P;
+      TP = Math.round(P * tpr);
+      FN = P - TP;
+      FP = Math.round(Nn * fpr);
+      TN = Nn - FP;
+    }
 
     const svg = $('mosaicSVG');
     const mobile = isMobile() || isShortLandscapeMode();
@@ -4461,7 +4672,22 @@ function switchView(view) {
   }
 
   // ─── Event Wiring ───
-  $('themeToggle').addEventListener('click', cycleTheme);
+  const themeBtn = $('themeToggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', cycleTheme);
+  }
+
+  const fileInput = $('file_custom_data');
+  if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) loadCustomData(file);
+    });
+  }
+  const resetBtn = $('btn_reset_data');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetCustomData);
+  }
   $('landscapeControlsToggle').addEventListener('click', toggleLandscapeControls);
   $('landscapeControlsBackdrop').addEventListener('click', () => setLandscapeControlsOpen(false));
 
