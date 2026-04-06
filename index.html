@@ -2970,12 +2970,11 @@ function switchView(view) {
     if (event) event.stopPropagation();
     setLandscapeControlsOpen(!landscapeControlsOpen);
   }
-  const THEME_ORDER = ['neon-dark', 'light', 'colorblind', 'graphite'];
+  const THEME_ORDER = ['neon-dark', 'light', 'colorblind'];
   const THEME_LABELS = {
     'neon-dark': 'Neon Dark',
     'light': 'Light',
-    'colorblind': 'Colorblind',
-    'graphite': 'Graphite'
+    'colorblind': 'Colorblind'
   };
   const THEME_PRESETS = {
     'neon-dark': {
@@ -3013,18 +3012,6 @@ function switchView(view) {
       '--neutral-band-bg': 'rgba(238,243,247,0.035)', '--cell-stroke': 'rgba(238,243,247,0.10)',
       '--plot-grid': '#30414e', '--plot-font': '#a7b4bf', '--plot-zero': '#425462',
       '--good-color': '#009e73', '--bad-color': '#d55e00'
-    },
-    'graphite': {
-      '--bg': '#111417', '--bg2': '#171c21', '--bg3': '#202830', '--border': '#33414e',
-      '--text': '#edf3f7', '--text-dim': '#93a3b1', '--accent': '#67d3c5', '--accent2': '#f2b36f', '--accent3': '#8aa4ff',
-      '--green': '#7cd992', '--red': '#f26c6c', '--orange': '#f2b36f',
-      '--pos-color': '#67d3c5', '--neg-color': '#f2b36f', '--tp-color': '#7cd992', '--fp-color': '#f26c6c', '--tn-color': '#74b9ff', '--fn-color': '#f2b36f',
-      '--cm-tp-bg': 'rgba(124,217,146,0.14)', '--cm-fp-bg': 'rgba(242,108,108,0.15)', '--cm-fn-bg': 'rgba(242,179,111,0.15)', '--cm-tn-bg': 'rgba(116,185,255,0.14)',
-      '--soft-accent-bg': 'rgba(103,211,197,0.08)', '--soft-accent-strong': 'rgba(103,211,197,0.18)', '--soft-accent-border': 'rgba(103,211,197,0.42)',
-      '--hint-bg': 'rgba(103,211,197,0.08)', '--hint-manual-bg': 'rgba(242,179,111,0.12)', '--hint-manual-text': '#f0d8b8',
-      '--neutral-band-bg': 'rgba(237,243,247,0.03)', '--cell-stroke': 'rgba(237,243,247,0.09)',
-      '--plot-grid': '#293540', '--plot-font': '#93a3b1', '--plot-zero': '#3a4958',
-      '--good-color': '#7cd992', '--bad-color': '#f26c6c'
     }
   };
 
