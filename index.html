@@ -5079,41 +5079,64 @@ function applyPreset(name) {
     return points.map(point => point.join(',')).join(' ');
   }
 
+  function mosaicOverlayStrokeAttrs(strokeWidth, dashArray = '') {
+    let attrs = ' stroke-width="' + strokeWidth + '" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"';
+    if (dashArray) attrs += ' stroke-dasharray="' + dashArray + '"';
+    return attrs;
+  }
+
+  function mosaicInsetRect(shape, inset) {
+    if (!shape) return shape;
+    const safeInset = Math.max(0, Math.min(
+      inset,
+      Math.max(0, (shape.w - 2) / 2),
+      Math.max(0, (shape.h - 2) / 2)
+    ));
+    return {
+      x: shape.x + safeInset,
+      y: shape.y + safeInset,
+      w: Math.max(0, shape.w - safeInset * 2),
+      h: Math.max(0, shape.h - safeInset * 2)
+    };
+  }
+
   function mosaicOverlayRect(shape, fill, stroke, strokeWidth = 2.5, dashArray = '') {
     if (!shape || shape.w < 1 || shape.h < 1) return '';
+    const normalizedFill = fill && fill !== 'transparent' ? fill : 'none';
     let html = '';
     if (stroke && stroke !== 'none') {
-      html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="transparent" stroke="'+themeAlpha('--bg2', 0.96)+'" stroke-width="'+(strokeWidth + 4)+'"';
-      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
-      html += ' rx="5"/>';
+      html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="none" stroke="'+themeColor('--bg2')+'"';
+      html += mosaicOverlayStrokeAttrs(strokeWidth + 6);
+      html += ' rx="8" ry="8"/>';
     }
-    html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="'+fill+'"';
+    html += '<rect x="'+shape.x+'" y="'+shape.y+'" width="'+shape.w+'" height="'+shape.h+'" fill="'+normalizedFill+'"';
     if (stroke && stroke !== 'none') {
-      html += ' stroke="'+stroke+'" stroke-width="'+strokeWidth+'"';
-      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+      html += ' stroke="'+stroke+'"';
+      html += mosaicOverlayStrokeAttrs(strokeWidth, dashArray);
     } else {
       html += ' stroke="none"';
     }
-    html += ' rx="5"/>';
+    html += ' rx="8" ry="8"/>';
     return html;
   }
 
   function mosaicOverlayPolygon(points, fill, stroke, strokeWidth = 2.5, dashArray = '') {
     if (!points || !points.length) return '';
+    const normalizedFill = fill && fill !== 'transparent' ? fill : 'none';
     let html = '';
     if (stroke && stroke !== 'none') {
-      html += '<polygon points="'+mosaicPointsToString(points)+'" fill="transparent" stroke="'+themeAlpha('--bg2', 0.96)+'" stroke-width="'+(strokeWidth + 4)+'"';
-      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
-      html += ' stroke-linejoin="round"/>';
+      html += '<polygon points="'+mosaicPointsToString(points)+'" fill="none" stroke="'+themeColor('--bg2')+'"';
+      html += mosaicOverlayStrokeAttrs(strokeWidth + 6);
+      html += '/>';
     }
-    html += '<polygon points="'+mosaicPointsToString(points)+'" fill="'+fill+'"';
+    html += '<polygon points="'+mosaicPointsToString(points)+'" fill="'+normalizedFill+'"';
     if (stroke && stroke !== 'none') {
-      html += ' stroke="'+stroke+'" stroke-width="'+strokeWidth+'"';
-      if (dashArray) html += ' stroke-dasharray="'+dashArray+'"';
+      html += ' stroke="'+stroke+'"';
+      html += mosaicOverlayStrokeAttrs(strokeWidth, dashArray);
     } else {
       html += ' stroke="none"';
     }
-    html += ' stroke-linejoin="round"/>';
+    html += '/>';
     return html;
   }
 
@@ -5126,29 +5149,33 @@ function applyPreset(name) {
       const accentStroke = themeColor('--accent');
       const guideStrokeWidth = 4.1;
       const focusStrokeWidth = 4.1;
+      const focusInset = mobile ? 6 : 8;
+      const tpFocusRect = mosaicInsetRect(geometry.tpRect, focusInset);
+      const fpFocusRect = mosaicInsetRect(geometry.fpRect, focusInset);
+      const tnFocusRect = mosaicInsetRect(geometry.tnRect, focusInset);
       let html = '';
 
       switch (metricKey) {
         case 'tpr':
           // Draw the denominator first, then the numerator inside it.
           html += mosaicOverlayRect(geometry.actualPosRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tpFocusRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
           break;
         case 'fpr':
           html += mosaicOverlayRect(geometry.actualNegRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
-          html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeColor('--fp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(fpFocusRect, 'transparent', themeColor('--fp-color'), focusStrokeWidth);
           break;
         case 'precision':
           html += mosaicOverlayPolygon(geometry.predictedPosPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tpFocusRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
           break;
         case 'accuracy':
           html += mosaicOverlayRect(geometry.wholeRect, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
-          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tpFocusRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tnFocusRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
           break;
         case 'f1':
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tpFocusRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
           html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.82), guideStrokeWidth, outlineDash);
           html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.82), guideStrokeWidth, outlineDash);
           break;
@@ -5158,11 +5185,11 @@ function applyPreset(name) {
           break;
         case 'npv':
           html += mosaicOverlayPolygon(geometry.predictedNegPoints, 'transparent', guideStroke, guideStrokeWidth, outlineDash);
-          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tnFocusRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
           break;
         case 'mcc':
-          html += mosaicOverlayRect(geometry.tpRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
-          html += mosaicOverlayRect(geometry.tnRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tpFocusRect, 'transparent', themeColor('--tp-color'), focusStrokeWidth);
+          html += mosaicOverlayRect(tnFocusRect, 'transparent', themeColor('--tn-color'), focusStrokeWidth);
           html += mosaicOverlayRect(geometry.fpRect, 'transparent', themeAlpha('--fp-color', 0.85), guideStrokeWidth, outlineDash);
           html += mosaicOverlayRect(geometry.fnRect, 'transparent', themeAlpha('--fn-color', 0.85), guideStrokeWidth, outlineDash);
           break;
@@ -5228,10 +5255,15 @@ function applyPreset(name) {
     ];
 
     let html = '';
-    html += rect(x0, y0, pW, tpH, themeAlpha('--tp-color', 0.3), 'TP', TP, themeColor('--tp-color'), typo, 'left');
-    html += rect(x0, y0 + tpH, pW, fnH, themeAlpha('--fn-color', 0.3), 'FN', FN, themeColor('--fn-color'), typo, 'left');
-    html += rect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3), 'FP', FP, themeColor('--fp-color'), typo, 'right');
-    html += rect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3), 'TN', TN, themeColor('--tn-color'), typo, 'right');
+    let cellLabelsHtml = '';
+    html += mosaicCellRect(x0, y0, pW, tpH, themeAlpha('--tp-color', 0.3));
+    cellLabelsHtml += mosaicCellLabel(x0, y0, pW, tpH, 'TP', TP, themeColor('--tp-color'), typo, 'left');
+    html += mosaicCellRect(x0, y0 + tpH, pW, fnH, themeAlpha('--fn-color', 0.3));
+    cellLabelsHtml += mosaicCellLabel(x0, y0 + tpH, pW, fnH, 'FN', FN, themeColor('--fn-color'), typo, 'left');
+    html += mosaicCellRect(x0 + pW, y0, nW, fpH, themeAlpha('--fp-color', 0.3));
+    cellLabelsHtml += mosaicCellLabel(x0 + pW, y0, nW, fpH, 'FP', FP, themeColor('--fp-color'), typo, 'right');
+    html += mosaicCellRect(x0 + pW, y0 + fpH, nW, tnH, themeAlpha('--tn-color', 0.3));
+    cellLabelsHtml += mosaicCellLabel(x0 + pW, y0 + fpH, nW, tnH, 'TN', TN, themeColor('--tn-color'), typo, 'right');
 
     if (!window.activeMosaicMetricKey) {
       const ppPoints = mosaicPointsToString(predictedPosPoints);
@@ -5258,13 +5290,19 @@ function applyPreset(name) {
       predictedPosPoints,
       predictedNegPoints
     }, mobile);
+    html += cellLabelsHtml;
 
     svg.innerHTML = html;
   }
 
-  function rect(x, y, w, h, fill, label, count, textColor, typo, side) {
+  function mosaicCellRect(x, y, w, h, fill) {
     if (w < 1 || h < 1) return '';
-    let s = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="'+themeColor('--cell-stroke')+'" stroke-width="1" rx="3"/>';
+    return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="'+themeColor('--cell-stroke')+'" stroke-width="1" rx="3"/>';
+  }
+
+  function mosaicCellLabel(x, y, w, h, label, count, textColor, typo, side) {
+    if (w < 1 || h < 1) return '';
+    let s = '';
     // If a cell gets too small, move the label outside instead of hiding it.
     if (w > typo.cellMinW && h > typo.cellMinH) {
       const cx = x + w/2, cy = y + h/2;
