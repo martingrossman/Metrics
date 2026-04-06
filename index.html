@@ -237,6 +237,15 @@
     margin: 0;
   }
 
+  /* Plotly toolbar tweaks */
+  .modebar {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .modebar-btn {
+    background: transparent !important;
+  }
+
   input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -3644,7 +3653,12 @@ function switchView(view) {
       annotations
     };
 
-    Plotly.react('distPlot', traces, layout, { displayModeBar: true, responsive: true });
+    Plotly.react('distPlot', traces, layout, {
+      displayModeBar: true,
+      displaylogo: false,
+      modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d']],
+      responsive: true
+    });
   }
 
   // ─── Top View: Scatter plot preview ───
@@ -3806,7 +3820,12 @@ function switchView(view) {
       annotations,
     };
 
-    Plotly.react('rocPlot', traces, layout, { displayModeBar: true, responsive: true });
+    Plotly.react('rocPlot', traces, layout, {
+      displayModeBar: true,
+      displaylogo: false,
+      modeBarButtons: [['resetScale2d', 'zoomIn2d', 'zoomOut2d']],
+      responsive: true
+    });
   }
 
   function var_accent() { return themeColor('--accent'); }
