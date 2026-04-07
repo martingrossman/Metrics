@@ -2850,7 +2850,7 @@
       <div class="custom-data-panel">
         <div class="data-import">
           <div class="data-import-head">
-            <label for="file_custom_data">Custom data (CSV/JSON, max 1000 rows):</label>
+            <label for="file_custom_data">Custom data (CSV/JSON, max 2000 rows):</label>
             <details class="data-help">
               <summary aria-label="Show expected custom data format">i</summary>
               <div class="data-help-popover">
@@ -3606,7 +3606,7 @@ function updateThemeButton() {
     const hasHeader = isNaN(parseFloat(first[0])) || isNaN(parseFloat(first[1]));
     if (hasHeader) start = 1;
     const rows = [];
-    for (let i = start; i < lines.length && rows.length < 1000; i++) {
+    for (let i = start; i < lines.length && rows.length < 2000; i++) {
       const parts = lines[i].split(/,|\s+/).map(s => s.trim());
       if (parts.length < 2) continue;
       const label = parseInt(parts[0], 10);
@@ -3623,7 +3623,7 @@ function updateThemeButton() {
     try { data = JSON.parse(text); } catch (e) { return []; }
     if (!Array.isArray(data)) return [];
     const rows = [];
-    for (let i = 0; i < data.length && rows.length < 1000; i++) {
+    for (let i = 0; i < data.length && rows.length < 2000; i++) {
       const row = data[i] || {};
       const label = parseInt(row.label ?? row.y_true ?? row.y ?? row.target, 10);
       const score = parseFloat(row.score ?? row.prob ?? row.p ?? row.pred);
@@ -3646,7 +3646,7 @@ function updateThemeButton() {
         clearCustomFileInput();
         return;
       }
-      state.customData = rows.slice(0, 1000);
+      state.customData = rows.slice(0, 2000);
       state.customCounts = null;
       state.linkedMode = true;
       activePresetKey = null;
@@ -4482,7 +4482,7 @@ function applyPreset(name) {
     }
 
     // Cap dots for performance (custom data already limited to 1000 rows)
-    const maxDots = hasCustom ? Math.min(state.customData.length, 1000) : 500;
+    const maxDots = hasCustom ? Math.min(state.customData.length, 2000) : 500;
     const negCount = Math.min(nNeg, maxDots);
     const posCount = Math.min(nPos, maxDots);
 
