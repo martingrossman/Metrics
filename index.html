@@ -3942,6 +3942,18 @@ function threshToRates(t, storeCustomCounts = true) {
     if (el) el.checked = checked;
   }
 
+  function writeSliderValues(entries) {
+    entries.forEach(([id, value]) => writeSlider(id, value));
+  }
+
+  function writePercentInputValues(entries) {
+    entries.forEach(([id, value]) => writePercentInput(id, value));
+  }
+
+  function syncCheckboxValues(ids, checked) {
+    ids.forEach(id => syncCheckbox(id, checked));
+  }
+
   function setControlDisabled(id, disabled) {
     const el = $(id);
     if (!el) return;
@@ -3981,19 +3993,22 @@ function threshToRates(t, storeCustomCounts = true) {
 
   function syncStateToInputs() {
     const stats = getDatasetStats();
-    writeSlider('s_mu_neg', state.mu_neg);
-    writeSlider('s_std_neg', state.std_neg);
-    writeSlider('s_mu_pos', state.mu_pos);
-    writeSlider('s_std_pos', state.std_pos);
-    writeSlider('s_N', hasCustomDataset() ? stats.total : state.N);
-    writeSlider('s_bal', stats.bal);
-    writeSlider('m_s_bal', stats.bal);
-    writeSlider('s_thresh', state.threshold);
-    writeSlider('m_s_thresh', state.threshold);
-    writePercentInput('i_bal_pct', stats.bal);
-    writePercentInput('m_i_bal_pct', stats.bal);
-    syncCheckbox('toggle_bidirectional', state.linkedMode);
-    syncCheckbox('mobile_toggle_bidirectional', state.linkedMode);
+    writeSliderValues([
+      ['s_mu_neg', state.mu_neg],
+      ['s_std_neg', state.std_neg],
+      ['s_mu_pos', state.mu_pos],
+      ['s_std_pos', state.std_pos],
+      ['s_N', hasCustomDataset() ? stats.total : state.N],
+      ['s_bal', stats.bal],
+      ['m_s_bal', stats.bal],
+      ['s_thresh', state.threshold],
+      ['m_s_thresh', state.threshold]
+    ]);
+    writePercentInputValues([
+      ['i_bal_pct', stats.bal],
+      ['m_i_bal_pct', stats.bal]
+    ]);
+    syncCheckboxValues(['toggle_bidirectional', 'mobile_toggle_bidirectional'], state.linkedMode);
   }
 
   function getPresetGroup() {
@@ -4167,8 +4182,7 @@ function applyPreset(name) {
     const hasCustom = hasCustomDataset();
     const linked = state.linkedMode;
     updateCustomDataToggleUI();
-    syncCheckbox('toggle_bidirectional', hasCustom ? true : linked);
-    syncCheckbox('mobile_toggle_bidirectional', hasCustom ? true : linked);
+    syncCheckboxValues(['toggle_bidirectional', 'mobile_toggle_bidirectional'], hasCustom ? true : linked);
 
     if (hasCustom) {
       $('modeStateLabel').textContent = 'Custom Data';
@@ -4226,12 +4240,14 @@ function applyPreset(name) {
     $('v_tpr').textContent = formatPercent(rates.tpr);
     $('v_fpr').textContent = formatPercent(rates.fpr);
     $('v_thresh').textContent = (state.linkedMode || hasCustomDataset()) ? formatThresholdValue() : 'manual';
-    writePercentInput('i_tpr_pct', rates.tpr);
-    writePercentInput('m_i_tpr_pct', rates.tpr);
-    writePercentInput('i_fpr_pct', rates.fpr);
-    writePercentInput('m_i_fpr_pct', rates.fpr);
-    writePercentInput('i_bal_pct', stats.bal);
-    writePercentInput('m_i_bal_pct', stats.bal);
+    writePercentInputValues([
+      ['i_tpr_pct', rates.tpr],
+      ['m_i_tpr_pct', rates.tpr],
+      ['i_fpr_pct', rates.fpr],
+      ['m_i_fpr_pct', rates.fpr],
+      ['i_bal_pct', stats.bal],
+      ['m_i_bal_pct', stats.bal]
+    ]);
   }
 
   // ─── Plot Config ───
