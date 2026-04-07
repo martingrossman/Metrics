@@ -5494,6 +5494,50 @@ function applyPreset(name) {
   }
 
   // ─── Event Wiring ───
+  function runGuardedRenderUpdate(action, renderOnFalse = true) {
+    if (updating) return;
+    updating = true;
+    clearPresetSelection();
+    if (action && action() === false) {
+      if (renderOnFalse) render();
+      updating = false;
+      return;
+    }
+    render();
+    updating = false;
+  }
+
+  function bindBidirectionalToggle(id) {
+    $(id).addEventListener('change', () => {
+      if (updating) return;
+      if (hasCustomDataset()) {
+        syncCheckbox(id, true);
+        return;
+      }
+      updating = true;
+      clearPresetSelection();
+      const linked = $(id).checked;
+      if (!linked && state.linkedMode) syncManualRatesFromThreshold();
+      state.linkedMode = linked;
+      render();
+      updating = false;
+    });
+  }
+
+  function bindPercentInputs(ids, applyValue) {
+    ids.forEach(id => {
+      $(id).addEventListener('change', () => {
+        if (updating) return;
+        const prob = readPercentInput(id);
+        if (prob === null) {
+          render();
+          return;
+        }
+        runGuardedRenderUpdate(() => applyValue(prob));
+      });
+    });
+  }
+
   const themeBtn = $('themeToggle');
   if (themeBtn) {
     themeBtn.addEventListener('click', cycleTheme);
@@ -5521,200 +5565,53 @@ function applyPreset(name) {
   // Distribution sliders → recompute threshold's TPR/FPR (threshold stays, rates change)
   ['s_mu_neg','s_std_neg','s_mu_pos','s_std_pos'].forEach(id => {
     $(id).addEventListener('input', () => {
-      if (updating) return;
-      updating = true;
-      clearPresetSelection();
-      state.mu_neg = parseFloat($('s_mu_neg').value);
-      state.std_neg = parseFloat($('s_std_neg').value);
-      state.mu_pos = parseFloat($('s_mu_pos').value);
-      state.std_pos = parseFloat($('s_std_pos').value);
-      // threshold stays, TPR/FPR update accordingly
-      render();
-      updating = false;
+      runGuardedRenderUpdate(() => {
+        state.mu_neg = parseFloat($('s_mu_neg').value);
+        state.std_neg = parseFloat($('s_std_neg').value);
+        state.mu_pos = parseFloat($('s_mu_pos').value);
+        state.std_pos = parseFloat($('s_std_pos').value);
+        // threshold stays, TPR/FPR update accordingly
+      });
     });
   });
 
-  $('toggle_bidirectional').addEventListener('change', () => {
-    if (updating) return;
-    if (hasCustomDataset()) {
-      syncCheckbox('toggle_bidirectional', true);
-      return;
-    }
-    updating = true;
-    clearPresetSelection();
-    const linked = $('toggle_bidirectional').checked;
-    if (!linked && state.linkedMode) syncManualRatesFromThreshold();
-    state.linkedMode = linked;
-    render();
-    updating = false;
-  });
-
-  $('mobile_toggle_bidirectional').addEventListener('change', () => {
-    if (updating) return;
-    if (hasCustomDataset()) {
-      syncCheckbox('mobile_toggle_bidirectional', true);
-      return;
-    }
-    updating = true;
-    clearPresetSelection();
-    const linked = $('mobile_toggle_bidirectional').checked;
-    if (!linked && state.linkedMode) syncManualRatesFromThreshold();
-    state.linkedMode = linked;
-    render();
-    updating = false;
-  });
+  bindBidirectionalToggle('toggle_bidirectional');
+  bindBidirectionalToggle('mobile_toggle_bidirectional');
 
   // TPR slider → compute new threshold from positive dist, update FPR
   $('s_tpr').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyTPRValue(parseFloat($('s_tpr').value))) {
-      render();
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyTPRValue(parseFloat($('s_tpr').value)));
   });
 
   $('m_s_tpr').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyTPRValue(parseFloat($('m_s_tpr').value))) {
-      render();
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyTPRValue(parseFloat($('m_s_tpr').value)));
   });
 
   // FPR slider → compute new threshold from negative dist, update TPR
   $('s_fpr').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyFPRValue(parseFloat($('s_fpr').value))) {
-      render();
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyFPRValue(parseFloat($('s_fpr').value)));
   });
 
   $('m_s_fpr').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyFPRValue(parseFloat($('m_s_fpr').value))) {
-      render();
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyFPRValue(parseFloat($('m_s_fpr').value)));
   });
 
   // Threshold slider → update TPR & FPR
   $('s_thresh').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyThresholdValue($('s_thresh').value)) {
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyThresholdValue($('s_thresh').value), false);
   });
 
   $('m_s_thresh').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyThresholdValue($('m_s_thresh').value)) {
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyThresholdValue($('m_s_thresh').value), false);
   });
 
   $('m_s_bal').addEventListener('input', () => {
-    if (updating) return;
-    updating = true;
-    clearPresetSelection();
-    if (!applyBalanceValue(parseFloat($('m_s_bal').value))) {
-      render();
-      updating = false;
-      return;
-    }
-    render();
-    updating = false;
+    runGuardedRenderUpdate(() => applyBalanceValue(parseFloat($('m_s_bal').value)));
   });
 
-  ['i_tpr_pct', 'm_i_tpr_pct'].forEach(id => {
-    $(id).addEventListener('change', () => {
-      if (updating) return;
-      const prob = readPercentInput(id);
-      if (prob === null) {
-        render();
-        return;
-      }
-      updating = true;
-      clearPresetSelection();
-      if (!applyTPRValue(prob)) {
-        render();
-        updating = false;
-        return;
-      }
-      render();
-      updating = false;
-    });
-  });
-
-  ['i_fpr_pct', 'm_i_fpr_pct'].forEach(id => {
-    $(id).addEventListener('change', () => {
-      if (updating) return;
-      const prob = readPercentInput(id);
-      if (prob === null) {
-        render();
-        return;
-      }
-      updating = true;
-      clearPresetSelection();
-      if (!applyFPRValue(prob)) {
-        render();
-        updating = false;
-        return;
-      }
-      render();
-      updating = false;
-    });
-  });
-
-  ['i_bal_pct', 'm_i_bal_pct'].forEach(id => {
-    $(id).addEventListener('change', () => {
-      if (updating) return;
-      const prob = readPercentInput(id);
-      if (prob === null) {
-        render();
-        return;
-      }
-      updating = true;
-      clearPresetSelection();
-      if (!applyBalanceValue(prob)) {
-        render();
-        updating = false;
-        return;
-      }
-      render();
-      updating = false;
-    });
-  });
+  bindPercentInputs(['i_tpr_pct', 'm_i_tpr_pct'], applyTPRValue);
+  bindPercentInputs(['i_fpr_pct', 'm_i_fpr_pct'], applyFPRValue);
+  bindPercentInputs(['i_bal_pct', 'm_i_bal_pct'], applyBalanceValue);
 
   $('storyLoadExample').addEventListener('click', () => {
     if (updating) return;
@@ -5727,17 +5624,10 @@ function applyPreset(name) {
   // N & Balance → just re-render CM & metrics
   ['s_N','s_bal'].forEach(id => {
     $(id).addEventListener('input', () => {
-      if (updating) return;
-      updating = true;
-      clearPresetSelection();
-      state.N = parseInt($('s_N').value);
-      if (!applyBalanceValue(parseFloat($('s_bal').value))) {
-        render();
-        updating = false;
-        return;
-      }
-      render();
-      updating = false;
+      runGuardedRenderUpdate(() => {
+        state.N = parseInt($('s_N').value);
+        return applyBalanceValue(parseFloat($('s_bal').value));
+      });
     });
   });
 
