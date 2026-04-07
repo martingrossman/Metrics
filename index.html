@@ -3556,47 +3556,34 @@ function updateThemeButton() {
     }
   }
 
+  function setControlRange(id, min, max, step, value) {
+    const el = $(id);
+    if (!el) return;
+    el.min = min;
+    el.max = max;
+    el.step = step;
+    el.value = value;
+  }
+
   function resetThresholdRange() {
-    const ids = ['s_thresh', 'm_s_thresh'];
-    ids.forEach(id => {
-      const el = $(id);
-      if (!el) return;
-      el.min = ORIGINAL_THRESH.min;
-      el.max = ORIGINAL_THRESH.max;
-      el.step = ORIGINAL_THRESH.step;
-      el.value = state.threshold;
+    ['s_thresh', 'm_s_thresh'].forEach(id => {
+      setControlRange(id, ORIGINAL_THRESH.min, ORIGINAL_THRESH.max, ORIGINAL_THRESH.step, state.threshold);
     });
   }
 
   function setCustomThresholdRange() {
-    const ids = ['s_thresh', 'm_s_thresh'];
-    ids.forEach(id => {
-      const el = $(id);
-      if (!el) return;
-      el.min = 0;
-      el.max = 1;
-      el.step = 0.001;
-      el.value = 0.5;
+    ['s_thresh', 'm_s_thresh'].forEach(id => {
+      setControlRange(id, 0, 1, 0.001, 0.5);
     });
     state.threshold = 0.5;
   }
 
   function resetSampleSizeRange() {
-    const el = $('s_N');
-    if (!el) return;
-    el.min = ORIGINAL_SAMPLE_SIZE.min;
-    el.max = ORIGINAL_SAMPLE_SIZE.max;
-    el.step = ORIGINAL_SAMPLE_SIZE.step;
-    el.value = state.N;
+    setControlRange('s_N', ORIGINAL_SAMPLE_SIZE.min, ORIGINAL_SAMPLE_SIZE.max, ORIGINAL_SAMPLE_SIZE.step, state.N);
   }
 
   function setCustomSampleSizeRange(totalRows) {
-    const el = $('s_N');
-    if (!el) return;
-    el.min = 1;
-    el.max = Math.max(1000, totalRows);
-    el.step = 1;
-    el.value = totalRows;
+    setControlRange('s_N', 1, Math.max(1000, totalRows), 1, totalRows);
   }
 
   function parseCSV(text) {
