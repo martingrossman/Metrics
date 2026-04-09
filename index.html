@@ -68,6 +68,7 @@
     padding: 18px 0 10px;
     letter-spacing: -0.5px;
     background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -260,6 +261,7 @@
   }
 
   input[type="range"] {
+    appearance: none;
     -webkit-appearance: none;
     width: 100%;
     height: 4px;
@@ -314,7 +316,6 @@
     position: relative;
   }
 
-  .cm-corner { }
   .cm-header {
     display: flex;
     align-items: center;
@@ -416,6 +417,7 @@
     box-shadow: 0 6px 18px rgba(22, 32, 51, 0.08);
     pointer-events: none;
     z-index: 5;
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
   }
 
@@ -880,6 +882,7 @@
     border-radius: 12px;
     background: var(--soft-accent-bg);
     padding: 10px 11px;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
 
@@ -904,6 +907,33 @@
     color: var(--text);
   }
 
+  .compat-hidden {
+    display: none;
+  }
+
+  .ml-auto {
+    margin-left: auto;
+  }
+
+  .cm-header-positive {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .cm-header-negative {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .plot-host {
+    width: 100%;
+    height: 300px;
+  }
+
+  .plot-svg {
+    display: block;
+  }
+
   .mobile-stat-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -916,7 +946,6 @@
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    scrollbar-width: none;
   }
 
   .mobile-preset-strip::-webkit-scrollbar,
@@ -1435,7 +1464,6 @@
       top: 12px;
       max-height: calc(100vh - 24px);
       overflow-y: auto;
-      scrollbar-gutter: stable both-edges;
     }
 
     .metrics-grid {
@@ -2115,6 +2143,7 @@
     font-size: 0.68rem;
     font-weight: 700;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
     transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
   }
@@ -2372,6 +2401,7 @@
       padding: 4px 28px 4px 10px;
       line-height: 1.3;
       cursor: pointer;
+      -webkit-user-select: none;
       user-select: none;
       position: relative;
       margin-bottom: 0;
@@ -2601,7 +2631,6 @@
       max-height: calc(100dvh - (12px + env(safe-area-inset-top) + env(safe-area-inset-bottom)));
       overflow-y: auto;
       overscroll-behavior: contain;
-      -webkit-overflow-scrolling: touch;
       border-bottom: none;
       box-shadow: none;
       background: transparent;
@@ -2794,7 +2823,6 @@
     .equations-box {
       max-height: 205px;
       overflow: auto;
-      -webkit-overflow-scrolling: touch;
     }
   }
 </style>
@@ -2802,7 +2830,7 @@
 <body>
 
 <!-- JS compatibility shim: legacy mobile/accordion IDs kept alive -->
-<div style="display:none" aria-hidden="true">
+<div class="compat-hidden" aria-hidden="true">
   <input type="checkbox" id="mobile_toggle_bidirectional">
   <input type="range" id="m_s_tpr" min="0" max="1" step="0.001" value="0.85">
   <input type="range" id="m_s_fpr" min="0" max="1" step="0.001" value="0.2">
@@ -2885,17 +2913,17 @@ label,score
     <div class="sliders-row">
       <div class="slider-col">
         <div class="slider-label">TPR <span class="val" id="v_tpr">85%</span></div>
-        <input type="range" id="s_tpr" min="0" max="1" step="0.001" value="0.85">
+        <input type="range" id="s_tpr" min="0" max="1" step="0.001" value="0.85" aria-label="TPR slider">
         <input class="pct-chip" type="text" id="i_tpr_pct" value="80" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="TPR exact percent">
       </div>
       <div class="slider-col">
         <div class="slider-label">FPR <span class="val" id="v_fpr">20%</span></div>
-        <input type="range" id="s_fpr" min="0" max="1" step="0.001" value="0.2">
+        <input type="range" id="s_fpr" min="0" max="1" step="0.001" value="0.2" aria-label="FPR slider">
         <input class="pct-chip" type="text" id="i_fpr_pct" value="10" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="FPR exact percent">
       </div>
       <div class="slider-col">
         <div class="slider-label">Prevalence <span class="val" id="v_bal">30%</span></div>
-        <input type="range" id="s_bal" min="0.001" max="0.999" step="0.001" value="0.30">
+        <input type="range" id="s_bal" min="0.001" max="0.999" step="0.001" value="0.30" aria-label="Prevalence slider">
         <input class="pct-chip" type="text" id="i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Prevalence exact percent">
       </div>
     </div>
@@ -2903,7 +2931,7 @@ label,score
       <div class="advanced-header">
         <span class="advanced-label">Score Model</span>
         <span class="advanced-note" id="advancedNote">Score model only — affects distributions &amp; AUC in direct mode</span>
-        <div class="mode-pill" style="margin-left:auto;">
+        <div class="mode-pill ml-auto">
           <span id="modeStateLabel">Direct</span>
           <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
             <input type="checkbox" id="toggle_bidirectional">
@@ -2915,27 +2943,27 @@ label,score
       <div class="advanced-grid">
         <div class="slider-col" id="g_thresh">
           <div class="slider-label">Threshold <span class="val" id="v_thresh">&mdash;</span></div>
-          <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
+          <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1" aria-label="Threshold slider">
         </div>
         <div class="slider-col">
           <div class="slider-label">&mu; Neg <span class="val" id="v_mu_neg">0.0</span></div>
-          <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0">
+          <input type="range" id="s_mu_neg" min="-5" max="5" step="0.1" value="0" aria-label="Negative mean slider">
         </div>
         <div class="slider-col">
           <div class="slider-label">&sigma; Neg <span class="val" id="v_std_neg">1.0</span></div>
-          <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1">
+          <input type="range" id="s_std_neg" min="0.3" max="4" step="0.1" value="1" aria-label="Negative standard deviation slider">
         </div>
         <div class="slider-col">
           <div class="slider-label">&mu; Pos <span class="val" id="v_mu_pos">2.0</span></div>
-          <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2">
+          <input type="range" id="s_mu_pos" min="-5" max="8" step="0.1" value="2" aria-label="Positive mean slider">
         </div>
         <div class="slider-col">
           <div class="slider-label">&sigma; Pos <span class="val" id="v_std_pos">1.0</span></div>
-          <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1">
+          <input type="range" id="s_std_pos" min="0.3" max="4" step="0.1" value="1" aria-label="Positive standard deviation slider">
         </div>
         <div class="slider-col">
           <div class="slider-label">N <span class="val" id="v_N">1000</span></div>
-          <input type="range" id="s_N" min="50" max="10000" step="50" value="1000">
+          <input type="range" id="s_N" min="50" max="10000" step="50" value="1000" aria-label="Sample size slider">
         </div>
       </div>
     </div>
@@ -2959,8 +2987,8 @@ label,score
         <div class="cm-view" id="cmView">
           <div class="cm-grid">
             <div class="cm-corner"></div>
-            <div class="cm-header" style="grid-column:2;grid-row:1;">Positive</div>
-            <div class="cm-header" style="grid-column:3;grid-row:1;">Negative</div>
+            <div class="cm-header cm-header-positive">Positive</div>
+            <div class="cm-header cm-header-negative">Negative</div>
             <div class="cm-header left-label">Predicted</div>
             <div class="cm-cell cm-tp" id="cm_tp" data-cm-cell="tp">
               <span class="count">&mdash;</span><span class="label">TP</span><span class="rate"></span>
@@ -2980,7 +3008,7 @@ label,score
           <div class="cm-axis-bottom">Actual</div>
         </div>
         <div class="mosaic-view active" id="mosaicView">
-          <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+          <svg id="mosaicSVG" class="plot-svg" viewBox="0 0 700 340" width="100%" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
       </div>
     </div>
@@ -3010,7 +3038,7 @@ label,score
       </div>
       <div class="metrics-bar-view" id="metricsBarView">
         <div class="metrics-bar-frame">
-          <div id="metricsBarPlot" style="width:100%;height:300px;"></div>
+          <div id="metricsBarPlot" class="plot-host"></div>
         </div>
       </div>
       <div class="metrics-formulas-view" id="metricsFormulasView">
@@ -3154,10 +3182,10 @@ label,score
         </div>
       </div>
       <div class="dist-curves-view active" id="distCurvesView">
-        <div id="distPlot" style="width:100%;height:300px;"></div>
+        <div id="distPlot" class="plot-host"></div>
       </div>
       <div class="dist-topview-view" id="distTopView">
-        <svg id="topViewSVG" viewBox="0 0 700 320" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+        <svg id="topViewSVG" class="plot-svg" viewBox="0 0 700 320" width="100%" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
     </div>
 
@@ -3165,7 +3193,7 @@ label,score
       <div class="card-header">
         <span class="card-title">ROC Curve</span>
       </div>
-      <div id="rocPlot" style="width:100%;height:300px;"></div>
+      <div id="rocPlot" class="plot-host"></div>
     </div>
   </div>
 
