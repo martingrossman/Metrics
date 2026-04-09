@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "test": "node tests/metrics_core.test.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.59.1"
   }
 }
