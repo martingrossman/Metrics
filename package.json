@@ -1,0 +1,7 @@
+{
+  "name": "metrics-playground",
+  "private": true,
+  "scripts": {
+    "test": "node tests/metrics_core.test.js"
+  }
+}

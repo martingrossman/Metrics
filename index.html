@@ -3376,9 +3376,12 @@ function switchView(view) {
   }
 }
 </script>
+<script src="metrics_core.js"></script>
 <script>
 (function() {
   'use strict';
+
+  const MetricsCore = window.MetricsCore;
 
   // ─── Helpers ───
   const $ = id => document.getElementById(id);
@@ -3463,39 +3466,25 @@ function switchView(view) {
 
   // Normal PDF
   function normPDF(x, mu, sigma) {
-    const z = (x - mu) / sigma;
-    return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
+    return MetricsCore.normPDF(x, mu, sigma);
   }
 
   // Normal CDF via approximation (Abramowitz & Stegun)
   function normCDF(x, mu, sigma) {
-    const z = (x - mu) / sigma;
-    return stdNormCDF(z);
+    return MetricsCore.normCDF(x, mu, sigma);
   }
 
   function stdNormCDF(z) {
-    const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
-    const sign = z < 0 ? -1 : 1;
-    const az = Math.abs(z);
-    const t = 1.0 / (1.0 + p * az);
-    const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-az*az/2);
-    return 0.5 * (1.0 + sign * y);
+    return MetricsCore.stdNormCDF(z);
   }
 
   // Inverse normal CDF (rational approximation)
   function stdNormInvCDF(p) {
-    if (p <= 0) return -8;
-    if (p >= 1) return 8;
-    if (p < 0.5) return -stdNormInvCDF(1 - p);
-    // Rational approximation for 0.5 <= p < 1
-    const t = Math.sqrt(-2 * Math.log(1 - p));
-    const c0=2.515517, c1=0.802853, c2=0.010328;
-    const d1=1.432788, d2=0.189269, d3=0.001308;
-    return t - (c0 + c1*t + c2*t*t) / (1 + d1*t + d2*t*t + d3*t*t*t);
+    return MetricsCore.stdNormInvCDF(p);
   }
 
   function normInvCDF(p, mu, sigma) {
-    return mu + sigma * stdNormInvCDF(p);
+    return MetricsCore.normInvCDF(p, mu, sigma);
   }
 
   function cssVar(name) {
@@ -3615,38 +3604,11 @@ function updateThemeButton() {
   }
 
   function parseCSV(text) {
-    const lines = text.trim().split(/\r?\n/);
-    let start = 0;
-    const first = lines[0].split(/,|\s+/);
-    const hasHeader = isNaN(parseFloat(first[0])) || isNaN(parseFloat(first[1]));
-    if (hasHeader) start = 1;
-    const rows = [];
-    for (let i = start; i < lines.length && rows.length < 1000; i++) {
-      const parts = lines[i].split(/,|\s+/).map(s => s.trim());
-      if (parts.length < 2) continue;
-      const label = parseInt(parts[0], 10);
-      const score = parseFloat(parts[1]);
-      if ((label === 0 || label === 1) && isFinite(score)) {
-        rows.push({ label, score: Math.max(0, Math.min(1, score)) });
-      }
-    }
-    return rows;
+    return MetricsCore.parseCSV(text);
   }
 
   function parseJSON(text) {
-    let data;
-    try { data = JSON.parse(text); } catch (e) { return []; }
-    if (!Array.isArray(data)) return [];
-    const rows = [];
-    for (let i = 0; i < data.length && rows.length < 1000; i++) {
-      const row = data[i] || {};
-      const label = parseInt(row.label ?? row.y_true ?? row.y ?? row.target, 10);
-      const score = parseFloat(row.score ?? row.prob ?? row.p ?? row.pred);
-      if ((label === 0 || label === 1) && isFinite(score)) {
-        rows.push({ label, score: Math.max(0, Math.min(1, score)) });
-      }
-    }
-    return rows;
+    return MetricsCore.parseJSON(text);
   }
 
   function loadCustomData(file) {
@@ -3806,49 +3768,29 @@ let state = {
 
   // ─── Derived: from threshold → TPR, FPR ───
 function threshToRates(t, storeCustomCounts = true) {
-  if (!state.customData) {
-    const tpr = 1 - normCDF(t, state.mu_pos, state.std_pos);
-    const fpr = 1 - normCDF(t, state.mu_neg, state.std_neg);
-    return { tpr, fpr };
+  const rates = MetricsCore.threshToRatesForState(state, t, storeCustomCounts);
+  if (storeCustomCounts && rates.customCounts) {
+    state.customCounts = rates.customCounts;
   }
-
-  let tp = 0, fp = 0, fn = 0, tn = 0;
-  const data = state.customData;
-  for (let i = 0; i < data.length; i++) {
-    const predPos = data[i].score >= t;
-    if (predPos && data[i].label === 1) tp++;
-    else if (predPos && data[i].label === 0) fp++;
-    else if (!predPos && data[i].label === 1) fn++;
-    else tn++;
-  }
-  const P = tp + fn;
-  const N = fp + tn;
-  if (storeCustomCounts) {
-    state.customCounts = { tp, fp, fn, tn, P, N };
-  }
-  return {
-    tpr: P > 0 ? tp / P : 0,
-    fpr: N > 0 ? fp / N : 0
-  };
+  return { tpr: rates.tpr, fpr: rates.fpr };
 }
 
   // ─── From TPR → threshold (given positive distribution) ───
   function tprToThresh(tpr) {
-    // TPR = 1 - CDF(t) => CDF(t) = 1-TPR => t = invCDF(1-TPR)
-    return normInvCDF(1 - tpr, state.mu_pos, state.std_pos);
+    return MetricsCore.tprToThreshold(state, tpr);
   }
 
   // ─── From FPR → threshold (given negative distribution) ───
   function fprToThresh(fpr) {
-    return normInvCDF(1 - fpr, state.mu_neg, state.std_neg);
+    return MetricsCore.fprToThreshold(state, fpr);
   }
 
   function clamp01(x) {
-    return Math.max(0, Math.min(1, x));
+    return MetricsCore.clamp01(x);
   }
 
   function hasCustomDataset() {
-    return !!(state.customData && state.customData.length);
+    return MetricsCore.hasCustomDataset(state);
   }
 
   function formatThresholdValue(value = state.threshold) {
@@ -3856,33 +3798,11 @@ function threshToRates(t, storeCustomCounts = true) {
   }
 
   function getDatasetStats() {
-    if (!hasCustomDataset()) {
-      const P = Math.round(state.N * state.bal);
-      return {
-        total: state.N,
-        P,
-        N: state.N - P,
-        bal: state.bal
-      };
-    }
-
-    let P = 0;
-    for (let i = 0; i < state.customData.length; i++) {
-      if (state.customData[i].label === 1) P++;
-    }
-    const total = state.customData.length;
-    return {
-      total,
-      P,
-      N: total - P,
-      bal: total > 0 ? P / total : 0
-    };
+    return MetricsCore.getDatasetStats(state);
   }
 
   function getActiveRates() {
-    if (state.customData) return threshToRates(state.threshold);
-    if (state.linkedMode) return threshToRates(state.threshold);
-    return { tpr: state.manual_tpr, fpr: state.manual_fpr };
+    return MetricsCore.getActiveRatesForState(state);
   }
 
   function syncManualRatesFromThreshold() {
@@ -3893,40 +3813,12 @@ function threshToRates(t, storeCustomCounts = true) {
 
   // ─── Generate ROC curve points ───
   function generateROC(nPts) {
-    if (state.customData) {
-      const scores = Array.from(new Set(state.customData.map(d => d.score))).sort((a, b) => b - a);
-      const pts = [];
-      for (let i = 0; i < scores.length; i++) {
-        const t = scores[i];
-        const { tpr, fpr } = threshToRates(t, false);
-        pts.push({ fpr, tpr, t });
-      }
-      if (scores.length < nPts) {
-        const extra = [0, 1].map(t => ({ fpr: t, tpr: t === 0 ? 0 : 1, t }));
-        pts.push(...extra);
-      }
-      pts.sort((a, b) => a.fpr - b.fpr);
-      return pts;
-    }
-    const pts = [];
-    for (let i = 0; i <= nPts; i++) {
-      const t = state.mu_neg - 4*state.std_neg + (state.mu_pos + 4*state.std_pos - state.mu_neg + 4*state.std_neg) * i / nPts;
-      const { tpr, fpr } = threshToRates(t);
-      pts.push({ fpr, tpr, t });
-    }
-    pts.sort((a, b) => a.fpr - b.fpr);
-    return pts;
+    return MetricsCore.generateROCForState(state, nPts);
   }
 
   // ─── AUC via trapezoidal ───
   function computeAUC(rocPts) {
-    let auc = 0;
-    for (let i = 1; i < rocPts.length; i++) {
-      const dx = rocPts[i].fpr - rocPts[i-1].fpr;
-      const avgY = (rocPts[i].tpr + rocPts[i-1].tpr) / 2;
-      auc += dx * avgY;
-    }
-    return auc;
+    return MetricsCore.computeAUC(rocPts);
   }
 
   // ─── Slider read/write ───
@@ -4964,52 +4856,18 @@ function applyPreset(name) {
   }
 
   function renderMetrics(tpr, fpr) {
-    let TP, FN, FP, TN, P, N_neg;
-    if (state.customData && state.customCounts) {
-      ({ tp: TP, fn: FN, fp: FP, tn: TN, P, N: N_neg } = state.customCounts);
-    } else {
-      P = Math.round(state.N * state.bal);
-      N_neg = state.N - P;
-      TP = Math.round(P * tpr);
-      FN = P - TP;
-      FP = Math.round(N_neg * fpr);
-      TN = N_neg - FP;
-    }
-
-    const total = TP + TN + FP + FN;
-    const acc = total > 0 ? (TP+TN)/total : 0;
-    const prec = (TP+FP) > 0 ? TP/(TP+FP) : 0;
-    const rec = (TP+FN) > 0 ? TP/(TP+FN) : 0;
-    const fprMetric = (FP+TN) > 0 ? FP/(FP+TN) : 0;
-    const f1 = (prec+rec) > 0 ? 2*prec*rec/(prec+rec) : 0;
-    const npv = (TN+FN) > 0 ? TN/(TN+FN) : 0;
-
-    const denom = Math.sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN));
-    const mcc = denom > 0 ? (TP*TN - FP*FN)/denom : 0;
-
     const rocPts = generateROC(500);
-    const auc = computeAUC(rocPts);
-
-    const metrics = {
-      rec,
-      fpr: fprMetric,
-      prec,
-      acc,
-      f1,
-      auc,
-      npv,
-      mcc
-    };
+    const metrics = MetricsCore.computeMetricsForState(state, tpr, fpr, rocPts);
     latestMetrics = metrics;
 
-    $('m_rec').textContent = pf(rec, 3);
-    $('m_fpr').textContent = pf(fprMetric, 3);
-    $('m_prec').textContent = pf(prec, 3);
-    $('m_acc').textContent = pf(acc, 3);
-    $('m_f1').textContent = pf(f1, 3);
-    $('m_auc').textContent = pf(auc, 3);
-    $('m_npv').textContent = pf(npv, 3);
-    $('m_mcc').textContent = pf(mcc, 3);
+    $('m_rec').textContent = pf(metrics.rec, 3);
+    $('m_fpr').textContent = pf(metrics.fpr, 3);
+    $('m_prec').textContent = pf(metrics.prec, 3);
+    $('m_acc').textContent = pf(metrics.acc, 3);
+    $('m_f1').textContent = pf(metrics.f1, 3);
+    $('m_auc').textContent = pf(metrics.auc, 3);
+    $('m_npv').textContent = pf(metrics.npv, 3);
+    $('m_mcc').textContent = pf(metrics.mcc, 3);
     renderPrecisionStory(tpr, fpr);
 
     if ($('metricsBarView').classList.contains('active')) {
