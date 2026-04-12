@@ -2,7 +2,10 @@
   "name": "metrics-playground",
   "private": true,
   "scripts": {
-    "test": "node tests/metrics_core.test.js"
+    "test": "node tests/metrics_core.test.js",
+    "test:unit": "node tests/metrics_core.test.js",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
   },
   "devDependencies": {
     "playwright": "^1.59.1"
