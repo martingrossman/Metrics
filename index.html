@@ -3254,7 +3254,7 @@
   </div>
 
   <div class="landscape-controls-popover" id="landscapeControlsPopover">
-  <div class="hint-bar" id="hintBar"><span id="modeHint">Direct mode: TPR, FPR, and balance are set manually.</span></div>
+  <div class="hint-bar" id="hintBar"><span id="modeHint">Manual: set TPR, FPR, and prevalence directly.</span></div>
 
   <div class="controls-strip" id="controlsPanel">
     <div class="preset-row">
@@ -3323,14 +3323,14 @@ label,score
       <div class="advanced-header">
         <span class="advanced-label">Score Model</span>
         <button class="advanced-collapse-toggle" id="advancedCollapseToggle" type="button" aria-expanded="false" aria-controls="advancedGrid">More</button>
-        <span class="advanced-note" id="advancedNote">Score model only — affects distributions &amp; AUC in direct mode</span>
+        <span class="advanced-note" id="advancedNote">Gaussian curves affect distributions &amp; AUC in Manual</span>
         <div class="mode-pill" style="margin-left:auto;">
-          <span id="modeStateLabel">Direct</span>
-          <label class="switch" for="toggle_bidirectional" aria-label="Toggle bidirectional link">
+          <span id="modeStateLabel">Manual</span>
+          <label class="switch" for="toggle_bidirectional" aria-label="Toggle Gaussian score model">
             <input type="checkbox" id="toggle_bidirectional">
             <span class="switch-slider"></span>
           </label>
-          <span class="mode-pill-name">Link</span>
+          <span class="mode-pill-name">Gaussian</span>
         </div>
       </div>
       <div class="advanced-grid" id="advancedGrid">
@@ -4502,8 +4502,8 @@ function applyPreset(name) {
       operating.textContent = hasCustom
         ? `Custom ROC | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(stats.bal)} | t ${formatThresholdValue()}`
         : state.linkedMode
-          ? `Linked | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)} | t ${formatThresholdValue()}`
-          : `Direct | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)}`;
+          ? `Gaussian | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)} | t ${formatThresholdValue()}`
+          : `Manual | TPR ${formatPercent(rates.tpr)} | FPR ${formatPercent(rates.fpr)} | Prev ${formatPercent(state.bal)}`;
     }
     if (dataset) {
       dataset.textContent = hasCustom
@@ -4523,7 +4523,7 @@ function applyPreset(name) {
     const precCard = $('mobile_prec_card');
     const aucCard = $('mobile_auc_card');
 
-    if (modeEl) modeEl.textContent = hasCustom ? 'Custom' : (state.linkedMode ? 'Linked' : 'Direct');
+    if (modeEl) modeEl.textContent = hasCustom ? 'Custom' : (state.linkedMode ? 'Gaussian' : 'Manual');
     if (thresholdEl) thresholdEl.textContent = (state.linkedMode || hasCustom) ? formatThresholdValue() : 'Manual';
     if (tprCard) tprCard.textContent = formatPercent(rates.tpr);
     if (fprCard) fprCard.textContent = formatPercent(rates.fpr);
@@ -4624,14 +4624,14 @@ function applyPreset(name) {
       $('advancedNote').textContent = 'Uploaded rows fix prevalence, ROC, and AUC. Threshold is the active control.';
       $('distPanelTitle').textContent = 'Custom Scores & Threshold';
     } else {
-      $('modeStateLabel').textContent = linked ? 'Linked' : 'Direct Rates';
+      $('modeStateLabel').textContent = linked ? 'Gaussian' : 'Manual';
       $('modeHint').textContent = linked
-        ? 'Linked mode: distributions, threshold, and TPR/FPR stay synchronized.'
-        : 'Direct mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.';
-      $('desktopPresetLabel').textContent = linked ? 'Linked Quick Starts' : 'Direct Quick Starts';
+        ? 'Gaussian: threshold on score curves sets TPR/FPR.'
+        : 'Manual: set TPR, FPR, and prevalence directly. Gaussian curves still shape score views and AUC.';
+      $('desktopPresetLabel').textContent = linked ? 'Gaussian presets' : 'Manual presets';
       $('desktopPresetCopy').textContent = linked
-        ? 'Change the distributions and threshold together to see how the model itself changes.'
-        : 'Start simple with ready-made TPR/FPR/Balance combinations, then shape the score model only if you want more depth.';
+        ? 'Change the Gaussian curves and threshold together to see how the model itself changes.'
+        : 'Start simple with ready-made TPR/FPR/Prevalence combinations, then shape the Gaussian curves only if you want more depth.';
       $('step1Kicker').textContent = linked ? 'Step 1' : 'Optional';
       $('step1Title').textContent = linked ? 'Shape the classes' : 'Shape the score model';
       $('step2Kicker').textContent = linked ? 'Step 2' : 'Step 1';
@@ -4639,8 +4639,8 @@ function applyPreset(name) {
       $('step3Kicker').textContent = linked ? 'Step 3' : 'Step 2';
       $('step3Title').textContent = 'Choose sample count';
       $('advancedNote').textContent = linked
-        ? 'Drives TPR/FPR via threshold'
-        : 'Score model only — affects distributions & AUC in direct mode';
+        ? 'Threshold sets TPR/FPR'
+        : 'Gaussian curves affect distributions & AUC';
       $('distPanelTitle').textContent = linked ? 'Class Distributions & Threshold' : 'Class Distributions';
     }
 
@@ -4854,7 +4854,7 @@ function applyPreset(name) {
         y: 1.02,
         xref: 'paper',
         yref: 'paper',
-        text: 'Direct mode: threshold detached from TPR/FPR',
+        text: 'Manual: threshold detached from TPR/FPR',
         showarrow: false,
         font: { size: 10, color: themeColor('--plot-font') }
       });
@@ -4971,7 +4971,7 @@ function applyPreset(name) {
     } else {
       html += '<rect x="'+pad.l+'" y="'+y0neg+'" width="'+bW+'" height="'+bandH+'" fill="'+themeColor('--neutral-band-bg')+'" rx="3"/>';
       html += '<rect x="'+pad.l+'" y="'+y0pos+'" width="'+bW+'" height="'+bandH+'" fill="'+themeColor('--neutral-band-bg')+'" rx="3"/>';
-      html += '<text x="'+(pad.l + bW/2)+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Direct mode: dots show actual class only</text>';
+      html += '<text x="'+(pad.l + bW/2)+'" y="'+(pad.t - 8)+'" text-anchor="middle" fill="'+themeColor('--plot-font')+'" font-size="10" font-family="JetBrains Mono, monospace">Manual: dots show actual class only</text>';
     }
 
     // ── Draw dots ──
@@ -5058,7 +5058,7 @@ function applyPreset(name) {
   function renderROCPlot(tpr, fpr) {
     const hasCustom = hasCustomDataset();
     const rocPts = generateROC(500);
-    const markerName = hasCustom ? 'Threshold' : (state.linkedMode ? 'Operating Pt' : 'Manual Pt');
+    const markerName = hasCustom ? 'Threshold' : (state.linkedMode ? 'Gaussian Pt' : 'Manual Pt');
     const markerColor = hasCustom ? var_accent() : themeColor('--text');
     const markerLineColor = hasCustom ? themeColor('--text') : (state.linkedMode ? var_accent() : themeColor('--fn-color'));
 
@@ -5134,7 +5134,7 @@ function applyPreset(name) {
         y: 1.02,
         xref: 'paper',
         yref: 'paper',
-        text: 'Direct mode: manual point may sit off the ROC curve',
+        text: 'Manual point may sit off the ROC curve',
         showarrow: false,
         font: { size: 10, color: themeColor('--plot-font') }
       });
