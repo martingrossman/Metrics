@@ -2287,6 +2287,23 @@
     color: var(--text-dim);
     line-height: 1.3;
   }
+  .advanced-collapse-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 7px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg3);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .mobile-advanced-tools-toggle {
+    display: none;
+  }
   .advanced-section.is-direct .advanced-grid {
     display: none;
   }
@@ -2620,22 +2637,22 @@
     }
 
     .app-header-right {
-      gap: 5px;
+      gap: 3px;
     }
 
     .theme-toggle {
       width: auto;
       max-width: none;
-      padding: 5px 8px;
-      font-size: 0.62rem;
+      padding: 4px 7px;
+      font-size: 0.60rem;
       line-height: 1.1;
     }
 
     #hintBar,
     .sticky-top #hintBar {
-      padding: 3px 24px 3px 8px;
-      font-size: 0.70rem;
-      line-height: 1.22;
+      padding: 2px 22px 2px 7px;
+      font-size: 0.66rem;
+      line-height: 1.18;
     }
 
     #hintBar::after {
@@ -2644,12 +2661,15 @@
 
     .controls-strip,
     .sticky-top .controls-strip {
-      padding: 5px 6px 6px;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 5px 5px;
     }
 
     .preset-row {
-      gap: 4px;
-      margin-bottom: 4px;
+      order: 1;
+      gap: 3px;
+      margin-bottom: 2px;
     }
 
     .preset-label {
@@ -2657,27 +2677,45 @@
     }
 
     .preset-chips {
-      gap: 4px;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 3px;
       width: 100%;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 1px;
+    }
+
+    .preset-chips::-webkit-scrollbar {
+      display: none;
     }
 
     .mobile-preset {
-      min-height: var(--mobile-touch-min);
-      padding: 4px 7px;
-      border-radius: 5px;
-      font-size: 0.76rem;
+      min-height: 30px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.70rem;
       line-height: 1.05;
-      flex: 1 1 auto;
+      flex: 0 0 auto;
+      white-space: nowrap;
     }
 
     .custom-data-toggle {
-      margin: 5px 0;
+      order: 4;
+      display: none;
+      margin: 2px 0;
+    }
+
+    .controls-strip.mobile-tools-open .custom-data-toggle {
+      display: block;
     }
 
     .custom-data-toggle-btn {
-      padding: 4px 8px;
-      gap: 5px;
-      font-size: 0.62rem;
+      padding: 2px 6px;
+      gap: 4px;
+      font-size: 0.58rem;
     }
 
     .custom-data-toggle-state {
@@ -2696,7 +2734,7 @@
     }
 
     .data-import .data-btn {
-      padding: 5px 8px;
+      padding: 4px 7px;
     }
 
     .data-action-item {
@@ -2704,28 +2742,59 @@
     }
 
     .sliders-row {
+      order: 2;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 5px 7px;
+      gap: 4px 6px;
+    }
+
+    .mobile-advanced-tools-toggle {
+      order: 3;
+      display: inline-flex;
+      align-self: flex-start;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      margin-top: 4px;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg3);
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .slider-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px;
+      grid-template-rows: auto auto;
+      column-gap: 5px;
+      align-items: center;
     }
 
     .slider-label {
       display: block;
-      font-size: 0.68rem;
+      grid-column: 1;
+      grid-row: 1;
+      font-size: 0.66rem;
       line-height: 1.15;
-      margin-bottom: 2px;
+      margin-bottom: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .slider-label .val {
-      display: block;
-      margin-top: 1px;
-      font-size: 0.66rem;
+      display: none;
     }
 
     input[type="range"] {
+      grid-column: 1 / -1;
+      grid-row: 2;
       height: 6px;
+      margin-top: 4px;
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -2734,16 +2803,24 @@
     }
 
     .pct-chip {
+      grid-column: 2;
+      grid-row: 1;
       width: 100%;
-      min-height: 30px;
-      margin-top: 3px;
-      padding: 3px 6px;
-      font-size: 0.70rem;
+      min-height: 25px;
+      margin-top: 0;
+      padding: 2px 5px;
+      font-size: 0.66rem;
     }
 
     .advanced-section {
-      margin-top: 5px;
-      padding-top: 5px;
+      order: 5;
+      display: none;
+      margin-top: 4px;
+      padding-top: 4px;
+    }
+
+    .controls-strip.mobile-tools-open .advanced-section {
+      display: block;
     }
 
     .advanced-header {
@@ -2756,14 +2833,29 @@
       letter-spacing: 0.8px;
     }
 
+    .advanced-collapse-toggle {
+      display: inline-flex;
+      min-height: 24px;
+      margin-left: 0;
+      padding: 2px 6px;
+    }
+
+    .advanced-section.is-direct .advanced-collapse-toggle {
+      display: none;
+    }
+
+    .advanced-section.mobile-advanced-collapsed .advanced-grid {
+      display: none !important;
+    }
+
     .advanced-note {
       display: none;
     }
 
     .mode-pill {
-      gap: 5px;
-      padding: 4px 7px;
-      font-size: 0.56rem;
+      gap: 4px;
+      padding: 2px 5px;
+      font-size: 0.54rem;
     }
 
     .switch {
@@ -2796,9 +2888,9 @@
     }
 
     .card-header {
-      margin-bottom: 6px;
-      padding-bottom: 5px;
-      gap: 8px;
+      margin-bottom: 5px;
+      padding-bottom: 4px;
+      gap: 5px;
     }
 
     .card-title {
@@ -2807,9 +2899,9 @@
     }
 
     .view-toggle button {
-      min-height: var(--mobile-touch-min);
-      padding: 5px 7px;
-      font-size: 0.68rem;
+      min-height: 32px;
+      padding: 4px 6px;
+      font-size: 0.64rem;
     }
 
     .metric-card {
@@ -2817,7 +2909,9 @@
     }
 
     .see-why-btn {
-      min-height: 30px;
+      min-height: 28px;
+      padding-top: 2px;
+      padding-bottom: 2px;
     }
   }
 
@@ -3140,9 +3234,11 @@ label,score
         <input class="pct-chip" type="text" id="i_bal_pct" value="30" inputmode="decimal" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Prevalence exact percent">
       </div>
     </div>
+    <button class="mobile-advanced-tools-toggle" id="mobileAdvancedToolsToggle" type="button" aria-expanded="false" aria-controls="customDataToggle advancedSection">Advanced</button>
     <div class="advanced-section" id="advancedSection">
       <div class="advanced-header">
         <span class="advanced-label">Score Model</span>
+        <button class="advanced-collapse-toggle" id="advancedCollapseToggle" type="button" aria-expanded="false" aria-controls="advancedGrid">More</button>
         <span class="advanced-note" id="advancedNote">Score model only — affects distributions &amp; AUC in direct mode</span>
         <div class="mode-pill" style="margin-left:auto;">
           <span id="modeStateLabel">Direct</span>
@@ -3153,7 +3249,7 @@ label,score
           <span class="mode-pill-name">Link</span>
         </div>
       </div>
-      <div class="advanced-grid">
+      <div class="advanced-grid" id="advancedGrid">
         <div class="slider-col" id="g_thresh">
           <div class="slider-label">Threshold <span class="val" id="v_thresh">&mdash;</span></div>
           <input type="range" id="s_thresh" min="-6" max="10" step="0.05" value="1">
@@ -5759,6 +5855,44 @@ function applyPreset(name) {
     $('hintBar').classList.toggle('hint-collapsed');
   });
 
+  function setAdvancedMobileCollapsed(collapsed) {
+    const section = $('advancedSection');
+    const toggle = $('advancedCollapseToggle');
+    if (!section || !toggle) return;
+    section.classList.toggle('mobile-advanced-collapsed', collapsed);
+    toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    toggle.textContent = collapsed ? 'More' : 'Less';
+  }
+
+  function initCompactMobileControls() {
+    const hintBar = $('hintBar');
+    const advancedToggle = $('advancedCollapseToggle');
+    const toolsToggle = $('mobileAdvancedToolsToggle');
+    const controlsPanel = $('controlsPanel');
+
+    if (window.innerWidth <= 640) {
+      if (hintBar) hintBar.classList.add('hint-collapsed');
+      setAdvancedMobileCollapsed(true);
+      if (controlsPanel) controlsPanel.classList.remove('mobile-tools-open');
+    }
+
+    if (advancedToggle) {
+      advancedToggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const section = $('advancedSection');
+        setAdvancedMobileCollapsed(!section.classList.contains('mobile-advanced-collapsed'));
+      });
+    }
+
+    if (toolsToggle && controlsPanel) {
+      toolsToggle.addEventListener('click', () => {
+        const isOpen = controlsPanel.classList.toggle('mobile-tools-open');
+        toolsToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        toolsToggle.textContent = isOpen ? 'Hide advanced' : 'Advanced';
+      });
+    }
+  }
+
   // Distribution sliders → recompute threshold's TPR/FPR (threshold stays, rates change)
   ['s_mu_neg','s_std_neg','s_mu_pos','s_std_pos'].forEach(id => {
     $(id).addEventListener('input', () => {
@@ -5987,6 +6121,7 @@ function applyPreset(name) {
   try { storedTheme = localStorage.getItem('metrics-theme'); } catch (e) {}
   applyTheme(storedTheme || currentThemeName, false);
   initMobileUI();
+  initCompactMobileControls();
   syncLandscapeControlsUI();
   if (PRESET_CONFIGS[activePresetKey]) {
     applyPreset(activePresetKey);
