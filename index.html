@@ -1891,6 +1891,8 @@
     color: var(--text-dim);
   }
   .mode-pill-name { font-weight: 700; color: var(--text); }
+  .mode-pill-name.is-active { color: var(--accent); }
+  .mode-pill-name.is-gaussian-active { color: var(--orange); }
 
   .hint-bar {
     font-size: 0.63rem;
@@ -2314,9 +2316,13 @@
     display: none;
   }
   .advanced-section.is-direct .advanced-note {
+    color: var(--text-dim);
+  }
+  .advanced-section.is-gaussian .advanced-note {
     color: var(--orange);
   }
-  #modeStateLabel.is-direct { color: var(--orange); font-weight: 700; }
+  #modeStateLabel.is-direct { color: var(--accent); font-weight: 700; }
+  #modeStateLabel.is-gaussian { font-weight: 700; }
 
   .advanced-grid {
     display: grid;
@@ -2918,18 +2924,11 @@
     }
 
     .advanced-collapse-toggle {
-      display: inline-flex;
-      min-height: 24px;
-      margin-left: 0;
-      padding: 2px 6px;
-    }
-
-    .advanced-section.is-direct .advanced-collapse-toggle {
       display: none;
     }
 
-    .advanced-section.mobile-advanced-collapsed .advanced-grid {
-      display: none !important;
+    .controls-strip.mobile-tools-open .advanced-section:not(.is-direct) .advanced-grid {
+      display: grid !important;
     }
 
     .advanced-note {
@@ -3330,7 +3329,7 @@ label,score
             <input type="checkbox" id="toggle_bidirectional">
             <span class="switch-slider"></span>
           </label>
-          <span class="mode-pill-name">Gaussian</span>
+          <span class="mode-pill-name" id="modeSwitchLabel">Gaussian</span>
         </div>
       </div>
       <div class="advanced-grid" id="advancedGrid">
@@ -4612,6 +4611,7 @@ function applyPreset(name) {
 
     if (hasCustom) {
       $('modeStateLabel').textContent = 'Custom Data';
+      if ($('modeSwitchLabel')) $('modeSwitchLabel').textContent = 'Threshold';
       $('modeHint').textContent = 'Custom data mode: move Threshold to step along the empirical ROC and update the matrix.';
       $('desktopPresetLabel').textContent = 'Built-in Quick Starts';
       $('desktopPresetCopy').textContent = 'Presets switch back to the simulator. Uploaded rows keep the threshold as the main control.';
@@ -4624,7 +4624,8 @@ function applyPreset(name) {
       $('advancedNote').textContent = 'Uploaded rows fix prevalence, ROC, and AUC. Threshold is the active control.';
       $('distPanelTitle').textContent = 'Custom Scores & Threshold';
     } else {
-      $('modeStateLabel').textContent = linked ? 'Gaussian' : 'Manual';
+      $('modeStateLabel').textContent = 'Manual';
+      if ($('modeSwitchLabel')) $('modeSwitchLabel').textContent = 'Gaussian';
       $('modeHint').textContent = linked
         ? 'Gaussian: threshold on score curves sets TPR/FPR.'
         : 'Manual: set TPR, FPR, and prevalence directly. Gaussian curves still shape score views and AUC.';
@@ -4646,7 +4647,13 @@ function applyPreset(name) {
 
     $('modeHint').classList.toggle('manual', !linked && !hasCustom);
     $('advancedSection').classList.toggle('is-direct', !linked && !hasCustom);
+    $('advancedSection').classList.toggle('is-gaussian', linked && !hasCustom);
     $('modeStateLabel').classList.toggle('is-direct', !linked && !hasCustom);
+    $('modeStateLabel').classList.toggle('is-gaussian', linked && !hasCustom);
+    if ($('modeSwitchLabel')) {
+      $('modeSwitchLabel').classList.toggle('is-active', hasCustom);
+      $('modeSwitchLabel').classList.toggle('is-gaussian-active', linked && !hasCustom);
+    }
     $('g_thresh').classList.toggle('disabled', !linked && !hasCustom);
     $('s_thresh').disabled = !linked && !hasCustom;
     if ($('mobileQuickThreshGroup')) $('mobileQuickThreshGroup').classList.toggle('is-hidden', !linked && !hasCustom);
@@ -5978,7 +5985,6 @@ function applyPreset(name) {
 
     if (window.innerWidth <= 640) {
       if (hintBar) hintBar.classList.add('hint-collapsed');
-      setAdvancedMobileCollapsed(true);
       if (controlsPanel) controlsPanel.classList.remove('mobile-tools-open');
     }
 
