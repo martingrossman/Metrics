@@ -2309,9 +2309,6 @@
   .mobile-section-tabs {
     display: none;
   }
-  .mobile-matrix-metrics {
-    display: none;
-  }
   .advanced-section.is-direct .advanced-grid {
     display: none;
   }
@@ -2715,45 +2712,6 @@
     .mobile-panel-hidden,
     .mobile-grid-hidden {
       display: none !important;
-    }
-
-    .mobile-matrix-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 4px;
-      margin-top: 6px;
-    }
-
-    .mobile-matrix-metric {
-      min-width: 0;
-      padding: 5px 6px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg3);
-    }
-
-    .mobile-matrix-metric-label {
-      display: block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.54rem;
-      font-weight: 700;
-      line-height: 1.05;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .mobile-matrix-metric-value {
-      display: block;
-      margin-top: 2px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      font-weight: 800;
-      line-height: 1.05;
-      color: var(--accent);
-      white-space: nowrap;
     }
 
     .preset-row {
@@ -3407,20 +3365,6 @@ label,score
         </div>
         <div class="mosaic-view active" id="mosaicView">
           <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
-        </div>
-      </div>
-      <div class="mobile-matrix-metrics" aria-label="Key metrics">
-        <div class="mobile-matrix-metric">
-          <span class="mobile-matrix-metric-label">Precision</span>
-          <span class="mobile-matrix-metric-value" id="mini_prec">&mdash;</span>
-        </div>
-        <div class="mobile-matrix-metric">
-          <span class="mobile-matrix-metric-label">Accuracy</span>
-          <span class="mobile-matrix-metric-value" id="mini_acc">&mdash;</span>
-        </div>
-        <div class="mobile-matrix-metric">
-          <span class="mobile-matrix-metric-label">F1</span>
-          <span class="mobile-matrix-metric-value" id="mini_f1">&mdash;</span>
         </div>
       </div>
     </div>
@@ -5426,9 +5370,6 @@ function applyPreset(name) {
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
     $('m_mcc').textContent = pf(mcc, 3);
-    if ($('mini_prec')) $('mini_prec').textContent = pf(prec, 3);
-    if ($('mini_acc')) $('mini_acc').textContent = pf(acc, 3);
-    if ($('mini_f1')) $('mini_f1').textContent = pf(f1, 3);
     renderPrecisionStory(tpr, fpr);
 
     if ($('metricsBarView').classList.contains('active')) {
