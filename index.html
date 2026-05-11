@@ -2304,6 +2304,12 @@
   .mobile-advanced-tools-toggle {
     display: none;
   }
+  .mobile-section-tabs {
+    display: none;
+  }
+  .mobile-matrix-metrics {
+    display: none;
+  }
   .advanced-section.is-direct .advanced-grid {
     display: none;
   }
@@ -2664,6 +2670,84 @@
       display: flex;
       flex-direction: column;
       padding: 4px 5px 5px;
+    }
+
+    .mobile-section-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 3px;
+      padding: 4px 5px 5px;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+    }
+
+    .mobile-section-tab {
+      min-width: 0;
+      min-height: 30px;
+      padding: 3px 4px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--bg3);
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.61rem;
+      font-weight: 700;
+      line-height: 1.05;
+      cursor: pointer;
+    }
+
+    .mobile-section-tab.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    [data-theme="neon-dark"] .mobile-section-tab.active {
+      color: #0b0b0f;
+    }
+
+    .mobile-panel-hidden,
+    .mobile-grid-hidden {
+      display: none !important;
+    }
+
+    .mobile-matrix-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .mobile-matrix-metric {
+      min-width: 0;
+      padding: 5px 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg3);
+    }
+
+    .mobile-matrix-metric-label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.54rem;
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mobile-matrix-metric-value {
+      display: block;
+      margin-top: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--accent);
+      white-space: nowrap;
     }
 
     .preset-row {
@@ -3277,6 +3361,12 @@ label,score
       </div>
     </div>
   </div>
+  <div class="mobile-section-tabs" id="mobileSectionTabs" role="tablist" aria-label="Mobile visualization sections">
+    <button class="mobile-section-tab active" type="button" data-mobile-panel="cmPanel" role="tab" aria-selected="true">Matrix</button>
+    <button class="mobile-section-tab" type="button" data-mobile-panel="metricsPanel" role="tab" aria-selected="false">Metrics</button>
+    <button class="mobile-section-tab" type="button" data-mobile-panel="distPanel" role="tab" aria-selected="false">Curves</button>
+    <button class="mobile-section-tab" type="button" data-mobile-panel="rocPanel" role="tab" aria-selected="false">ROC</button>
+  </div>
   </div>
   </div><!-- /.sticky-top -->
   <div id="landscapeControlsBackdrop" aria-hidden="true"></div>
@@ -3318,6 +3408,20 @@ label,score
         </div>
         <div class="mosaic-view active" id="mosaicView">
           <svg id="mosaicSVG" viewBox="0 0 700 340" width="100%" style="display:block;" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+      <div class="mobile-matrix-metrics" aria-label="Key metrics">
+        <div class="mobile-matrix-metric">
+          <span class="mobile-matrix-metric-label">Precision</span>
+          <span class="mobile-matrix-metric-value" id="mini_prec">&mdash;</span>
+        </div>
+        <div class="mobile-matrix-metric">
+          <span class="mobile-matrix-metric-label">Accuracy</span>
+          <span class="mobile-matrix-metric-value" id="mini_acc">&mdash;</span>
+        </div>
+        <div class="mobile-matrix-metric">
+          <span class="mobile-matrix-metric-label">F1</span>
+          <span class="mobile-matrix-metric-value" id="mini_f1">&mdash;</span>
         </div>
       </div>
     </div>
@@ -4121,8 +4225,7 @@ let state = {
     ],
     direct: [
       { key: 'direct_balanced', label: 'Balanced' },
-      { key: 'direct_rare', label: 'Rare 5%' },
-      { key: 'direct_screening', label: 'Screening' }
+      { key: 'direct_rare', label: 'Rare 5%' }
     ]
   };
 
@@ -4584,9 +4687,9 @@ function applyPreset(name) {
       paper_bgcolor: paperBg,
       plot_bgcolor: plotBg,
       font: { family: 'JetBrains Mono, monospace', size: mobile ? 9 : 10, color: themeColor('--plot-font') },
-      margin: mobile ? { l: 35, r: 8, t: 8, b: 32 } : { l: 45, r: 15, t: 10, b: 40 },
-      xaxis: { gridcolor: themeColor('--plot-grid'), zerolinecolor: themeColor('--plot-zero') },
-      yaxis: { gridcolor: themeColor('--plot-grid'), zerolinecolor: themeColor('--plot-zero') },
+      margin: mobile ? { l: 26, r: 22, t: 14, b: 28 } : { l: 45, r: 15, t: 10, b: 40 },
+      xaxis: { gridcolor: themeColor('--plot-grid'), zerolinecolor: themeColor('--plot-zero'), automargin: true },
+      yaxis: { gridcolor: themeColor('--plot-grid'), zerolinecolor: themeColor('--plot-zero'), automargin: true },
     };
   }
 
@@ -4666,8 +4769,8 @@ function applyPreset(name) {
       const layout = {
         ...base,
         barmode: 'overlay',
-        xaxis: { ...base.xaxis, title: 'Score', range: [-0.02, 1.02] },
-        yaxis: { ...base.yaxis, title: 'Row Count', rangemode: 'tozero' },
+        xaxis: { ...base.xaxis, title: isMobile() ? '' : 'Score', range: [-0.02, 1.02] },
+        yaxis: { ...base.yaxis, title: isMobile() ? '' : 'Row Count', rangemode: 'tozero' },
         legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
         shapes: [{
           type: 'line',
@@ -4760,8 +4863,8 @@ function applyPreset(name) {
     const base = getBasePlotLayout();
     const layout = {
       ...base,
-      xaxis: { ...base.xaxis, title: 'Score' },
-      yaxis: { ...base.yaxis, title: 'Weighted Density' },
+      xaxis: { ...base.xaxis, title: isMobile() ? '' : 'Score' },
+      yaxis: { ...base.yaxis, title: isMobile() ? '' : 'Weighted Density' },
       legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
       shapes,
       annotations
@@ -5038,8 +5141,8 @@ function applyPreset(name) {
     }
     const layout = {
       ...base,
-      xaxis: { ...base.xaxis, title: 'FPR', range: [-0.02, 1.02] },
-      yaxis: { ...base.yaxis, title: 'TPR', range: [-0.02, 1.02] },
+      xaxis: { ...base.xaxis, title: isMobile() ? '' : 'FPR', range: [-0.02, 1.02] },
+      yaxis: { ...base.yaxis, title: isMobile() ? '' : 'TPR', range: [-0.02, 1.02] },
       legend: { x: 0.55, y: 0.15, bgcolor: 'rgba(0,0,0,0)', font: { size: isMobile() ? 8 : 9, color: themeColor('--plot-font') } },
       annotations,
       shapes,
@@ -5316,6 +5419,9 @@ function applyPreset(name) {
     $('m_auc').textContent = pf(auc, 3);
     $('m_npv').textContent = pf(npv, 3);
     $('m_mcc').textContent = pf(mcc, 3);
+    if ($('mini_prec')) $('mini_prec').textContent = pf(prec, 3);
+    if ($('mini_acc')) $('mini_acc').textContent = pf(acc, 3);
+    if ($('mini_f1')) $('mini_f1').textContent = pf(f1, 3);
     renderPrecisionStory(tpr, fpr);
 
     if ($('metricsBarView').classList.contains('active')) {
@@ -5893,6 +5999,58 @@ function applyPreset(name) {
     }
   }
 
+  function setMobileVisualizationPanel(panelId) {
+    const panelIds = ['cmPanel', 'metricsPanel', 'distPanel', 'rocPanel'];
+    const mobileLayout = window.innerWidth <= 640;
+    const primaryGrid = document.querySelector('.primary-grid');
+    const secondaryGrid = document.querySelector('.secondary-grid');
+
+    panelIds.forEach(id => {
+      const panel = $(id);
+      if (!panel) return;
+      panel.classList.toggle('mobile-panel-hidden', mobileLayout && id !== panelId);
+    });
+
+    document.querySelectorAll('.mobile-section-tab').forEach(tab => {
+      const active = tab.dataset.mobilePanel === panelId;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+
+    if (primaryGrid) {
+      primaryGrid.classList.toggle('mobile-grid-hidden', mobileLayout && !['cmPanel', 'metricsPanel'].includes(panelId));
+    }
+    if (secondaryGrid) {
+      secondaryGrid.classList.toggle('mobile-grid-hidden', mobileLayout && !['distPanel', 'rocPanel'].includes(panelId));
+    }
+  }
+
+  function resizeVisiblePlots() {
+    if (!window.Plotly) return;
+    ['distPlot', 'rocPlot', 'metricsBarPlot'].forEach(id => {
+      const plot = $(id);
+      if (!plot || !plot.offsetParent) return;
+      Plotly.Plots.resize(plot);
+    });
+  }
+
+  function initMobileVisualizationTabs() {
+    const tabs = document.querySelectorAll('.mobile-section-tab');
+    if (!tabs.length) return;
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        setMobileVisualizationPanel(tab.dataset.mobilePanel);
+        requestAnimationFrame(() => {
+          render();
+          requestAnimationFrame(resizeVisiblePlots);
+        });
+      });
+    });
+
+    setMobileVisualizationPanel('cmPanel');
+  }
+
   // Distribution sliders → recompute threshold's TPR/FPR (threshold stays, rates change)
   ['s_mu_neg','s_std_neg','s_mu_pos','s_std_pos'].forEach(id => {
     $(id).addEventListener('input', () => {
@@ -6122,6 +6280,7 @@ function applyPreset(name) {
   applyTheme(storedTheme || currentThemeName, false);
   initMobileUI();
   initCompactMobileControls();
+  initMobileVisualizationTabs();
   syncLandscapeControlsUI();
   if (PRESET_CONFIGS[activePresetKey]) {
     applyPreset(activePresetKey);
@@ -6137,7 +6296,10 @@ function applyPreset(name) {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       syncLandscapeControlsUI();
+      const activeTab = document.querySelector('.mobile-section-tab.active');
+      setMobileVisualizationPanel(activeTab ? activeTab.dataset.mobilePanel : 'cmPanel');
       render();
+      resizeVisiblePlots();
     }, 150);
   });
 
