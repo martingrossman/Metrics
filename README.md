@@ -10,13 +10,14 @@ custom domain for GitHub Pages.
 
 ## Model
 
-The demo represents 100 cases using two fixed distributions of 50 deterministic
+The demo represents 1,000 weighted cases using two fixed distributions of 50 deterministic
 score samples. Positive share changes their weights, preserving TPR and FPR
 at a given threshold and separation. Precision changes with the weighted
 balance of correct detections and false alarms. Counts can be fractional.
 
-Each chart renders one marker per whole case plus a smaller marker for a
-fractional remainder. Matching dots and squares highlight together on hover.
+Each full marker represents 10 cases, with a smaller marker for any remainder.
+Marker area is proportional to its case count. Both charts use the same
+representative scores and counts; matching dots and squares highlight on hover.
 At 0% or 100% positive share, a rate with no actual cases is shown as `N/A`.
 Precision is `N/A` when there are no positive predictions.
 

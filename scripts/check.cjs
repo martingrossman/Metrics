@@ -21,27 +21,35 @@ const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-6
 
 let combinations = 0;
 for (let separation = 0; separation <= 100; separation += 5) {
-  const reference = model.generateExamples(50, separation / 100);
+  const reference = model.generateExamples(500, separation / 100);
   for (let prevalence = 0; prevalence <= 100; prevalence++) {
-    const examples = model.generateExamples(prevalence, separation / 100);
+    const examples = model.generateExamples(prevalence * 10, separation / 100);
     assert.deepEqual(examples.map(e => e.score), reference.map(e => e.score));
     for (let threshold = 0; threshold <= 100; threshold += 5) {
       const groups = model.classifyExamples(examples, threshold / 100);
       const metrics = model.calculateMetrics(groups);
       const markers = model.createCountGroups(groups);
-      close(metrics.tp + metrics.fp + metrics.fn + metrics.tn, 100);
-      close(metrics.tp + metrics.fn, prevalence);
+      close(metrics.tp + metrics.fp + metrics.fn + metrics.tn, 1000);
+      close(metrics.tp + metrics.fn, prevalence * 10);
       for (const outcome of Object.keys(groups)) {
         close(model.weightedCount(markers[outcome]), metrics[outcome]);
-        assert.ok(markers[outcome].every(e => e.weight > 0 && e.weight <= 1));
+        assert.ok(markers[outcome].every(e => e.weight > 0 && e.weight <= 10));
+        assert.ok(markers[outcome].every(e =>
+          (e.score + 1e-9 >= threshold / 100) === ['tp', 'fp'].includes(outcome)));
       }
       if (prevalence) close(metrics.tpr, reference.filter(e => e.isPositive && e.score + 1e-9 >= threshold / 100).length / 50);
       else assert.ok(Number.isNaN(metrics.tpr));
       if (prevalence < 100) close(metrics.fpr, reference.filter(e => !e.isPositive && e.score + 1e-9 >= threshold / 100).length / 50);
       else assert.ok(Number.isNaN(metrics.fpr));
       if (separation === 100 && threshold === 50) assert.equal(metrics.fp + metrics.fn, 0);
-      if (threshold === 100) assert.ok(Number.isNaN(metrics.precision));
-      if (threshold === 0) close(metrics.precision, prevalence / 100);
+      if (threshold === 100) {
+        close(metrics.tp + metrics.fp, 0);
+        assert.ok(Number.isNaN(metrics.precision));
+      }
+      if (threshold === 0) {
+        close(metrics.fn + metrics.tn, 0);
+        close(metrics.precision, prevalence / 100);
+      }
       combinations++;
     }
   }
@@ -75,11 +83,17 @@ console.log(`Model: ${combinations} combinations passed.`);
               clipped: [...document.querySelectorAll('.tiles, .group')].some(e => e.scrollHeight > e.clientHeight + 1),
               panelHeights: [...document.querySelectorAll('.panel')].map(e => e.getBoundingClientRect().height),
               dots: document.querySelectorAll('circle[data-id]').length,
-              squares: document.querySelectorAll('.tile[data-id]').length
+              squares: document.querySelectorAll('.tile[data-id]').length,
+              clippedLabels: [...document.querySelectorAll('#plot text')].filter(e => {
+                const box = e.getBBox();
+                const view = document.querySelector('#plot').viewBox.baseVal;
+                return box.x < 0 || box.y < 0 || box.x + box.width > view.width || box.y + box.height > view.height;
+              }).map(e => e.textContent)
             }));
             assert.equal(layout.overflow, false, `Horizontal overflow at ${width}px`);
             assert.equal(layout.clipped, false, `Clipped population markers at ${width}px, separation ${separation}, prevalence ${prevalence}, threshold ${threshold}`);
             assert.equal(layout.dots, layout.squares);
+            assert.deepEqual(layout.clippedLabels, [], `Clipped graph labels at ${width}px, prevalence ${prevalence}`);
             originalPanelHeights ??= layout.panelHeights;
             assert.deepEqual(layout.panelHeights, originalPanelHeights, `Graph resized at ${width}px, separation ${separation}, prevalence ${prevalence}, threshold ${threshold}`);
           }
@@ -110,11 +124,34 @@ console.log(`Model: ${combinations} combinations passed.`);
     assert.equal(await page.locator('#threshold').inputValue(), '50');
     assert.equal(await page.locator('#separation').inputValue(), '60');
     // The visible story: change only class balance, keeping the model fixed.
-    for (const [prevalence, precision] of [[10, '72.7%'], [50, '96%'], [90, '99.5%']]) {
+    for (const [prevalence, precision] of [[1, '19.5%'], [10, '72.7%'], [50, '96%'], [90, '99.5%'], [99, '100%']]) {
       await setSlider('prevalence', prevalence);
       assert.equal(await page.locator('#tpr').textContent(), '96%');
       assert.equal(await page.locator('#fpr').textContent(), '4%');
       assert.equal(await page.locator('#precision').textContent(), precision);
+    }
+    await page.locator('#reset').click();
+    assert.equal(await page.locator('#plot text').last().textContent(), 'Positive class score →');
+    assert.deepEqual(await page.locator('#plot text').allTextContents().then(labels =>
+      labels.filter(label => /^\d\.\d\d$/.test(label))), ['0.00', '0.25', '0.50', '0.75', '1.00']);
+    // Both charts retain exact weights; matrix labels round only for display.
+    for (const prevalence of [1, 10, 50, 99]) {
+      await setSlider('prevalence', prevalence);
+      const outcomes = await page.evaluate(() => {
+        const colors = { tp: '#0ea976', fp: '#e64b60', fn: '#f2a527', tn: '#a4afc0' };
+        return Object.entries(colors).map(([outcome, color]) => ({
+          count: document.getElementById(`${outcome}Num`).textContent,
+          dotCount: [...document.querySelectorAll(`#plot circle[fill="${color}"]`)]
+            .reduce((sum, e) => sum + (Number(e.getAttribute('r')) / 8) ** 2 * 10, 0),
+          tileCount: [...document.querySelectorAll(`#${outcome}Tiles .tile`)]
+            .reduce((sum, e) => sum + Number(e.style.getPropertyValue('--weight-scale')) ** 2 * 10, 0)
+        }));
+      });
+      for (const outcome of outcomes) {
+        assert.match(outcome.count, /^\d+$/);
+        assert.equal(Number(outcome.count), Math.round(outcome.dotCount));
+        close(outcome.dotCount, outcome.tileCount);
+      }
     }
     await page.locator('#reset').click();
     const dot = page.locator('circle[data-id]').first();

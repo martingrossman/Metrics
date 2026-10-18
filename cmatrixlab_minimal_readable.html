@@ -143,9 +143,9 @@
   }
 
   .story strong {
-    display: block;
+    display: inline;
     color: var(--ink);
-    font-size: var(--font-heading);
+    font-size: var(--font-body);
     line-height: 1.25;
     margin-bottom: 2px;
   }
@@ -252,7 +252,7 @@
   }
 
   .key {
-    margin: 0 0 8px;
+    margin: 0 0 5px;
     text-align: center;
     color: var(--muted);
     font-size: var(--font-caption);
@@ -564,7 +564,7 @@
   }
 
   .author-credit {
-    display: block;
+    display: none;
     margin: 8px 2px 0;
     color: #526886;
     font-size: var(--font-caption);
@@ -1077,6 +1077,7 @@
     </i>
    </span>
    <span>CMatrixLab</span>
+   <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
   </div>
   <div class="top-right">
    <button class="reset" id="reset">
@@ -1084,7 +1085,7 @@
    </button>
   </div>
  </header>
- <p class="story"><strong>Drag “Positive share” and watch Precision change.</strong><span>TPR and FPR stay fixed; Precision changes.</span></p>
+ <p class="story"><strong>Drag “Positive share” and watch Precision change.</strong> <span>TPR and FPR stay fixed; Precision changes.</span></p>
  <section aria-live="polite" class="metrics">
   <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
@@ -1203,10 +1204,10 @@
    TN · Correctly ignored
   </span>
  </div>
- <p class="key">1,000 cases in total. Each dot or square = 10 cases with about the same model score.</p>
+ <p class="key">Full dot or square = 10 cases; smaller = partial.</p>
  <section class="views">
-  <div class="card panel" role="group" aria-label="Data and model score graph">
-   <svg aria-label="Model scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
+  <div class="card panel" role="group" aria-label="Positive class score graph">
+   <svg aria-label="Positive class scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
    </svg>
   </div>
   <div class="card panel" role="group" aria-label="Confusion matrix">
@@ -1287,7 +1288,7 @@
   </div>
  </section>
 
- <section class="card insight" title="Each dot or square stands for 10 cases. Positive share changes case counts; TPR and FPR stay fixed.">
+ <section class="card insight" title="Each full dot or square represents 10 cases; smaller markers represent partial counts. Positive share changes case counts; TPR and FPR stay fixed.">
   <div class="insight-text">
    <strong>
     Among predicted positives:
@@ -1322,7 +1323,7 @@
   </div>
  </section>
  <p class="foot">
-  1,000 cases. Each dot and square stands for 10 cases; the numbers are exact counts. Outcome counts change with Positive share while TPR and FPR remain fixed.
+  1,000 weighted cases. Counts are expected values and may be fractional. Positive share changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
  </p>
  <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
 </main>
@@ -1341,9 +1342,10 @@
  *   4. RENDERING: the 1D score plot and population grid
  *   5. CONTROLS: update the UI when sliders move
  *
- * 1,000 cases: one dot/square per 10 cases, drawn at fixed score quantiles.
- * Moving the threshold only recolors dots; it never moves them.
- * TPR and FPR come from the score model; counts are whole cases.
+ * Fixed class distributions are weighted to a population of 1,000.
+ * Both charts use the same full/partial markers and expected counts.
+ * Representative markers are regrouped when outcomes change; underlying
+ * sample scores depend only on separation, never on balance or threshold.
  */
 (() => {
   'use strict';
@@ -1354,7 +1356,8 @@
 
   const CONFIG = Object.freeze({
     totalExamples: 1000,
-    caseUnit: 10,            // Cases per dot/square
+    caseUnit: 10,            // Cases per full dot/square
+    samplesPerClass: 50,
     defaultPrevalence: 10,   // Percent of actual positives
     defaultThreshold: 0.50,  // Score >= threshold -> predicted positive
     defaultSeparation: 60,   // 0 = overlapping; 100 = perfectly separable
@@ -1365,8 +1368,8 @@
       tn: '#a4afc0'
     },
     plot: {
-      left: 170,
-      width: 430,
+      left: 190,
+      width: 410,
       top: 55,
       bottom: 360,
       positiveRow: 130,
@@ -1473,83 +1476,89 @@
   function generateExamples(positiveCount, separation) {
     const meanOffset = 0.30 * separation;
     const standardDeviation = 0.16 - 0.09 * separation;
-    const positiveMarkers = positiveCount / CONFIG.caseUnit;
-    const negativeMarkers = (CONFIG.totalExamples - positiveCount) / CONFIG.caseUnit;
+    const negativeCount = CONFIG.totalExamples - positiveCount;
 
-    // One dot per `caseUnit` cases. Scores depend only on the class sizes and
-    // separation, so dots stay put when the threshold moves.
+    // Balance changes sample weights, not the class score distributions.
     const positiveExamples = createClassExamples(
-      positiveMarkers, 0.5 + meanOffset, standardDeviation, true, 0
+      CONFIG.samplesPerClass, 0.5 + meanOffset, standardDeviation, true, 0
     );
     const negativeExamples = createClassExamples(
-      negativeMarkers, 0.5 - meanOffset, standardDeviation, false, positiveMarkers
+      CONFIG.samplesPerClass, 0.5 - meanOffset, standardDeviation, false, CONFIG.samplesPerClass
     );
 
-    return [...positiveExamples, ...negativeExamples];
+    return [...positiveExamples, ...negativeExamples].map(example => ({
+      ...example,
+      weight: (example.isPositive ? positiveCount : negativeCount) / CONFIG.samplesPerClass
+    }));
   }
 
   // ============================================================
   // 3. CLASSIFICATION AND METRICS
   // ============================================================
 
-  // TPR and FPR come from the score model, so they depend only on threshold
-  // and class separation, never on Positive share.
-  function modelRates(separation, threshold) {
-    const meanOffset = 0.30 * separation;
-    const standardDeviation = 0.16 - 0.09 * separation;
-    return {
-      tpr: 1 - normalCdf((threshold - (0.5 + meanOffset)) / standardDeviation),
-      fpr: 1 - normalCdf((threshold - (0.5 - meanOffset)) / standardDeviation)
-    };
-  }
-
-  // Color the dots: the highest-scoring dots of each class become TP / FP.
-  function classifyExamples(examples, rates) {
+  function classifyExamples(examples, threshold) {
     const groups = { tp: [], fp: [], fn: [], tn: [] };
-    const positives = examples.filter(example => example.isPositive);
-    const negatives = examples.filter(example => !example.isPositive);
-    const tpStart = positives.length - Math.round(positives.length * rates.tpr);
-    const fpStart = negatives.length - Math.round(negatives.length * rates.fpr);
 
-    positives.forEach((example, index) => {
-      example.outcome = index >= tpStart ? 'tp' : 'fn';
+    for (const example of examples) {
+      const predictedPositive = example.score + 1e-9 >= threshold;
+      example.outcome = example.isPositive
+        ? (predictedPositive ? 'tp' : 'fn')
+        : (predictedPositive ? 'fp' : 'tn');
       groups[example.outcome].push(example);
-    });
-    negatives.forEach((example, index) => {
-      example.outcome = index >= fpStart ? 'fp' : 'tn';
-      groups[example.outcome].push(example);
-    });
+    }
     return groups;
   }
 
-  function formatCount(value) {
-    return String(value);
+  function weightedCount(examples) {
+    return Math.round(examples.reduce((sum, example) => sum + example.weight, 0) * 1e8) / 1e8;
   }
 
-  // Whole-case counts: rate x class size, rounded once per actual class, so
-  // TP+FN = positives and TN+FP = negatives. TPR, FPR and Precision are
-  // computed from these counts, so the cards always match the matrix.
-  function calculateMetrics(positiveCount, rates) {
-    const negativeCount = CONFIG.totalExamples - positiveCount;
+  function formatCount(value) {
+    return Number(value.toFixed(2)).toString();
+  }
 
-    const tp = Math.round(positiveCount * rates.tpr);
-    const fn = positiveCount - tp;
-    const fp = Math.round(negativeCount * rates.fpr);
-    const tn = negativeCount - fp;
+  // Expected counts retain fractional cases so display rounding cannot alter
+  // the class-conditional rates when only the balance changes.
+  function calculateMetrics(groups) {
+    const tp = weightedCount(groups.tp);
+    const fp = weightedCount(groups.fp);
+    const fn = weightedCount(groups.fn);
+    const tn = weightedCount(groups.tn);
     const predictedPositiveCount = tp + fp;
 
     return {
       tp, fp, fn, tn,
       predictedPositiveCount,
-      tpr: positiveCount > 0 ? tp / positiveCount : NaN,
-      fpr: negativeCount > 0 ? fp / negativeCount : NaN,
+      tpr: tp + fn > 0 ? groups.tp.length / (groups.tp.length + groups.fn.length) : NaN,
+      fpr: fp + tn > 0 ? groups.fp.length / (groups.fp.length + groups.tn.length) : NaN,
       precision: predictedPositiveCount ? tp / predictedPositiveCount : NaN
     };
   }
 
+  // Full markers represent caseUnit cases; the final marker holds the remainder.
+  // Both charts share these weights and scores, including partial outcomes.
+  function createCountGroups(groups) {
+    const result = { tp: [], fp: [], fn: [], tn: [] };
+    let nextId = 0;
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      const source = groups[outcome];
+      const count = weightedCount(source);
+      const whole = Math.floor(count / CONFIG.caseUnit + 1e-8);
+      const remainder = Math.round((count - whole * CONFIG.caseUnit) * 1e8) / 1e8;
+      const markerCount = whole + (remainder > 1e-8 ? 1 : 0);
+      for (let i = 0; i < markerCount; i++) {
+        const representative = source[Math.min(source.length - 1,
+          Math.floor((i + 0.5) * source.length / markerCount))];
+        result[outcome].push({ ...representative, id: nextId++,
+          weight: i < whole ? CONFIG.caseUnit : remainder });
+      }
+    }
+    return result;
+  }
+
   function formatPercent(value) {
     if (!Number.isFinite(value)) return 'N/A';
-    return Math.round(100 * value) + '%';
+    return (100 * value).toFixed(1).replace(/\.0$/, '') + '%';
   }
 
   // ============================================================
@@ -1614,11 +1623,11 @@
     });
 
     draw('text', {
-      x: left, y: 38,
+      x: left, y: compact ? 48 : 38,
       fill: '#3465b7', 'font-size': 32, 'font-weight': 700
     }, 'Predicted −');
     draw('text', {
-      x: left + width, y: 38, 'text-anchor': 'end',
+      x: left + width, y: compact ? 48 : 38, 'text-anchor': 'end',
       fill: '#c54757', 'font-size': 32, 'font-weight': 700
     }, 'Predicted +');
 
@@ -1628,11 +1637,11 @@
     });
 
     draw('text', {
-      x: 155, y: positiveRow + 8, 'text-anchor': 'end',
+      x: left - 15, y: positiveRow + 8, 'text-anchor': 'end',
       'font-size': 28, 'font-weight': 700, fill: '#1f3556'
     }, `${positiveCount} + cases`);
     draw('text', {
-      x: 155, y: negativeRow + 8, 'text-anchor': 'end',
+      x: left - 15, y: negativeRow + 8, 'text-anchor': 'end',
       'font-size': 28, 'font-weight': 700, fill: '#1f3556'
     }, `${CONFIG.totalExamples - positiveCount} − cases`);
 
@@ -1664,13 +1673,13 @@
 
         occupiedPositions.push({ x, y });
         const dot = draw('circle', {
-          cx: x, cy: y, r: 8,
+          cx: x, cy: y, r: 8 * Math.sqrt(example.weight / CONFIG.caseUnit),
           fill: CONFIG.colors[example.outcome],
           stroke: '#fff', 'stroke-width': 1, class: 'point'
         });
         addHoverLink(dot, example);
         dot.appendChild(createSvgElement('title', {},
-          `${example.outcome.toUpperCase()} · ${example.score.toFixed(3)}`));
+          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} cases · score ${example.score.toFixed(3)}`));
       }
     }
 
@@ -1692,27 +1701,31 @@
       draw('text', {
         x: scoreToX(tick), y: compact ? 398 : 387, 'text-anchor': 'middle',
         'font-size': 28, fill: '#526886'
-      }, `${Math.round(tick * 100)}%`);
+      }, tick.toFixed(2));
     }
     draw('text', {
       x: left + width / 2, y: compact ? 438 : 430, 'text-anchor': 'middle',
       'font-size': 32, 'font-weight': 700, fill: '#526886'
-    }, 'Model score →');
+    }, 'Positive class score →');
   }
 
   // ----- Population view: 2×2 outcome groups from the SAME examples. -----
 
   function renderPopulationGrid(groups, metrics) {
     for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
-      getElement(`${outcome}Num`).textContent = formatCount(metrics[outcome]);
+      const count = getElement(`${outcome}Num`);
+      count.textContent = String(Math.round(metrics[outcome]));
+      count.title = `Rounded to whole cases; expected count: ${formatCount(metrics[outcome])}`;
+      count.setAttribute('aria-label', `${count.textContent} cases, rounded`);
       const fragment = document.createDocumentFragment();
 
       for (const example of groups[outcome]) {
         const tile = document.createElement('span');
         tile.className = 'tile';
         tile.style.backgroundColor = CONFIG.colors[outcome];
+        tile.style.setProperty('--weight-scale', Math.sqrt(example.weight / CONFIG.caseUnit));
         tile.title = `${example.isPositive ? 'Actual +' : 'Actual −'} · ` +
-          `score ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
+          `${formatCount(example.weight)} cases · score ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
         addHoverLink(tile, example);
         fragment.appendChild(tile);
       }
@@ -1765,12 +1778,12 @@
       `${CONFIG.totalExamples - positiveCount} cases`;
 
     const examples = generateExamples(positiveCount, separation);
-    const rates = modelRates(separation, threshold);
-    const groups = classifyExamples(examples, rates);
-    const metrics = calculateMetrics(positiveCount, rates);
+    const groups = classifyExamples(examples, threshold);
+    const metrics = calculateMetrics(groups);
+    const countGroups = createCountGroups(groups);
 
-    renderScorePlot(examples, threshold, positiveCount);
-    renderPopulationGrid(groups, metrics);
+    renderScorePlot(Object.values(countGroups).flat(), threshold, positiveCount);
+    renderPopulationGrid(countGroups, metrics);
     renderMetrics(metrics);
     highlightExample(null);
   }
