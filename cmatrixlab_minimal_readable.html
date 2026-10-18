@@ -254,17 +254,17 @@
 
   .population-header {
     display: grid;
-    grid-template-columns: 62px 1fr 1fr;
-    gap: 5px;
-    margin-bottom: 5px;
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .population-header div:not(:first-child) {
     text-align: center;
-    font-size: 11px;
+    font-size: 22px;
     font-weight: 700;
-    border-radius: 6px;
-    padding: 8px 0px;
+    border-radius: 9px;
+    padding: 12px 4px;
   }
 
   .population-header div:nth-child(2) {
@@ -279,33 +279,35 @@
 
   .population {
     display: grid;
-    grid-template-columns: 62px 1fr 1fr;
-    grid-template-rows: repeat(2, 126px);
-    gap: 5px;
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(190px, auto));
+    gap: 8px;
   }
 
   .row-label {
     align-self: center;
     text-align: right;
     font-weight: 750;
-    font-size: 12px;
+    font-size: 22px;
     line-height: 1.25;
     padding-right: 6px;
   }
 
   .row-label small {
-    color: var(--muted);
+    display: block;
+    color: #526886;
+    font-size: 17px;
     font-weight: 500;
   }
 
   .group {
     border: 1px solid var(--line);
-    border-radius: 9px;
-    padding: 8px;
+    border-radius: 12px;
+    padding: 12px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 12px;
   }
 
   .group.fn {
@@ -332,12 +334,12 @@
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 800;
   }
 
   .group-top strong {
-    font-size: 21px;
+    font-size: 34px;
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
@@ -363,7 +365,7 @@
     flex-wrap: wrap;
     align-content: flex-start;
     gap: 3px;
-    flex: 1 1 0%;
+    flex: none;
     overflow: hidden;
   }
 
@@ -371,7 +373,7 @@
     flex: 0 0 auto;
     border-radius: 2.5px;
     cursor: default;
-    --tile-size: 10px;
+    --tile-size: 14px;
     width: calc(var(--tile-size) * var(--weight-scale,1));
     height: calc(var(--tile-size) * var(--weight-scale,1));
     transition: width 0.12s, height 0.12s;
@@ -578,9 +580,6 @@
       max-height: 300px;
     }
 
-    .population {
-      grid-template-rows: repeat(2, 108px);
-    }
   }
 
   /* Phone: compact controls, charts, and sticky metrics. */
@@ -626,45 +625,48 @@
     }
 
     .population {
-      grid-template-columns: 44px 1fr 1fr;
-      grid-template-rows: repeat(2, minmax(53px, auto));
-      gap: 3px;
+      grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: repeat(2, minmax(112px, auto));
+      gap: 5px;
     }
 
     .population-header {
-      margin-bottom: 3px;
-      gap: 3px;
-      grid-template-columns: 44px 1fr 1fr;
+      margin-bottom: 5px;
+      gap: 5px;
+      grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
     }
 
     .group {
-      padding: 3px 5px;
-      gap: 2px;
-      border-radius: 6px;
+      padding: 8px 6px;
+      gap: 8px;
+      border-radius: 9px;
     }
 
     .tile {
-      border-radius: 1px;
-      --tile-size: 4px;
+      border-radius: 1.5px;
+      --tile-size: 7px;
     }
 
     .tiles {
-      gap: 1px;
-      flex: none;
+      gap: 2px;
     }
 
     .group-top strong {
-      font-size: 15px;
+      font-size: 24px;
     }
 
     .group-top {
-      font-size: 10px;
+      font-size: 14px;
       line-height: 1;
     }
 
     .row-label {
-      font-size: 10px;
-      padding-right: 3px;
+      font-size: 15px;
+      padding-right: 2px;
+    }
+
+    .row-label small {
+      font-size: 12px;
     }
 
     .metrics {
@@ -861,8 +863,8 @@
     }
 
     .population-header div:not(:first-child) {
-      padding: 3px 0px;
-      font-size: 10px;
+      padding: 8px 2px;
+      font-size: 14px;
     }
 
     .insight-text {
@@ -883,6 +885,24 @@
     .prec-labels {
       font-size: 10px;
     }
+  }
+
+  /* Fit the complete dashboard below the browser toolbars on portrait phones. */
+  @media (max-width: 650px) and (orientation: portrait) {
+    .container { padding-top: 4px; padding-bottom: 4px; }
+    .container > .legend { display: none; }
+    .container > .controls { margin-bottom: 5px; }
+    .control, .control input[type="range"] { min-height: 32px; height: 32px; }
+    .container > .metrics { padding: 2px 0; }
+    .metric { padding: 4px 8px; }
+    .population { grid-template-rows: repeat(2, minmax(52px, auto)); gap: 4px; }
+    .population-header { margin-bottom: 4px; gap: 4px; }
+    .population-header div:not(:first-child) { padding: 5px 2px; }
+    .group { padding: 5px 6px; gap: 4px; }
+    .tile { --tile-size: 6px; }
+    .tiles { gap: 1.5px; }
+    .insight { padding: 5px 9px; gap: 4px; }
+    .insight-text strong { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1436,8 +1456,19 @@
     svg.replaceChildren();
 
     const { left, width, top, bottom, positiveRow, negativeRow } = CONFIG.plot;
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    // Compress vertical whitespace while keeping label and marker sizes intact.
+    const yScale = compact ? 0.75 : 1;
+    svg.setAttribute('viewBox', `0 0 650 ${compact ? 340 : 440}`);
     const scoreToX = score => left + width * score;
     const draw = (tag, attributes, text) => {
+      if (compact) {
+        for (const name of ['y', 'y1', 'y2', 'cy', 'height']) {
+          if (name in attributes) attributes[name] *= yScale;
+        }
+        // Leave enough room under the larger tick labels for the axis title.
+        if (attributes.y === 430 * yScale) attributes.y = 333;
+      }
       const element = createSvgElement(tag, attributes, text);
       svg.appendChild(element);
       return element;
@@ -1639,6 +1670,8 @@
     slider.addEventListener('input', update);
   }
   elements.reset.addEventListener('click', reset);
+  window.matchMedia('(max-width: 650px) and (orientation: portrait)')
+    .addEventListener('change', update);
 
   update();
 })();

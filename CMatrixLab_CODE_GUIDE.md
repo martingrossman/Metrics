@@ -4,7 +4,7 @@ Open `index.html` or `cmatrixlab_minimal_readable.html` in a browser. No build s
 
 ## Where to edit
 
-- **Colors and layout:** the `<style>` block. Base styles come first, followed by tablet (1050px), phone (650px), and reduced-motion rules.
+- **Colors and layout:** the `<style>` block. Base styles come first, followed by tablet (1050px), phone (650px), compact portrait-phone, and reduced-motion rules. The score renderer also compresses vertical spacing in portrait-phone mode while preserving text and marker sizes.
 - **Defaults:** HTML input values and the matching `CONFIG.default*` values. Keep these in sync.
 - **Population:** `CONFIG.totalExamples` is 100. The prevalence slider maps percentages directly to counts; changing the population requires updating that mapping and the UI labels.
 - **Score resolution:** `CONFIG.samplesPerClass` sets the fixed number of samples per class. Quantile sampling in `createClassExamples()` keeps scores deterministic.
@@ -28,7 +28,7 @@ Open `index.html` or `cmatrixlab_minimal_readable.html` in a browser. No build s
 
 ## Verification
 
-Run `npm test` after the setup in the [README](README.md). It checks model invariants and browser interactions at desktop, tablet, and phone widths.
+Run `npm test` after the setup in the [README](README.md). It checks model invariants and browser interactions at desktop, tablet, and phone widths, plus no-scroll portrait layouts at 402px wide and 714px, 754px, and 874px high.
 For a manual check, use the defaults (10% positive share, 50% threshold, 60% separation), try both ends of each slider, hover a dot, and press Reset.
 
 The HTML remains standalone. Styles and JavaScript can be moved into separate files later without changing the model.

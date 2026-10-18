@@ -14,9 +14,9 @@ source = source.replace('(() => {', 'return (() => {').replace(
   /  update\(\);\s*\}\)\(\);/,
   '  return {generateExamples, classifyExamples, calculateMetrics, createCountGroups, weightedCount};\n})();'
 );
-const model = Function('document', source)({
+const model = Function('document', 'window', source)({
   getElementById: () => ({ addEventListener() {} })
-});
+}, { matchMedia: () => ({ addEventListener() {} }) });
 const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-6, `${actual} != ${expected}`);
 
 let combinations = 0;
@@ -93,6 +93,27 @@ console.log(`Model: ${combinations} combinations passed.`);
     assert.equal(await page.locator('#precision').textContent(), 'N/A');
     await page.locator('#reset').click();
     fs.mkdirSync(path.join(root, 'artifacts'), { recursive: true });
+    // Use the available portrait page height with browser toolbars visible.
+    for (const height of [714, 754, 874]) {
+      await page.setViewportSize({ width: 402, height });
+      for (const prevalence of [0, 1, 10, 50, 99, 100]) {
+        for (const threshold of [0, 50, 100]) {
+          await setSlider('prevalence', prevalence);
+          await setSlider('threshold', threshold);
+          const fit = await page.evaluate(() => ({
+            scroll: document.documentElement.scrollHeight > innerHeight,
+            hiddenMarkers: [...document.querySelectorAll('.tiles')].some(e => e.scrollHeight > e.clientHeight + 1),
+            summaryBottom: document.querySelector('.insight').getBoundingClientRect().bottom
+          }));
+          assert.equal(fit.scroll, false, `iPhone portrait overflow at ${height}px, prevalence ${prevalence}, threshold ${threshold}`);
+          assert.equal(fit.hiddenMarkers, false);
+          assert.ok(fit.summaryBottom <= height);
+        }
+      }
+    }
+    await page.locator('#reset').click();
+    await page.setViewportSize({ width: 402, height: 714 });
+    await page.screenshot({ path: path.join(root, 'artifacts', 'iphone17pro.png'), fullPage: true });
     for (const [name, width] of [['desktop', 1440], ['phone', 375]]) {
       await page.setViewportSize({ width, height: 900 });
       await page.screenshot({ path: path.join(root, 'artifacts', `${name}.png`), fullPage: true });
