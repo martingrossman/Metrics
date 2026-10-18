@@ -1,0 +1,1513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fc">
+  <title>CMatrixLab — Simple</title>
+
+  <!-- Edit the CSS variables below to change the color palette. -->
+  <style>
+  :root {
+    --bg:#f6f8fc;
+    --ink:#15243d;
+    --muted:#64748b;
+    --line:#e3e9f2;
+    --blue:#246cf0;
+    --tp:#0ea976;
+    --fp:#e64b60;
+    --fn:#f2a527;
+    --tn:#a4afc0;
+  }
+  
+  * {
+    box-sizing:border-box;
+  }
+  
+  body {
+    margin:0;
+    background:var(--bg);
+    font:14px/1.35 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink);
+  }
+  
+  button,input {
+    font:inherit;
+  }
+  
+  .container {
+    max-width:1420px;
+    margin:auto;
+    padding:16px 22px 22px;
+  }
+  
+  .top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:16px;
+  }
+  
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-.7px;
+  }
+  
+  .logo {
+    display:grid;
+    grid-template-columns:repeat(3,7px);
+    gap:3px;
+  }
+  
+  .logo i {
+    width:7px;
+    height:7px;
+    border-radius:2px;
+    background:#2c79fa;
+  }
+  
+  .logo i:nth-child(3n) {
+    background:#a4c8fc;
+  }
+  
+  .tab {
+    background:#e9eff8;
+    border:0;
+    border-radius:10px;
+    padding:9px 17px;
+    font-size:12px;
+    font-weight:750;
+    color:#62738d;
+  }
+  
+  .tab.active {
+    background:var(--blue);
+    color:white;
+  }
+  
+  .reset {
+    background:white;
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:8px 13px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  
+  .top-right {
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  
+  .card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:15px;
+    box-shadow:0 2px 12px #19325105;
+  }
+  
+  .controls {
+    padding:15px 20px;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:36px;
+    margin-bottom:12px;
+  }
+  
+  .control {
+    min-width:0;
+  }
+  
+  .control-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    font-weight:750;
+    font-size:13px;
+  }
+  
+  .val {
+    background:#edf3ff;
+    color:var(--blue);
+    padding:4px 8px;
+    border-radius:7px;
+    font-size:13px;
+    min-width:49px;
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  
+  .control:has(#prevalence) .val {
+    background:#f1edff;
+    color:#7751ce;
+  }
+  
+  input[type=range] {
+    display:block;
+    width:100%;
+    margin:15px 0 3px;
+    accent-color:var(--blue);
+    cursor:pointer;
+  }
+  
+  .control input#prevalence {
+    accent-color:#805ad5;
+  }
+  
+  .endpoints {
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:10px;
+  }
+  
+  .legend {
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:16px;
+    margin:12px 0 13px;
+  }
+  
+  .legend span {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:650;
+    color:#4f6079;
+  }
+  
+  .dot {
+    width:11px;
+    height:11px;
+    display:inline-block;
+    border-radius:3px;
+  }
+  
+  .tp {
+    background:var(--tp);
+  }
+  
+  .fp {
+    background:var(--fp);
+  }
+  
+  .fn {
+    background:var(--fn);
+  }
+  
+  .tn {
+    background:var(--tn);
+  }
+  
+  .views {
+    display:grid;
+    grid-template-columns:1.03fr .97fr;
+    gap:12px;
+  }
+  
+  .panel {
+    padding:14px 16px 16px;
+    min-width:0;
+  }
+  
+  .panel h2 {
+    font-size:16px;
+    margin:0 0 10px;
+    letter-spacing:-.2px;
+  }
+  
+  .plot {
+    width:100%;
+    display:block;
+    background:#fbfcff;
+    border:1px solid #edf1f6;
+    border-radius:10px;
+  }
+  
+  .plot text {
+    font-family:Inter,system-ui,sans-serif;
+  }
+  
+  .plot .point {
+    transition:opacity .1s;
+  }
+  
+  .plot .point.muted {
+    opacity:.17;
+  }
+  
+  .plot .point.focus {
+    stroke:#111f38;
+    stroke-width:2.3;
+  }
+  
+  .population-header {
+    display:grid;
+    grid-template-columns:62px 1fr 1fr;
+    gap:5px;
+    margin-bottom:5px;
+  }
+  
+  .population-header div:not(:first-child) {
+    text-align:center;
+    font-size:11px;
+    font-weight:700;
+    border-radius:6px;
+    padding:8px 0;
+  }
+  
+  .population-header div:nth-child(2) {
+    background:#eff4ff;
+    color:#2c67c2;
+  }
+  
+  .population-header div:nth-child(3) {
+    background:#fff0f2;
+    color:#c94859;
+  }
+  
+  .population {
+    display:grid;
+    grid-template-columns:62px 1fr 1fr;
+    grid-template-rows:repeat(2,126px);
+    gap:5px;
+  }
+  
+  .row-label {
+    align-self:center;
+    text-align:right;
+    font-weight:750;
+    font-size:12px;
+    line-height:1.25;
+    padding-right:6px;
+  }
+  
+  .row-label small {
+    color:var(--muted);
+    font-weight:500;
+  }
+  
+  .group {
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:8px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+  }
+  
+  .group.fn {
+    background:#fffaf0;
+    border-color:#faecd1;
+  }
+  
+  .group.tp {
+    background:#f1fcf7;
+    border-color:#d6f3e4;
+  }
+  
+  .group.tn {
+    background:#f7f9fc;
+  }
+  
+  .group.fp {
+    background:#fff5f6;
+    border-color:#f7dbe0;
+  }
+  
+  .group-top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:4px;
+    font-size:12px;
+    font-weight:800;
+  }
+  
+  .group-top strong {
+    font-size:21px;
+    font-variant-numeric:tabular-nums;
+    line-height:1;
+  }
+  
+  .group.tp .group-top {
+    color:#0b9066;
+  }
+  
+  .group.fp .group-top {
+    color:#cb3f53;
+  }
+  
+  .group.fn .group-top {
+    color:#b67c1d;
+  }
+  
+  .group.tn .group-top {
+    color:#718098;
+  }
+  
+  .tiles {
+    display:flex;
+    flex-wrap:wrap;
+    align-content:flex-start;
+    gap:3px;
+    flex:1;
+    overflow:hidden;
+  }
+  
+  .tile {
+    height:10px;
+    width:10px;
+    flex:none;
+    border-radius:2.5px;
+    cursor:default;
+  }
+  
+  .tile.muted {
+    opacity:.18;
+  }
+  
+  .tile.focus {
+    outline:2px solid #182c47;
+    outline-offset:2px;
+    transform:scale(1.25);
+  }
+  
+  .metrics {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:0 0 12px;
+  }
+  
+  .metric {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:7px;
+    padding:18px 20px;
+  }
+  
+  .metric-label {
+    font-weight:800;
+    font-size:14px;
+  }
+  
+  .metric-label small {
+    display:block;
+    color:var(--muted);
+    font-weight:500;
+    font-size:11px;
+    margin-top:3px;
+  }
+  
+  .metric strong {
+    font-size:clamp(25px,3vw,40px);
+    font-weight:850;
+    letter-spacing:-1px;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  
+  .metric:nth-child(1) strong {
+    color:var(--tp);
+  }
+  
+  .metric:nth-child(2) strong {
+    color:var(--fp);
+  }
+  
+  .metric:nth-child(3) strong {
+    color:var(--blue);
+  }
+  
+  .insight {
+    margin-top:12px;
+    padding:13px 18px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    justify-content:space-between;
+  }
+  
+  .insight-text {
+    font-size:13px;
+  }
+  
+  .insight-text strong {
+    font-weight:800;
+  }
+  
+  .insight-text em {
+    font-style:normal;
+    color:var(--blue);
+    font-weight:800;
+  }
+  
+  .prec-right {
+    display:flex;
+    flex-direction:column;
+    min-width:240px;
+    max-width:330px;
+    flex:1;
+    gap:5px;
+  }
+  
+  .precbar {
+    height:15px;
+    background:#e9eef5;
+    border-radius:6px;
+    overflow:hidden;
+    display:flex;
+  }
+  
+  .precbar>span {
+    height:100%;
+    display:block;
+  }
+  
+  .precbar .tp {
+    background:var(--tp);
+  }
+  
+  .precbar .fp {
+    background:var(--fp);
+  }
+  
+  .prec-labels {
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:#64748b;
+  }
+  
+  .prec-labels b {
+    color:var(--ink);
+  }
+  
+  .foot {
+    margin:9px 2px 0;
+    color:#8a99aa;
+    font-size:10px;
+  }
+  
+  button:focus-visible,input:focus-visible {
+    outline:3px solid #91b7ff;
+    outline-offset:3px;
+  }
+  
+  @media(max-width:1050px) {
+    /* Slider controls */
+    .controls {
+      gap:16px;
+    }
+    /* Synchronized score and population charts */
+    .views {
+      grid-template-columns:1fr;
+    }
+    .panel {
+      padding:13px;
+    }
+    .plot {
+      max-height:300px;
+    }
+    /* 2 × 2 confusion matrix with individual squares */
+    .population {
+      grid-template-rows:repeat(2,108px);
+    }
+  }
+  
+  @media(max-width:650px) {
+    .container {
+      padding:10px;
+    }
+    .top {
+      margin-bottom:10px;
+    }
+    .brand {
+      font-size:19px;
+    }
+    .controls {
+      grid-template-columns:1fr;
+      gap:12px;
+      padding:14px;
+    }
+    .legend {
+      gap:10px;
+    }
+    .legend span {
+      font-size:11px;
+    }
+    .panel {
+      padding:12px;
+    }
+    .population {
+      grid-template-columns:51px 1fr 1fr;
+      grid-template-rows:repeat(2,118px);
+    }
+    .population-header {
+      grid-template-columns:51px 1fr 1fr;
+    }
+    .group {
+      padding:6px;
+    }
+    .tile {
+      width:8px;
+      height:8px;
+    }
+    .tiles {
+      gap:2px;
+    }
+    .group-top strong {
+      font-size:18px;
+    }
+    .group-top {
+      font-size:10px;
+    }
+    .row-label {
+      font-size:10px;
+    }
+    /* TPR / FPR / Precision cards */
+    .metrics {
+      gap:6px;
+    }
+    .metric {
+      padding:12px 8px;
+      display:block;
+    }
+    .metric-label {
+      font-size:12px;
+    }
+    .metric-label small {
+      font-size:10px;
+    }
+    .metric strong {
+      display:block;
+      font-size:25px;
+      margin-top:6px;
+    }
+    /* Precision summary bar */
+    .insight {
+      align-items:stretch;
+      flex-direction:column;
+      gap:10px;
+    }
+    .prec-right {
+      min-width:0;
+      max-width:none;
+    }
+    .foot {
+      line-height:1.45;
+    }
+  }
+  /* Keep live results above the controls at every screen size. */
+  .metrics {
+    position:sticky;
+    top:0;
+    z-index:20;
+    padding:6px 0;
+    background:var(--bg);
+  }
+
+  /* Compact phone controls. */
+  @media (max-width:650px) {
+    .container {
+      display:flex;
+      flex-direction:column;
+      padding-bottom:calc(16px + env(safe-area-inset-bottom, 0px));
+    }
+    .container > * { order:5; }
+    .container > .top { order:0; margin-bottom:4px; }
+    .container > .metrics {
+      order:1;
+      position:sticky;
+      top:0;
+      z-index:20;
+      flex-shrink:0;
+      margin:0 -2px 8px;
+      padding:6px 2px;
+      background:var(--bg);
+      box-shadow:0 5px 8px #15243d0b;
+    }
+    .metric { padding:7px 9px; min-width:0; }
+    .metric-label { font-size:12px; }
+    .metric-label small {
+      position:absolute;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+    }
+    .metric strong {
+      font-size:24px;
+      line-height:1.2;
+      margin-top:3px;
+    }
+    .container > .controls {
+      order:2;
+      padding:5px 10px;
+      gap:0;
+      margin-bottom:4px;
+    }
+    .control {
+      display:grid;
+      grid-template-columns:150px minmax(0,1fr);
+      align-items:center;
+      gap:10px;
+      min-height:44px;
+    }
+    .control + .control { border-top:1px solid var(--line); }
+    .control-header { gap:6px; font-size:12px; }
+    .val { min-width:43px; padding:3px 5px; font-size:12px; }
+    .control input[type=range] {
+      height:44px;
+      margin:0;
+      min-width:0;
+      touch-action:pan-y;
+    }
+    .control .endpoints { display:none; }
+    .container > .legend { order:3; margin:7px 0 9px; gap:5px 12px; }
+    .container > .views { order:4; gap:10px; }
+    .panel { padding:10px; }
+    .panel h2 { font-size:15px; margin-bottom:7px; }
+    .tab { padding:6px 10px; }
+    .reset { min-height:36px; }
+  }
+  @media (max-width:370px) {
+    .control { grid-template-columns:135px minmax(0,1fr); gap:7px; }
+    .control-header { font-size:11px; }
+  }
+  /* Normalize Android/iOS text and slider rendering without disabling zoom. */
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  .metrics { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .control input[type=range] {
+    -webkit-appearance:none;
+    appearance:none;
+    background:transparent;
+    border:0;
+    padding:0;
+    border-radius:0;
+    color:var(--blue);
+  }
+  .control input#prevalence { color:#805ad5; }
+  .control input[type=range]::-webkit-slider-runnable-track {
+    height:5px;
+    background:#d4e1f5;
+    border-radius:10px;
+  }
+  .control input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none;
+    appearance:none;
+    width:22px;
+    height:22px;
+    margin-top:-8.5px;
+    border:3px solid white;
+    border-radius:50%;
+    background:currentColor;
+    box-shadow:0 1px 5px #15243d40;
+  }
+  .control input[type=range]::-moz-range-track {
+    height:5px;
+    background:#d4e1f5;
+    border-radius:10px;
+  }
+  .control input[type=range]::-moz-range-thumb {
+    width:16px;
+    height:16px;
+    border:3px solid white;
+    border-radius:50%;
+    background:currentColor;
+    box-shadow:0 1px 5px #15243d40;
+  }
+  @media(max-width:650px) {
+    .container { width:100%; min-width:0; }
+    .container > *, .views > *, .control-header > span { min-width:0; }
+    .top { gap:8px; }
+    .brand { font-size:18px; gap:7px; white-space:nowrap; }
+    .top-right { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+    .tab { padding:6px 8px; }
+    .reset { padding:6px 9px; }
+    .control { grid-template-columns:minmax(132px,44%) minmax(0,1fr); gap:12px; }
+    .control-header { line-height:1.25; }
+    .control-header .val { flex-shrink:0; }
+    .control input[type=range] { width:100%; height:44px; }
+    .metric strong { font-size:clamp(21px,6vw,25px); letter-spacing:-.5px; }
+    .metrics { align-items:stretch; }
+    .plot { height:auto; max-height:none; aspect-ratio:650 / 285; }
+  }
+  
+/* One-screen phone dashboard; charts and the precision bar remain visible. */
+@media(max-width:650px){
+ .container{padding:6px 8px 8px;gap:0}.container>.top{margin:0 0 2px;min-height:28px}.brand{font-size:16px}.logo{grid-template-columns:repeat(3,5px);gap:2px}.logo i{width:5px;height:5px}.tab{font-size:10px;padding:4px 7px}.reset{min-height:28px;padding:3px 8px;font-size:11px}.container>.metrics{margin:0 0 4px;padding:3px 0;gap:5px}.metric{padding:5px 8px;border-radius:9px}.metric-label{font-size:11px;line-height:1.1}.metric strong{font-size:22px;line-height:1.1;margin-top:2px}.container>.controls{padding:1px 8px;margin:0;border-radius:10px}.control{min-height:36px;grid-template-columns:minmax(135px,43%) minmax(0,1fr);gap:10px}.control input[type=range]{height:36px}.control-header{font-size:11px}.val{font-size:11px;min-width:39px;padding:2px 4px}.container>.legend{margin:4px 0;gap:18px;min-height:15px}.legend span{font-size:0;gap:5px}.legend span::after{content:attr(data-short);font-size:11px;font-weight:650}.legend .dot{width:9px;height:9px}.container>.views{gap:5px}.panel{padding:6px 8px;border-radius:10px}.panel h2{font-size:13px;line-height:1.2;margin:0 0 4px}.plot{max-height:125px;aspect-ratio:auto;height:125px}.population-header{margin-bottom:3px;gap:3px;grid-template-columns:44px 1fr 1fr}.population-header div:not(:first-child){padding:3px 0;font-size:10px}.population{grid-template-columns:44px 1fr 1fr;grid-template-rows:repeat(2,43px);gap:3px}.row-label{font-size:10px;padding-right:3px}.group{padding:3px 5px;gap:2px;border-radius:6px}.group-top{font-size:10px;line-height:1}.group-top strong{font-size:15px}.tiles{gap:1px}.tile{width:4px;height:4px;border-radius:1px}.insight{margin-top:5px;padding:7px 9px;gap:5px;border-radius:10px}.insight-text{font-size:11px;line-height:1.3}.insight-text strong{display:block;margin-bottom:2px}.prec-right{gap:3px;width:100%;min-width:0}.precbar{height:12px;border-radius:4px}.prec-labels{font-size:10px}.foot{display:none}
+}
+
+/* Marker area, rather than score, changes with population share. */
+.tile{--tile-size:10px;width:calc(var(--tile-size) * var(--weight-scale,1));height:calc(var(--tile-size) * var(--weight-scale,1));transition:width .12s,height .12s}
+@media(max-width:650px){.tile{--tile-size:4px}}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+<main class="container">
+ <header class="top">
+  <div class="brand">
+   <span aria-hidden="true" class="logo">
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+   </span>
+   CMatrixLab
+  </div>
+  <div class="top-right">
+   <span class="tab active">
+    Simple
+   </span>
+   <button class="reset" id="reset">
+    Reset ↺
+   </button>
+  </div>
+ </header>
+ <section aria-live="polite" class="metrics">
+  <div class="card metric">
+   <div class="metric-label">
+    TPR
+    <small>
+     Detected positives
+    </small>
+   </div>
+   <strong id="tpr">
+    —
+   </strong>
+  </div>
+  <div class="card metric">
+   <div class="metric-label">
+    FPR
+    <small>
+     False alarms
+    </small>
+   </div>
+   <strong id="fpr">
+    —
+   </strong>
+  </div>
+  <div class="card metric">
+   <div class="metric-label">
+    Precision
+    <small>
+     Correct among predicted +
+    </small>
+   </div>
+   <strong id="precision">
+    —
+   </strong>
+  </div>
+ </section>
+ <section aria-label="Model controls" class="card controls">
+  
+  <label class="control">
+   <span class="control-header">
+    <span>
+     Decision threshold
+    </span>
+    <output class="val" id="thresholdOut">
+     50%
+    </output>
+   </span>
+   <input id="threshold" max="100" min="0" step="1" type="range" value="50"/>
+   <span class="endpoints">
+    <span>
+     0% ? More predicted +
+    </span>
+    <span>
+     100% ? Fewer predicted +
+    </span>
+   </span>
+  </label>
+  <label class="control">
+   <span class="control-header">
+    <span>
+     Class separation
+    </span>
+    <output class="val" id="separationOut">
+     60%
+    </output>
+   </span>
+   <input id="separation" max="100" min="0" step="1" type="range" value="60"/>
+   <span class="endpoints">
+    <span>
+     Overlapping
+    </span>
+    <span>
+     Fully separated
+    </span>
+   </span>
+  </label>
+ 
+ <label class="control">
+   <span class="control-header">
+    <span>
+     Positive share
+    </span>
+    <output class="val" id="prevalenceOut">
+     10%
+    </output>
+   </span>
+   <input id="prevalence" max="100" min="0" step="1" type="range" value="10"/>
+   <span class="endpoints">
+    <span>
+     1% · rare
+    </span>
+    <span>
+     50% · common
+    </span>
+   </span>
+  </label>
+ </section>
+ <div aria-label="Classification outcome colors" class="legend">
+  <span data-short="TP">
+   <i class="dot tp">
+   </i>
+   TP · Correct detection
+  </span>
+  <span data-short="FP">
+   <i class="dot fp">
+   </i>
+   FP · False alarm
+  </span>
+  <span data-short="FN">
+   <i class="dot fn">
+   </i>
+   FN · Missed
+  </span>
+  <span data-short="TN">
+   <i class="dot tn">
+   </i>
+   TN · Correctly ignored
+  </span>
+ </div>
+ <section class="views">
+  <div class="card panel">
+   <h2>
+    Data and Model (1 dot = 1 case) 
+   </h2>
+   <svg aria-label="Model scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewbox="0 0 650 285">
+   </svg>
+  </div>
+  <div class="card panel">
+   <h2>
+    Confusion Matrix (1 square = 1 case) 
+   </h2>
+   <div class="population-header">
+    <div>
+    </div>
+    <div>
+     Predicted −
+    </div>
+    <div>
+     Predicted +
+    </div>
+   </div>
+   <div class="population">
+    <div class="row-label">
+     Actual +
+     <br/>
+     <small id="pCount">
+      10 cases
+     </small>
+    </div>
+    <div class="group fn">
+     <div class="group-top">
+      <span>
+       FN
+      </span>
+      <strong id="fnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fnTiles">
+     </div>
+    </div>
+    <div class="group tp">
+     <div class="group-top">
+      <span>
+       TP
+      </span>
+      <strong id="tpNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tpTiles">
+     </div>
+    </div>
+    <div class="row-label">
+     Actual −
+     <br/>
+     <small id="nCount">
+      90 cases
+     </small>
+    </div>
+    <div class="group tn">
+     <div class="group-top">
+      <span>
+       TN
+      </span>
+      <strong id="tnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tnTiles">
+     </div>
+    </div>
+    <div class="group fp">
+     <div class="group-top">
+      <span>
+       FP
+      </span>
+      <strong id="fpNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fpTiles">
+     </div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="card insight" title="Each full dot or square represents one case. A smaller marker represents the remaining fractional case. Positive share changes case counts; TPR and FPR stay fixed.">
+  <div class="insight-text">
+   <strong>
+    Why Precision changes:
+   </strong>
+   <span id="summary">
+    —
+   </span>
+  </div>
+  <div class="prec-right">
+   <div aria-label="Correct detections versus false alarms among positive predictions" class="precbar" id="precbar" role="img">
+    <span class="tp" id="tpFill">
+    </span>
+    <span class="fp" id="fpFill">
+    </span>
+   </div>
+   <div class="prec-labels">
+    <span>
+     Green:
+     <b id="tpLabel">
+      0
+     </b>
+     correct
+    </span>
+    <span>
+     Red:
+     <b id="fpLabel">
+      0
+     </b>
+     false alarms
+    </span>
+   </div>
+  </div>
+ </section>
+ <p class="foot">
+  100 cases. Each full dot and square represents one case; a smaller marker represents a fractional case. Outcome counts change with Positive share while TPR and FPR remain fixed.
+ </p>
+</main>
+
+
+  <script>
+/**
+ * CMatrixLab — Simple view
+ * ------------------------
+ * Single-file, dependency-free educational classifier demo.
+ *
+ * Read the code in this order:
+ *   1. CONFIG / state
+ *   2. MODEL: generate exactly 100 deterministic examples
+ *   3. CLASSIFICATION: assign TP, FP, FN, TN and compute metrics
+ *   4. RENDERING: the 1D score plot and population grid
+ *   5. CONTROLS: update the UI when sliders move
+ *
+ * Important invariant: the dots, squares, counts, and metrics all use the
+ * SAME 100 generated examples. No independently rounded percentages.
+ */
+(() => {
+  'use strict';
+
+  // ============================================================
+  // 1. CONFIGURATION AND STATE
+  // ============================================================
+
+  const CONFIG = Object.freeze({
+    totalExamples: 100,
+    defaultPrevalence: 10,    // Number of actual positives, out of 100
+    defaultThreshold: 0.50,  // Score >= threshold -> predicted positive
+    defaultSeparation: 60,   // 0 = overlapping; 100 = perfectly separable
+    colors: {
+      tp: '#0ea976',
+      fp: '#e64b60',
+      fn: '#f2a527',
+      tn: '#a4afc0'
+    },
+    plot: {
+      left: 125,
+      width: 489,
+      top: 33,
+      bottom: 242,
+      positiveRow: 87,
+      negativeRow: 192
+    }
+  });
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const getElement = id => document.getElementById(id);
+
+  const elements = {
+    prevalence: getElement('prevalence'),
+    threshold: getElement('threshold'),
+    separation: getElement('separation'),
+    prevalenceOut: getElement('prevalenceOut'),
+    thresholdOut: getElement('thresholdOut'),
+    separationOut: getElement('separationOut'),
+    positiveCount: getElement('pCount'),
+    negativeCount: getElement('nCount'),
+    scorePlot: getElement('plot'),
+    tpr: getElement('tpr'),
+    fpr: getElement('fpr'),
+    precision: getElement('precision'),
+    truePositiveLabel: getElement('tpLabel'),
+    falsePositiveLabel: getElement('fpLabel'),
+    truePositiveFill: getElement('tpFill'),
+    falsePositiveFill: getElement('fpFill'),
+    precisionBar: getElement('precbar'),
+    summary: getElement('summary'),
+    reset: getElement('reset')
+  };
+
+  // Hover highlights the same example in both synchronized views.
+  let highlightedExampleId = null;
+
+  function readSettings() {
+    return {
+      positiveCount: Number(elements.prevalence.value),
+      threshold: Number(elements.threshold.value) / 100,
+      separation: Number(elements.separation.value) / 100
+    };
+  }
+
+  // ============================================================
+  // 2. MODEL: DETERMINISTIC SCORE DISTRIBUTIONS
+  // ============================================================
+
+  /** Approximate standard-normal cumulative distribution function Φ(z). */
+  function normalCdf(z) {
+    const absZ = Math.abs(z);
+    const t = 1 / (1 + 0.2316419 * absZ);
+    const polynomial = t * (
+      0.319381530 + t * (
+        -0.356563782 + t * (
+          1.781477937 + t * (-1.821255978 + t * 1.330274429)
+        )
+      )
+    );
+    const positiveCdf = 1 - 0.3989422804 * Math.exp(-absZ * absZ / 2) * polynomial;
+    return z >= 0 ? positiveCdf : 1 - positiveCdf;
+  }
+
+  /** Inverse of Φ, evaluated by binary search (no external libraries). */
+  function inverseNormalCdf(probability) {
+    let lower = -5;
+    let upper = 5;
+
+    for (let step = 0; step < 32; step++) {
+      const midpoint = (lower + upper) / 2;
+      if (normalCdf(midpoint) < probability) {
+        lower = midpoint;
+      } else {
+        upper = midpoint;
+      }
+    }
+    return (lower + upper) / 2;
+  }
+
+  /**
+   * Create a representative, evenly spaced set of scores from one class.
+   * Quantile sampling (rather than Math.random) means every slider position
+   * is reproducible: no jumping dots when you interact with the page.
+   */
+  function createClassExamples(count, mean, standardDeviation, isPositive, firstId) {
+    return Array.from({ length: count }, (_, index) => {
+      const quantile = (index + 0.5) / count;
+      const unboundedScore = mean + standardDeviation * inverseNormalCdf(quantile);
+      return {
+        id: firstId + index,
+        isPositive,
+        score: clamp(unboundedScore, 0.015, 0.985)
+      };
+    });
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  /**
+   * The class separation slider alters both mean distance and spread.
+   * At 100% the class score ranges don't overlap and threshold 0.50
+   * perfectly classifies all 100 samples.
+   */
+  function generateExamples(positiveCount, separation) {
+    const meanOffset = 0.30 * separation;
+    const standardDeviation = 0.16 - 0.09 * separation;
+    const negativeCount = CONFIG.totalExamples - positiveCount;
+
+    const positiveExamples = createClassExamples(
+      50, 0.5 + meanOffset, standardDeviation, true, 0
+    );
+    const negativeExamples = createClassExamples(
+      50, 0.5 - meanOffset, standardDeviation, false, 50
+    );
+
+    return [...positiveExamples, ...negativeExamples].map(example => ({
+      ...example,
+      weight: (example.isPositive ? positiveCount : negativeCount) / 50
+    }));
+  }
+
+  // ============================================================
+  // 3. CLASSIFICATION AND METRICS
+  // ============================================================
+
+  function classifyExamples(examples, threshold) {
+    const groups = { tp: [], fp: [], fn: [], tn: [] };
+
+    for (const example of examples) {
+      const predictedPositive = example.score + 1e-9 >= threshold;
+      if (example.isPositive) {
+        example.outcome = predictedPositive ? 'tp' : 'fn';
+      } else {
+        example.outcome = predictedPositive ? 'fp' : 'tn';
+      }
+      groups[example.outcome].push(example);
+    }
+    return groups;
+  }
+
+  // Fixed class samples preserve TPR/FPR as prevalence changes.
+  // Weights represent a population of 100 and may yield fractional case counts.
+  function weightedCount(examples) {
+    return Math.round(examples.reduce((sum, example) => sum + example.weight, 0) * 1e8) / 1e8;
+  }
+  function formatCount(value) { return Number(value.toFixed(2)).toString(); }
+
+  function calculateMetrics(groups) {
+    const tp = weightedCount(groups.tp);
+    const fp = weightedCount(groups.fp);
+    const fn = weightedCount(groups.fn);
+    const tn = weightedCount(groups.tn);
+    const predictedPositiveCount = tp + fp;
+
+    return {
+      tp, fp, fn, tn,
+      predictedPositiveCount,
+      tpr: tp + fn > 0 ? groups.tp.length / (groups.tp.length + groups.fn.length) : NaN,
+      fpr: fp + tn > 0 ? groups.fp.length / (groups.fp.length + groups.tn.length) : NaN,
+      precision: predictedPositiveCount ? tp / predictedPositiveCount : NaN
+    };
+  }
+
+  // Draw one marker per case, plus a partial marker for a fractional remainder.
+  // The expected outcome totals still come from the fixed class distributions.
+  function createCountGroups(groups) {
+    const result = { tp: [], fp: [], fn: [], tn: [] };
+    let nextId = 0;
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      const source = groups[outcome];
+      const count = weightedCount(source);
+      const whole = Math.floor(count + 1e-8);
+      const remainder = Math.round((count - whole) * 1e8) / 1e8;
+      const markerCount = whole + (remainder > 1e-8 ? 1 : 0);
+      for (let i = 0; i < markerCount; i++) {
+        const representative = source[Math.min(source.length - 1,
+          Math.floor((i + 0.5) * source.length / markerCount))];
+        result[outcome].push({ ...representative, id: nextId++,
+          weight: i < whole ? 1 : remainder });
+      }
+    }
+    return result;
+  }
+
+  function formatPercent(value) {
+    if (!Number.isFinite(value)) return 'N/A';
+    return (100 * value).toFixed(1).replace(/\.0$/, '') + '%';
+  }
+
+  // ============================================================
+  // 4. RENDERING HELPERS
+  // ============================================================
+
+  function createSvgElement(tagName, attributes = {}, text) {
+    const element = document.createElementNS(SVG_NS, tagName);
+    for (const [name, value] of Object.entries(attributes)) {
+      element.setAttribute(name, value);
+    }
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  function highlightExample(id) {
+    highlightedExampleId = id;
+    document.querySelectorAll('[data-id]').forEach(element => {
+      const matches = id !== null && Number(element.dataset.id) === id;
+      element.classList.toggle('focus', matches);
+      element.classList.toggle('muted', id !== null && !matches);
+    });
+  }
+
+  function addHoverLink(element, example) {
+    element.dataset.id = example.id;
+    element.addEventListener('pointerenter', () => highlightExample(example.id));
+    element.addEventListener('pointerleave', () => highlightExample(null));
+  }
+
+  // ----- Plot: each score appears at the same x coordinate in its row. -----
+
+  function renderScorePlot(examples, threshold, positiveCount) {
+    const svg = elements.scorePlot;
+    svg.replaceChildren();
+
+    const { left, width, top, bottom, positiveRow, negativeRow } = CONFIG.plot;
+    const scoreToX = score => left + width * score;
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    // Background: predicted-negative left, predicted-positive right.
+    draw('rect', {
+      x: left, y: top, width: width * threshold, height: bottom - top,
+      fill: '#eef4ff'
+    });
+    draw('rect', {
+      x: scoreToX(threshold), y: top,
+      width: width * (1 - threshold), height: bottom - top,
+      fill: '#fff1f3'
+    });
+
+    draw('text', {
+      x: scoreToX(threshold / 2), y: 22, 'text-anchor': 'middle',
+      fill: '#3465b7', 'font-size': 12, 'font-weight': 750
+    }, 'Predicted −');
+    draw('text', {
+      x: scoreToX((1 + threshold) / 2), y: 22, 'text-anchor': 'middle',
+      fill: '#c54757', 'font-size': 12, 'font-weight': 750
+    }, 'Predicted +');
+
+    draw('line', {
+      x1: left, y1: 138, x2: left + width, y2: 138,
+      stroke: '#dbe4ef', 'stroke-width': 1
+    });
+
+    draw('text', {
+      x: 111, y: 83, 'text-anchor': 'end',
+      'font-size': 14, 'font-weight': 800, fill: '#1f3556'
+    }, 'Actual +');
+    draw('text', {
+      x: 111, y: 100, 'text-anchor': 'end',
+      'font-size': 12, fill: '#75859a'
+    }, `${positiveCount} cases`);
+    draw('text', {
+      x: 111, y: 190, 'text-anchor': 'end',
+      'font-size': 14, 'font-weight': 800, fill: '#1f3556'
+    }, 'Actual −');
+    draw('text', {
+      x: 111, y: 207, 'text-anchor': 'end',
+      'font-size': 12, fill: '#75859a'
+    }, `${CONFIG.totalExamples - positiveCount} cases`);
+
+    // Distribute dots vertically only when neighboring scores overlap.
+    // Their HORIZONTAL position always corresponds to the actual score.
+    function renderScoreRow(rowExamples, centerY) {
+      const occupiedPositions = [];
+      const verticalOffsets = [0, -8, 8, -16, 16, -24, 24, -32, 32, -40, 40];
+
+      for (const example of rowExamples) {
+        const x = scoreToX(example.score);
+        let y = centerY;
+        let bestDistance = -1;
+
+        for (const offset of verticalOffsets) {
+          const proposedY = centerY + offset;
+          const closestDistanceSquared = occupiedPositions.reduce(
+            (closest, occupied) => Math.min(
+              closest,
+              (occupied.x - x) ** 2 + (occupied.y - proposedY) ** 2
+            ), Infinity
+          );
+          if (closestDistanceSquared > bestDistance) {
+            bestDistance = closestDistanceSquared;
+            y = proposedY;
+          }
+          if (closestDistanceSquared >= 82) break;
+        }
+
+        occupiedPositions.push({ x, y });
+        const dot = draw('circle', {
+          cx: x, cy: y, r: 4.2 * Math.sqrt(example.weight),
+          fill: CONFIG.colors[example.outcome],
+          stroke: '#fff', 'stroke-width': 0.9 * Math.sqrt(example.weight), class: 'point'
+        });
+        addHoverLink(dot, example);
+        dot.appendChild(createSvgElement('title', {},
+          `${example.outcome.toUpperCase()} · ${example.score.toFixed(3)}`));
+      }
+    }
+
+    renderScoreRow(examples.filter(example => example.isPositive), positiveRow);
+    renderScoreRow(examples.filter(example => !example.isPositive), negativeRow);
+
+    draw('line', {
+      x1: scoreToX(threshold), x2: scoreToX(threshold),
+      y1: top, y2: bottom, stroke: '#246cf0',
+      'stroke-width': 2, 'stroke-dasharray': '6 5',
+      'pointer-events': 'none'
+    });
+    draw('line', {
+      x1: left, x2: left + width, y1: bottom, y2: bottom,
+      stroke: '#8c9bb0'
+    });
+
+    for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
+      draw('text', {
+        x: scoreToX(tick), y: 259, 'text-anchor': 'middle',
+        'font-size': 11, fill: '#667a96'
+      }, `${Math.round(tick * 100)}%`);
+    }
+    draw('text', {
+      x: left + width / 2, y: 278, 'text-anchor': 'middle',
+      'font-size': 12, 'font-weight': 700, fill: '#526886'
+    }, 'Model score →');
+  }
+
+  // ----- Population view: 2×2 outcome groups from the SAME examples. -----
+
+  function renderPopulationGrid(groups) {
+    for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
+      getElement(`${outcome}Num`).textContent = formatCount(weightedCount(groups[outcome]));
+      const fragment = document.createDocumentFragment();
+
+      for (const example of groups[outcome]) {
+        const tile = document.createElement('span');
+        tile.className = 'tile';
+        tile.style.backgroundColor = CONFIG.colors[outcome];
+        tile.style.setProperty('--weight-scale', Math.sqrt(example.weight));
+        tile.title = `${example.isPositive ? 'Actual +' : 'Actual −'} · ` +
+          `score ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
+        addHoverLink(tile, example);
+        fragment.appendChild(tile);
+      }
+      getElement(`${outcome}Tiles`).replaceChildren(fragment);
+    }
+  }
+
+  function renderMetrics(metrics) {
+    const { tp, fp, tpr, fpr, precision, predictedPositiveCount } = metrics;
+
+    elements.tpr.textContent = formatPercent(tpr);
+    elements.fpr.textContent = formatPercent(fpr);
+    elements.precision.textContent = formatPercent(precision);
+    elements.truePositiveLabel.textContent = formatCount(tp);
+    elements.falsePositiveLabel.textContent = formatCount(fp);
+
+    elements.truePositiveFill.style.width = predictedPositiveCount
+      ? `${100 * tp / predictedPositiveCount}%` : '0%';
+    elements.falsePositiveFill.style.width = predictedPositiveCount
+      ? `${100 * fp / predictedPositiveCount}%` : '0%';
+    elements.precisionBar.setAttribute('aria-label',
+      `${formatCount(tp)} weighted correct detections and ${formatCount(fp)} weighted false alarms`);
+
+    // Construct summary without injecting HTML strings.
+    if (predictedPositiveCount === 0) {
+      elements.summary.textContent = 'No positive predictions at this threshold.';
+    } else {
+      const emphasizedValue = document.createElement('em');
+      emphasizedValue.textContent = `${formatPercent(precision)} Precision`;
+      elements.summary.replaceChildren(
+        document.createTextNode(`${formatCount(tp)} true detections + ${formatCount(fp)} false alarms = `),
+        emphasizedValue,
+        document.createTextNode('.')
+      );
+    }
+  }
+
+  // ============================================================
+  // 5. UI CONTROLS — SINGLE SOURCE OF TRUTH
+  // ============================================================
+
+  function update() {
+    const { positiveCount, threshold, separation } = readSettings();
+
+    elements.prevalenceOut.value = `${positiveCount}%`;
+    elements.thresholdOut.value = `${Math.round(threshold * 100)}%`;
+    elements.separationOut.value = `${Math.round(separation * 100)}%`;
+    elements.positiveCount.textContent = `${positiveCount} cases`;
+    elements.negativeCount.textContent =
+      `${CONFIG.totalExamples - positiveCount} cases`;
+
+    const examples = generateExamples(positiveCount, separation);
+    const groups = classifyExamples(examples, threshold);
+    const metrics = calculateMetrics(groups);
+
+    const countGroups = createCountGroups(groups);
+    const countExamples = Object.values(countGroups).flat();
+    renderScorePlot(countExamples, threshold, positiveCount);
+    renderPopulationGrid(countGroups);
+    renderMetrics(metrics);
+    highlightExample(null);
+  }
+
+  function reset() {
+    elements.prevalence.value = CONFIG.defaultPrevalence;
+    elements.threshold.value = CONFIG.defaultThreshold * 100;
+    elements.separation.value = CONFIG.defaultSeparation;
+    update();
+  }
+
+  for (const slider of [
+    elements.prevalence, elements.threshold, elements.separation
+  ]) {
+    slider.addEventListener('input', update);
+  }
+  elements.reset.addEventListener('click', reset);
+
+  update();
+})();
+  </script>
+</body>
+</html>
