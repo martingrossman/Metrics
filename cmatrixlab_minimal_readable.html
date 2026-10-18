@@ -437,7 +437,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 7px;
-    padding: 10px 18px;
+    padding: 10px 18px 6px;
   }
 
   .metric-label {
@@ -618,14 +618,20 @@
     .insight { margin-top: 4px; }
   }
 
+  @media (min-width: 1280px) and (max-width: 1399px) {
+    .views { grid-template-columns: 0.92fr 1.08fr; }
+    .population { --matrix-row-height: 160px; }
+  }
+
   @media (min-width: 1400px) {
-    .views { grid-template-columns: 0.88fr 1.12fr; }
+    .views { grid-template-columns: 0.84fr 1.16fr; }
+    .population { --matrix-row-height: 145px; }
   }
 
   @media (min-width: 1280px) and (max-height: 820px) {
     .container { padding-bottom: 4px; }
-    .views { grid-template-columns: 0.88fr 1.12fr; }
-    .population { --matrix-row-height: 155px; }
+    .views { grid-template-columns: 0.84fr 1.16fr; }
+    .population { --matrix-row-height: 145px; }
     .insight { padding-top: 8px; padding-bottom: 8px; }
     .foot { display: none; }
   }
@@ -764,7 +770,7 @@
     .metric {
       display: block;
       min-width: 0px;
-      padding: 5px 8px;
+      padding: 5px 8px 3px;
       border-radius: 9px;
     }
 
@@ -973,7 +979,7 @@
     .container > .controls { margin-bottom: 5px; }
     .control, .control input[type="range"] { min-height: 32px; height: 32px; }
     .container > .metrics { padding: 2px 0; }
-    .metric { padding: 4px 8px; }
+    .metric { padding: 4px 8px 2px; }
     .population { --matrix-row-height: 53px; gap: 4px; }
     .population-header { margin-bottom: 4px; gap: 4px; }
     .population-header div:not(:first-child) { padding: 5px 2px; }
