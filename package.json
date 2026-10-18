@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Standalone interactive classifier metrics demo",
-  "scripts": { "test": "node scripts/check.cjs" },
+  "scripts": {
+    "serve": "node scripts/serve.cjs",
+    "test": "node --test scripts/serve.test.cjs && node scripts/check.cjs"
+  },
   "devDependencies": { "playwright": "1.59.1" }
 }
