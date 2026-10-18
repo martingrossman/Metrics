@@ -38,7 +38,7 @@
   .container {
     max-width: 1420px;
     margin: auto;
-    padding: 16px 22px 22px;
+    padding: 12px 22px 10px;
   }
 
   .top {
@@ -46,7 +46,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   .brand {
@@ -131,7 +131,7 @@
   }
 
   .story {
-    margin: 0 0 14px;
+    margin: 0 0 8px;
     color: #435572;
     font-size: 15px;
     line-height: 1.4;
@@ -142,11 +142,11 @@
   }
 
   .controls {
-    padding: 15px 20px;
+    padding: 10px 16px;
     display: grid;
     grid-template-columns: repeat(3, minmax(0px, 1fr));
     gap: 36px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
   .control {
@@ -181,7 +181,7 @@
   input[type="range"] {
     display: block;
     width: 100%;
-    margin: 15px 0px 3px;
+    margin: 10px 0px 3px;
     accent-color: var(--blue);
     cursor: pointer;
   }
@@ -203,7 +203,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 16px;
-    margin: 12px 0px 13px;
+    margin: 6px 0px 7px;
   }
 
   .legend span {
@@ -240,7 +240,7 @@
 
   .views {
     display: grid;
-    grid-template-columns: 1.03fr 0.97fr;
+    grid-template-columns: 0.96fr 1.04fr;
     gap: 12px;
     align-items: start;
   }
@@ -423,11 +423,11 @@
   .metrics {
     display: grid;
     gap: 12px;
-    margin: 0px 0px 12px;
+    margin: 0;
     position: sticky;
     top: 0px;
     z-index: 20;
-    padding: 6px 0px;
+    padding: 4px 0px;
     background: var(--bg);
     grid-template-columns: repeat(3, minmax(0px, 1fr));
   }
@@ -437,7 +437,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 7px;
-    padding: 18px 20px;
+    padding: 10px 18px;
   }
 
   .metric-label {
@@ -474,8 +474,8 @@
   }
 
   .insight {
-    margin-top: 12px;
-    padding: 13px 18px;
+    margin-top: 8px;
+    padding: 10px 18px;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -538,7 +538,7 @@
   }
 
   .foot {
-    margin: 9px 2px 0px;
+    margin: 5px 2px 0px;
     color: rgb(138, 153, 170);
     font-size: 10px;
   }
@@ -606,12 +606,28 @@
     .population { --matrix-row-height: 170px; }
   }
 
-  @media (max-width: 1299px) {
+  @media (max-width: 1250px) {
     .population { --matrix-row-height: 185px; }
   }
 
   @media (max-width: 1199px) {
     .population { --matrix-row-height: 195px; }
+  }
+
+  @media (min-width: 1280px) {
+    .insight { margin-top: 4px; }
+  }
+
+  @media (min-width: 1400px) {
+    .views { grid-template-columns: 0.88fr 1.12fr; }
+  }
+
+  @media (min-width: 1280px) and (max-height: 820px) {
+    .container { padding-bottom: 4px; }
+    .views { grid-template-columns: 0.88fr 1.12fr; }
+    .population { --matrix-row-height: 155px; }
+    .insight { padding-top: 8px; padding-bottom: 8px; }
+    .foot { display: none; }
   }
 
   /* Tablet: stack the synchronized charts. */
@@ -810,7 +826,7 @@
       flex-shrink: 0;
       background: var(--bg);
       box-shadow: rgba(21, 36, 61, 0.043) 0px 5px 8px;
-      margin: 0px 0px 4px;
+      margin: 0;
       padding: 3px 0px;
       gap: 5px;
     }

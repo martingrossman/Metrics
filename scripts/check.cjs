@@ -61,7 +61,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       input.dispatchEvent(new Event('input', { bubbles: true }));
     }, String(value));
 
-    for (const width of [320, 350, 360, 375, 402, 500, 650, 651, 685, 686, 750, 767, 768, 1050, 1051, 1100, 1169, 1170, 1280, 1400, 1439, 1440]) {
+    for (const width of [320, 350, 360, 375, 402, 500, 650, 651, 685, 686, 750, 767, 768, 1050, 1051, 1100, 1169, 1170, 1250, 1251, 1279, 1280, 1400, 1439, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       let originalPanelHeights;
       for (const separation of [0, 60, 100]) {
@@ -83,6 +83,25 @@ console.log(`Model: ${combinations} combinations passed.`);
             originalPanelHeights ??= layout.panelHeights;
             assert.deepEqual(layout.panelHeights, originalPanelHeights, `Graph resized at ${width}px, separation ${separation}, prevalence ${prevalence}, threshold ${threshold}`);
           }
+        }
+      }
+    }
+    for (const [width, height] of [[1280, 800], [1366, 768], [1440, 768]]) {
+      await page.setViewportSize({ width, height });
+      let originalPanelHeights;
+      for (const prevalence of [0, 50, 100]) {
+        await setSlider('prevalence', prevalence);
+        for (const threshold of [0, 50, 100]) {
+          await setSlider('threshold', threshold);
+          const layout = await page.evaluate(() => ({
+            scroll: document.documentElement.scrollHeight > innerHeight,
+            clipped: [...document.querySelectorAll('.tiles, .group')].some(e => e.scrollHeight > e.clientHeight + 1),
+            panelHeights: [...document.querySelectorAll('.panel')].map(e => e.getBoundingClientRect().height)
+          }));
+          assert.equal(layout.scroll, false, `Desktop overflow at ${width}×${height}, prevalence ${prevalence}, threshold ${threshold}`);
+          assert.equal(layout.clipped, false, `Clipped desktop matrix at ${width}×${height}, prevalence ${prevalence}, threshold ${threshold}`);
+          originalPanelHeights ??= layout.panelHeights;
+          assert.deepEqual(layout.panelHeights, originalPanelHeights, `Graph resized at ${width}×${height}, prevalence ${prevalence}, threshold ${threshold}`);
         }
       }
     }
@@ -136,7 +155,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       await page.screenshot({ path: path.join(root, 'artifacts', `${name}.png`), fullPage: true });
     }
     assert.deepEqual(errors, []);
-    console.log('Browser: redirect, controls, reset, hover, endpoints, and 22 stable responsive widths passed.');
+    console.log('Browser: redirect, controls, reset, hover, endpoints, and 25 stable responsive widths passed.');
   } finally {
     await browser.close();
   }
