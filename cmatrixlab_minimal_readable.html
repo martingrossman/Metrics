@@ -1067,7 +1067,7 @@
    </button>
   </div>
  </header>
- <p class="story"><strong>Change the balance (Positive share).</strong> Actual + = positive; Actual − = negative. TPR and FPR stay fixed; Precision can change.</p>
+ <p class="story"><strong>Change the balance  between positives and negatives.</strong> Actual + = positive; Actual − = negative. TPR and FPR stay fixed; Precision can change.</p>
  <section aria-live="polite" class="metrics">
   <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
@@ -1147,7 +1147,7 @@
  <label class="control">
    <span class="control-header">
     <span>
-     Positive share
+     Balance pos / neg
     </span>
     <output class="val" id="prevalenceOut">
      10%
@@ -1187,8 +1187,8 @@
   </span>
  </div>
  <section class="views">
-  <div class="card panel" role="group" aria-label="Data and model score graph">
-   <svg aria-label="Model scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
+  <div class="card panel" role="group" aria-label="Positive class score graph">
+   <svg aria-label="Positive class scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
    </svg>
   </div>
   <div class="card panel" role="group" aria-label="Confusion matrix">
@@ -1678,12 +1678,12 @@
       draw('text', {
         x: scoreToX(tick), y: compact ? 398 : 387, 'text-anchor': 'middle',
         'font-size': 28, fill: '#526886'
-      }, `${Math.round(tick * 100)}%`);
+      }, tick.toFixed(2));
     }
     draw('text', {
       x: left + width / 2, y: compact ? 438 : 430, 'text-anchor': 'middle',
       'font-size': 32, 'font-weight': 700, fill: '#526886'
-    }, 'Model score →');
+    }, 'Positive class score →');
   }
 
   // ----- Population view: 2×2 outcome groups from the SAME examples. -----
