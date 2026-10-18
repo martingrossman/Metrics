@@ -1,3 +1,6 @@
 /.vscode
 /.claude
 /node_modules
+/.venv
+/artifacts
+/debug.log
