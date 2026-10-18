@@ -18,6 +18,11 @@
     --fp: #e64b60;
     --fn: #f2a527;
     --tn: #a4afc0;
+    --font-caption: 12px;
+    --font-body: 14px;
+    --font-heading: 22px;
+    --font-count: 32px;
+    --font-metric: 40px;
   }
 
   * {
@@ -53,7 +58,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 22px;
+    font-size: var(--font-heading);
     font-weight: 800;
     letter-spacing: -0.7px;
   }
@@ -63,7 +68,7 @@
     align-items: center;
     gap: 7px;
     color: #526886;
-    font-size: 12px;
+    font-size: var(--font-caption);
     font-weight: 500;
     letter-spacing: 0;
     white-space: nowrap;
@@ -97,8 +102,8 @@
     border: 0px;
     border-radius: 10px;
     padding: 9px 17px;
-    font-size: 12px;
-    font-weight: 750;
+    font-size: var(--font-caption);
+    font-weight: 700;
     color: rgb(98, 115, 141);
   }
 
@@ -112,7 +117,7 @@
     border: 1px solid var(--line);
     border-radius: 9px;
     padding: 8px 13px;
-    font-size: 12px;
+    font-size: var(--font-caption);
     font-weight: 700;
     cursor: pointer;
   }
@@ -133,7 +138,7 @@
   .story {
     margin: 0 0 8px;
     color: #435572;
-    font-size: 15px;
+    font-size: var(--font-body);
     line-height: 1.4;
   }
 
@@ -158,8 +163,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    font-weight: 750;
-    font-size: 13px;
+    font-weight: 700;
+    font-size: var(--font-body);
   }
 
   .val {
@@ -167,7 +172,7 @@
     color: var(--blue);
     padding: 4px 8px;
     border-radius: 7px;
-    font-size: 13px;
+    font-size: var(--font-body);
     min-width: 49px;
     text-align: center;
     font-variant-numeric: tabular-nums;
@@ -195,7 +200,7 @@
     display: flex;
     justify-content: space-between;
     color: var(--muted);
-    font-size: 10px;
+    font-size: var(--font-caption);
   }
 
   .legend {
@@ -210,8 +215,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
-    font-weight: 650;
+    font-size: var(--font-caption);
+    font-weight: 700;
     color: rgb(79, 96, 121);
   }
 
@@ -284,7 +289,7 @@
 
   .population-header div:not(:first-child) {
     text-align: center;
-    font-size: 22px;
+    font-size: var(--font-heading);
     font-weight: 700;
     border-radius: 9px;
     padding: 12px 4px;
@@ -310,8 +315,8 @@
   .row-label {
     align-self: center;
     text-align: right;
-    font-weight: 750;
-    font-size: 22px;
+    font-weight: 700;
+    font-size: var(--font-heading);
     line-height: 1.25;
     padding-right: 6px;
   }
@@ -320,7 +325,7 @@
     display: block;
     margin-top: 6px;
     color: #526886;
-    font-size: 17px;
+    font-size: var(--font-body);
     font-weight: 500;
   }
 
@@ -358,12 +363,13 @@
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    font-size: 18px;
-    font-weight: 800;
+    font-size: var(--font-body);
+    font-weight: 700;
   }
 
   .group-top strong {
-    font-size: 34px;
+    font-size: var(--font-count);
+    font-weight: 800;
     font-variant-numeric: tabular-nums;
     line-height: 1;
   }
@@ -415,7 +421,6 @@
 
   @media (min-width: 651px) {
     .group { padding: 8px; gap: 8px; }
-    .group-top strong { font-size: 30px; }
     .tiles { gap: 2px; }
     .tile { --tile-size: 12px; }
   }
@@ -441,21 +446,21 @@
   }
 
   .metric-label {
-    font-weight: 800;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: var(--font-body);
   }
 
   .metric-label small {
     display: block;
     color: var(--muted);
     font-weight: 500;
-    font-size: 11px;
+    font-size: var(--font-caption);
     margin-top: 3px;
   }
 
   .metric strong {
-    font-size: clamp(25px, 3vw, 40px);
-    font-weight: 850;
+    font-size: var(--font-metric);
+    font-weight: 800;
     letter-spacing: -1px;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -483,11 +488,11 @@
   }
 
   .insight-text {
-    font-size: 13px;
+    font-size: var(--font-body);
   }
 
   .insight-text strong {
-    font-weight: 800;
+    font-weight: 700;
   }
 
   .insight-text em {
@@ -529,7 +534,7 @@
   .prec-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: var(--font-caption);
     color: rgb(100, 116, 139);
   }
 
@@ -540,14 +545,14 @@
   .foot {
     margin: 5px 2px 0px;
     color: rgb(138, 153, 170);
-    font-size: 10px;
+    font-size: var(--font-caption);
   }
 
   .author-credit {
     display: none;
     margin: 8px 2px 0;
     color: #526886;
-    font-size: 12px;
+    font-size: var(--font-caption);
     text-align: right;
   }
 
@@ -638,6 +643,7 @@
 
   /* Tablet: stack the synchronized charts. */
   @media (max-width: 1050px) {
+    :root { --font-metric: 32px; }
     .population { --matrix-row-height: 140px; }
     .controls {
       gap: 16px;
@@ -658,6 +664,7 @@
   }
 
   @media (max-width: 767px) {
+    :root { --font-metric: 28px; }
     .population { --matrix-row-height: 155px; }
   }
 
@@ -667,6 +674,13 @@
 
   /* Phone: compact controls, charts, and sticky metrics. */
   @media (max-width: 650px) {
+    :root {
+      --font-caption: 11px;
+      --font-body: 12px;
+      --font-heading: 14px;
+      --font-count: 22px;
+      --font-metric: 22px;
+    }
     .container {
       display: flex;
       flex-direction: column;
@@ -691,10 +705,9 @@
       align-items: flex-start;
       flex-direction: column;
       gap: 0;
-      font-size: 10px;
       line-height: 1.2;
     }
-    .brand-credit a { font-size: 10.5px; letter-spacing: -0.2px; }
+    .brand-credit a { letter-spacing: -0.2px; }
 
     .controls {
       grid-template-columns: 1fr;
@@ -743,22 +756,17 @@
       gap: 2px;
     }
 
-    .group-top strong {
-      font-size: 24px;
-    }
-
     .group-top {
-      font-size: 14px;
+      font-size: var(--font-heading);
       line-height: 1;
     }
 
     .row-label {
-      font-size: 15px;
       padding-right: 2px;
     }
 
     .row-label small {
-      font-size: 12px;
+      font-size: var(--font-caption);
       margin-top: 4px;
     }
 
@@ -775,12 +783,12 @@
     }
 
     .metric-label {
-      font-size: 11px;
+      font-size: var(--font-caption);
       line-height: 1.1;
     }
 
     .metric-label small {
-      font-size: 9px;
+      font-size: 10px;
       line-height: 1.2;
       margin-top: 2px;
     }
@@ -788,7 +796,7 @@
     .metric strong {
       display: block;
       letter-spacing: -0.5px;
-      font-size: 22px;
+      font-size: var(--font-metric);
       line-height: 1.1;
       margin-top: 2px;
     }
@@ -860,11 +868,11 @@
     .control-header {
       gap: 6px;
       line-height: 1.25;
-      font-size: 11px;
+      font-size: var(--font-caption);
     }
 
     .val {
-      font-size: 11px;
+      font-size: var(--font-caption);
       min-width: 39px;
       padding: 2px 4px;
     }
@@ -901,7 +909,7 @@
     .reset {
       min-height: 28px;
       padding: 3px 8px;
-      font-size: 11px;
+      font-size: var(--font-caption);
     }
 
     .container > *, .views > *, .control-header > span {
@@ -937,8 +945,8 @@
 
     .legend span::after {
       content: attr(data-short);
-      font-size: 11px;
-      font-weight: 650;
+      font-size: var(--font-caption);
+      font-weight: 700;
     }
 
     .legend .dot {
@@ -948,11 +956,11 @@
 
     .population-header div:not(:first-child) {
       padding: 8px 2px;
-      font-size: 14px;
+      font-size: var(--font-heading);
     }
 
     .insight-text {
-      font-size: 11px;
+      font-size: var(--font-caption);
       line-height: 1.3;
     }
 
@@ -974,7 +982,7 @@
   /* Fit the complete dashboard below the browser toolbars on portrait phones. */
   @media (max-width: 650px) and (orientation: portrait) {
     .container { padding-top: 4px; padding-bottom: 4px; }
-    .container > .story { order: 1; margin: 0 2px 4px; font-size: 12.5px; line-height: 1.25; }
+    .container > .story { order: 1; margin: 0 2px 4px; font-size: var(--font-body); line-height: 1.25; }
     .container > .legend { display: none; }
     .container > .controls { margin-bottom: 5px; }
     .control, .control input[type="range"] { min-height: 32px; height: 32px; }
@@ -1593,11 +1601,11 @@
 
     draw('text', {
       x: left, y: 38,
-      fill: '#3465b7', 'font-size': 32, 'font-weight': 750
+      fill: '#3465b7', 'font-size': 32, 'font-weight': 700
     }, 'Predicted −');
     draw('text', {
       x: left + width, y: 38, 'text-anchor': 'end',
-      fill: '#c54757', 'font-size': 32, 'font-weight': 750
+      fill: '#c54757', 'font-size': 32, 'font-weight': 700
     }, 'Predicted +');
 
     draw('line', {
@@ -1607,11 +1615,11 @@
 
     draw('text', {
       x: 155, y: positiveRow + 8, 'text-anchor': 'end',
-      'font-size': 28, 'font-weight': 750, fill: '#1f3556'
+      'font-size': 28, 'font-weight': 700, fill: '#1f3556'
     }, `${positiveCount} + cases`);
     draw('text', {
       x: 155, y: negativeRow + 8, 'text-anchor': 'end',
-      'font-size': 28, 'font-weight': 750, fill: '#1f3556'
+      'font-size': 28, 'font-weight': 700, fill: '#1f3556'
     }, `${CONFIG.totalExamples - positiveCount} − cases`);
 
     // Distribute dots vertically only when neighboring scores overlap.
