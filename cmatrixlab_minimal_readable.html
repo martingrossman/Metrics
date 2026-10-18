@@ -58,6 +58,23 @@
     letter-spacing: -0.7px;
   }
 
+  .brand-credit {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #526886;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .brand-credit a, .author-credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
   .logo {
     display: grid;
     grid-template-columns: repeat(3, 7px);
@@ -526,6 +543,14 @@
     font-size: 10px;
   }
 
+  .author-credit {
+    display: none;
+    margin: 8px 2px 0;
+    color: #526886;
+    font-size: 12px;
+    text-align: right;
+  }
+
   button:focus-visible, input:focus-visible {
     outline: rgb(145, 183, 255) solid 3px;
     outline-offset: 3px;
@@ -639,6 +664,15 @@
       white-space: nowrap;
       font-size: 16px;
     }
+
+    .brand-credit {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+    .brand-credit a { font-size: 10.5px; letter-spacing: -0.2px; }
 
     .controls {
       grid-template-columns: 1fr;
@@ -955,6 +989,11 @@
     .population { --matrix-row-height: 82px; }
   }
 
+  @media (max-width: 390px) {
+    .brand-credit { display: none; }
+    .author-credit { display: block; text-align: center; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .tile {
       transition: none;
@@ -986,7 +1025,8 @@
     <i>
     </i>
    </span>
-   CMatrixLab
+   <span>CMatrixLab</span>
+   <span class="brand-credit"><span>by Martin Grossman</span><a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
   </div>
   <div class="top-right">
    <span class="tab active">
@@ -1236,6 +1276,7 @@
  <p class="foot">
   100 cases. Each full dot and square represents one case; a smaller marker represents a fractional case. Outcome counts change with Positive share while TPR and FPR remain fixed.
  </p>
+ <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
 </main>
 
 
