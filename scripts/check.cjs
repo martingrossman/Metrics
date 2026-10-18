@@ -81,6 +81,14 @@ console.log(`Model: ${combinations} combinations passed.`);
     assert.equal(await page.locator('#prevalence').inputValue(), '10');
     assert.equal(await page.locator('#threshold').inputValue(), '50');
     assert.equal(await page.locator('#separation').inputValue(), '60');
+    // The visible story: change only class balance, keeping the model fixed.
+    for (const [prevalence, precision] of [[10, '72.7%'], [50, '96%'], [90, '99.5%']]) {
+      await setSlider('prevalence', prevalence);
+      assert.equal(await page.locator('#tpr').textContent(), '96%');
+      assert.equal(await page.locator('#fpr').textContent(), '4%');
+      assert.equal(await page.locator('#precision').textContent(), precision);
+    }
+    await page.locator('#reset').click();
     const dot = page.locator('circle[data-id]').first();
     const id = await dot.getAttribute('data-id');
     await dot.hover();

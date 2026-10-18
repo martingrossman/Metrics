@@ -687,12 +687,9 @@
     }
 
     .metric-label small {
-      font-size: 10px;
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0px, 0px, 0px, 0px);
+      font-size: 9px;
+      line-height: 1.2;
+      margin-top: 2px;
     }
 
     .metric strong {
@@ -948,33 +945,33 @@
   </div>
  </header>
  <section aria-live="polite" class="metrics">
-  <div class="card metric">
+  <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
     TPR
     <small>
-     Detected positives
+     Fixed with balance
     </small>
    </div>
    <strong id="tpr">
     —
    </strong>
   </div>
-  <div class="card metric">
+  <div class="card metric" title="FPR = FP / all actual negatives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
     FPR
     <small>
-     False alarms
+     Fixed with balance
     </small>
    </div>
    <strong id="fpr">
     —
    </strong>
   </div>
-  <div class="card metric">
+  <div class="card metric" title="Precision = TP / (TP + FP). Changing balance changes the mix of correct detections and false alarms among positive predictions.">
    <div class="metric-label">
     Precision
     <small>
-     Correct among predicted +
+     Depends on balance
     </small>
    </div>
    <strong id="precision">
@@ -1032,7 +1029,7 @@
      10%
     </output>
    </span>
-   <input id="prevalence" max="100" min="0" step="1" type="range" value="10"/>
+   <input id="prevalence" aria-description="Change the class balance. With threshold and separation fixed, TPR and FPR stay fixed while precision depends on the positive share." max="100" min="0" step="1" type="range" value="10"/>
    <span class="endpoints">
     <span>
      0% · none positive
@@ -1157,7 +1154,7 @@
  <section class="card insight" title="Each full dot or square represents one case. A smaller marker represents the remaining fractional case. Positive share changes case counts; TPR and FPR stay fixed.">
   <div class="insight-text">
    <strong>
-    Why Precision changes:
+    Among predicted positives:
    </strong>
    <span id="summary">
     —
@@ -1624,7 +1621,7 @@
       const emphasizedValue = document.createElement('em');
       emphasizedValue.textContent = `${formatPercent(precision)} Precision`;
       elements.summary.replaceChildren(
-        document.createTextNode(`${formatCount(tp)} true detections + ${formatCount(fp)} false alarms = `),
+        document.createTextNode(`${formatCount(tp)} TP ÷ (${formatCount(tp)} TP + ${formatCount(fp)} FP) = `),
         emphasizedValue,
         document.createTextNode('.')
       );
