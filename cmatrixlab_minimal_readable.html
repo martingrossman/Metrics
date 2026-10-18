@@ -834,9 +834,9 @@
     }
 
     .plot {
-      max-height: 125px;
+      max-height: none;
       aspect-ratio: auto;
-      height: 125px;
+      height: auto;
     }
 
     .logo {
@@ -1050,7 +1050,7 @@
    <h2>
     Data and Model (1 dot = 1 case) 
    </h2>
-   <svg aria-label="Model scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewbox="0 0 650 285">
+   <svg aria-label="Model scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
    </svg>
   </div>
   <div class="card panel">
@@ -1211,12 +1211,12 @@
       tn: '#a4afc0'
     },
     plot: {
-      left: 125,
-      width: 489,
-      top: 33,
-      bottom: 242,
-      positiveRow: 87,
-      negativeRow: 192
+      left: 170,
+      width: 430,
+      top: 55,
+      bottom: 360,
+      positiveRow: 130,
+      negativeRow: 285
     }
   });
 
@@ -1455,41 +1455,41 @@
     });
 
     draw('text', {
-      x: scoreToX(threshold / 2), y: 22, 'text-anchor': 'middle',
-      fill: '#3465b7', 'font-size': 12, 'font-weight': 750
+      x: left, y: 38,
+      fill: '#3465b7', 'font-size': 32, 'font-weight': 750
     }, 'Predicted −');
     draw('text', {
-      x: scoreToX((1 + threshold) / 2), y: 22, 'text-anchor': 'middle',
-      fill: '#c54757', 'font-size': 12, 'font-weight': 750
+      x: left + width, y: 38, 'text-anchor': 'end',
+      fill: '#c54757', 'font-size': 32, 'font-weight': 750
     }, 'Predicted +');
 
     draw('line', {
-      x1: left, y1: 138, x2: left + width, y2: 138,
+      x1: left, y1: 205, x2: left + width, y2: 205,
       stroke: '#dbe4ef', 'stroke-width': 1
     });
 
     draw('text', {
-      x: 111, y: 83, 'text-anchor': 'end',
-      'font-size': 14, 'font-weight': 800, fill: '#1f3556'
+      x: 155, y: 125, 'text-anchor': 'end',
+      'font-size': 32, 'font-weight': 800, fill: '#1f3556'
     }, 'Actual +');
     draw('text', {
-      x: 111, y: 100, 'text-anchor': 'end',
-      'font-size': 12, fill: '#75859a'
+      x: 155, y: 159, 'text-anchor': 'end',
+      'font-size': 28, fill: '#526886'
     }, `${positiveCount} cases`);
     draw('text', {
-      x: 111, y: 190, 'text-anchor': 'end',
-      'font-size': 14, 'font-weight': 800, fill: '#1f3556'
+      x: 155, y: 280, 'text-anchor': 'end',
+      'font-size': 32, 'font-weight': 800, fill: '#1f3556'
     }, 'Actual −');
     draw('text', {
-      x: 111, y: 207, 'text-anchor': 'end',
-      'font-size': 12, fill: '#75859a'
+      x: 155, y: 314, 'text-anchor': 'end',
+      'font-size': 28, fill: '#526886'
     }, `${CONFIG.totalExamples - positiveCount} cases`);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
     function renderScoreRow(rowExamples, centerY) {
       const occupiedPositions = [];
-      const verticalOffsets = [0, -8, 8, -16, 16, -24, 24, -32, 32, -40, 40];
+      const verticalOffsets = [0, -16, 16, -32, 32, -48, 48, -64, 64];
 
       for (const example of rowExamples) {
         const x = scoreToX(example.score);
@@ -1508,14 +1508,14 @@
             bestDistance = closestDistanceSquared;
             y = proposedY;
           }
-          if (closestDistanceSquared >= 82) break;
+          if (closestDistanceSquared >= 289) break;
         }
 
         occupiedPositions.push({ x, y });
         const dot = draw('circle', {
-          cx: x, cy: y, r: 4.2 * Math.sqrt(example.weight),
+          cx: x, cy: y, r: 8 * Math.sqrt(example.weight),
           fill: CONFIG.colors[example.outcome],
-          stroke: '#fff', 'stroke-width': 0.9 * Math.sqrt(example.weight), class: 'point'
+          stroke: '#fff', 'stroke-width': Math.sqrt(example.weight), class: 'point'
         });
         addHoverLink(dot, example);
         dot.appendChild(createSvgElement('title', {},
@@ -1539,13 +1539,13 @@
 
     for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
       draw('text', {
-        x: scoreToX(tick), y: 259, 'text-anchor': 'middle',
-        'font-size': 11, fill: '#667a96'
+        x: scoreToX(tick), y: 387, 'text-anchor': 'middle',
+        'font-size': 28, fill: '#526886'
       }, `${Math.round(tick * 100)}%`);
     }
     draw('text', {
-      x: left + width / 2, y: 278, 'text-anchor': 'middle',
-      'font-size': 12, 'font-weight': 700, fill: '#526886'
+      x: left + width / 2, y: 430, 'text-anchor': 'middle',
+      'font-size': 32, 'font-weight': 700, fill: '#526886'
     }, 'Model score →');
   }
 
