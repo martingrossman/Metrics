@@ -51,8 +51,8 @@ npm run serve -- --port 8081
 On Windows PowerShell, if script execution blocks `npm`, use `npm.cmd` in
 these commands (for example, `npm.cmd run serve`).
 
-The server loads the pages when it starts. After editing the demo, stop and
-restart the server to share the updated version.
+After saving an edit to either HTML page, refresh the page on your iPhone to
+see it. The server reads the file again on every request, so it can stay running.
 
 ## Checks
 

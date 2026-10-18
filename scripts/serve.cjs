@@ -4,12 +4,11 @@ const path = require('node:path');
 const os = require('node:os');
 const { parseArgs } = require('node:util');
 
-function createServer() {
-  // Load only the demo pages. Other repository files are never shared.
-  const read = name => fs.readFileSync(path.join(__dirname, '..', name));
+function createServer(root = path.join(__dirname, '..')) {
+  // Only these pages are shared; read them for each request so edits show on refresh.
   const pages = new Map([
-    ['/', read('index.html')],
-    ['/cmatrixlab_minimal_readable.html', read('cmatrixlab_minimal_readable.html')]
+    ['/', 'index.html'],
+    ['/cmatrixlab_minimal_readable.html', 'cmatrixlab_minimal_readable.html']
   ]);
   pages.set('/index.html', pages.get('/'));
 
@@ -23,18 +22,30 @@ function createServer() {
     }
 
     const pathname = request.url.split('?')[0];
-    const content = pages.get(pathname);
+    const filename = pages.get(pathname);
     if (pathname === '/favicon.ico') {
       response.writeHead(204);
-    } else if (!content) {
+      response.end();
+      return;
+    }
+    if (!filename) {
       response.writeHead(404);
-    } else {
+      response.end();
+      return;
+    }
+
+    try {
+      const content = fs.readFileSync(path.join(root, filename));
       response.writeHead(200, {
         'Content-Type': 'text/html; charset=utf-8',
         'Content-Length': content.length
       });
+      response.end(request.method === 'HEAD' ? undefined : content);
+    } catch (error) {
+      console.error(`Cannot read ${filename}: ${error.message}`);
+      response.writeHead(500);
+      response.end();
     }
-    response.end(request.method === 'HEAD' ? undefined : content);
   });
 }
 
@@ -57,7 +68,7 @@ function start() {
         console.log(`Same Wi-Fi:   http://${address.address}:${port}/`);
       }
     }
-    console.log('\nOpen a Same Wi-Fi address on your other device. Ctrl+C stops sharing.');
+    console.log('\nSave an HTML edit, then refresh on your other device. Ctrl+C stops sharing.');
   });
 }
 
