@@ -51,6 +51,9 @@ npm run serve -- --port 8081
 On Windows PowerShell, if script execution blocks `npm`, use `npm.cmd` in
 these commands (for example, `npm.cmd run serve`).
 
+The server loads the pages when it starts. After editing the demo, stop and
+restart the server to share the updated version.
+
 ## Checks
 
 With Node.js and npm installed:
