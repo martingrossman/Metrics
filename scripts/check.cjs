@@ -61,20 +61,29 @@ console.log(`Model: ${combinations} combinations passed.`);
       input.dispatchEvent(new Event('input', { bubbles: true }));
     }, String(value));
 
-    for (const width of [320, 375, 650, 768, 1050, 1280, 1440]) {
+    for (const width of [320, 350, 360, 375, 402, 500, 650, 651, 685, 686, 750, 767, 768, 1050, 1051, 1100, 1169, 1170, 1280, 1400, 1439, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      for (const prevalence of [0, 10, 50, 100]) {
-        await setSlider('prevalence', prevalence);
-        await setSlider('threshold', 0);
-        const layout = await page.evaluate(() => ({
-          overflow: document.documentElement.scrollWidth > innerWidth,
-          clipped: [...document.querySelectorAll('.tiles')].some(e => e.scrollHeight > e.clientHeight + 1),
-          dots: document.querySelectorAll('circle[data-id]').length,
-          squares: document.querySelectorAll('.tile[data-id]').length
-        }));
-        assert.equal(layout.overflow, false, `Horizontal overflow at ${width}px`);
-        assert.equal(layout.clipped, false, `Clipped population markers at ${width}px, prevalence ${prevalence}`);
-        assert.equal(layout.dots, layout.squares);
+      let originalPanelHeights;
+      for (const separation of [0, 60, 100]) {
+        await setSlider('separation', separation);
+        for (const prevalence of [0, 10, 50, 100]) {
+          await setSlider('prevalence', prevalence);
+          for (const threshold of [0, 50, 100]) {
+            await setSlider('threshold', threshold);
+            const layout = await page.evaluate(() => ({
+              overflow: document.documentElement.scrollWidth > innerWidth,
+              clipped: [...document.querySelectorAll('.tiles, .group')].some(e => e.scrollHeight > e.clientHeight + 1),
+              panelHeights: [...document.querySelectorAll('.panel')].map(e => e.getBoundingClientRect().height),
+              dots: document.querySelectorAll('circle[data-id]').length,
+              squares: document.querySelectorAll('.tile[data-id]').length
+            }));
+            assert.equal(layout.overflow, false, `Horizontal overflow at ${width}px`);
+            assert.equal(layout.clipped, false, `Clipped population markers at ${width}px, separation ${separation}, prevalence ${prevalence}, threshold ${threshold}`);
+            assert.equal(layout.dots, layout.squares);
+            originalPanelHeights ??= layout.panelHeights;
+            assert.deepEqual(layout.panelHeights, originalPanelHeights, `Graph resized at ${width}px, separation ${separation}, prevalence ${prevalence}, threshold ${threshold}`);
+          }
+        }
       }
     }
     await page.locator('#reset').click();
@@ -127,7 +136,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       await page.screenshot({ path: path.join(root, 'artifacts', `${name}.png`), fullPage: true });
     }
     assert.deepEqual(errors, []);
-    console.log('Browser: redirect, controls, reset, hover, endpoints, and seven responsive widths passed.');
+    console.log('Browser: redirect, controls, reset, hover, endpoints, and 22 stable responsive widths passed.');
   } finally {
     await browser.close();
   }

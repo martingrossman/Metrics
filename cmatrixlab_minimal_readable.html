@@ -113,6 +113,17 @@
     box-shadow: rgba(25, 50, 81, 0.02) 0px 2px 12px;
   }
 
+  .story {
+    margin: 0 0 14px;
+    color: #435572;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .story strong {
+    color: var(--ink);
+  }
+
   .controls {
     padding: 15px 20px;
     display: grid;
@@ -214,17 +225,12 @@
     display: grid;
     grid-template-columns: 1.03fr 0.97fr;
     gap: 12px;
+    align-items: start;
   }
 
   .panel {
     padding: 14px 16px 16px;
     min-width: 0px;
-  }
-
-  .panel h2 {
-    font-size: 16px;
-    margin: 0px 0px 10px;
-    letter-spacing: -0.2px;
   }
 
   .plot {
@@ -280,7 +286,7 @@
   .population {
     display: grid;
     grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: repeat(2, minmax(190px, auto));
+    grid-template-rows: repeat(2, var(--matrix-row-height, 155px));
     gap: 8px;
   }
 
@@ -295,6 +301,7 @@
 
   .row-label small {
     display: block;
+    margin-top: 6px;
     color: #526886;
     font-size: 17px;
     font-weight: 500;
@@ -387,6 +394,13 @@
     outline: rgb(24, 44, 71) solid 2px;
     outline-offset: 2px;
     transform: scale(1.25);
+  }
+
+  @media (min-width: 651px) {
+    .group { padding: 8px; gap: 8px; }
+    .group-top strong { font-size: 30px; }
+    .tiles { gap: 2px; }
+    .tile { --tile-size: 12px; }
   }
 
   .metrics {
@@ -562,8 +576,22 @@
     box-shadow: 0 1px 5px #15243d40;
   }
 
+  /* Reserve the largest matrix row at each width, so slider changes cannot resize either chart. */
+  @media (max-width: 1439px) {
+    .population { --matrix-row-height: 170px; }
+  }
+
+  @media (max-width: 1299px) {
+    .population { --matrix-row-height: 185px; }
+  }
+
+  @media (max-width: 1199px) {
+    .population { --matrix-row-height: 195px; }
+  }
+
   /* Tablet: stack the synchronized charts. */
   @media (max-width: 1050px) {
+    .population { --matrix-row-height: 140px; }
     .controls {
       gap: 16px;
     }
@@ -580,6 +608,14 @@
       max-height: 300px;
     }
 
+  }
+
+  @media (max-width: 767px) {
+    .population { --matrix-row-height: 155px; }
+  }
+
+  @media (max-width: 685px) {
+    .population { --matrix-row-height: 160px; }
   }
 
   /* Phone: compact controls, charts, and sticky metrics. */
@@ -625,8 +661,8 @@
     }
 
     .population {
+      --matrix-row-height: 112px;
       grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: repeat(2, minmax(112px, auto));
       gap: 5px;
     }
 
@@ -667,6 +703,7 @@
 
     .row-label small {
       font-size: 12px;
+      margin-top: 4px;
     }
 
     .metrics {
@@ -800,12 +837,6 @@
       gap: 5px;
     }
 
-    .panel h2 {
-      font-size: 13px;
-      line-height: 1.2;
-      margin: 0px 0px 4px;
-    }
-
     .tab {
       font-size: 10px;
       padding: 4px 7px;
@@ -887,19 +918,41 @@
   /* Fit the complete dashboard below the browser toolbars on portrait phones. */
   @media (max-width: 650px) and (orientation: portrait) {
     .container { padding-top: 4px; padding-bottom: 4px; }
+    .container > .story { order: 1; margin: 0 2px 4px; font-size: 12.5px; line-height: 1.25; }
     .container > .legend { display: none; }
     .container > .controls { margin-bottom: 5px; }
     .control, .control input[type="range"] { min-height: 32px; height: 32px; }
     .container > .metrics { padding: 2px 0; }
     .metric { padding: 4px 8px; }
-    .population { grid-template-rows: repeat(2, minmax(52px, auto)); gap: 4px; }
+    .population { --matrix-row-height: 53px; gap: 4px; }
     .population-header { margin-bottom: 4px; gap: 4px; }
     .population-header div:not(:first-child) { padding: 5px 2px; }
-    .group { padding: 5px 6px; gap: 4px; }
-    .tile { --tile-size: 6px; }
-    .tiles { gap: 1.5px; }
+    .group { padding: 3px 6px; gap: 2px; }
+    .group-top strong { font-size: 20px; }
+    .tile { --tile-size: 5.5px; }
+    .tiles { gap: 1px; }
     .insight { padding: 5px 9px; gap: 4px; }
     .insight-text strong { display: none; }
+  }
+
+  @media (max-width: 599px) and (orientation: portrait) {
+    .population { --matrix-row-height: 56px; }
+  }
+
+  @media (max-width: 499px) and (orientation: portrait) {
+    .population { --matrix-row-height: 63px; }
+  }
+
+  @media (max-width: 399px) and (orientation: portrait) {
+    .population { --matrix-row-height: 69px; }
+  }
+
+  @media (max-width: 359px) and (orientation: portrait) {
+    .population { --matrix-row-height: 76px; }
+  }
+
+  @media (max-width: 339px) and (orientation: portrait) {
+    .population { --matrix-row-height: 82px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -944,6 +997,7 @@
    </button>
   </div>
  </header>
+ <p class="story"><strong>Change the balance (Positive share).</strong> Actual + = positive; Actual − = negative. TPR and FPR stay fixed; Precision can change.</p>
  <section aria-live="polite" class="metrics">
   <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
@@ -1063,17 +1117,11 @@
   </span>
  </div>
  <section class="views">
-  <div class="card panel">
-   <h2>
-    Data and Model (1 dot = 1 case) 
-   </h2>
+  <div class="card panel" role="group" aria-label="Data and model score graph">
    <svg aria-label="Model scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
    </svg>
   </div>
-  <div class="card panel">
-   <h2>
-    Confusion Matrix (1 square = 1 case) 
-   </h2>
+  <div class="card panel" role="group" aria-label="Confusion matrix">
    <div class="population-header">
     <div>
     </div>
@@ -1463,8 +1511,6 @@
         for (const name of ['y', 'y1', 'y2', 'cy', 'height']) {
           if (name in attributes) attributes[name] *= yScale;
         }
-        // Leave enough room under the larger tick labels for the axis title.
-        if (attributes.y === 430 * yScale) attributes.y = 333;
       }
       const element = createSvgElement(tag, attributes, text);
       svg.appendChild(element);
@@ -1497,21 +1543,13 @@
     });
 
     draw('text', {
-      x: 155, y: 125, 'text-anchor': 'end',
-      'font-size': 32, 'font-weight': 800, fill: '#1f3556'
-    }, 'Actual +');
+      x: 155, y: positiveRow + 8, 'text-anchor': 'end',
+      'font-size': 28, 'font-weight': 750, fill: '#1f3556'
+    }, `${positiveCount} + cases`);
     draw('text', {
-      x: 155, y: 159, 'text-anchor': 'end',
-      'font-size': 28, fill: '#526886'
-    }, `${positiveCount} cases`);
-    draw('text', {
-      x: 155, y: 280, 'text-anchor': 'end',
-      'font-size': 32, 'font-weight': 800, fill: '#1f3556'
-    }, 'Actual −');
-    draw('text', {
-      x: 155, y: 314, 'text-anchor': 'end',
-      'font-size': 28, fill: '#526886'
-    }, `${CONFIG.totalExamples - positiveCount} cases`);
+      x: 155, y: negativeRow + 8, 'text-anchor': 'end',
+      'font-size': 28, 'font-weight': 750, fill: '#1f3556'
+    }, `${CONFIG.totalExamples - positiveCount} − cases`);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
@@ -1567,12 +1605,12 @@
 
     for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
       draw('text', {
-        x: scoreToX(tick), y: 387, 'text-anchor': 'middle',
+        x: scoreToX(tick), y: compact ? 398 : 387, 'text-anchor': 'middle',
         'font-size': 28, fill: '#526886'
       }, `${Math.round(tick * 100)}%`);
     }
     draw('text', {
-      x: left + width / 2, y: 430, 'text-anchor': 'middle',
+      x: left + width / 2, y: compact ? 438 : 430, 'text-anchor': 'middle',
       'font-size': 32, 'font-weight': 700, fill: '#526886'
     }, 'Model score →');
   }
