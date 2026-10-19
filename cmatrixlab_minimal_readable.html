@@ -1603,7 +1603,7 @@
     const midY = compact ? 154 : 205;
     const positiveRow = compact ? 98 : CONFIG.plot.positiveRow;
     const negativeRow = compact ? 214 : CONFIG.plot.negativeRow;
-    const headerY = compact ? 35 : 38;
+    const headerY = compact ? 36 : 38;
     const tickY = compact ? 298 : 387;
     const axisLabelY = compact ? 328 : 430;
     const dotRadius = compact ? 6.5 : 8;
@@ -1643,14 +1643,21 @@
       stroke: '#dbe4ef', 'stroke-width': 1
     });
 
-    draw('text', {
-      x: left - 15, y: positiveRow + (compact ? 6 : 8), 'text-anchor': 'end',
-      'font-size': 28, 'font-weight': 700, fill: '#1f3556'
-    }, `${positiveCount} + cases`);
-    draw('text', {
-      x: left - 15, y: negativeRow + (compact ? 6 : 8), 'text-anchor': 'end',
-      'font-size': 28, 'font-weight': 700, fill: '#1f3556'
-    }, `${CONFIG.totalExamples - positiveCount} − cases`);
+    function drawPopulationLabel(count, sign, rowY) {
+      const labelY = rowY + (compact ? 6 : 8);
+      const attributes = {
+        x: left - 15, 'text-anchor': 'end',
+        'font-size': 28, 'font-weight': 700, fill: '#1f3556'
+      };
+      draw('text', { ...attributes, y: labelY - 12 }, `Actual ${sign}`);
+      draw('text', {
+        ...attributes, y: labelY + 16,
+        'font-size': 20, 'font-weight': 500, fill: '#526886'
+      }, `${count} cases`);
+    }
+
+    drawPopulationLabel(positiveCount, '+', positiveRow);
+    drawPopulationLabel(CONFIG.totalExamples - positiveCount, '−', negativeRow);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
