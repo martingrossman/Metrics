@@ -1033,6 +1033,11 @@
     .insight-text strong { display: none; }
   }
 
+  @media (max-width: 650px) and (max-height: 759px) and (orientation: portrait) {
+    .views > .panel:first-child { padding-top: 0; padding-bottom: 0; }
+    .insight { padding-top: 3px; padding-bottom: 3px; }
+  }
+
   @media (max-width: 599px) and (orientation: portrait) {
     .population { --matrix-row-height: 56px; }
   }
@@ -1098,7 +1103,7 @@
    </button>
   </div>
  </header>
- <p class="story">Actual = flu (+) or no flu (−); Predicted = test result. <strong>TPR:</strong> % of sick people testing +. <strong>FPR:</strong> % of people without flu testing +. <strong>Precision:</strong> your chance of having flu after a + test. Change the sick share: precision can change, while the same test keeps TPR/FPR fixed.</p>
+ <p class="story"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the share of sick people correctly testing positive (TPR) and the share of people without flu getting a false alarm (FPR) stay the same.</p>
  <section aria-live="polite" class="metrics">
   <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
@@ -1634,20 +1639,21 @@
     svg.replaceChildren();
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
     const { left, width } = CONFIG.plot;
     const top = compact ? 42 : CONFIG.plot.top;
-    const bottom = compact ? 270 : CONFIG.plot.bottom;
-    const midY = compact ? 154 : 205;
-    const positiveRow = compact ? 98 : CONFIG.plot.positiveRow;
-    const negativeRow = compact ? 214 : CONFIG.plot.negativeRow;
+    const bottom = shortPhone ? 212 : compact ? 270 : CONFIG.plot.bottom;
+    const midY = shortPhone ? 128 : compact ? 154 : 205;
+    const positiveRow = shortPhone ? 86 : compact ? 98 : CONFIG.plot.positiveRow;
+    const negativeRow = shortPhone ? 170 : compact ? 214 : CONFIG.plot.negativeRow;
     const headerY = compact ? 36 : 38;
-    const tickY = compact ? 298 : 387;
-    const axisLabelY = compact ? 328 : 430;
+    const tickY = shortPhone ? 240 : compact ? 298 : 387;
+    const axisLabelY = shortPhone ? 270 : compact ? 328 : 430;
     const dotRadius = compact ? 6.5 : 8;
-    const rowStep = compact ? 12 : 16;
+    const rowStep = shortPhone ? 9 : compact ? 12 : 16;
     const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
 
-    svg.setAttribute('viewBox', `0 0 650 ${compact ? 340 : 440}`);
+    svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
     const scoreToX = score => left + width * score;
     const draw = (tag, attributes, text) => {
       const element = createSvgElement(tag, attributes, text);
@@ -1869,6 +1875,7 @@
   }
   window.matchMedia('(max-width: 650px) and (orientation: portrait)')
     .addEventListener('change', update);
+  window.matchMedia('(max-height: 759px)').addEventListener('change', update);
 
   update();
 })();
