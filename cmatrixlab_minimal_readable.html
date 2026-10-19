@@ -172,7 +172,7 @@
   }
 
   .control:has(#prevalence) .val {
-    background: rgb(241, 237, 255);
+    background: #f1edff;
     color: rgb(119, 81, 206);
   }
 
@@ -186,7 +186,7 @@
   .balance-preset {
     border: 1px solid #ddd3f5;
     border-radius: 7px;
-    background: #f1edff;
+    background: #fcfaff;
     color: #6d43bc;
     padding: 4px 6px;
     font-size: var(--font-caption);
@@ -196,9 +196,9 @@
   }
 
   .balance-preset[aria-pressed="true"] {
-    background: #6d43bc;
-    border-color: #6d43bc;
-    color: white;
+    background: #f7f4ff;
+    border-color: #b6a0df;
+    color: #6d43bc;
   }
 
   input[type="range"] {
@@ -1177,24 +1177,24 @@
  
  <div class="control">
    <span class="control-header">
-    <label for="prevalence">
-     Positive share
+    <label for="prevalence" title="Percentage of people who actually have flu">
+     Sick share
     </label>
     <span class="balance-values">
+    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set sick share to 10%">10%</button>
+    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set sick share to 50%">50%</button>
     <output class="val" id="prevalenceOut">
      50%
     </output>
-    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set positive share to 10%">10%</button>
-    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set positive share to 50%">50%</button>
     </span>
    </span>
    <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="50"/>
    <span class="endpoints">
     <span>
-     0% · none positive
+     0% · no one has flu
     </span>
     <span>
-     100% · all positive
+     100% · everyone has flu
     </span>
    </span>
   </div>
@@ -1240,7 +1240,7 @@
    </div>
    <div class="population">
     <div class="row-label">
-     Actual +
+     Actual flu
      <br/>
      <small id="pCount">
        500 cases
@@ -1271,7 +1271,7 @@
      </div>
     </div>
     <div class="row-label">
-     Actual −
+     Actual no&nbsp;flu
      <br/>
      <small id="nCount">
        500 cases
@@ -1305,7 +1305,7 @@
   </div>
  </section>
 
- <section class="card insight" title="Each full dot or square represents 10 cases; smaller markers represent partial counts. Positive share changes case counts; TPR and FPR stay fixed.">
+ <section class="card insight" title="Each full dot or square represents 10 cases; smaller markers represent partial counts. Sick share changes case counts; TPR and FPR stay fixed.">
   <div class="insight-text">
    <strong>
     Among predicted positives:
@@ -1340,7 +1340,7 @@
   </div>
  </section>
  <p class="foot" id="footNote">
-  1,000 weighted cases. Counts are expected values and may be fractional. Positive share changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
+  1,000 weighted cases. Counts are expected values and may be fractional. Sick share changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
  </p>
  <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
 </main>
@@ -1680,21 +1680,21 @@
       stroke: '#dbe4ef', 'stroke-width': 1
     });
 
-    function drawPopulationLabel(count, sign, rowY) {
+    function drawPopulationLabel(count, condition, rowY) {
       const labelY = rowY + (compact ? 6 : 8);
       const attributes = {
         x: left - 15, 'text-anchor': 'end',
         'font-size': 28, 'font-weight': 700, fill: '#1f3556'
       };
-      draw('text', { ...attributes, y: labelY - 12 }, `Actual ${sign}`);
+      draw('text', { ...attributes, y: labelY - 12 }, `Actual ${condition}`);
       draw('text', {
         ...attributes, y: labelY + 16,
         'font-size': 20, 'font-weight': 500, fill: '#526886'
       }, `${count} cases`);
     }
 
-    drawPopulationLabel(positiveCount, '+', positiveRow);
-    drawPopulationLabel(CONFIG.totalExamples - positiveCount, '−', negativeRow);
+    drawPopulationLabel(positiveCount, 'flu', positiveRow);
+    drawPopulationLabel(CONFIG.totalExamples - positiveCount, 'no flu', negativeRow);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
@@ -1782,7 +1782,7 @@
         tile.className = 'tile';
         tile.style.backgroundColor = CONFIG.colors[outcome];
         tile.style.setProperty('--weight-scale', Math.sqrt(example.weight / CONFIG.caseUnit));
-        tile.title = `${example.isPositive ? 'Actual +' : 'Actual −'} · ` +
+        tile.title = `${example.isPositive ? 'Actual flu' : 'Actual no flu'} · ` +
           `${formatCount(example.weight)} cases · score ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
         addHoverLink(tile, example);
         fragment.appendChild(tile);
