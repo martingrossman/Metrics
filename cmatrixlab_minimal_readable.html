@@ -113,6 +113,9 @@
     gap: 8px;
   }
 
+  .mode-short { display: none; }
+  .mode-toggle { color: #6d43bc; border-color: #ddd3f5; }
+
   .card {
     background: rgb(255, 255, 255);
     border: 1px solid var(--line);
@@ -700,6 +703,8 @@
 
   /* Phone: compact controls, charts, and sticky metrics. */
   @media (max-width: 650px) {
+    .mode-long { display: none; }
+    .mode-short { display: inline; }
     .control:has(#prevalence) {
       grid-template-columns: minmax(205px, 55%) minmax(0px, 1fr);
     }
@@ -1098,12 +1103,13 @@
    <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
   </div>
   <div class="top-right">
+   <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
    <button class="reset" id="reset">
     Reset ↺
    </button>
   </div>
  </header>
- <p class="story"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the share of sick people correctly testing positive (TPR) and the share of people without flu getting a false alarm (FPR) stay the same.</p>
+ <p class="story" id="intro"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the share of sick people correctly testing positive (TPR) and the share of people without flu getting a false alarm (FPR) stay the same.</p>
  <section aria-live="polite" class="metrics">
   <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
@@ -1182,7 +1188,7 @@
  
  <div class="control">
    <span class="control-header">
-    <label for="prevalence" title="Percentage of people who actually have flu">
+    <label for="prevalence" id="shareLabel" title="Percentage of people who actually have flu">
      Sick share
     </label>
     <span class="balance-values">
@@ -1196,10 +1202,10 @@
    <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="50"/>
    <span class="endpoints">
     <span>
-     0% · no one has flu
+     <span data-term="minimum">0% · no one has flu</span>
     </span>
     <span>
-     100% · everyone has flu
+     <span data-term="maximum">100% · everyone has flu</span>
     </span>
    </span>
   </div>
@@ -1208,22 +1214,22 @@
   <span>
    <i class="dot tp">
    </i>
-   TP<span class="legend-detail"> · Correct detection</span>
+   TP<span class="legend-detail" data-term="tpLegend"> · Correct detection</span>
   </span>
   <span>
    <i class="dot fp">
    </i>
-   FP<span class="legend-detail"> · False alarm</span>
+   FP<span class="legend-detail" data-term="fpLegend"> · False alarm</span>
   </span>
   <span>
    <i class="dot fn">
    </i>
-   FN<span class="legend-detail"> · Missed</span>
+   FN<span class="legend-detail" data-term="fnLegend"> · Missed</span>
   </span>
   <span>
    <i class="dot tn">
    </i>
-   TN<span class="legend-detail"> · Correctly ignored</span>
+   TN<span class="legend-detail" data-term="tnLegend"> · Correctly ignored</span>
   </span>
  </div>
  <p class="key">Full dot or square = 10 cases; smaller = partial.</p>
@@ -1245,7 +1251,7 @@
    </div>
    <div class="population">
     <div class="row-label">
-     Actual flu
+     <span data-term="actualPositive">Actual flu</span>
      <br/>
      <small id="pCount">
        500 cases
@@ -1276,7 +1282,7 @@
      </div>
     </div>
     <div class="row-label">
-     Actual no&nbsp;flu
+     <span data-term="actualNegative">Actual no&nbsp;flu</span>
      <br/>
      <small id="nCount">
        500 cases
@@ -1409,6 +1415,7 @@
     prevalenceOut: getElement('prevalenceOut'),
     balance10: getElement('balance10'),
     balance50: getElement('balance50'),
+    modeToggle: getElement('modeToggle'),
     thresholdOut: getElement('thresholdOut'),
     separationOut: getElement('separationOut'),
     positiveCount: getElement('pCount'),
@@ -1425,6 +1432,47 @@
     summary: getElement('summary'),
     reset: getElement('reset')
   };
+
+  // Terminology is presentation state only; the model and slider state are shared.
+  let genericMode = false;
+  const terminology = {
+    flu: {
+      introduction: getElement('intro').innerHTML,
+      share: 'Sick share', shareTitle: 'Percentage of people who actually have flu',
+      actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
+      minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
+      tpLegend: ' · Correct detection', fpLegend: ' · False alarm',
+      fnLegend: ' · Missed', tnLegend: ' · Correctly ignored'
+    },
+    generic: {
+      introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive share).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
+      share: 'Positive share', shareTitle: 'Class prevalence: percentage of actual positive cases',
+      actualPositive: 'Actual +', actualNegative: 'Actual −',
+      minimum: '0% · all negative', maximum: '100% · all positive',
+      tpLegend: ' · True positive', fpLegend: ' · False positive',
+      fnLegend: ' · False negative', tnLegend: ' · True negative'
+    }
+  };
+
+  function renderTerminology() {
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    // Both introductions are trusted local copy, never user-supplied HTML.
+    getElement('intro').innerHTML = copy.introduction;
+    document.querySelectorAll('[data-term]').forEach(element => {
+      element.textContent = copy[element.dataset.term];
+    });
+    getElement('shareLabel').textContent = copy.share;
+    getElement('shareLabel').title = copy.shareTitle;
+    for (const share of [10, 50]) {
+      elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
+    }
+    getElement('footNote').textContent = `1,000 weighted cases. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.`;
+    document.querySelector('.insight').title = `Each full dot or square represents 10 cases; smaller markers represent partial counts. ${copy.share} changes case counts; TPR and FPR stay fixed.`;
+    elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? 'Flu example' : 'Generic ML';
+    elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? 'Flu' : 'ML';
+    elements.modeToggle.title = genericMode ? 'Switch to the flu example' : 'Switch to generic ML terminology';
+    elements.modeToggle.setAttribute('aria-label', elements.modeToggle.title);
+  }
 
   function readSettings() {
     const prevalencePct = Number(elements.prevalence.value);
@@ -1686,21 +1734,22 @@
       stroke: '#dbe4ef', 'stroke-width': 1
     });
 
-    function drawPopulationLabel(count, condition, rowY) {
+    function drawPopulationLabel(count, label, rowY) {
       const labelY = rowY + (compact ? 6 : 8);
       const attributes = {
         x: left - 15, 'text-anchor': 'end',
         'font-size': 28, 'font-weight': 700, fill: '#1f3556'
       };
-      draw('text', { ...attributes, y: labelY - 12 }, `Actual ${condition}`);
+      draw('text', { ...attributes, y: labelY - 12 }, label);
       draw('text', {
         ...attributes, y: labelY + 16,
         'font-size': 20, 'font-weight': 500, fill: '#526886'
       }, `${count} cases`);
     }
 
-    drawPopulationLabel(positiveCount, 'flu', positiveRow);
-    drawPopulationLabel(CONFIG.totalExamples - positiveCount, 'no flu', negativeRow);
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    drawPopulationLabel(positiveCount, copy.actualPositive, positiveRow);
+    drawPopulationLabel(CONFIG.totalExamples - positiveCount, copy.actualNegative, negativeRow);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
@@ -1788,7 +1837,8 @@
         tile.className = 'tile';
         tile.style.backgroundColor = CONFIG.colors[outcome];
         tile.style.setProperty('--weight-scale', Math.sqrt(example.weight / CONFIG.caseUnit));
-        tile.title = `${example.isPositive ? 'Actual flu' : 'Actual no flu'} · ` +
+        const copy = terminology[genericMode ? 'generic' : 'flu'];
+        tile.title = `${example.isPositive ? copy.actualPositive : copy.actualNegative} · ` +
           `${formatCount(example.weight)} cases · score ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
         addHoverLink(tile, example);
         fragment.appendChild(tile);
@@ -1832,6 +1882,7 @@
   // ============================================================
 
   function update() {
+    renderTerminology();
     const { prevalencePct, positiveCount, threshold, separation } = readSettings();
 
     elements.prevalenceOut.value = `${prevalencePct}%`;
@@ -1867,6 +1918,10 @@
     slider.addEventListener('input', update);
   }
   elements.reset.addEventListener('click', reset);
+  elements.modeToggle.addEventListener('click', () => {
+    genericMode = !genericMode;
+    update();
+  });
   for (const share of [10, 50]) {
     elements[`balance${share}`].addEventListener('click', () => {
       elements.prevalence.value = share;

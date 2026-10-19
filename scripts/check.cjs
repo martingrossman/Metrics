@@ -137,6 +137,25 @@ console.log(`Model: ${combinations} combinations passed.`);
       assert.equal(await page.locator('#tpr').textContent(), fixedTpr);
       assert.equal(await page.locator('#fpr').textContent(), fixedFpr);
     }
+    // Terminology changes copy only, even with non-default model settings.
+    const numericState = () => page.evaluate(() => ({
+      sliders: [...document.querySelectorAll('input[type="range"]')].map(e => e.value),
+      values: ['tpr', 'fpr', 'precision', 'tpNum', 'fpNum', 'fnNum', 'tnNum', 'summary']
+        .map(id => document.getElementById(id).textContent),
+      points: [...document.querySelectorAll('#plot circle')]
+        .map(e => ['cx', 'cy', 'r', 'fill'].map(attribute => e.getAttribute(attribute)))
+    }));
+    const beforeModeChange = await numericState();
+    await page.locator('#modeToggle').click();
+    assert.deepEqual(await numericState(), beforeModeChange);
+    assert.equal(await page.locator('#shareLabel').textContent(), 'Positive share');
+    assert.ok((await page.locator('#plot').textContent()).includes('Actual +'));
+    assert.ok(!(await page.locator('#intro').textContent()).includes('flu'));
+    assert.ok(!(await page.locator('.tile').first().getAttribute('title')).includes('flu'));
+    await page.locator('#modeToggle').click();
+    assert.deepEqual(await numericState(), beforeModeChange);
+    assert.equal(await page.locator('#shareLabel').textContent(), 'Sick share');
+    assert.ok((await page.locator('#intro').textContent()).includes('also depends'));
     await setSlider('prevalence', 27);
     assert.equal(await page.locator('.balance-preset[aria-pressed="true"]').count(), 0);
     await page.locator('#balance10').click();
