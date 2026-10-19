@@ -705,7 +705,7 @@
   @media (max-width: 650px) {
     .mode-long { display: none; }
     .mode-short { display: inline; }
-    .control:has(#prevalence) {
+    .control:has(#prevalence), .control:has(#threshold) {
       grid-template-columns: minmax(205px, 55%) minmax(0px, 1fr);
     }
     :root {
@@ -1115,7 +1115,7 @@
    <div class="metric-label">
     TPR
     <small>
-     Fixed with balance
+     <span data-term="fixedCaption">Fixed with sick share</span>
     </small>
    </div>
    <strong id="tpr">
@@ -1126,7 +1126,7 @@
    <div class="metric-label">
     FPR
     <small>
-     Fixed with balance
+     <span data-term="fixedCaption">Fixed with sick share</span>
     </small>
    </div>
    <strong id="fpr">
@@ -1137,7 +1137,7 @@
    <div class="metric-label">
     Precision
     <small>
-     Depends on balance
+     <span data-term="precisionCaption">Depends on sick share</span>
     </small>
    </div>
    <strong id="precision">
@@ -1150,7 +1150,7 @@
   <label class="control">
    <span class="control-header">
     <span>
-     <span data-term="thresholdLabel">Test cutoff</span>
+     <span data-term="thresholdLabel">Sensitivity to the flu signal</span>
     </span>
     <output class="val" id="thresholdOut">
      50%
@@ -1159,17 +1159,17 @@
    <input id="threshold" max="100" min="0" step="1" type="range" value="50"/>
    <span class="endpoints">
     <span>
-     <span data-term="thresholdLow">0% · More positive tests</span>
+     <span data-term="thresholdLow">0% · Less sensitive</span>
     </span>
     <span>
-     <span data-term="thresholdHigh">100% · Fewer positive tests</span>
+     <span data-term="thresholdHigh">100% · More sensitive</span>
     </span>
    </span>
   </label>
   <label class="control">
    <span class="control-header">
     <span>
-     <span data-term="separationLabel">Test quality</span>
+     <span data-term="separationLabel">How easy flu is to detect</span>
     </span>
     <output class="val" id="separationOut">
      60%
@@ -1439,16 +1439,17 @@
     flu: {
       introduction: getElement('intro').innerHTML,
       share: 'Sick share', shareTitle: 'Percentage of people who actually have flu',
-      thresholdLabel: 'Test cutoff', thresholdLow: '0% · More positive tests', thresholdHigh: '100% · Fewer positive tests',
-      separationLabel: 'Test quality', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
+      thresholdLabel: 'Sensitivity to the flu signal', thresholdLow: '0% · Less sensitive', thresholdHigh: '100% · More sensitive',
+      separationLabel: 'How easy flu is to detect', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
       actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
       predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
       minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
       tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
-      fnLegend: ' · Flu missed', tnLegend: ' · Correct negative',
+      fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
       amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
-      subject: 'people', cutoff: 'test cutoff',
-      noPositives: 'No positive tests at this cutoff.',
+      subject: 'people', cutoff: 'signal sensitivity',
+      separation: 'score separation', fixedCaption: 'Fixed with sick share', precisionCaption: 'Depends on sick share',
+      noPositives: 'No positive tests at this sensitivity setting.',
       scorePanel: 'Flu test score graph', plot: 'Flu test scores of people with and without flu, with vertical test cutoff',
       matrixPanel: 'Flu test results', controls: 'Flu test controls',
       bar: 'People with flu versus false alarms among positive tests'
@@ -1465,6 +1466,7 @@
       fnLegend: ' · False negative', tnLegend: ' · True negative',
       amongPositive: 'Among predicted positives:', correctLabel: 'correct', falseLabel: 'false alarms',
       subject: 'cases', cutoff: 'decision threshold',
+      separation: 'class separation', fixedCaption: 'Fixed with balance', precisionCaption: 'Depends on balance',
       noPositives: 'No positive predictions at this threshold.',
       scorePanel: 'Positive class score graph', plot: 'Positive class scores of actual positives and negatives, with vertical decision threshold',
       matrixPanel: 'Confusion matrix', controls: 'Model controls',
@@ -1488,7 +1490,7 @@
     for (const share of [10, 50]) {
       elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
     }
-    getElement('footNote').textContent = `1,000 weighted ${copy.subject}. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same ${copy.cutoff} and separation.`;
+    getElement('footNote').textContent = `1,000 weighted ${copy.subject}. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same ${copy.cutoff} and ${copy.separation}.`;
     getElement('markerKey').textContent = `Full dot or square = 10 ${copy.subject}; smaller = partial.`;
     document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
     document.querySelectorAll('.metric')[0].title = genericMode
@@ -1511,7 +1513,8 @@
     return {
       prevalencePct,
       positiveCount: Math.round(prevalencePct * CONFIG.totalExamples / 100),
-      threshold: Number(elements.threshold.value) / 100,
+      // Flu sensitivity increases to the right; the equivalent ML cutoff decreases.
+      threshold: (genericMode ? Number(elements.threshold.value) : 100 - Number(elements.threshold.value)) / 100,
       separation: Number(elements.separation.value) / 100
     };
   }
@@ -1717,6 +1720,7 @@
   function renderScorePlot(examples, threshold, positiveCount) {
     const svg = elements.scorePlot;
     svg.replaceChildren();
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
     const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
@@ -1755,11 +1759,11 @@
     draw('text', {
       x: left, y: headerY,
       fill: '#3465b7', 'font-size': 32, 'font-weight': 700
-    }, 'Predicted −');
+    }, copy.predictedNegative);
     draw('text', {
       x: left + width, y: headerY, 'text-anchor': 'end',
       fill: '#c54757', 'font-size': 32, 'font-weight': 700
-    }, 'Predicted +');
+    }, copy.predictedPositive);
 
     draw('line', {
       x1: left, y1: midY, x2: left + width, y2: midY,
@@ -1776,10 +1780,9 @@
       draw('text', {
         ...attributes, y: labelY + 16,
         'font-size': 20, 'font-weight': 500, fill: '#526886'
-      }, `${count} cases`);
+      }, `${count} ${copy.subject}`);
     }
 
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
     drawPopulationLabel(positiveCount, copy.actualPositive, positiveRow);
     drawPopulationLabel(CONFIG.totalExamples - positiveCount, copy.actualNegative, negativeRow);
 
@@ -1823,7 +1826,7 @@
         });
         addHoverLink(dot, example);
         dot.appendChild(createSvgElement('title', {},
-          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} cases · score ${example.score.toFixed(3)}`));
+          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(' →', '').toLowerCase()} ${example.score.toFixed(3)}`));
       }
     }
 
@@ -1850,18 +1853,19 @@
     draw('text', {
       x: left + width / 2, y: axisLabelY, 'text-anchor': 'middle',
       'font-size': 32, 'font-weight': 700, fill: '#526886'
-    }, 'Positive class score →');
+    }, copy.scoreLabel);
   }
 
   // ----- Population view: 2×2 outcome groups from the SAME examples. -----
 
   function renderPopulationGrid(groups, metrics) {
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
     for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
       const count = getElement(`${outcome}Num`);
       const formattedCount = formatCount(metrics[outcome]);
       count.textContent = formattedCount;
-      count.title = `Expected count: ${formattedCount} cases`;
-      count.setAttribute('aria-label', `${formattedCount} cases`);
+      count.title = `Expected count: ${formattedCount} ${copy.subject}`;
+      count.setAttribute('aria-label', `${formattedCount} ${copy.subject}`);
       const fragment = document.createDocumentFragment();
 
       for (const example of groups[outcome]) {
@@ -1869,9 +1873,8 @@
         tile.className = 'tile';
         tile.style.backgroundColor = CONFIG.colors[outcome];
         tile.style.setProperty('--weight-scale', Math.sqrt(example.weight / CONFIG.caseUnit));
-        const copy = terminology[genericMode ? 'generic' : 'flu'];
         tile.title = `${example.isPositive ? copy.actualPositive : copy.actualNegative} · ` +
-          `${formatCount(example.weight)} cases · score ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
+          `${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(' →', '').toLowerCase()} ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
         addHoverLink(tile, example);
         fragment.appendChild(tile);
       }
@@ -1881,6 +1884,7 @@
 
   function renderMetrics(metrics) {
     const { tp, fp, tpr, fpr, precision, predictedPositiveCount } = metrics;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
 
     elements.tpr.textContent = formatPercent(tpr);
     elements.fpr.textContent = formatPercent(fpr);
@@ -1893,11 +1897,11 @@
     elements.falsePositiveFill.style.width = predictedPositiveCount
       ? `${100 * fp / predictedPositiveCount}%` : '0%';
     elements.precisionBar.setAttribute('aria-label',
-      `${formatCount(tp)} correct detections and ${formatCount(fp)} false alarms`);
+      `${formatCount(tp)} ${genericMode ? 'correct detections' : 'people with flu'} and ${formatCount(fp)} false alarms`);
 
     // Construct summary without injecting HTML strings.
     if (predictedPositiveCount === 0) {
-      elements.summary.textContent = 'No positive predictions at this threshold.';
+      elements.summary.textContent = copy.noPositives;
     } else {
       const emphasizedValue = document.createElement('em');
       emphasizedValue.textContent = `${formatPercent(precision)} Precision`;
@@ -1920,11 +1924,18 @@
     elements.prevalenceOut.value = `${prevalencePct}%`;
     elements.balance10.setAttribute('aria-pressed', String(prevalencePct === 10));
     elements.balance50.setAttribute('aria-pressed', String(prevalencePct === 50));
-    elements.thresholdOut.value = `${Math.round(threshold * 100)}%`;
+    elements.thresholdOut.value = `${elements.threshold.value}%`;
+    elements.threshold.setAttribute('aria-valuetext', genericMode
+      ? `${threshold.toFixed(2)} decision threshold`
+      : `${elements.threshold.value}% sensitivity setting; signal cutoff ${threshold.toFixed(2)}`);
+    elements.threshold.title = genericMode
+      ? 'Scores at or above this threshold are predicted positive.'
+      : 'Move right to detect weaker flu signals: more flu detections and more false alarms.';
     elements.separationOut.value = `${Math.round(separation * 100)}%`;
-    elements.positiveCount.textContent = `${positiveCount} cases`;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    elements.positiveCount.textContent = `${positiveCount} ${copy.subject}`;
     elements.negativeCount.textContent =
-      `${CONFIG.totalExamples - positiveCount} cases`;
+      `${CONFIG.totalExamples - positiveCount} ${copy.subject}`;
 
     const examples = generateExamples(positiveCount, separation);
     const groups = classifyExamples(examples, threshold);
@@ -1939,7 +1950,7 @@
 
   function reset() {
     elements.prevalence.value = CONFIG.defaultPrevalence;
-    elements.threshold.value = CONFIG.defaultThreshold * 100;
+    elements.threshold.value = genericMode ? CONFIG.defaultThreshold * 100 : 100 - CONFIG.defaultThreshold * 100;
     elements.separation.value = CONFIG.defaultSeparation;
     update();
   }
@@ -1951,6 +1962,8 @@
   }
   elements.reset.addEventListener('click', reset);
   elements.modeToggle.addEventListener('click', () => {
+    // Preserve the effective cutoff and every prediction when changing terminology.
+    elements.threshold.value = 100 - Number(elements.threshold.value);
     genericMode = !genericMode;
     update();
   });

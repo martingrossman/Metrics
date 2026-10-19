@@ -6,7 +6,7 @@ Open `index.html` or `cmatrixlab_minimal_readable.html` in a browser. No build s
 
 - **Colors and layout:** the `<style>` block. Base styles come first, followed by tablet (1050px), phone (650px), compact portrait-phone, and reduced-motion rules. The score renderer also compresses vertical spacing in portrait-phone mode while preserving text and marker sizes.
 - **Defaults:** HTML input values and the matching `CONFIG.default*` values. Keep these in sync.
-- **Terminology:** The header button switches between the flu example and generic ML copy in `terminology`. `genericMode` affects labels only; slider settings, model calculations, and marker positions are shared. Reset retains the selected terminology.
+- **Terminology:** The header button switches between flu and generic ML copy in `terminology`. Flu mode shows signal sensitivity: moving right lowers the effective cutoff. Generic ML shows the decision threshold: moving right raises it. Switching modes complements this slider value (`100 - value`) to preserve the cutoff, counts, metrics, and marker positions. Reset retains the selected terminology.
 - **Population:** `CONFIG.totalExamples` is 1,000. `readSettings()` converts the positive-share percentage to a case count. Update the explanatory text if the population changes.
 - **Score resolution:** `CONFIG.samplesPerClass` sets the fixed number of samples per class. Quantile sampling in `createClassExamples()` keeps scores deterministic.
 - **Distributions:** `generateExamples()` sets class means, spread, and sample weights. Prevalence changes weights, not sample scores.

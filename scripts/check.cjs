@@ -123,6 +123,18 @@ console.log(`Model: ${combinations} combinations passed.`);
     assert.equal(await page.locator('#prevalence').inputValue(), '50');
     assert.equal(await page.locator('#threshold').inputValue(), '50');
     assert.equal(await page.locator('#separation').inputValue(), '60');
+    // In the flu view, moving sensitivity right admits weaker signals.
+    let previousPositiveCount = -1;
+    for (const sensitivity of [0, 25, 50, 75, 100]) {
+      await setSlider('threshold', sensitivity);
+      const positiveCount = Number(await page.locator('#tpNum').textContent()) +
+        Number(await page.locator('#fpNum').textContent());
+      assert.ok(positiveCount >= previousPositiveCount);
+      if (sensitivity === 0) assert.equal(positiveCount, 0);
+      if (sensitivity === 100) assert.equal(positiveCount, 1000);
+      previousPositiveCount = positiveCount;
+    }
+    await page.locator('#reset').click();
     // Balance presets change only prevalence, including with custom test settings.
     await setSlider('threshold', 63);
     await setSlider('separation', 35);
@@ -137,9 +149,10 @@ console.log(`Model: ${combinations} combinations passed.`);
       assert.equal(await page.locator('#tpr').textContent(), fixedTpr);
       assert.equal(await page.locator('#fpr').textContent(), fixedFpr);
     }
-    // Terminology changes copy only, even with non-default model settings.
+    // Switching terminology preserves the effective cutoff and all model results.
     const numericState = () => page.evaluate(() => ({
-      sliders: [...document.querySelectorAll('input[type="range"]')].map(e => e.value),
+      otherSliders: ['prevalence', 'separation'].map(id => document.getElementById(id).value),
+      cutoff: document.querySelector('#plot line[stroke-dasharray]').getAttribute('x1'),
       values: ['tpr', 'fpr', 'precision', 'tpNum', 'fpNum', 'fnNum', 'tnNum', 'summary']
         .map(id => document.getElementById(id).textContent),
       points: [...document.querySelectorAll('#plot circle')]
@@ -148,12 +161,14 @@ console.log(`Model: ${combinations} combinations passed.`);
     const beforeModeChange = await numericState();
     await page.locator('#modeToggle').click();
     assert.deepEqual(await numericState(), beforeModeChange);
+    assert.equal(await page.locator('#threshold').inputValue(), '37');
     assert.equal(await page.locator('#shareLabel').textContent(), 'Positive share');
     assert.ok((await page.locator('#plot').textContent()).includes('Actual +'));
     assert.ok(!(await page.locator('#intro').textContent()).includes('flu'));
     assert.ok(!(await page.locator('.tile').first().getAttribute('title')).includes('flu'));
     await page.locator('#modeToggle').click();
     assert.deepEqual(await numericState(), beforeModeChange);
+    assert.equal(await page.locator('#threshold').inputValue(), '63');
     assert.equal(await page.locator('#shareLabel').textContent(), 'Sick share');
     assert.ok((await page.locator('#intro').textContent()).includes('also depends'));
     await setSlider('prevalence', 27);
@@ -170,7 +185,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       assert.equal(await page.locator('#precision').textContent(), precision);
     }
     await page.locator('#reset').click();
-    assert.equal(await page.locator('#plot text').last().textContent(), 'Positive class score →');
+    assert.equal(await page.locator('#plot text').last().textContent(), 'Flu test score →');
     assert.deepEqual(await page.locator('#plot text').allTextContents().then(labels =>
       labels.filter(label => /^\d\.\d\d$/.test(label))), ['0.00', '0.25', '0.50', '0.75', '1.00']);
     // Both charts retain exact weights; matrix labels round only for display.
@@ -201,7 +216,7 @@ console.log(`Model: ${combinations} combinations passed.`);
     assert.equal(await page.locator('#tpr').textContent(), 'N/A');
     await setSlider('prevalence', 100);
     assert.equal(await page.locator('#fpr').textContent(), 'N/A');
-    await setSlider('threshold', 100);
+    await setSlider('threshold', 0);
     assert.equal(await page.locator('#precision').textContent(), 'N/A');
     await page.locator('#reset').click();
     fs.mkdirSync(path.join(root, 'artifacts'), { recursive: true });
