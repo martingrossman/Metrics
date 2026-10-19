@@ -1145,12 +1145,12 @@
    </strong>
   </div>
  </section>
- <section aria-label="Model controls" class="card controls">
+ <section aria-label="Flu test controls" class="card controls" id="controls">
   
   <label class="control">
    <span class="control-header">
     <span>
-     Decision threshold
+     <span data-term="thresholdLabel">Test cutoff</span>
     </span>
     <output class="val" id="thresholdOut">
      50%
@@ -1159,17 +1159,17 @@
    <input id="threshold" max="100" min="0" step="1" type="range" value="50"/>
    <span class="endpoints">
     <span>
-     0% · More predicted +
+     <span data-term="thresholdLow">0% · More positive tests</span>
     </span>
     <span>
-     100% · Fewer predicted +
+     <span data-term="thresholdHigh">100% · Fewer positive tests</span>
     </span>
    </span>
   </label>
   <label class="control">
    <span class="control-header">
     <span>
-     Class separation
+     <span data-term="separationLabel">Test quality</span>
     </span>
     <output class="val" id="separationOut">
      60%
@@ -1178,10 +1178,10 @@
    <input id="separation" max="100" min="0" step="1" type="range" value="60"/>
    <span class="endpoints">
     <span>
-     Overlapping
+     <span data-term="separationLow">Hard to tell apart</span>
     </span>
     <span>
-     Fully separated
+     <span data-term="separationHigh">Easy to tell apart</span>
     </span>
    </span>
   </label>
@@ -1232,21 +1232,21 @@
    TN<span class="legend-detail" data-term="tnLegend"> · Correctly ignored</span>
   </span>
  </div>
- <p class="key">Full dot or square = 10 cases; smaller = partial.</p>
+ <p class="key" id="markerKey">Full dot or square = 10 people; smaller = partial.</p>
  <section class="views">
-  <div class="card panel" role="group" aria-label="Positive class score graph">
-   <svg aria-label="Positive class scores of actual positives and negatives, with vertical decision threshold" class="plot" id="plot" role="img" viewBox="0 0 650 440">
+  <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
+   <svg aria-label="Flu test scores of people with and without flu, with vertical test cutoff" class="plot" id="plot" role="img" viewBox="0 0 650 440">
    </svg>
   </div>
-  <div class="card panel" role="group" aria-label="Confusion matrix">
+  <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
    <div class="population-header">
     <div>
     </div>
     <div>
-     Predicted −
+     <span data-term="predictedNegative">Test −</span>
     </div>
     <div>
-     Predicted +
+     <span data-term="predictedPositive">Test +</span>
     </div>
    </div>
    <div class="population">
@@ -1316,17 +1316,17 @@
   </div>
  </section>
 
- <section class="card insight" title="Each full dot or square represents 10 cases; smaller markers represent partial counts. Sick share changes case counts; TPR and FPR stay fixed.">
+ <section class="card insight" title="Each full dot or square represents 10 people; smaller markers represent partial counts. Sick share changes counts; TPR and FPR stay fixed.">
   <div class="insight-text">
    <strong>
-    Among predicted positives:
+    <span data-term="amongPositive">Among positive tests:</span>
    </strong>
    <span id="summary">
     —
    </span>
   </div>
   <div class="prec-right">
-   <div aria-label="Correct detections versus false alarms among positive predictions" class="precbar" id="precbar" role="img">
+   <div aria-label="People with flu versus false alarms among positive tests" class="precbar" id="precbar" role="img">
     <span class="tp" id="tpFill">
     </span>
     <span class="fp" id="fpFill">
@@ -1338,14 +1338,14 @@
      <b id="tpLabel">
       0
      </b>
-     correct
+     <span data-term="correctLabel">have flu</span>
     </span>
     <span>
      Red:
      <b id="fpLabel">
       0
      </b>
-     false alarms
+     <span data-term="falseLabel">false alarms</span>
     </span>
    </div>
   </div>
@@ -1439,18 +1439,36 @@
     flu: {
       introduction: getElement('intro').innerHTML,
       share: 'Sick share', shareTitle: 'Percentage of people who actually have flu',
+      thresholdLabel: 'Test cutoff', thresholdLow: '0% · More positive tests', thresholdHigh: '100% · Fewer positive tests',
+      separationLabel: 'Test quality', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
       actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
+      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
       minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
-      tpLegend: ' · Correct detection', fpLegend: ' · False alarm',
-      fnLegend: ' · Missed', tnLegend: ' · Correctly ignored'
+      tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
+      fnLegend: ' · Flu missed', tnLegend: ' · Correct negative',
+      amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
+      subject: 'people', cutoff: 'test cutoff',
+      noPositives: 'No positive tests at this cutoff.',
+      scorePanel: 'Flu test score graph', plot: 'Flu test scores of people with and without flu, with vertical test cutoff',
+      matrixPanel: 'Flu test results', controls: 'Flu test controls',
+      bar: 'People with flu versus false alarms among positive tests'
     },
     generic: {
       introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive share).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
       share: 'Positive share', shareTitle: 'Class prevalence: percentage of actual positive cases',
+      thresholdLabel: 'Decision threshold', thresholdLow: '0% · More predicted +', thresholdHigh: '100% · Fewer predicted +',
+      separationLabel: 'Class separation', separationLow: 'Overlapping', separationHigh: 'Fully separated',
       actualPositive: 'Actual +', actualNegative: 'Actual −',
+      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: 'Positive class score →',
       minimum: '0% · all negative', maximum: '100% · all positive',
       tpLegend: ' · True positive', fpLegend: ' · False positive',
-      fnLegend: ' · False negative', tnLegend: ' · True negative'
+      fnLegend: ' · False negative', tnLegend: ' · True negative',
+      amongPositive: 'Among predicted positives:', correctLabel: 'correct', falseLabel: 'false alarms',
+      subject: 'cases', cutoff: 'decision threshold',
+      noPositives: 'No positive predictions at this threshold.',
+      scorePanel: 'Positive class score graph', plot: 'Positive class scores of actual positives and negatives, with vertical decision threshold',
+      matrixPanel: 'Confusion matrix', controls: 'Model controls',
+      bar: 'Correct detections versus false alarms among positive predictions'
     }
   };
 
@@ -1463,11 +1481,25 @@
     });
     getElement('shareLabel').textContent = copy.share;
     getElement('shareLabel').title = copy.shareTitle;
+    for (const [id, label] of [
+      ['controls', copy.controls], ['scorePanel', copy.scorePanel],
+      ['matrixPanel', copy.matrixPanel], ['plot', copy.plot], ['precbar', copy.bar]
+    ]) getElement(id).setAttribute('aria-label', label);
     for (const share of [10, 50]) {
       elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
     }
-    getElement('footNote').textContent = `1,000 weighted cases. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.`;
-    document.querySelector('.insight').title = `Each full dot or square represents 10 cases; smaller markers represent partial counts. ${copy.share} changes case counts; TPR and FPR stay fixed.`;
+    getElement('footNote').textContent = `1,000 weighted ${copy.subject}. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same ${copy.cutoff} and separation.`;
+    getElement('markerKey').textContent = `Full dot or square = 10 ${copy.subject}; smaller = partial.`;
+    document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
+    document.querySelectorAll('.metric')[0].title = genericMode
+      ? 'TPR = TP / all actual positives. Fixed when class balance changes at the same threshold and separation.'
+      : 'TPR = share of people with flu who test positive. Fixed when sick share changes with the same test settings.';
+    document.querySelectorAll('.metric')[1].title = genericMode
+      ? 'FPR = FP / all actual negatives. Fixed when class balance changes at the same threshold and separation.'
+      : 'FPR = share of people without flu who get a positive test. Fixed when sick share changes with the same test settings.';
+    document.querySelectorAll('.metric')[2].title = genericMode
+      ? 'Precision = TP / (TP + FP). Changes as the actual positive share changes.'
+      : 'Precision = chance a person has flu after a positive test in this group.';
     elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? 'Flu example' : 'Generic ML';
     elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? 'Flu' : 'ML';
     elements.modeToggle.title = genericMode ? 'Switch to the flu example' : 'Switch to generic ML terminology';
