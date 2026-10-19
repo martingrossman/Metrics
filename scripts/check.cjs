@@ -120,9 +120,29 @@ console.log(`Model: ${combinations} combinations passed.`);
       }
     }
     await page.locator('#reset').click();
-    assert.equal(await page.locator('#prevalence').inputValue(), '10');
+    assert.equal(await page.locator('#prevalence').inputValue(), '50');
     assert.equal(await page.locator('#threshold').inputValue(), '50');
     assert.equal(await page.locator('#separation').inputValue(), '60');
+    // Balance presets change only prevalence, including with custom test settings.
+    await setSlider('threshold', 63);
+    await setSlider('separation', 35);
+    const fixedTpr = await page.locator('#tpr').textContent();
+    const fixedFpr = await page.locator('#fpr').textContent();
+    for (const share of ['10', '50']) {
+      await page.locator(`#balance${share}`).click();
+      assert.equal(await page.locator(`#balance${share}`).getAttribute('aria-pressed'), 'true');
+      assert.equal(await page.locator('#prevalence').inputValue(), share);
+      assert.equal(await page.locator('#threshold').inputValue(), '63');
+      assert.equal(await page.locator('#separation').inputValue(), '35');
+      assert.equal(await page.locator('#tpr').textContent(), fixedTpr);
+      assert.equal(await page.locator('#fpr').textContent(), fixedFpr);
+    }
+    await setSlider('prevalence', 27);
+    assert.equal(await page.locator('.balance-preset[aria-pressed="true"]').count(), 0);
+    await page.locator('#balance10').click();
+    assert.equal(await page.locator('#prevalence').inputValue(), '10');
+    await page.locator('#reset').click();
+    assert.equal(await page.locator('#prevalence').inputValue(), '50');
     // The visible story: change only class balance, keeping the model fixed.
     for (const [prevalence, precision] of [[1, '19.5%'], [10, '72.7%'], [50, '96%'], [90, '99.5%'], [99, '100%']]) {
       await setSlider('prevalence', prevalence);

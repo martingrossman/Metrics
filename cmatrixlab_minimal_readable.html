@@ -176,6 +176,31 @@
     color: rgb(119, 81, 206);
   }
 
+  .balance-values {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .balance-preset {
+    border: 1px solid #ddd3f5;
+    border-radius: 7px;
+    background: #f1edff;
+    color: #6d43bc;
+    padding: 4px 6px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .balance-preset[aria-pressed="true"] {
+    background: #6d43bc;
+    border-color: #6d43bc;
+    color: white;
+  }
+
   input[type="range"] {
     display: block;
     width: 100%;
@@ -635,6 +660,7 @@
 
   @media (min-width: 1280px) and (max-height: 820px) {
     .container { padding-bottom: 4px; }
+    .story { margin-bottom: 0; }
     .views { grid-template-columns: 0.84fr 1.16fr; }
     .population { --matrix-row-height: 145px; }
     .insight { padding-top: 8px; padding-bottom: 8px; }
@@ -674,6 +700,9 @@
 
   /* Phone: compact controls, charts, and sticky metrics. */
   @media (max-width: 650px) {
+    .control:has(#prevalence) {
+      grid-template-columns: minmax(205px, 55%) minmax(0px, 1fr);
+    }
     :root {
       --font-caption: 11px;
       --font-body: 12px;
@@ -988,9 +1017,11 @@
     .container > .story { margin: 0 2px 4px; font-size: var(--font-body); line-height: 1.25; }
     .container > .legend { display: none; }
     .container > .controls { margin-bottom: 5px; }
-    .control, .control input[type="range"] { min-height: 32px; height: 32px; }
+    .control, .control input[type="range"] { min-height: 30px; height: 30px; }
     .container > .metrics { padding: 2px 0; }
     .metric { padding: 4px 8px 2px; }
+    .metric-label small { display: none; }
+    .panel { padding-top: 4px; padding-bottom: 4px; }
     .population { --matrix-row-height: 53px; gap: 4px; }
     .population-header { margin-bottom: 4px; gap: 4px; }
     .population-header div:not(:first-child) { padding: 5px 2px; }
@@ -998,7 +1029,7 @@
     .group-top strong { font-size: 20px; }
     .tile { --tile-size: 5.5px; }
     .tiles { gap: 1px; }
-    .insight { padding: 5px 9px; gap: 4px; }
+    .insight { padding: 5px 9px; gap: 2px; }
     .insight-text strong { display: none; }
   }
 
@@ -1067,7 +1098,7 @@
    </button>
   </div>
  </header>
- <p class="story"><strong>Drag “Positive share” and watch Precision change.</strong> <span>TPR and FPR stay fixed; Precision changes.</span></p>
+ <p class="story">Actual = flu (+) or no flu (−); Predicted = test result. <strong>TPR:</strong> % of sick people testing +. <strong>FPR:</strong> % of people without flu testing +. <strong>Precision:</strong> your chance of having flu after a + test. Change the sick share: precision can change, while the same test keeps TPR/FPR fixed.</p>
  <section aria-live="polite" class="metrics">
   <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <div class="metric-label">
@@ -1144,16 +1175,20 @@
    </span>
   </label>
  
- <label class="control">
+ <div class="control">
    <span class="control-header">
-    <span>
+    <label for="prevalence">
      Positive share
-    </span>
+    </label>
+    <span class="balance-values">
     <output class="val" id="prevalenceOut">
-     10%
+     50%
     </output>
+    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set positive share to 10%">10%</button>
+    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set positive share to 50%">50%</button>
+    </span>
    </span>
-   <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="10"/>
+   <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="50"/>
    <span class="endpoints">
     <span>
      0% · none positive
@@ -1162,7 +1197,7 @@
      100% · all positive
     </span>
    </span>
-  </label>
+  </div>
  </section>
  <div aria-label="Classification outcome colors" class="legend">
   <span>
@@ -1208,7 +1243,7 @@
      Actual +
      <br/>
      <small id="pCount">
-      100 cases
+       500 cases
      </small>
     </div>
     <div class="group fn">
@@ -1239,7 +1274,7 @@
      Actual −
      <br/>
      <small id="nCount">
-      900 cases
+       500 cases
      </small>
     </div>
     <div class="group tn">
@@ -1340,7 +1375,7 @@
     totalExamples: 1000,
     caseUnit: 10,            // Cases per full dot/square
     samplesPerClass: 50,
-    defaultPrevalence: 10,   // Percent of actual positives
+    defaultPrevalence: 50,   // Percent of actual positives
     defaultThreshold: 0.50,  // Score >= threshold -> predicted positive
     defaultSeparation: 60,   // 0 = overlapping; 100 = perfectly separable
     colors: {
@@ -1367,6 +1402,8 @@
     threshold: getElement('threshold'),
     separation: getElement('separation'),
     prevalenceOut: getElement('prevalenceOut'),
+    balance10: getElement('balance10'),
+    balance50: getElement('balance50'),
     thresholdOut: getElement('thresholdOut'),
     separationOut: getElement('separationOut'),
     positiveCount: getElement('pCount'),
@@ -1792,6 +1829,8 @@
     const { prevalencePct, positiveCount, threshold, separation } = readSettings();
 
     elements.prevalenceOut.value = `${prevalencePct}%`;
+    elements.balance10.setAttribute('aria-pressed', String(prevalencePct === 10));
+    elements.balance50.setAttribute('aria-pressed', String(prevalencePct === 50));
     elements.thresholdOut.value = `${Math.round(threshold * 100)}%`;
     elements.separationOut.value = `${Math.round(separation * 100)}%`;
     elements.positiveCount.textContent = `${positiveCount} cases`;
@@ -1822,6 +1861,12 @@
     slider.addEventListener('input', update);
   }
   elements.reset.addEventListener('click', reset);
+  for (const share of [10, 50]) {
+    elements[`balance${share}`].addEventListener('click', () => {
+      elements.prevalence.value = share;
+      update();
+    });
+  }
   window.matchMedia('(max-width: 650px) and (orientation: portrait)')
     .addEventListener('change', update);
 
