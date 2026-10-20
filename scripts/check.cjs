@@ -15,6 +15,7 @@ source = source.replace('(() => {', 'return (() => {').replace(
   '  return {generateExamples, classifyExamples, calculateMetrics, createCountGroups, weightedCount};\n})();'
 );
 const model = Function('document', 'window', source)({
+  addEventListener() {},
   getElementById: () => ({ addEventListener() {} })
 }, { matchMedia: () => ({ addEventListener() {} }) });
 const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-6, `${actual} != ${expected}`);

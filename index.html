@@ -357,6 +357,7 @@
   }
 
   .population {
+    position: relative;
     display: grid;
     grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: repeat(2, var(--matrix-row-height, 155px));
@@ -489,12 +490,49 @@
   }
 
   .metric {
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 7px;
     padding: 10px 18px 6px;
   }
+
+  .metric.active, .metric:focus-visible {
+    border-color: #8056d9;
+    box-shadow: inset 0 0 0 1px #8056d9;
+    outline: none;
+  }
+
+  .metric-label { display: block; }
+
+  .metric-outline {
+    display: none;
+    position: absolute;
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: 2;
+  }
+
+  .metric-denominator {
+    inset: -3px;
+    border: 2px dashed #8056d9;
+  }
+
+  .metric-numerator {
+    inset: 3px;
+    border: 2px solid var(--tp);
+    border-radius: 9px;
+  }
+
+  .group.metric-excluded { opacity: 0.25; }
+  .plot .point.metric-excluded { opacity: 0.15; }
+  .key .formula-numerator { border-bottom: 2px solid var(--tp); }
+  .key .formula-denominator { border-bottom: 2px dashed #8056d9; }
 
   .metric-label {
     font-weight: 700;
@@ -1134,39 +1172,39 @@
  </header>
  <p class="story" id="intro"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the share of sick people correctly testing positive (TPR) and the share of people without flu getting a false alarm (FPR) stay the same.</p>
  <section aria-live="polite" class="metrics">
-  <div class="card metric" title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
-   <div class="metric-label">
+  <button class="card metric" id="tprCard" type="button" data-metric="tpr" aria-pressed="false" aria-description="Highlight TP out of all actual positives: TP divided by TP plus FN. Tap again to clear." title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
+   <span class="metric-label">
     TPR
     <small>
      <span data-term="fixedCaption">Fixed with sick share</span>
     </small>
-   </div>
+   </span>
    <strong id="tpr">
     —
    </strong>
-  </div>
-  <div class="card metric" title="FPR = FP / all actual negatives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
-   <div class="metric-label">
+  </button>
+  <button class="card metric" id="fprCard" type="button" data-metric="fpr" aria-pressed="false" aria-description="Highlight FP out of all actual negatives: FP divided by FP plus TN. Tap again to clear." title="FPR = FP / all actual negatives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
+   <span class="metric-label">
     FPR
     <small>
      <span data-term="fixedCaption">Fixed with sick share</span>
     </small>
-   </div>
+   </span>
    <strong id="fpr">
     —
    </strong>
-  </div>
-  <div class="card metric" title="Precision = TP / (TP + FP). Changing balance changes the mix of correct detections and false alarms among positive predictions.">
-   <div class="metric-label">
+  </button>
+  <button class="card metric" id="precisionCard" type="button" data-metric="precision" aria-pressed="false" aria-description="Highlight TP out of all predicted positives: TP divided by TP plus FP. Tap again to clear." title="Precision = TP / (TP + FP). Changing balance changes the mix of correct detections and false alarms among positive predictions.">
+   <span class="metric-label">
     Precision
     <small>
      <span data-term="precisionCaption">Depends on sick share</span>
     </small>
-   </div>
+   </span>
    <strong id="precision">
     —
    </strong>
-  </div>
+  </button>
  </section>
  <section aria-label="Flu test controls" class="card controls" id="controls">
 
@@ -1273,6 +1311,8 @@
     </div>
    </div>
    <div class="population">
+    <div class="metric-outline metric-denominator" id="matrixDenominator" aria-hidden="true"></div>
+    <div class="metric-outline metric-numerator" id="matrixNumerator" aria-hidden="true"></div>
     <div class="row-label">
      <span data-term="actualPositive">Actual flu</span>
      <br/>
@@ -1458,6 +1498,16 @@
 
   // Terminology is presentation state only; the model and slider state are shared.
   let genericMode = false;
+  const metricGroups = {
+    tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+    fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+    precision: { label: 'Precision', numerator: 'tp', denominator: ['tp', 'fp'], area: '1 / 3 / 3 / 4', numeratorArea: '1 / 3 / 2 / 4' }
+  };
+  let hoveredMetric = null;
+  let focusedMetric = null;
+  let pinnedMetric = null;
+  let plotRegions = null;
+  const activeMetric = () => hoveredMetric || focusedMetric || pinnedMetric;
   const terminology = {
     flu: {
       introduction: getElement('intro').innerHTML,
@@ -1725,6 +1775,7 @@
   }
 
   function highlightExample(id) {
+    if (activeMetric()) id = null;
     document.querySelectorAll('[data-id]').forEach(element => {
       const matches = id !== null && Number(element.dataset.id) === id;
       element.classList.toggle('focus', matches);
@@ -1734,6 +1785,7 @@
 
   function addHoverLink(element, example) {
     element.dataset.id = example.id;
+    element.dataset.outcome = example.outcome;
     element.addEventListener('pointerenter', () => highlightExample(example.id));
     element.addEventListener('pointerleave', () => highlightExample(null));
   }
@@ -1759,6 +1811,7 @@
     const dotRadius = compact ? 6.5 : 8;
     const rowStep = shortPhone ? 9 : compact ? 12 : 16;
     const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
+    plotRegions = { left, width, top, bottom, midY, cutoff: left + width * threshold };
 
     svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
     const scoreToX = score => left + width * score;
@@ -1902,6 +1955,61 @@
 
   // ----- Population view: 2×2 outcome groups from the SAME examples. -----
 
+  function renderMetricHighlight() {
+    const selected = activeMetric();
+    const definition = metricGroups[selected];
+    for (const name of Object.keys(metricGroups)) {
+      const card = getElement(`${name}Card`);
+      card.classList.toggle('active', name === selected);
+      card.setAttribute('aria-pressed', String(name === pinnedMetric));
+    }
+    elements.scorePlot.querySelector('.metric-regions')?.remove();
+    elements.scorePlot.querySelectorAll('.point').forEach(dot => {
+      dot.classList.toggle('metric-excluded', Boolean(definition && !definition.denominator.includes(dot.dataset.outcome)));
+    });
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      getElement(`${outcome}Tiles`).closest('.group').classList.toggle('metric-excluded',
+        Boolean(definition && !definition.denominator.includes(outcome)));
+    }
+    const outer = getElement('matrixDenominator');
+    const inner = getElement('matrixNumerator');
+    outer.style.display = inner.style.display = definition ? 'block' : 'none';
+    const key = getElement('markerKey');
+    if (!definition) {
+      const copy = terminology[genericMode ? 'generic' : 'flu'];
+      key.textContent = `Full dot or square = 10 ${copy.subject}; smaller = partial.`;
+      return;
+    }
+    highlightExample(null);
+    const color = CONFIG.colors[definition.numerator];
+    outer.style.gridArea = definition.area;
+    inner.style.gridArea = definition.numeratorArea;
+    inner.style.borderColor = color;
+    const numerator = document.createElement('span');
+    numerator.className = 'formula-numerator';
+    numerator.style.borderColor = color;
+    numerator.textContent = definition.numerator.toUpperCase();
+    const denominator = document.createElement('span');
+    denominator.className = 'formula-denominator';
+    denominator.textContent = `(${definition.denominator.join(' + ').toUpperCase()})`;
+    key.replaceChildren(`${definition.label} = `, numerator, ' ÷ ', denominator);
+
+    const { left, width, top, bottom, midY, cutoff } = plotRegions;
+    const x = selected === 'precision' ? cutoff : left;
+    const y = selected === 'fpr' ? midY : top;
+    const endY = selected === 'tpr' ? midY : bottom;
+    const region = createSvgElement('g', { class: 'metric-regions', 'pointer-events': 'none', 'aria-hidden': 'true' });
+    const outline = (bounds, stroke, dashed) => region.appendChild(createSvgElement('rect', {
+      ...bounds, fill: 'none', stroke, 'stroke-width': 2,
+      'vector-effect': 'non-scaling-stroke', rx: 5,
+      ...(dashed ? { 'stroke-dasharray': '6 4', class: 'denominator-region' } : { class: 'numerator-region' })
+    }));
+    outline({ x: x - 3, y: y - 3, width: left + width - x + 6, height: endY - y + 6 }, '#8056d9', true);
+    outline({ x: cutoff + 3, y: y + 3, width: Math.max(0, left + width - cutoff - 6),
+      height: (selected === 'fpr' ? bottom : midY) - y - 6 }, color, false);
+    elements.scorePlot.insertBefore(region, elements.scorePlot.querySelector('.threshold-drag'));
+  }
+
   function renderPopulationGrid(groups, metrics) {
     const copy = terminology[genericMode ? 'generic' : 'flu'];
     for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
@@ -2023,9 +2131,11 @@
     renderPopulationGrid(countGroups, metrics);
     renderMetrics(metrics);
     highlightExample(null);
+    renderMetricHighlight();
   }
 
   function reset() {
+    hoveredMetric = focusedMetric = pinnedMetric = null;
     elements.prevalence.value = CONFIG.defaultPrevalence;
     elements.threshold.value = genericMode ? CONFIG.defaultThreshold * 100 : 100 - CONFIG.defaultThreshold * 100;
     elements.separation.value = CONFIG.defaultSeparation;
@@ -2038,6 +2148,42 @@
     slider.addEventListener('input', update);
   }
   elements.reset.addEventListener('click', reset);
+  for (const name of Object.keys(metricGroups)) {
+    const card = getElement(`${name}Card`);
+    card.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'touch') return;
+      hoveredMetric = name;
+      renderMetricHighlight();
+    });
+    card.addEventListener('pointerleave', () => {
+      hoveredMetric = null;
+      renderMetricHighlight();
+    });
+    card.addEventListener('focus', () => {
+      if (!card.matches(':focus-visible')) return;
+      focusedMetric = name;
+      renderMetricHighlight();
+    });
+    card.addEventListener('blur', () => {
+      focusedMetric = null;
+      renderMetricHighlight();
+    });
+    card.addEventListener('click', () => {
+      pinnedMetric = pinnedMetric === name ? null : name;
+      hoveredMetric = focusedMetric = null;
+      renderMetricHighlight();
+    });
+  }
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    renderMetricHighlight();
+  });
+  document.addEventListener('pointerdown', event => {
+    if (event.target.closest('.metric, #controls, .views, #modeToggle')) return;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    renderMetricHighlight();
+  });
   elements.scorePlot.addEventListener('pointerdown', event => {
     if (!event.isPrimary || event.button !== 0 || thresholdDrag ||
         !event.target.closest('.threshold-drag')) return;

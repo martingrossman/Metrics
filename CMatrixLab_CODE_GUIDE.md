@@ -16,6 +16,7 @@ Open `index.html` in a browser. This is the only HTML file; it contains the enti
 - **Markers:** `createCountGroups()` converts weighted outcomes to full markers of `CONFIG.caseUnit` (10) cases plus one partial marker per outcome when needed. Representative scores remain on the correct side of the threshold. Markers can be regrouped as outcomes change; underlying class samples stay fixed.
 - **Charts:** `renderScorePlot()` and `renderPopulationGrid()` use the same marker groups and hover IDs. Fractional marker area is proportional to its case weight.
 - **Summary:** `renderMetrics()` updates cards, outcome totals, and the precision bar.
+- **Metric explanations:** `metricGroups` maps each metric to its numerator and denominator. `renderMetricHighlight()` outlines the matching score regions and matrix cells, fades excluded outcomes, and shows the formula above the graphs. Hover/focus previews an explanation; tapping/clicking pins or clears it. Pinned explanations update with the controls; Reset and Escape clear them.
 - **Controls:** `update()` reads sliders and renders everything; `reset()` restores defaults.
 - **Graph threshold:** Drag the blue line or its arrow handle with a mouse, pen, or finger. Pointer capture stays on the SVG during redraws; screen coordinates convert to SVG coordinates and clamp to the score range. The graph and range slider share the same cutoff, including inverted sensitivity in flu mode. The focused graph also supports arrow keys, Page Up/Down, and Home/End.
 

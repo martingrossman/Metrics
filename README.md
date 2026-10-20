@@ -11,6 +11,11 @@ GitHub Pages.
 Drag the blue threshold line in the first graph with a mouse or finger, or use
 the matching slider. You can also focus the graph and use the arrow keys.
 
+Hover over a metric or tap it on your phone to see its calculation in both
+graphs. A solid outline marks the numerator; a dashed outline marks the total
+it is divided by. Tap the same metric again to clear it. Keyboard users can
+focus a metric, press Enter to keep its explanation visible, and Escape to clear.
+
 ## Model
 
 The demo represents 1,000 weighted cases using two fixed distributions of 50 deterministic
