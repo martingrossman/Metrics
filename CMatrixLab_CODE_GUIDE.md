@@ -18,6 +18,7 @@ Open `index.html` in a browser. This is the only HTML file; it contains the enti
 - **Summary:** `renderMetrics()` updates cards, outcome totals, and the precision bar.
 - **Metric explanations:** `metricGroups` maps each metric to its numerator and denominator. `renderMetricHighlight()` outlines the matching score regions and matrix cells, fades excluded outcomes, and shows the formula above the graphs. Hover/focus previews an explanation; tapping/clicking pins or clears it. Pinned explanations update with the controls; Reset and Escape clear them.
 - **Controls:** `update()` reads sliders and renders everything; `reset()` restores defaults.
+- **Learning view:** `setLearningMode()` reveals standard formulas and a tabbed panel; `renderLearning()` uses the current unrounded metrics for explanations, count calculations, and Bayesian substitution. The view and selected tab persist through Reset. Formula terms reuse the graph highlighting, with numerator-only or denominator-only outlines. Empty actual groups show N/A for their conditional rates; Bayes then explains precision using expected counts rather than multiplying an undefined rate.
 - **Graph threshold:** Drag the blue line or its arrow handle with a mouse, pen, or finger. Pointer capture stays on the SVG during redraws; screen coordinates convert to SVG coordinates and clamp to the score range. The graph and range slider share the same cutoff, including inverted sensitivity in flu mode. The focused graph also supports arrow keys, Page Up/Down, and Home/End.
 
 ## Invariants

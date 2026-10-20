@@ -16,6 +16,14 @@ graphs. A solid outline marks the numerator; a dashed outline marks the total
 it is divided by. Tap the same metric again to clear it. Keyboard users can
 focus a metric, press Enter to keep its explanation visible, and Escape to clear.
 
+Choose **Learn more** above the graphs for a deeper explanation. The basics,
+Formulas, and Bayes tabs explain the outcomes, show live calculations, and connect
+TPR, FPR, and positive share to precision using Bayes' theorem. Hover or tap a
+formula term to highlight its numerator or denominator. The 10% and 50% buttons
+in Bayes change only class balance. **Simple view** returns to the compact page.
+The Flu / Generic ML switch applies to both views; opening or closing the learning
+panel preserves all model settings. Reset retains the chosen view and terminology.
+
 ## Model
 
 The demo represents 1,000 weighted cases using two fixed distributions of 50 deterministic

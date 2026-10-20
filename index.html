@@ -1134,6 +1134,148 @@
       transition: none;
     }
   }
+  /* Optional learning layer; the default dashboard stays compact. */
+  [hidden] { display: none !important; }
+  .learning-entry { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0; }
+  .learning-entry .key { margin: 0; }
+  .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; padding: 1px 9px; }
+  .learn-toggle[aria-expanded="true"] { background: #f2edff; }
+  .metric-formula { display: none; font-size: var(--font-caption); color: #526886; font-weight: 500; margin-top: 5px; letter-spacing: 0; }
+  .learning .metric { flex-wrap: wrap; }
+  .learning .metric-formula { display: block; flex-basis: 100%; }
+  .learn-panel { margin-top: 18px; padding: 28px; font-size: 14px; line-height: 1.55; scroll-margin-top: 20px; border-color: #dedff0; background: linear-gradient(155deg, #faf9ff 0, #fff 320px); }
+  .learn-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+  .learn-panel h2 { margin: 0; font-size: 28px; line-height: 1.15; letter-spacing: -0.8px; max-width: 620px; }
+  .learn-panel h3 { margin: 0 0 8px; font-size: 16px; }
+  .learn-panel p { margin: 8px 0 16px; }
+  .learn-panel .eyebrow { color: #8056d9; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin: 0 0 8px; }
+  .learn-heading > .reset { white-space: nowrap; flex-shrink: 0; }
+  .learn-tabs { display: flex; gap: 6px; border-bottom: 1px solid #e4e8f0; padding-bottom: 12px; margin: 24px 0; }
+  .learn-tabs button { border: 1px solid transparent; border-radius: 10px; padding: 9px 16px; color: #526886; background: transparent; font: inherit; cursor: pointer; }
+  .learn-tabs button::before { content: attr(data-step); color: #8490a4; margin-right: 8px; font-size: 12px; }
+  .learn-tabs button[aria-selected="true"] { color: #6337b8; background: #f0eaff; border-color: #e1d5ff; font-weight: 700; }
+  .learn-panel button:focus-visible, .learn-toggle:focus-visible { outline: 2px solid #8056d9; outline-offset: 3px; }
+  .learn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .learn-card { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; min-width: 0; }
+  .learn-card p:last-child { margin-bottom: 0; }
+  .learn-note { color: #526886; font-size: 12px; }
+  .equation { display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; margin: 16px 0; font-size: 16px; }
+  .fraction { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; max-width: 100%; }
+  .fraction > :first-child { border-bottom: 1px solid #8795aa; padding: 4px 8px; }
+  .fraction > :last-child { padding: 4px 8px; }
+  .formula-term { appearance: none; border: 0; border-radius: 7px; background: #eefaf5; color: #087f59; font: inherit; padding: 7px 10px; cursor: pointer; border-bottom: 2px solid #0ea976; }
+  .formula-term[data-part="denominator"] { border-bottom: 2px dashed #8056d9; color: #6337b8; background: #f4f0fc; }
+  .formula-term[data-explain="fpr"][data-part="numerator"] { color: #bf3148; border-color: #e64b60; }
+  .formula-term:hover, .formula-term[aria-pressed="true"] { background: #eee8fb; }
+  .live-calculation { color: #263f65; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .learn-panel .live-calculation { background: #f2f5fa; border-radius: 9px; padding: 10px 12px; font-size: 12px; }
+  .learn-intro { max-width: 700px; margin-bottom: 20px; }
+  .learn-intro h3 { font-size: 22px; line-height: 1.3; letter-spacing: -0.4px; }
+  .learn-intro p { color: #526886; }
+  .basics-hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; margin-bottom: 24px; }
+  .basics-hero h3 { font-size: 28px; line-height: 1.2; letter-spacing: -0.7px; max-width: 430px; }
+  .learn-link { display: inline-block; color: #6337b8; background: transparent; border: 0; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; padding: 0; }
+  .odds-preview { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; background: #f1edfb; border: 1px solid #e1d8f7; padding: 22px; border-radius: 18px; text-align: center; }
+  .odds-preview strong { display: block; color: #663bb6; font-size: 36px; line-height: 1.2; letter-spacing: -1px; }
+  .odds-preview span { font-size: 12px; color: #526886; }
+  .odds-preview .odds-arrow { font-size: 22px; color: #9f80d5; }
+  .metric-detail { border-top: 3px solid var(--metric-color); }
+  .metric-detail .metric-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .metric-detail .metric-heading strong { font-size: 36px; line-height: 1.2; color: var(--metric-color); letter-spacing: -1px; }
+  .metric-detail h3 { color: var(--metric-color); }
+  .metric-detail .question { min-height: 44px; }
+  .rate-track { height: 6px; border-radius: 10px; background: #e9eef4; overflow: hidden; margin-top: 16px; }
+  .rate-track span { display: block; height: 100%; background: var(--metric-color, #0ea976); border-radius: inherit; }
+  .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 24px 0 12px; }
+  .outcome-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .outcome-card { border-radius: 12px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--outcome-color) 22%, white); background: color-mix(in srgb, var(--outcome-color) 6%, white); }
+  .outcome-card strong { display: block; color: var(--outcome-color); font-size: 22px; }
+  .outcome-card span { font-size: 12px; }
+  .balance-message { padding: 16px 20px; border-left: 3px solid #8056d9; background: #f7f4fd; border-radius: 0 12px 12px 0; margin: 20px 0; }
+  .balance-message p { margin: 4px 0; }
+  .learn-panel details { border-top: 1px solid #e4e8f0; padding: 14px 0; }
+  .learn-panel summary { cursor: pointer; font-weight: 700; color: #526886; }
+  .formula-card .equation { padding: 12px 0; margin: 12px 0; }
+  .formula-card .learn-note { min-height: 20px; }
+  .formula-feedback { display: none; margin: 8px 0 0; font-size: 12px; color: #6337b8; }
+  .formula-card:has(.formula-term[aria-pressed="true"]) .formula-feedback { display: block; }
+  .bayes-flow { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 20px; margin: 20px 0; }
+  .flow-step { position: relative; min-width: 0; padding: 18px; border: 1px solid #e4e8f0; border-radius: 16px; background: #fff; }
+  .flow-step + .flow-step::before { content: '→'; position: absolute; top: 50%; left: -19px; color: #a28bc8; font-size: 18px; }
+  .flow-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; }
+  .step-index { display: inline-grid; place-items: center; width: 24px; height: 24px; background: #f0eaff; border-radius: 7px; color: #7852b9; font-size: 12px; }
+  .count-row { padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #eef1f6; }
+  .count-row:last-of-type { border-bottom: 0; }
+  .count-row strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+  .count-row span { display: block; }
+  .count-row small { color: #526886; font-size: 12px; }
+  .count-row.true-result strong { color: #07845c; }
+  .count-row.false-result strong { color: #ce3c52; }
+  .evidence-bar { display: flex; height: 12px; border-radius: 8px; overflow: hidden; background: #e5eaf1; margin: 12px 0; }
+  .evidence-bar .correct { background: #0ea976; }
+  .evidence-bar .false-alarm { background: #e64b60; }
+  .result-step { border-color: #d8eae3; background: linear-gradient(135deg, #f1fbf6, #fff); }
+  .result-content { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+  .probability-ring { --probability: 0%; width: 136px; height: 136px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: conic-gradient(#0ea976 0 var(--probability), #e64b60 var(--probability) 100%); }
+  .probability-ring[data-value="na"] { background: #e1e6ed; }
+  .ring-center { width: 112px; height: 112px; background: white; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; }
+  .ring-center strong { color: #174f40; font-size: 28px; letter-spacing: -1px; line-height: 1.1; }
+  .ring-center span { font-size: 12px; color: #526886; margin-top: 5px; }
+  .result-caption { max-width: 220px; font-size: 12px; }
+  .bayes-math { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 20px; background: #f7f5fc; border: 1px solid #e6dff3; padding: 18px 22px; border-radius: 14px; margin: 20px 0; }
+  .bayes-math p { margin: 6px 0; }
+  .bayes-math .equation { margin: 0; }
+  .comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .comparison-card { text-align: left; background: white; border: 1px solid #dce3ee; border-radius: 14px; padding: 16px 18px; cursor: pointer; font: inherit; color: inherit; }
+  .comparison-card[aria-pressed="true"] { border-color: #8056d9; box-shadow: inset 0 0 0 1px #8056d9; background: #fbf9ff; }
+  .comparison-card:hover { border-color: #8056d9; }
+  .comparison-card .comparison-share { display: block; color: #6337b8; font-weight: 700; }
+  .comparison-card strong { display: block; font-size: 28px; letter-spacing: -0.5px; margin-top: 8px; }
+  .comparison-card small { display: block; color: #526886; font-size: 12px; }
+  .notation-list { display: grid; gap: 8px; margin: 16px 0; }
+  .notation-row { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 14px; padding: 10px 12px; background: #f7f9fc; border-radius: 9px; }
+  .notation-row p { margin: 0; }
+  .learning .metrics { position: static; }
+  @media (max-width: 767px) {
+    .learn-grid, .basics-hero, .bayes-flow, .bayes-math { grid-template-columns: 1fr; }
+    .learn-panel { padding: 16px; }
+    .learn-panel h2 { font-size: 22px; }
+    .basics-hero h3 { font-size: 22px; }
+    .learn-heading { gap: 8px; }
+    .learn-heading > .reset { font-size: 11px; padding: 5px 8px; }
+    .learn-tabs { width: 100%; }
+    .learn-tabs button { flex: 1; padding: 8px; }
+    .learn-tabs button::before { display: none; }
+    .learn-card { padding: 16px; }
+    .metric-detail .question { min-height: 0; }
+    .metric-detail .metric-heading strong { font-size: 28px; }
+    .outcome-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .outcome-card { padding: 12px; }
+    .flow-step + .flow-step::before { content: '↓'; top: -23px; left: calc(50% - 6px); }
+    .flow-heading { margin-bottom: 8px; }
+    .result-content { flex-direction: row; text-align: left; }
+    .ring-center { text-align: center; }
+    .result-caption { min-width: 0; }
+    .comparison-card { padding: 12px; }
+    .comparison-card strong { font-size: 22px; }
+    .notation-row { grid-template-columns: 1fr; gap: 4px; }
+    .odds-preview { padding: 18px 14px; }
+    .odds-preview strong { font-size: 28px; }
+    .equation { font-size: 14px; }
+    .formula-term { min-height: 44px; }
+  }
+  @media (max-width: 650px) and (orientation: portrait) {
+    .container > .learning-entry { order: 3; gap: 6px; }
+    .learning-entry .key { font-size: 10px; }
+    .learning-entry .learn-toggle { min-height: 24px; padding: 1px 6px; font-size: 11px; }
+    .container > .controls { margin-bottom: 0; }
+    .container > .learn-panel { order: 6; }
+    .learning .metric-formula { font-size: 10px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .learn-panel:not([hidden]) { animation: learn-in 180ms ease-out; }
+    @keyframes learn-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  }
   </style>
 </head>
 <body>
@@ -1293,7 +1435,10 @@
    TN<span class="legend-detail" data-term="tnLegend"> · Correctly ignored</span>
   </span>
  </div>
- <p class="key" id="markerKey">Full dot or square = 10 people; smaller = partial.</p>
+ <div class="learning-entry">
+  <p class="key" id="markerKey">Full marker = 10 people; smaller = partial.</p>
+  <button class="reset learn-toggle" id="learnToggle" type="button" aria-expanded="false" aria-controls="learnPanel">Learn more</button>
+ </div>
  <section class="views">
   <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
    <svg aria-label="Flu test score threshold" aria-description="Drag the blue line left or right, or use the arrow keys." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="horizontal" tabindex="0" class="plot" id="plot" role="slider" viewBox="0 0 650 440">
@@ -1413,6 +1558,20 @@
    </div>
   </div>
  </section>
+ <section class="card learn-panel" id="learnPanel" hidden aria-labelledby="learnTitle">
+  <div class="learn-heading">
+   <div><p class="eyebrow">A CLOSER LOOK</p><h2 id="learnTitle">From a result to a probability</h2></div>
+   <button class="reset" id="closeLearn" type="button">Simple view</button>
+  </div>
+  <div class="learn-tabs" role="tablist" aria-label="Learning topics">
+   <button id="tab-basics" data-step="01" type="button" role="tab" aria-controls="learn-basics" aria-selected="true">The basics</button>
+   <button id="tab-formulas" data-step="02" type="button" role="tab" aria-controls="learn-formulas" aria-selected="false" tabindex="-1">Formulas</button>
+   <button id="tab-bayes" data-step="03" type="button" role="tab" aria-controls="learn-bayes" aria-selected="false" tabindex="-1">Bayes</button>
+  </div>
+  <div id="learn-basics" role="tabpanel" aria-labelledby="tab-basics" tabindex="0"></div>
+  <div id="learn-formulas" role="tabpanel" aria-labelledby="tab-formulas" tabindex="0" hidden></div>
+  <div id="learn-bayes" role="tabpanel" aria-labelledby="tab-bayes" tabindex="0" hidden></div>
+ </section>
  <p class="foot" id="footNote">
   1,000 weighted cases. Counts are expected values and may be fractional. Sick share changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
  </p>
@@ -1498,6 +1657,11 @@
 
   // Terminology is presentation state only; the model and slider state are shared.
   let genericMode = false;
+  let learningMode = false;
+  let learningTab = 'basics';
+  let latestMetrics = null;
+  let formulaPreview = null;
+  let formulaPinned = null;
   const metricGroups = {
     tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
     fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
@@ -1507,7 +1671,7 @@
   let focusedMetric = null;
   let pinnedMetric = null;
   let plotRegions = null;
-  const activeMetric = () => hoveredMetric || focusedMetric || pinnedMetric;
+  const activeMetric = () => (formulaPreview || formulaPinned)?.metric || hoveredMetric || focusedMetric || pinnedMetric;
   const terminology = {
     flu: {
       introduction: getElement('intro').innerHTML,
@@ -1564,7 +1728,7 @@
       elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
     }
     getElement('footNote').textContent = `1,000 weighted ${copy.subject}. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same ${copy.cutoff} and ${copy.separation}.`;
-    getElement('markerKey').textContent = `Full dot or square = 10 ${copy.subject}; smaller = partial.`;
+    getElement('markerKey').textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
     document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
     document.querySelectorAll('.metric')[0].title = genericMode
       ? 'TPR = TP / all actual positives. Fixed when class balance changes at the same threshold and separation.'
@@ -1958,6 +2122,11 @@
   function renderMetricHighlight() {
     const selected = activeMetric();
     const definition = metricGroups[selected];
+    const part = (formulaPreview || formulaPinned)?.part;
+    const included = part === 'numerator' && definition ? [definition.numerator] : definition?.denominator;
+    document.querySelectorAll('[data-explain]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.explain === formulaPinned?.metric && button.dataset.part === formulaPinned?.part));
+    });
     for (const name of Object.keys(metricGroups)) {
       const card = getElement(`${name}Card`);
       card.classList.toggle('active', name === selected);
@@ -1965,19 +2134,21 @@
     }
     elements.scorePlot.querySelector('.metric-regions')?.remove();
     elements.scorePlot.querySelectorAll('.point').forEach(dot => {
-      dot.classList.toggle('metric-excluded', Boolean(definition && !definition.denominator.includes(dot.dataset.outcome)));
+      dot.classList.toggle('metric-excluded', Boolean(definition && !included.includes(dot.dataset.outcome)));
     });
     for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
       getElement(`${outcome}Tiles`).closest('.group').classList.toggle('metric-excluded',
-        Boolean(definition && !definition.denominator.includes(outcome)));
+        Boolean(definition && !included.includes(outcome)));
     }
     const outer = getElement('matrixDenominator');
     const inner = getElement('matrixNumerator');
     outer.style.display = inner.style.display = definition ? 'block' : 'none';
+    if (part === 'numerator') outer.style.display = 'none';
+    if (part === 'denominator') inner.style.display = 'none';
     const key = getElement('markerKey');
     if (!definition) {
       const copy = terminology[genericMode ? 'generic' : 'flu'];
-      key.textContent = `Full dot or square = 10 ${copy.subject}; smaller = partial.`;
+      key.textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
       return;
     }
     highlightExample(null);
@@ -2004,8 +2175,8 @@
       'vector-effect': 'non-scaling-stroke', rx: 5,
       ...(dashed ? { 'stroke-dasharray': '6 4', class: 'denominator-region' } : { class: 'numerator-region' })
     }));
-    outline({ x: x - 3, y: y - 3, width: left + width - x + 6, height: endY - y + 6 }, '#8056d9', true);
-    outline({ x: cutoff + 3, y: y + 3, width: Math.max(0, left + width - cutoff - 6),
+    if (part !== 'numerator') outline({ x: x - 3, y: y - 3, width: left + width - x + 6, height: endY - y + 6 }, '#8056d9', true);
+    if (part !== 'denominator') outline({ x: cutoff + 3, y: y + 3, width: Math.max(0, left + width - cutoff - 6),
       height: (selected === 'fpr' ? bottom : midY) - y - 6 }, color, false);
     elements.scorePlot.insertBefore(region, elements.scorePlot.querySelector('.threshold-drag'));
   }
@@ -2070,6 +2241,244 @@
   // 5. UI CONTROLS — SINGLE SOURCE OF TRUTH
   // ============================================================
 
+  function renderLearning(metrics) {
+    latestMetrics = metrics;
+    for (const [name, rule] of Object.entries(metricGroups)) {
+      const card = getElement(`${name}Card`);
+      let formula = card.querySelector('.metric-formula');
+      if (!formula) {
+        formula = document.createElement('span');
+        formula.className = 'metric-formula';
+        card.appendChild(formula);
+      }
+      formula.textContent = `${rule.numerator.toUpperCase()} ÷ (${rule.denominator.join(' + ').toUpperCase()})`;
+    }
+    if (!learningMode) return;
+    const { tp, fp, fn, tn, tpr, fpr, precision } = metrics;
+    const { separation, threshold } = readSettings();
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const p = Number(elements.prevalence.value) / 100;
+    const metricColors = { tpr: CONFIG.colors.tp, fpr: CONFIG.colors.fp, precision: '#246cf0' };
+    const questions = genericMode ? {
+      tpr: 'Of actual positives, how many are predicted positive?',
+      fpr: 'Of actual negatives, how many are predicted positive?',
+      precision: 'Of predicted positives, how many are actually positive?'
+    } : {
+      tpr: 'Of people with flu, how many test positive?',
+      fpr: 'Of people without flu, how many test positive?',
+      precision: 'Of people testing positive, how many have flu?'
+    };
+    const meanings = genericMode
+      ? ['Actual +, predicted +', 'Actual −, predicted +', 'Actual +, predicted −', 'Actual −, predicted −']
+      : ['Flu detected: flu, test +', 'False alarm: no flu, test +', 'Flu missed: flu, test −', 'Correctly cleared: no flu, test −'];
+    const conditions = genericMode ? {
+      tpr: 'P(predicted + | actual +)', fpr: 'P(predicted + | actual −)', precision: 'P(actual + | predicted +)'
+    } : {
+      tpr: 'P(test + | flu)', fpr: 'P(test + | no flu)', precision: 'P(flu | test +)'
+    };
+    const aliases = {
+      tpr: 'Sensitivity / Recall',
+      fpr: 'False alarm rate (1 − Specificity)',
+      precision: 'Positive predictive value (PPV)'
+    };
+    const share = genericMode ? 'positive share' : 'sick share';
+    const total = name => metricGroups[name].denominator.reduce((sum, outcome) => sum + metrics[outcome], 0);
+    const calculation = name => {
+      const rule = metricGroups[name];
+      const sum = total(name);
+      return `${formatCount(metrics[rule.numerator])} ÷ (${rule.denominator.map(o => formatCount(metrics[o])).join(' + ')}) = ${formatPercent(metrics[name])}` +
+        (sum === 0 ? ' — no cases in this group.' : '');
+    };
+    // All HTML below is trusted local copy plus numbers from the model.
+    getElement('learn-basics').innerHTML = `
+      <div class="basics-hero">
+        <div>
+          <h3>${genericMode ? 'A positive prediction is evidence, not certainty.' : 'A positive test is a clue, not the final answer.'}</h3>
+          <p>${genericMode ? 'Actual is the true class; Predicted is the label chosen by the model. Even a strong classifier can produce many false alarms when the positive class is rare.' : 'Actual tells us whether a person really has flu; the test predicts positive (+) or negative (−). Even an accurate test can produce many false alarms when flu is rare.'}</p>
+          <button class="learn-link" type="button" data-learn-tab="bayes">Explore the Bayes breakdown →</button>
+        </div>
+        <div class="odds-preview" aria-label="Prior versus posterior probability">
+          <div>
+            <strong>${formatPercent(p)}</strong>
+            <span>Before · ${share} (p)</span>
+          </div>
+          <div class="odds-arrow" aria-hidden="true">→</div>
+          <div>
+            <strong>${formatPercent(precision)}</strong>
+            <span>After ${copy.predictedPositive} · Precision</span>
+          </div>
+        </div>
+      </div>
+      <div class="learn-grid">
+        ${Object.entries(metricGroups).map(([name, rule]) => `
+          <article class="learn-card metric-detail" style="--metric-color:${metricColors[name]}">
+            <div class="metric-heading">
+              <h3>${rule.label}</h3>
+              <strong>${formatPercent(metrics[name])}</strong>
+            </div>
+            <p class="question">${questions[name]}</p>
+            <p class="learn-note"><b>${conditions[name]}</b> · ${name === 'precision' ? `Changes with ${share}` : `Fixed when ${share} changes`}</p>
+            <div class="rate-track" aria-hidden="true"><span style="width:${Number.isFinite(metrics[name]) ? 100 * metrics[name] : 0}%"></span></div>
+          </article>`).join('')}
+      </div>
+      <div class="section-heading">
+        <h3>Four possible outcomes</h3>
+        <span class="learn-note">1,000 weighted ${copy.subject}</span>
+      </div>
+      <div class="outcome-grid">
+        ${['tp', 'fp', 'fn', 'tn'].map((key, i) => `
+          <div class="outcome-card" style="--outcome-color:${CONFIG.colors[key]}">
+            <strong>${key.toUpperCase()} · ${formatCount(metrics[key])}</strong>
+            <span>${meanings[i]}</span>
+          </div>`).join('')}
+      </div>
+      <div class="balance-message">
+        <p><b>Why balance matters.</b> ${genericMode ? 'More actual positives create more true positives relative to false alarms.' : 'When flu is more common, more positive tests come from people who really have flu.'}</p>
+        <p>With the ${copy.cutoff} and ${copy.separation} fixed, changing the ${share} changes <b>Precision</b> while <b>TPR</b> and <b>FPR</b> stay fixed wherever both rates are defined.</p>
+      </div>
+      <details><summary>How this demonstration works</summary><p>There are 1,000 weighted ${copy.subject}. Changing the ${share} changes how many belong to each group. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two groups’ scores overlap.</p><p class="learn-note">These are simulated scores. A score is a signal used for a decision; it is not automatically a probability. Matrix counts are rounded for readability. Formulas use the precise expected counts, which can be fractional.</p></details>`;
+
+    getElement('learn-formulas').innerHTML = `
+      <div class="learn-intro">
+        <h3>Every metric is a fraction of two regions</h3>
+        <p>Each rate asks: <b>how many of the reference group (denominator) landed in the target outcome (numerator)?</b> Hover over or tap any part of a fraction below to outline its group in the graphs above. Tap again to clear.</p>
+      </div>
+      <div class="learn-grid">${Object.entries(metricGroups).map(([name, rule]) => `
+        <article class="learn-card formula-card metric-detail" style="--metric-color:${metricColors[name]}">
+          <div class="metric-heading">
+            <h3>${rule.label}</h3>
+            <strong>${formatPercent(metrics[name])}</strong>
+          </div>
+          <p class="question">${questions[name]}</p>
+          <div class="equation" aria-label="${rule.label}: ${rule.numerator.toUpperCase()} divided by ${rule.denominator.join(' plus ').toUpperCase()}">
+            <span><b>${rule.label}</b> =</span>
+            <span class="fraction">
+              <span><button class="formula-term" data-explain="${name}" data-part="numerator" aria-pressed="false" type="button" aria-label="Highlight ${rule.numerator.toUpperCase()} for ${rule.label}">${rule.numerator.toUpperCase()}</button></span>
+              <span><button class="formula-term" data-explain="${name}" data-part="denominator" aria-pressed="false" type="button" aria-label="Highlight ${rule.denominator.join(' plus ').toUpperCase()} for ${rule.label}">${rule.denominator.join(' + ').toUpperCase()}</button></span>
+            </span>
+          </div>
+          <p class="live-calculation" id="calculation-${name}">${calculation(name)}</p>
+          <p class="learn-note"><b>${conditions[name]}</b> · ${aliases[name]}</p>
+          <p class="formula-feedback">Outlined in the graphs above · tap again or press Esc to clear.</p>
+        </article>`).join('')}</div>
+      <p class="learn-note" style="margin-top:14px">Solid underline: the numerator counted. Dashed underline: the denominator group it is divided by. A rate is N/A when its denominator is zero. Display rounding never changes a calculation.</p>`;
+
+    const decimal = n => Number(n.toFixed(4)).toString();
+    const numericBayes = Number.isFinite(tpr) && Number.isFinite(fpr)
+      ? `${decimal(tpr)} × ${decimal(p)} ÷ [${decimal(tpr)} × ${decimal(p)} + ${decimal(fpr)} × ${decimal(1 - p)}] = ${formatPercent(precision)}`
+      : `Using expected counts: ${formatCount(tp)} ÷ (${formatCount(tp)} + ${formatCount(fp)}) = ${formatPercent(precision)}.`;
+    const comparisonFor = sharePct => calculateMetrics(
+      classifyExamples(generateExamples(sharePct * 10, separation), threshold)
+    );
+    getElement('learn-bayes').innerHTML = `
+      <div class="learn-intro">
+        <h3>${genericMode ? 'Bayes’ theorem: flipping the condition from TPR to Precision' : 'Bayes’ theorem: from a positive test to the chance of flu'}</h3>
+        <p>Start with how common ${genericMode ? 'the positive class' : 'flu'} is (prior <b>p = ${formatPercent(p)}</b>). Then combine true detections (<b>TPR</b>) and false alarms (<b>FPR</b>) to find the posterior probability <b>${conditions.precision}</b>.</p>
+      </div>
+      <div class="bayes-flow">
+        <div class="flow-step">
+          <div class="flow-heading"><span class="step-index">1</span><span>Prior · Base rate</span></div>
+          <div class="count-row">
+            <div><span>${copy.actualPositive}</span><small>p = ${formatPercent(p)} of 1,000</small></div>
+            <strong>${formatCount(tp + fn)}</strong>
+          </div>
+          <div class="count-row">
+            <div><span>${copy.actualNegative}</span><small>1 − p = ${formatPercent(1 - p)} of 1,000</small></div>
+            <strong>${formatCount(fp + tn)}</strong>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-heading"><span class="step-index">2</span><span>Evidence · <span id="bayesPositiveTotal">${formatCount(tp + fp)}</span> ${copy.predictedPositive}</span></div>
+          <div class="count-row true-result">
+            <div><span>${genericMode ? 'True positives (TP)' : 'Flu detected (TP)'}</span><small>TPR (${formatPercent(tpr)}) × ${formatCount(tp + fn)}</small></div>
+            <strong data-evidence="tp">${formatCount(tp)}</strong>
+          </div>
+          <div class="count-row false-result">
+            <div><span>False alarms (FP)</span><small>FPR (${formatPercent(fpr)}) × ${formatCount(fp + tn)}</small></div>
+            <strong data-evidence="fp">${formatCount(fp)}</strong>
+          </div>
+          <div class="evidence-bar" aria-hidden="true">
+            <span class="correct" style="width:${tp + fp > 0 ? 100 * tp / (tp + fp) : 0}%"></span>
+            <span class="false-alarm" style="width:${tp + fp > 0 ? 100 * fp / (tp + fp) : 0}%"></span>
+          </div>
+        </div>
+        <div class="flow-step result-step">
+          <div class="flow-heading"><span class="step-index">3</span><span>Posterior · Precision</span></div>
+          <div class="result-content">
+            <div class="probability-ring" data-value="${Number.isFinite(precision) ? precision : 'na'}" style="--probability:${Number.isFinite(precision) ? 100 * precision : 0}%">
+              <div class="ring-center">
+                <strong id="bayesPosterior">${formatPercent(precision)}</strong>
+                <span>Precision</span>
+              </div>
+            </div>
+            <p class="result-caption">${!Number.isFinite(precision) ? copy.noPositives : `${formatCount(tp)} of ${formatCount(tp + fp)} positive ${genericMode ? 'predictions are actual +' : 'tests have flu'}.`}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bayes-math">
+        <div>
+          <h3>Bayes’ theorem in rate form</h3>
+          <p>The bar <b>|</b> means <b>“given”</b>. TPR and FPR condition on the actual group (${conditions.tpr} and ${conditions.fpr}), while Precision flips the condition to ask about a positive result (${conditions.precision}).</p>
+          <p class="live-calculation" id="bayesCalculation">${numericBayes}</p>
+          <p class="learn-note" id="bayesEdge">${!Number.isFinite(precision) ? 'There are no positive predictions at these settings, so precision is N/A.' : !Number.isFinite(tpr) || !Number.isFinite(fpr) ? 'One actual group is empty, so its rate is N/A. The expected counts still give precision for the positive predictions that exist.' : 'The same precision as in the graph, calculated from TPR, FPR, and the prior p.'}</p>
+        </div>
+        <div>
+          <div class="equation" aria-label="P of A given B equals P of B given A times P of A divided by P of B">
+            <span><b>P(A | B)</b> =</span>
+            <span class="fraction"><span>P(B | A) × P(A)</span><span>P(B)</span></span>
+          </div>
+          <div class="equation" aria-label="Precision equals TPR times p divided by TPR times p plus FPR times one minus p">
+            <span><b>Precision</b> =</span>
+            <span class="fraction"><span>TPR × p</span><span>TPR × p + FPR × (1 − p)</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="section-heading">
+        <h3>Compare 10% vs. 50% ${share}</h3>
+        <span class="learn-note">Same ${copy.cutoff} and ${copy.separation} · tap a card to switch</span>
+      </div>
+      <div class="comparison-grid">
+        ${[10, 50].map(sharePct => {
+          const comp = comparisonFor(sharePct);
+          return `<button class="comparison-card" type="button" data-learn-share="${sharePct}" data-comparison-precision="${Number.isFinite(comp.precision) ? comp.precision : 'na'}" aria-pressed="${Math.round(p * 100) === sharePct}">
+            <span class="comparison-share">${sharePct}% ${share}</span>
+            <strong>${formatPercent(comp.precision)} Precision</strong>
+            <small>${formatCount(comp.tp)} TP vs. ${formatCount(comp.fp)} FP (${formatCount(comp.tp + comp.fp)} ${copy.predictedPositive})</small>
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="notation-list" aria-label="Probability notation">
+        <div class="notation-row"><p><b>Prior · p</b></p><p>${genericMode ? 'P(actual +)' : 'P(flu)'}</p><p>Base rate (${formatPercent(p)}) before seeing the ${genericMode ? 'prediction' : 'test result'}</p></div>
+        <div class="notation-row"><p><b>TPR</b></p><p>${conditions.tpr}</p><p>${questions.tpr} (${formatPercent(tpr)})</p></div>
+        <div class="notation-row"><p><b>FPR</b></p><p>${conditions.fpr}</p><p>${questions.fpr} (${formatPercent(fpr)})</p></div>
+        <div class="notation-row"><p><b>Precision</b></p><p>${conditions.precision}</p><p>${questions.precision} (${formatPercent(precision)})</p></div>
+      </div>`;
+  }
+
+  function setLearningMode(open) {
+    learningMode = open;
+    document.querySelector('main').classList.toggle('learning', open);
+    getElement('learnPanel').hidden = !open;
+    getElement('learnToggle').setAttribute('aria-expanded', String(open));
+    getElement('learnToggle').textContent = open ? 'Simple view' : 'Learn more';
+    if (!open) formulaPreview = formulaPinned = null;
+    renderLearning(latestMetrics);
+    renderMetricHighlight();
+  }
+
+  function selectLearningTab(tab, focus = false) {
+    learningTab = tab;
+    formulaPreview = formulaPinned = null;
+    for (const name of ['basics', 'formulas', 'bayes']) {
+      const button = getElement(`tab-${name}`);
+      button.setAttribute('aria-selected', String(name === tab));
+      button.tabIndex = name === tab ? 0 : -1;
+      getElement(`learn-${name}`).hidden = name !== tab;
+    }
+    if (focus) getElement(`tab-${tab}`).focus();
+    renderMetricHighlight();
+  }
+
   let thresholdDrag = null;
 
   function plotPointerX(event) {
@@ -2130,11 +2539,13 @@
     renderScorePlot(Object.values(countGroups).flat(), threshold, positiveCount);
     renderPopulationGrid(countGroups, metrics);
     renderMetrics(metrics);
+    renderLearning(metrics);
     highlightExample(null);
     renderMetricHighlight();
   }
 
   function reset() {
+    formulaPreview = formulaPinned = null;
     hoveredMetric = focusedMetric = pinnedMetric = null;
     elements.prevalence.value = CONFIG.defaultPrevalence;
     elements.threshold.value = genericMode ? CONFIG.defaultThreshold * 100 : 100 - CONFIG.defaultThreshold * 100;
@@ -2148,10 +2559,69 @@
     slider.addEventListener('input', update);
   }
   elements.reset.addEventListener('click', reset);
+  getElement('learnToggle').addEventListener('click', () => {
+    setLearningMode(!learningMode);
+    if (learningMode) getElement('learnPanel').scrollIntoView({ block: 'start' });
+  });
+  getElement('closeLearn').addEventListener('click', () => {
+    setLearningMode(false);
+    getElement('learnToggle').focus({ preventScroll: true });
+    getElement('learnToggle').scrollIntoView({ block: 'center' });
+  });
+  for (const [index, name] of ['basics', 'formulas', 'bayes'].entries()) {
+    const tab = getElement(`tab-${name}`);
+    tab.addEventListener('click', () => selectLearningTab(name));
+    tab.addEventListener('keydown', event => {
+      const names = ['basics', 'formulas', 'bayes'];
+      const next = { ArrowRight: (index + 1) % 3, ArrowLeft: (index + 2) % 3, Home: 0, End: 2 }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      selectLearningTab(names[next], true);
+    });
+  }
+  const learnPanel = getElement('learnPanel');
+  const previewFormula = event => {
+    if (event.pointerType === 'touch') return;
+    const term = event.target.closest('[data-explain]');
+    if (!term) return;
+    formulaPreview = { metric: term.dataset.explain, part: term.dataset.part };
+    renderMetricHighlight();
+  };
+  learnPanel.addEventListener('pointerover', previewFormula);
+  learnPanel.addEventListener('focusin', previewFormula);
+  const clearPreview = event => {
+    if (!event.target.closest('[data-explain]')) return;
+    formulaPreview = null;
+    renderMetricHighlight();
+  };
+  learnPanel.addEventListener('pointerout', clearPreview);
+  learnPanel.addEventListener('focusout', clearPreview);
+  learnPanel.addEventListener('click', event => {
+    const term = event.target.closest('[data-explain]');
+    if (term) {
+      const next = { metric: term.dataset.explain, part: term.dataset.part };
+      formulaPinned = formulaPinned?.metric === next.metric && formulaPinned?.part === next.part ? null : next;
+      formulaPreview = null;
+      hoveredMetric = focusedMetric = pinnedMetric = null;
+      renderMetricHighlight();
+    }
+    const preset = event.target.closest('[data-learn-share]');
+    if (preset) {
+      const share = preset.dataset.learnShare;
+      elements.prevalence.value = share;
+      update();
+      getElement('learnPanel').querySelector(`[data-learn-share="${share}"]`).focus({ preventScroll: true });
+    }
+    const tabLink = event.target.closest('[data-learn-tab]');
+    if (tabLink) {
+      selectLearningTab(tabLink.dataset.learnTab, true);
+    }
+  });
   for (const name of Object.keys(metricGroups)) {
     const card = getElement(`${name}Card`);
     card.addEventListener('pointerenter', event => {
       if (event.pointerType === 'touch') return;
+      formulaPreview = formulaPinned = null;
       hoveredMetric = name;
       renderMetricHighlight();
     });
@@ -2169,6 +2639,7 @@
       renderMetricHighlight();
     });
     card.addEventListener('click', () => {
+      formulaPreview = formulaPinned = null;
       pinnedMetric = pinnedMetric === name ? null : name;
       hoveredMetric = focusedMetric = null;
       renderMetricHighlight();
@@ -2176,11 +2647,13 @@
   }
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
+    formulaPreview = formulaPinned = null;
     hoveredMetric = focusedMetric = pinnedMetric = null;
     renderMetricHighlight();
   });
   document.addEventListener('pointerdown', event => {
-    if (event.target.closest('.metric, #controls, .views, #modeToggle')) return;
+    if (event.target.closest('.metric, #controls, .views, #modeToggle, #learnPanel, #learnToggle')) return;
+    formulaPreview = formulaPinned = null;
     hoveredMetric = focusedMetric = pinnedMetric = null;
     renderMetricHighlight();
   });
