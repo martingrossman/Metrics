@@ -1138,7 +1138,7 @@
   [hidden] { display: none !important; }
   .learning-entry { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0; }
   .learning-entry .key { margin: 0; }
-  .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; padding: 1px 9px; }
+  .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; }
   .learn-toggle[aria-expanded="true"] { background: #f2edff; }
   .metric-formula { display: none; font-size: var(--font-caption); color: #526886; font-weight: 500; margin-top: 5px; letter-spacing: 0; }
   .learning .metric { flex-wrap: wrap; }
@@ -1267,10 +1267,16 @@
   @media (max-width: 650px) and (orientation: portrait) {
     .container > .learning-entry { order: 3; gap: 6px; }
     .learning-entry .key { font-size: 10px; }
-    .learning-entry .learn-toggle { min-height: 24px; padding: 1px 6px; font-size: 11px; }
     .container > .controls { margin-bottom: 0; }
     .container > .learn-panel { order: 6; }
     .learning .metric-formula { font-size: 10px; }
+  }
+  @media (max-width: 480px) {
+    .top { gap: 4px; }
+    .brand { gap: 4px; font-size: 14px; }
+    .brand-credit { font-size: 9px; letter-spacing: -0.3px; }
+    .top-right { gap: 3px; }
+    .top-right .reset { padding: 3px 5px; font-size: 10px; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .learn-panel:not([hidden]) { animation: learn-in 180ms ease-out; }
@@ -1307,6 +1313,7 @@
   </div>
   <div class="top-right">
    <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
+   <button class="reset learn-toggle" id="learnToggle" type="button" aria-expanded="false" aria-controls="learnPanel">Learn more</button>
    <button class="reset" id="reset">
     Reset ↺
    </button>
@@ -1437,7 +1444,6 @@
  </div>
  <div class="learning-entry">
   <p class="key" id="markerKey">Full marker = 10 people; smaller = partial.</p>
-  <button class="reset learn-toggle" id="learnToggle" type="button" aria-expanded="false" aria-controls="learnPanel">Learn more</button>
  </div>
  <section class="views">
   <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
