@@ -724,7 +724,7 @@
 
   @media (min-width: 1280px) and (max-height: 820px) {
     .container { padding-bottom: 4px; }
-    .story { margin-bottom: 0; }
+    .story { margin-bottom: 0; font-size: 13.5px; }
     .views { grid-template-columns: 0.84fr 1.16fr; }
     .population { --matrix-row-height: 145px; }
     .insight { padding-top: 8px; padding-bottom: 8px; }
@@ -1312,13 +1312,13 @@
    </button>
   </div>
  </header>
- <p class="story" id="intro"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the share of sick people correctly testing positive (TPR) and the share of people without flu getting a false alarm (FPR) stay the same.</p>
+ <p class="story" id="intro"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.</p>
  <section aria-live="polite" class="metrics">
   <button class="card metric" id="tprCard" type="button" data-metric="tpr" aria-pressed="false" aria-description="Highlight TP out of all actual positives: TP divided by TP plus FN. Tap again to clear." title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
    <span class="metric-label">
     TPR
     <small>
-     <span data-term="fixedCaption">Fixed with sick share</span>
+     <span data-term="fixedCaption">Fixed with sick portion</span>
     </small>
    </span>
    <strong id="tpr">
@@ -1329,7 +1329,7 @@
    <span class="metric-label">
     FPR
     <small>
-     <span data-term="fixedCaption">Fixed with sick share</span>
+     <span data-term="fixedCaption">Fixed with sick portion</span>
     </small>
    </span>
    <strong id="fpr">
@@ -1340,7 +1340,7 @@
    <span class="metric-label">
     Precision
     <small>
-     <span data-term="precisionCaption">Depends on sick share</span>
+     <span data-term="precisionCaption">Depends on sick portion</span>
     </small>
    </span>
    <strong id="precision">
@@ -1392,11 +1392,11 @@
  <div class="control">
    <span class="control-header">
     <label for="prevalence" id="shareLabel" title="Percentage of people who actually have flu">
-     Sick share
+     Sick portion
     </label>
     <span class="balance-values">
-    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set sick share to 10%">10%</button>
-    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set sick share to 50%">50%</button>
+    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set sick portion to 10%">10%</button>
+    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set sick portion to 50%">50%</button>
     <output class="val" id="prevalenceOut">
      50%
     </output>
@@ -1524,7 +1524,7 @@
   </div>
  </section>
 
- <section class="card insight" title="Each full dot or square represents 10 people; smaller markers represent partial counts. Sick share changes counts; TPR and FPR stay fixed.">
+ <section class="card insight" title="Each full dot or square represents 10 people; smaller markers represent partial counts. Sick portion changes counts; TPR and FPR stay fixed.">
   <div class="insight-text">
    <strong>
     <span data-term="amongPositive">Among positive tests:</span>
@@ -1573,7 +1573,7 @@
   <div id="learn-bayes" role="tabpanel" aria-labelledby="tab-bayes" tabindex="0" hidden></div>
  </section>
  <p class="foot" id="footNote">
-  1,000 weighted cases. Counts are expected values and may be fractional. Sick share changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
+  1,000 weighted cases. Counts are expected values and may be fractional. Sick portion changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
  </p>
  <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
 </main>
@@ -1675,7 +1675,7 @@
   const terminology = {
     flu: {
       introduction: getElement('intro').innerHTML,
-      share: 'Sick share', shareTitle: 'Percentage of people who actually have flu',
+      share: 'Sick portion', shareTitle: 'Percentage of people who actually have flu',
       thresholdLabel: 'Sensitivity to the flu signal', thresholdLow: '0% · Less sensitive', thresholdHigh: '100% · More sensitive',
       separationLabel: 'How different the two groups are', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
       actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
@@ -1685,15 +1685,15 @@
       fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
       amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
       subject: 'people', cutoff: 'signal sensitivity',
-      separation: 'score separation', fixedCaption: 'Fixed with sick share', precisionCaption: 'Depends on sick share',
+      separation: 'score separation', fixedCaption: 'Fixed with sick portion', precisionCaption: 'Depends on sick portion',
       noPositives: 'No positive tests at this sensitivity setting.',
       scorePanel: 'Flu test score graph', plot: 'Flu test score threshold',
       matrixPanel: 'Flu test results', controls: 'Flu test controls',
       bar: 'People with flu versus false alarms among positive tests'
     },
     generic: {
-      introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive share).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
-      share: 'Positive share', shareTitle: 'Class prevalence: percentage of actual positive cases',
+      introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive portion).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
+      share: 'Positive portion', shareTitle: 'Class prevalence: percentage of actual positive cases',
       thresholdLabel: 'Decision threshold', thresholdLow: '0% · More predicted +', thresholdHigh: '100% · Fewer predicted +',
       separationLabel: 'Class separation', separationLow: 'Overlapping', separationHigh: 'Fully separated',
       actualPositive: 'Actual +', actualNegative: 'Actual −',
@@ -1732,12 +1732,12 @@
     document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
     document.querySelectorAll('.metric')[0].title = genericMode
       ? 'TPR = TP / all actual positives. Fixed when class balance changes at the same threshold and separation.'
-      : 'TPR = share of people with flu who test positive. Fixed when sick share changes with the same test settings.';
+      : 'TPR = portion of people with flu who test positive. Fixed when sick portion changes with the same test settings.';
     document.querySelectorAll('.metric')[1].title = genericMode
       ? 'FPR = FP / all actual negatives. Fixed when class balance changes at the same threshold and separation.'
-      : 'FPR = share of people without flu who get a positive test. Fixed when sick share changes with the same test settings.';
+      : 'FPR = portion of people without flu who get a positive test. Fixed when sick portion changes with the same test settings.';
     document.querySelectorAll('.metric')[2].title = genericMode
-      ? 'Precision = TP / (TP + FP). Changes as the actual positive share changes.'
+      ? 'Precision = TP / (TP + FP). Changes as the actual positive portion changes.'
       : 'Precision = chance a person has flu after a positive test in this group.';
     elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? 'Flu example' : 'Generic ML';
     elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? 'Flu' : 'ML';
@@ -2281,7 +2281,7 @@
       fpr: 'False alarm rate (1 − Specificity)',
       precision: 'Positive predictive value (PPV)'
     };
-    const share = genericMode ? 'positive share' : 'sick share';
+    const share = genericMode ? 'positive portion' : 'sick portion';
     const total = name => metricGroups[name].denominator.reduce((sum, outcome) => sum + metrics[outcome], 0);
     const calculation = name => {
       const rule = metricGroups[name];

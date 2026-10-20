@@ -18,7 +18,7 @@ focus a metric, press Enter to keep its explanation visible, and Escape to clear
 
 Choose **Learn more** above the graphs for a deeper explanation. The basics,
 Formulas, and Bayes tabs explain the outcomes, show live calculations, and connect
-TPR, FPR, and positive share to precision using Bayes' theorem. Hover or tap a
+TPR, FPR, and positive portion to precision using Bayes' theorem. Hover or tap a
 formula term to highlight its numerator or denominator. The 10% and 50% buttons
 in Bayes change only class balance. **Simple view** returns to the compact page.
 The Flu / Generic ML switch applies to both views; opening or closing the learning
@@ -27,14 +27,14 @@ panel preserves all model settings. Reset retains the chosen view and terminolog
 ## Model
 
 The demo represents 1,000 weighted cases using two fixed distributions of 50 deterministic
-score samples. Positive share changes their weights, preserving TPR and FPR
+score samples. Positive portion changes their weights, preserving TPR and FPR
 at a given threshold and separation. Precision changes with the weighted
 balance of correct detections and false alarms. Counts can be fractional.
 
 Each full marker represents 10 cases, with a smaller marker for any remainder.
 Marker area is proportional to its case count. Both charts use the same
 representative scores and counts; matching dots and squares highlight on hover.
-At 0% or 100% positive share, a rate with no actual cases is shown as `N/A`.
+At 0% or 100% positive portion, a rate with no actual cases is shown as `N/A`.
 Precision is `N/A` when there are no positive predictions.
 
 See [the code guide](CMatrixLab_CODE_GUIDE.md) for editing details.
