@@ -5,12 +5,11 @@ const os = require('node:os');
 const { parseArgs } = require('node:util');
 
 function createServer(root = path.join(__dirname, '..')) {
-  // Only these pages are shared; read them for each request so edits show on refresh.
+  // Only the demo is shared; read it for each request so edits show on refresh.
   const pages = new Map([
     ['/', 'index.html'],
-    ['/cmatrixlab_minimal_readable.html', 'cmatrixlab_minimal_readable.html']
+    ['/index.html', 'index.html']
   ]);
-  pages.set('/index.html', pages.get('/'));
 
   return http.createServer((request, response) => {
     response.setHeader('Cache-Control', 'no-store');

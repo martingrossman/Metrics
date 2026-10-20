@@ -4,9 +4,9 @@ An interactive explanation of how decision threshold, class separation, and
 positive-class prevalence affect classifier metrics. Open `index.html` in a
 browser; the demo has no build step or runtime dependencies.
 
-The Simple view lives in `cmatrixlab_minimal_readable.html`, with its styles
-and JavaScript together. `index.html` forwards to it. `CNAME` configures the
-custom domain for GitHub Pages.
+The complete demo lives in `index.html`, with its styles and JavaScript together.
+It opens directly without a redirect. `CNAME` configures the custom domain for
+GitHub Pages.
 
 ## Model
 
@@ -40,8 +40,8 @@ Wi-Fi adapter. Keep the terminal open; press **Ctrl+C** to stop sharing.
 If Windows asks about firewall access, allow Node.js on your **private** home
 network. If the other device cannot connect, check that both devices use the
 same network; guest Wi-Fi or a VPN may prevent device-to-device connections.
-The server listens on all IPv4 network adapters and serves only the two demo
-HTML pages. This shares the demo locally while your computer is running.
+The server listens on all IPv4 network adapters and serves only `index.html`.
+This shares the demo locally while your computer is running.
 
 To use another port:
 
@@ -52,7 +52,7 @@ npm run serve -- --port 8081
 On Windows PowerShell, if script execution blocks `npm`, use `npm.cmd` in
 these commands (for example, `npm.cmd run serve`).
 
-After saving an edit to either HTML page, refresh the page on your iPhone to
+After saving an edit to `index.html`, refresh the page on your iPhone to
 see it. The server reads the file again on every request, so it can stay running.
 
 ## Checks

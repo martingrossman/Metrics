@@ -5,7 +5,7 @@ const { pathToFileURL } = require('node:url');
 const { chromium } = require('playwright');
 
 const root = path.resolve(__dirname, '..');
-const filename = path.join(root, 'cmatrixlab_minimal_readable.html');
+const filename = path.join(root, 'index.html');
 const html = fs.readFileSync(filename, 'utf8');
 
 // Inspect the standalone model without adding a production-only test API.
@@ -62,8 +62,8 @@ console.log(`Model: ${combinations} combinations passed.`);
     const page = await browser.newPage({ reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto(pathToFileURL(path.join(root, 'index.html')).href);
-    await page.waitForURL('**/cmatrixlab_minimal_readable.html');
+    await page.goto(pathToFileURL(filename).href);
+    assert.equal(page.url(), pathToFileURL(filename).href);
     const setSlider = async (id, value) => page.locator(`#${id}`).evaluate((input, value) => {
       input.value = value;
       input.dispatchEvent(new Event('input', { bubbles: true }));

@@ -1,6 +1,6 @@
 ﻿# CMatrixLab Simple — code guide
 
-Open `index.html` or `cmatrixlab_minimal_readable.html` in a browser. No build step, server, or runtime libraries are required.
+Open `index.html` in a browser. This is the only HTML file; it contains the entire demo. No build step, server, or runtime libraries are required.
 
 ## Where to edit
 
