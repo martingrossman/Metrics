@@ -246,7 +246,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       await page.screenshot({ path: path.join(root, 'artifacts', `${name}.png`), fullPage: true });
     }
     assert.deepEqual(errors, []);
-    console.log('Browser: redirect, controls, reset, hover, endpoints, and 25 stable responsive widths passed.');
+    console.log('Browser: direct entry point, controls, reset, hover, endpoints, and 25 stable responsive widths passed.');
   } finally {
     await browser.close();
   }
