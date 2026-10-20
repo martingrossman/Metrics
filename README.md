@@ -8,6 +8,9 @@ The complete demo lives in `index.html`, with its styles and JavaScript together
 It opens directly without a redirect. `CNAME` configures the custom domain for
 GitHub Pages.
 
+Drag the blue threshold line in the first graph with a mouse or finger, or use
+the matching slider. You can also focus the graph and use the arrow keys.
+
 ## Model
 
 The demo represents 1,000 weighted cases using two fixed distributions of 50 deterministic
@@ -62,6 +65,7 @@ With Node.js and npm installed:
 ```sh
 npm ci
 npx playwright install chromium
+npx playwright install webkit
 npm test
 ```
 

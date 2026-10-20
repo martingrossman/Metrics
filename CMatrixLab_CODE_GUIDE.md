@@ -17,6 +17,7 @@ Open `index.html` in a browser. This is the only HTML file; it contains the enti
 - **Charts:** `renderScorePlot()` and `renderPopulationGrid()` use the same marker groups and hover IDs. Fractional marker area is proportional to its case weight.
 - **Summary:** `renderMetrics()` updates cards, outcome totals, and the precision bar.
 - **Controls:** `update()` reads sliders and renders everything; `reset()` restores defaults.
+- **Graph threshold:** Drag the blue line or its arrow handle with a mouse, pen, or finger. Pointer capture stays on the SVG during redraws; screen coordinates convert to SVG coordinates and clamp to the score range. The graph and range slider share the same cutoff, including inverted sensitivity in flu mode. The focused graph also supports arrow keys, Page Up/Down, and Home/End.
 
 ## Invariants
 

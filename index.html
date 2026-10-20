@@ -286,6 +286,7 @@
   .plot {
     width: 100%;
     display: block;
+    touch-action: none;
     background: rgb(251, 252, 255);
     border: 1px solid rgb(237, 241, 246);
     border-radius: 10px;
@@ -293,6 +294,28 @@
 
   .plot text {
     font-family: Inter, system-ui, sans-serif;
+  }
+
+  .plot:focus-visible {
+    outline: 2px solid #246cf0;
+    outline-offset: 2px;
+  }
+
+  .threshold-drag {
+    cursor: ew-resize;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .plot.dragging {
+    cursor: ew-resize;
+  }
+
+  .threshold-drag:hover .threshold-grip,
+  .plot.dragging .threshold-grip,
+  .plot:focus-visible .threshold-grip {
+    fill: #e2ecff;
   }
 
   .plot .point {
@@ -1235,7 +1258,7 @@
  <p class="key" id="markerKey">Full dot or square = 10 people; smaller = partial.</p>
  <section class="views">
   <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
-   <svg aria-label="Flu test scores of people with and without flu, with vertical test cutoff" class="plot" id="plot" role="img" viewBox="0 0 650 440">
+   <svg aria-label="Flu test score threshold" aria-description="Drag the blue line left or right, or use the arrow keys." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="horizontal" tabindex="0" class="plot" id="plot" role="slider" viewBox="0 0 650 440">
    </svg>
   </div>
   <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
@@ -1450,7 +1473,7 @@
       subject: 'people', cutoff: 'signal sensitivity',
       separation: 'score separation', fixedCaption: 'Fixed with sick share', precisionCaption: 'Depends on sick share',
       noPositives: 'No positive tests at this sensitivity setting.',
-      scorePanel: 'Flu test score graph', plot: 'Flu test scores of people with and without flu, with vertical test cutoff',
+      scorePanel: 'Flu test score graph', plot: 'Flu test score threshold',
       matrixPanel: 'Flu test results', controls: 'Flu test controls',
       bar: 'People with flu versus false alarms among positive tests'
     },
@@ -1468,7 +1491,7 @@
       subject: 'cases', cutoff: 'decision threshold',
       separation: 'class separation', fixedCaption: 'Fixed with balance', precisionCaption: 'Depends on balance',
       noPositives: 'No positive predictions at this threshold.',
-      scorePanel: 'Positive class score graph', plot: 'Positive class scores of actual positives and negatives, with vertical decision threshold',
+      scorePanel: 'Positive class score graph', plot: 'Decision threshold on the positive class score graph',
       matrixPanel: 'Confusion matrix', controls: 'Model controls',
       bar: 'Correct detections versus false alarms among positive predictions'
     }
@@ -1839,6 +1862,27 @@
       'stroke-width': 2, 'stroke-dasharray': '6 5',
       'pointer-events': 'none'
     });
+    // A wide invisible target makes the line easy to grab with a finger.
+    // Pointer capture belongs to the persistent SVG, since its children redraw.
+    const dragTarget = draw('g', { class: 'threshold-drag', 'aria-hidden': 'true' });
+    dragTarget.appendChild(createSvgElement('title', {}, 'Drag left or right to change the threshold'));
+    dragTarget.appendChild(createSvgElement('line', {
+      x1: scoreToX(threshold), x2: scoreToX(threshold), y1: top, y2: bottom,
+      stroke: 'transparent', 'stroke-width': 44,
+      'vector-effect': 'non-scaling-stroke', 'pointer-events': 'stroke'
+    }));
+    dragTarget.appendChild(createSvgElement('rect', {
+      x: scoreToX(threshold) - 20, y: midY - 12, width: 40, height: 24,
+      rx: 7, fill: '#fff', stroke: '#246cf0', 'stroke-width': 2,
+      class: 'threshold-grip'
+    }));
+    dragTarget.appendChild(createSvgElement('path', {
+      d: `M ${scoreToX(threshold) - 6} ${midY - 5} l -5 5 l 5 5 M ${scoreToX(threshold) + 6} ${midY - 5} l 5 5 l -5 5`,
+      fill: 'none', stroke: '#246cf0', 'stroke-width': 2,
+      'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pointer-events': 'none'
+    }));
+    svg.setAttribute('aria-valuenow', Math.round(threshold * 100));
+    svg.setAttribute('aria-valuetext', `${threshold.toFixed(2)} score threshold`);
     draw('line', {
       x1: left, x2: left + width, y1: bottom, y2: bottom,
       stroke: '#8c9bb0'
@@ -1918,6 +1962,38 @@
   // 5. UI CONTROLS — SINGLE SOURCE OF TRUTH
   // ============================================================
 
+  let thresholdDrag = null;
+
+  function plotPointerX(event) {
+    const point = elements.scorePlot.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    return point.matrixTransform(elements.scorePlot.getScreenCTM().inverse()).x;
+  }
+
+  function setPlotThreshold(percent) {
+    const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+    const value = String(genericMode ? clamped : 100 - clamped);
+    if (elements.threshold.value === value) return;
+    elements.threshold.value = value;
+    update();
+  }
+
+  function moveThreshold(event) {
+    if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
+    event.preventDefault();
+    setPlotThreshold((plotPointerX(event) - thresholdDrag.offset - CONFIG.plot.left) / CONFIG.plot.width * 100);
+  }
+
+  function endThresholdDrag(event) {
+    if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
+    thresholdDrag = null;
+    elements.scorePlot.classList.remove('dragging');
+    if (elements.scorePlot.hasPointerCapture(event.pointerId)) {
+      elements.scorePlot.releasePointerCapture(event.pointerId);
+    }
+  }
+
   function update() {
     renderTerminology();
     const { prevalencePct, positiveCount, threshold, separation } = readSettings();
@@ -1962,6 +2038,37 @@
     slider.addEventListener('input', update);
   }
   elements.reset.addEventListener('click', reset);
+  elements.scorePlot.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0 || thresholdDrag ||
+        !event.target.closest('.threshold-drag')) return;
+    event.preventDefault();
+    thresholdDrag = {
+      pointerId: event.pointerId,
+      offset: plotPointerX(event) - CONFIG.plot.left - readSettings().threshold * CONFIG.plot.width
+    };
+    elements.scorePlot.setPointerCapture(event.pointerId);
+    elements.scorePlot.focus({ preventScroll: true });
+    elements.scorePlot.classList.add('dragging');
+    highlightExample(null);
+  });
+  elements.scorePlot.addEventListener('pointermove', moveThreshold);
+  elements.scorePlot.addEventListener('pointerup', event => {
+    moveThreshold(event);
+    endThresholdDrag(event);
+  });
+  elements.scorePlot.addEventListener('pointercancel', endThresholdDrag);
+  elements.scorePlot.addEventListener('lostpointercapture', endThresholdDrag);
+  elements.scorePlot.addEventListener('keydown', event => {
+    const current = readSettings().threshold * 100;
+    const next = {
+      ArrowLeft: current - 1, ArrowDown: current - 1,
+      ArrowRight: current + 1, ArrowUp: current + 1,
+      PageDown: current - 10, PageUp: current + 10, Home: 0, End: 100
+    }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    setPlotThreshold(next);
+  });
   elements.modeToggle.addEventListener('click', () => {
     // Preserve the effective cutoff and every prediction when changing terminology.
     elements.threshold.value = 100 - Number(elements.threshold.value);
