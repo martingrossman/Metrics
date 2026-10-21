@@ -500,12 +500,22 @@
     justify-content: space-between;
     gap: 7px;
     padding: 10px 18px 6px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .metric:hover {
+    border-color: #c4b2ee;
   }
 
   .metric.active, .metric:focus-visible {
     border-color: #8056d9;
     box-shadow: inset 0 0 0 1px #8056d9;
     outline: none;
+  }
+
+  #precisionCard .metric-label small {
+    color: #6d43bc;
+    font-weight: 600;
   }
 
   .metric-label { display: block; }
@@ -588,6 +598,33 @@
     font-style: normal;
     color: var(--blue);
     font-weight: 800;
+  }
+
+  .group-top > span {
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .group-sub {
+    font-weight: 500;
+    opacity: 0.78;
+    font-size: var(--font-caption);
+  }
+
+  .summary-tp {
+    color: #087f59;
+    background: #e8f8f2;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .summary-fp {
+    color: #bf3148;
+    background: #fdecef;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-weight: 700;
   }
 
   .prec-right {
@@ -756,6 +793,14 @@
   @media (max-width: 767px) {
     :root { --font-metric: 28px; }
     .population { --matrix-row-height: 155px; }
+    .brand-credit {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.2;
+    }
+    .top-right { gap: 6px; }
+    .reset { padding: 6px 10px; }
   }
 
   @media (max-width: 685px) {
@@ -1235,8 +1280,25 @@
   .notation-list { display: grid; gap: 8px; margin: 16px 0; }
   .notation-row { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 14px; padding: 10px 12px; background: #f7f9fc; border-radius: 9px; }
   .notation-row p { margin: 0; }
+  .mini-matrix { width: 34px; height: 28px; display: inline-grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; border-radius: 6px; background: #f1f5f9; border: 1px solid #dce3ee; flex-shrink: 0; }
+  .mini-cell { border-radius: 2px; background: #e2e8f0; }
+  .mini-cell.denom { background: #ede6fc; box-shadow: inset 0 0 0 1px #9b78df; }
+  .mini-cell.num { background: var(--metric-color, var(--outcome-color, #0ea976)); box-shadow: none; }
+  .outcome-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .slice-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: #526886; font-weight: 600; background: #f7f9fc; padding: 3px 7px; border-radius: 7px; border: 1px solid #e6ecf5; }
+  .prior-bar { height: 5px; border-radius: 4px; background: #edf1f7; overflow: hidden; margin-top: 5px; }
+  .prior-bar span { display: block; height: 100%; border-radius: inherit; background: #8056d9; }
+  .prior-bar.neg span { background: #94a3b8; }
+  .math-pill { display: inline-block; padding: 1px 6px; border-radius: 5px; font-weight: 700; font-size: 0.92em; }
+  .math-pill.tpr { background: #e8f8f2; color: #087f59; }
+  .math-pill.fpr { background: #fdecef; color: #bf3148; }
+  .math-pill.prior { background: #f2edff; color: #6337b8; }
   .learning .metrics { position: static; }
+  @media (max-width: 1169px) {
+    .group-sub { display: none; }
+  }
   @media (max-width: 767px) {
+    .summary-tp, .summary-fp { padding: 0 3px; }
     .learn-grid, .basics-hero, .bayes-flow, .bayes-math { grid-template-columns: 1fr; }
     .learn-panel { padding: 16px; }
     .learn-panel h2 { font-size: 22px; }
@@ -1474,7 +1536,7 @@
     <div class="group fn">
      <div class="group-top">
       <span>
-       FN
+       FN<small class="group-sub" data-term="fnLegend"> · Flu missed</small>
       </span>
       <strong id="fnNum">
        0
@@ -1486,7 +1548,7 @@
     <div class="group tp">
      <div class="group-top">
       <span>
-       TP
+       TP<small class="group-sub" data-term="tpLegend"> · Flu detected</small>
       </span>
       <strong id="tpNum">
        0
@@ -1505,7 +1567,7 @@
     <div class="group tn">
      <div class="group-top">
       <span>
-       TN
+       TN<small class="group-sub" data-term="tnLegend"> · No flu, test −</small>
       </span>
       <strong id="tnNum">
        0
@@ -1517,7 +1579,7 @@
     <div class="group fp">
      <div class="group-top">
       <span>
-       FP
+       FP<small class="group-sub" data-term="fpLegend"> · False alarm</small>
       </span>
       <strong id="fpNum">
        0
@@ -2032,6 +2094,40 @@
     drawPopulationLabel(positiveCount, copy.actualPositive, positiveRow);
     drawPopulationLabel(CONFIG.totalExamples - positiveCount, copy.actualNegative, negativeRow);
 
+    // Draw smooth Gaussian density envelopes split at the threshold behind each dot row.
+    const { separation } = readSettings();
+    const meanOffset = 0.30 * separation;
+    const sigma = 0.16 - 0.09 * separation;
+    const envelopeHalfHeight = shortPhone ? 28 : compact ? 36 : 52;
+    function drawDensityEnvelope(mean, centerY, leftOutcome, rightOutcome, rowWeight) {
+      if (rowWeight <= 0) return;
+      const scale = envelopeHalfHeight * (0.45 + 0.55 * Math.sqrt(rowWeight / CONFIG.totalExamples));
+      const buildSide = (startS, endS, color) => {
+        if (endS - startS < 1e-4) return;
+        const steps = 28;
+        const upper = [];
+        const lower = [];
+        for (let i = 0; i <= steps; i++) {
+          const s = startS + (endS - startS) * (i / steps);
+          const x = scoreToX(s);
+          const density = Math.exp(-0.5 * ((s - mean) / sigma) ** 2);
+          const dy = scale * density;
+          upper.push(`${x.toFixed(1)} ${(centerY - dy).toFixed(1)}`);
+          lower.unshift(`${x.toFixed(1)} ${(centerY + dy).toFixed(1)}`);
+        }
+        draw('path', {
+          d: `M ${upper.join(' L ')} L ${lower.join(' L ')} Z`,
+          fill: color, 'fill-opacity': 0.12,
+          stroke: color, 'stroke-opacity': 0.28, 'stroke-width': 1,
+          'pointer-events': 'none', 'aria-hidden': 'true'
+        });
+      };
+      buildSide(0, threshold, CONFIG.colors[leftOutcome]);
+      buildSide(threshold, 1, CONFIG.colors[rightOutcome]);
+    }
+    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'fn', 'tp', positiveCount);
+    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'tn', 'fp', CONFIG.totalExamples - positiveCount);
+
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
     function renderScoreRow(rowExamples, centerY) {
@@ -2233,10 +2329,21 @@
     if (predictedPositiveCount === 0) {
       elements.summary.textContent = copy.noPositives;
     } else {
+      const makePill = (cls, text) => {
+        const span = document.createElement('span');
+        span.className = cls;
+        span.textContent = text;
+        return span;
+      };
       const emphasizedValue = document.createElement('em');
       emphasizedValue.textContent = `${formatPercent(precision)} Precision`;
       elements.summary.replaceChildren(
-        document.createTextNode(`${formatCount(tp)} TP ÷ (${formatCount(tp)} TP + ${formatCount(fp)} FP) = `),
+        makePill('summary-tp', `${formatCount(tp)} TP`),
+        document.createTextNode(' ÷ ('),
+        makePill('summary-tp', `${formatCount(tp)} TP`),
+        document.createTextNode(' + '),
+        makePill('summary-fp', `${formatCount(fp)} FP`),
+        document.createTextNode(') = '),
         emphasizedValue,
         document.createTextNode('.')
       );
@@ -2295,6 +2402,10 @@
       return `${formatCount(metrics[rule.numerator])} ÷ (${rule.denominator.map(o => formatCount(metrics[o])).join(' + ')}) = ${formatPercent(metrics[name])}` +
         (sum === 0 ? ' — no cases in this group.' : '');
     };
+    const miniMatrix = (numOutcomes, denomOutcomes = []) => `
+      <span class="mini-matrix" aria-hidden="true">
+        ${['fn', 'tp', 'tn', 'fp'].map(cell => `<i class="mini-cell${numOutcomes.includes(cell) ? ' num' : denomOutcomes.includes(cell) ? ' denom' : ''}"></i>`).join('')}
+      </span>`;
     // All HTML below is trusted local copy plus numbers from the model.
     getElement('learn-basics').innerHTML = `
       <div class="basics-hero">
@@ -2334,7 +2445,10 @@
       <div class="outcome-grid">
         ${['tp', 'fp', 'fn', 'tn'].map((key, i) => `
           <div class="outcome-card" style="--outcome-color:${CONFIG.colors[key]}">
-            <strong>${key.toUpperCase()} · ${formatCount(metrics[key])}</strong>
+            <div class="outcome-head">
+              <strong>${key.toUpperCase()} · ${formatCount(metrics[key])}</strong>
+              ${miniMatrix([key])}
+            </div>
             <span>${meanings[i]}</span>
           </div>`).join('')}
       </div>
@@ -2347,12 +2461,15 @@
     getElement('learn-formulas').innerHTML = `
       <div class="learn-intro">
         <h3>Every metric is a fraction of two regions</h3>
-        <p>Each rate asks: <b>how many of the reference group (denominator) landed in the target outcome (numerator)?</b> Hover over or tap any part of a fraction below to outline its group in the graphs above. Tap again to clear.</p>
+        <p>Each rate asks: <b>how many of the reference group (denominator) landed in the target outcome (numerator)?</b> Notice in the 2×2 mini-maps how <b>TPR</b> and <b>FPR</b> slice horizontally along a single row, whereas <b>Precision</b> slices vertically down the positive column. Hover over or tap any part of a fraction below to outline it above.</p>
       </div>
       <div class="learn-grid">${Object.entries(metricGroups).map(([name, rule]) => `
         <article class="learn-card formula-card metric-detail" style="--metric-color:${metricColors[name]}">
           <div class="metric-heading">
-            <h3>${rule.label}</h3>
+            <div>
+              <h3>${rule.label}</h3>
+              <span class="slice-badge">${miniMatrix([rule.numerator], rule.denominator)} ${name === 'precision' ? 'Column rate' : 'Row rate'}</span>
+            </div>
             <strong>${formatPercent(metrics[name])}</strong>
           </div>
           <p class="question">${questions[name]}</p>
@@ -2385,11 +2502,11 @@
         <div class="flow-step">
           <div class="flow-heading"><span class="step-index">1</span><span>Prior · Base rate</span></div>
           <div class="count-row">
-            <div><span>${copy.actualPositive}</span><small>p = ${formatPercent(p)} of 1,000</small></div>
+            <div style="flex:1"><span>${copy.actualPositive}</span><small>p = ${formatPercent(p)} of 1,000</small><div class="prior-bar" aria-hidden="true"><span style="width:${100 * p}%"></span></div></div>
             <strong>${formatCount(tp + fn)}</strong>
           </div>
           <div class="count-row">
-            <div><span>${copy.actualNegative}</span><small>1 − p = ${formatPercent(1 - p)} of 1,000</small></div>
+            <div style="flex:1"><span>${copy.actualNegative}</span><small>1 − p = ${formatPercent(1 - p)} of 1,000</small><div class="prior-bar neg" aria-hidden="true"><span style="width:${100 * (1 - p)}%"></span></div></div>
             <strong>${formatCount(fp + tn)}</strong>
           </div>
         </div>
@@ -2435,7 +2552,10 @@
           </div>
           <div class="equation" aria-label="Precision equals TPR times p divided by TPR times p plus FPR times one minus p">
             <span><b>Precision</b> =</span>
-            <span class="fraction"><span>TPR × p</span><span>TPR × p + FPR × (1 − p)</span></span>
+            <span class="fraction">
+              <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span></span>
+              <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span> + <span class="math-pill fpr">FPR</span> × (1 − <span class="math-pill prior">p</span>)</span>
+            </span>
           </div>
         </div>
       </div>
