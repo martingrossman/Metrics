@@ -1232,7 +1232,7 @@
   .rate-track { height: 6px; border-radius: 10px; background: #e9eef4; overflow: hidden; margin-top: 16px; }
   .rate-track span { display: block; height: 100%; background: var(--metric-color, #0ea976); border-radius: inherit; }
   .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 24px 0 12px; }
-  .outcome-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .outcome-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .outcome-card { border-radius: 12px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--outcome-color) 22%, white); background: color-mix(in srgb, var(--outcome-color) 6%, white); }
   .outcome-card strong { display: block; color: var(--outcome-color); font-size: 22px; }
   .outcome-card span { font-size: 12px; }
@@ -2382,8 +2382,8 @@
       precision: 'Of people testing positive, how many have flu?'
     };
     const meanings = genericMode
-      ? ['Actual +, predicted +', 'Actual −, predicted +', 'Actual +, predicted −', 'Actual −, predicted −']
-      : ['Flu detected: flu, test +', 'False alarm: no flu, test +', 'Flu missed: flu, test −', 'Correctly cleared: no flu, test −'];
+      ? { fn: 'Actual +, predicted −', tp: 'Actual +, predicted +', tn: 'Actual −, predicted −', fp: 'Actual −, predicted +' }
+      : { fn: 'Flu missed: flu, test −', tp: 'Flu detected: flu, test +', tn: 'Correctly cleared: no flu, test −', fp: 'False alarm: no flu, test +' };
     const conditions = genericMode ? {
       tpr: 'P(predicted + | actual +)', fpr: 'P(predicted + | actual −)', precision: 'P(actual + | predicted +)'
     } : {
@@ -2443,13 +2443,13 @@
         <span class="learn-note">1,000 weighted ${copy.subject}</span>
       </div>
       <div class="outcome-grid">
-        ${['tp', 'fp', 'fn', 'tn'].map((key, i) => `
+        ${['fn', 'tp', 'tn', 'fp'].map(key => `
           <div class="outcome-card" style="--outcome-color:${CONFIG.colors[key]}">
             <div class="outcome-head">
               <strong>${key.toUpperCase()} · ${formatCount(metrics[key])}</strong>
               ${miniMatrix([key])}
             </div>
-            <span>${meanings[i]}</span>
+            <span>${meanings[key]}</span>
           </div>`).join('')}
       </div>
       <div class="balance-message">
