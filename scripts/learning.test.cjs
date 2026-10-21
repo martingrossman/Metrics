@@ -74,6 +74,7 @@ for (const device of [
       await activate('#tab-bayes');
       await activate('[data-learn-share="10"]');
       assert.equal(await page.locator('#prevalence').inputValue(), '10');
+      assert.equal(await page.locator('#bayesPrevalence').inputValue(), '10');
       assert.equal(await page.locator('#bayesPosterior').textContent(), '72.7%');
       assert.ok((await page.locator('#bayesCalculation').textContent()).includes('0.96 × 0.1'));
       assert.equal(await page.locator('#tpr').textContent(), '96%');
@@ -81,8 +82,15 @@ for (const device of [
       await bayesEvidence(96, 36, 96 / 132);
       await comparisonProbability(10, 96 / 132);
       await comparisonProbability(50, 480 / 500);
-      await activate('[data-learn-share="50"]');
+      await setSlider('bayesPrevalence', 50);
+      assert.equal(await page.locator('#prevalence').inputValue(), '50');
       assert.equal(await page.locator('#bayesPosterior').textContent(), '96%');
+      await setSlider('bayesThreshold', 60);
+      assert.equal(await page.locator('#threshold').inputValue(), '60');
+      await setSlider('bayesSeparation', 70);
+      assert.equal(await page.locator('#separation').inputValue(), '70');
+      await setSlider('bayesThreshold', 50);
+      await setSlider('bayesSeparation', 60);
       await bayesEvidence(480, 20, 480 / 500);
       await comparisonProbability(10, 96 / 132);
       await comparisonProbability(50, 480 / 500);

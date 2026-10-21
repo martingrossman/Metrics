@@ -174,7 +174,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .control:has(#prevalence) .val {
+  .control:has(#prevalence) .val, .control:has(#bayesPrevalence) .val {
     background: #f1edff;
     color: rgb(119, 81, 206);
   }
@@ -212,7 +212,7 @@
     cursor: pointer;
   }
 
-  .control input#prevalence {
+  .control input#prevalence, .control input#bayesPrevalence {
     accent-color: rgb(128, 90, 213);
     color: rgb(128, 90, 213);
   }
@@ -1293,6 +1293,16 @@
   .math-pill.tpr { background: #e8f8f2; color: #087f59; }
   .math-pill.fpr { background: #fdecef; color: #bf3148; }
   .math-pill.prior { background: #f2edff; color: #6337b8; }
+  .odds-badge { grid-column: 1 / -1; background: #fff; border: 1px solid #dfd5f7; border-radius: 10px; padding: 7px 12px; font-size: 12px; color: #435572; margin-top: 2px; }
+  .odds-badge b { color: #6337b8; }
+  .outcome-pos { display: inline-block; font-size: 11px; font-weight: 700; color: #526886; background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(100, 116, 139, 0.2); border-radius: 6px; padding: 1px 6px; margin-bottom: 4px; }
+  .word-eq { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 12px; color: #526886; background: #f8fafd; border: 1px dashed #dce3ee; border-radius: 9px; padding: 6px 10px; margin: 0 0 12px; text-align: center; }
+  .word-eq .fraction > :first-child { border-bottom-color: #cbd5e1; padding: 2px 6px; font-weight: 600; color: #15243d; }
+  .word-eq .fraction > :last-child { padding: 2px 6px; }
+  .derivation-box { display: grid; gap: 10px; }
+  .derivation-step { background: #fff; border: 1px solid #e4dcf5; border-radius: 11px; padding: 10px 14px; }
+  .derivation-step small { display: block; font-size: 11px; font-weight: 700; color: #6337b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+  .bayes-controls { margin: 16px 0 20px; border-color: #dfd5f7; background: #fcfbff; }
   .learning .metrics { position: static; }
   @media (max-width: 1169px) {
     .group-sub { display: none; }
@@ -1638,7 +1648,45 @@
   </div>
   <div id="learn-basics" role="tabpanel" aria-labelledby="tab-basics" tabindex="0"></div>
   <div id="learn-formulas" role="tabpanel" aria-labelledby="tab-formulas" tabindex="0" hidden></div>
-  <div id="learn-bayes" role="tabpanel" aria-labelledby="tab-bayes" tabindex="0" hidden></div>
+  <div id="learn-bayes" role="tabpanel" aria-labelledby="tab-bayes" tabindex="0" hidden>
+   <div id="learn-bayes-intro"></div>
+   <div class="card controls bayes-controls" aria-label="Bayes interactive controls">
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="thresholdLabel">Sensitivity to the flu signal</span></span>
+      <output class="val" id="bayesThresholdOut">50%</output>
+     </span>
+     <input id="bayesThreshold" data-sync="threshold" max="100" min="0" step="1" type="range" value="50"/>
+     <span class="endpoints">
+      <span><span data-term="thresholdLow">0% · Less sensitive</span></span>
+      <span><span data-term="thresholdHigh">100% · More sensitive</span></span>
+     </span>
+    </label>
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="separationLabel">How different the two groups are</span></span>
+      <output class="val" id="bayesSeparationOut">60%</output>
+     </span>
+     <input id="bayesSeparation" data-sync="separation" max="100" min="0" step="1" type="range" value="60"/>
+     <span class="endpoints">
+      <span><span data-term="separationLow">Hard to tell apart</span></span>
+      <span><span data-term="separationHigh">Easy to tell apart</span></span>
+     </span>
+    </label>
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="share">Sick portion</span></span>
+      <output class="val" id="bayesPrevalenceOut">50%</output>
+     </span>
+     <input id="bayesPrevalence" data-sync="prevalence" max="100" min="0" step="1" type="range" value="50"/>
+     <span class="endpoints">
+      <span><span data-term="minimum">0% · no one has flu</span></span>
+      <span><span data-term="maximum">100% · everyone has flu</span></span>
+     </span>
+    </label>
+   </div>
+   <div id="learn-bayes-body"></div>
+  </div>
  </section>
  <p class="foot" id="footNote">
   1,000 weighted cases. Counts are expected values and may be fractional. Sick portion changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
@@ -2373,17 +2421,45 @@
     const p = Number(elements.prevalence.value) / 100;
     const metricColors = { tpr: CONFIG.colors.tp, fpr: CONFIG.colors.fp, precision: '#246cf0' };
     const questions = genericMode ? {
-      tpr: 'Of actual positives, how many are predicted positive?',
-      fpr: 'Of actual negatives, how many are predicted positive?',
-      precision: 'Of predicted positives, how many are actually positive?'
+      tpr: 'Given actual +, what fraction does the model predict as +?',
+      fpr: 'Given actual −, what fraction does the model mistakenly predict as +?',
+      precision: 'Given predicted +, what is the posterior probability of actual +?'
     } : {
-      tpr: 'Of people with flu, how many test positive?',
-      fpr: 'Of people without flu, how many test positive?',
-      precision: 'Of people testing positive, how many have flu?'
+      tpr: 'If a person really has the flu, what is the chance the test catches it?',
+      fpr: 'If a person does NOT have the flu, what is the chance of a false alarm?',
+      precision: 'If a person gets a positive test (Test +), what is the chance they truly have the flu?'
     };
-    const meanings = genericMode
-      ? { fn: 'Actual +, predicted −', tp: 'Actual +, predicted +', tn: 'Actual −, predicted −', fp: 'Actual −, predicted +' }
-      : { fn: 'Flu missed: flu, test −', tp: 'Flu detected: flu, test +', tn: 'Correctly cleared: no flu, test −', fp: 'False alarm: no flu, test +' };
+    const meanings = genericMode ? {
+      fn: 'Missed positive (Type II error): true class is +, but model predicted −.',
+      tp: 'True hit: true class is +, and model correctly predicted +.',
+      tn: 'Correct rejection: true class is −, and model correctly predicted −.',
+      fp: 'False alarm (Type I error): true class is −, but model predicted +.'
+    } : {
+      fn: 'Flu missed: person really has the flu, but the test came back negative (Test −).',
+      tp: 'Flu caught: person really has the flu, and the test came back positive (Test +).',
+      tn: 'Correctly cleared: person does not have the flu, and the test came back negative (Test −).',
+      fp: 'False alarm: person does not have the flu, yet the test came back positive (Test +).'
+    };
+    const quadrantLabels = genericMode ? {
+      fn: 'Top-left · Actual +, Predicted −',
+      tp: 'Top-right · Actual +, Predicted +',
+      tn: 'Bottom-left · Actual −, Predicted −',
+      fp: 'Bottom-right · Actual −, Predicted +'
+    } : {
+      fn: 'Top-left · Sick, Test −',
+      tp: 'Top-right · Sick, Test +',
+      tn: 'Bottom-left · Healthy, Test −',
+      fp: 'Bottom-right · Healthy, Test +'
+    };
+    const wordFractions = genericMode ? {
+      tpr: ['True positives (TP)', 'All actual positives (TP + FN)'],
+      fpr: ['False positives (FP)', 'All actual negatives (FP + TN)'],
+      precision: ['True positives (TP)', 'All predicted positives (TP + FP)']
+    } : {
+      tpr: ['Sick people caught (TP)', 'All sick people (TP + FN)'],
+      fpr: ['Healthy false alarms (FP)', 'All healthy people (FP + TN)'],
+      precision: ['Sick people caught (TP)', 'All positive tests (TP + FP)']
+    };
     const conditions = genericMode ? {
       tpr: 'P(predicted + | actual +)', fpr: 'P(predicted + | actual −)', precision: 'P(actual + | predicted +)'
     } : {
@@ -2406,13 +2482,22 @@
       <span class="mini-matrix" aria-hidden="true">
         ${['fn', 'tp', 'tn', 'fp'].map(cell => `<i class="mini-cell${numOutcomes.includes(cell) ? ' num' : denomOutcomes.includes(cell) ? ' denom' : ''}"></i>`).join('')}
       </span>`;
+    const decimal = n => Number(n.toFixed(4)).toString();
+    const lrText = Number.isFinite(tpr) && Number.isFinite(fpr)
+      ? (fpr > 0 ? `${Number((tpr / fpr).toFixed(1))}×` : (tpr > 0 ? '∞ (0 false alarms)' : '0×'))
+      : 'N/A';
+    getElement('learnTitle').textContent = genericMode
+      ? 'From a class-conditional likelihood to a posterior probability'
+      : 'You tested positive. What is the chance you really have the flu?';
     // All HTML below is trusted local copy plus numbers from the model.
     getElement('learn-basics').innerHTML = `
       <div class="basics-hero">
         <div>
-          <h3>${genericMode ? 'A positive prediction is evidence, not certainty.' : 'A positive test is a clue, not the final answer.'}</h3>
-          <p>${genericMode ? 'Actual is the true class; Predicted is the label chosen by the model. Even a strong classifier can produce many false alarms when the positive class is rare.' : 'Actual tells us whether a person really has flu; the test predicts positive (+) or negative (−). Even an accurate test can produce many false alarms when flu is rare.'}</p>
-          <button class="learn-link" type="button" data-learn-tab="bayes">Explore the Bayes breakdown →</button>
+          <h3>${genericMode ? 'Conditioning on the true class is not conditioning on the prediction.' : 'A test’s accuracy on sick people is not your chance of being sick.'}</h3>
+          <p>${genericMode
+            ? `<b>TPR (Recall)</b> and <b>FPR (Fall-out)</b> are class-conditional likelihoods: they normalize within each ground-truth row (<b>Actual +</b> or <b>Actual −</b>) and stay invariant when the class prior <b>p = ${formatPercent(p)}</b> changes. <b>Precision (PPV)</b> flips the condition to the <b>Predicted +</b> column, where true positives (${formatCount(tp)}) compete against false alarms (${formatCount(fp)}) from the negative class.`
+            : `When you get a <b>Test +</b>, you don’t know whether you came from the sick group or the healthy group. Right now, out of 1,000 people, <b>${formatCount(tp + fn)} have the flu</b> (yielding <b>${formatCount(tp)} true catches</b>) and <b>${formatCount(fp + tn)} are healthy</b> (yielding <b>${formatCount(fp)} false alarms</b>). Your actual chance of having the flu is <b>${formatCount(tp)} out of all ${formatCount(tp + fp)} positive tests (${formatPercent(precision)})</b>.`}</p>
+          <button class="learn-link" type="button" data-learn-tab="bayes">See the step-by-step Bayes proof →</button>
         </div>
         <div class="odds-preview" aria-label="Prior versus posterior probability">
           <div>
@@ -2424,6 +2509,9 @@
             <strong>${formatPercent(precision)}</strong>
             <span>After ${copy.predictedPositive} · Precision</span>
           </div>
+          <div class="odds-badge">
+            <b>Likelihood Ratio (LR+ = TPR ÷ FPR): ${lrText}</b> · ${genericMode ? 'Multiplies prior odds p/(1−p) to yield posterior odds TP/FP' : 'How strongly a Test + boosts the odds of flu'}
+          </div>
         </div>
       </div>
       <div class="learn-grid">
@@ -2434,17 +2522,18 @@
               <strong>${formatPercent(metrics[name])}</strong>
             </div>
             <p class="question">${questions[name]}</p>
-            <p class="learn-note"><b>${conditions[name]}</b> · ${name === 'precision' ? `Changes with ${share}` : `Fixed when ${share} changes`}</p>
+            <p class="learn-note"><b>${conditions[name]}</b> · ${name === 'precision' ? `Column rate · Changes with ${share}` : `Row rate · Fixed when ${share} changes`}</p>
             <div class="rate-track" aria-hidden="true"><span style="width:${Number.isFinite(metrics[name]) ? 100 * metrics[name] : 0}%"></span></div>
           </article>`).join('')}
       </div>
       <div class="section-heading">
-        <h3>Four possible outcomes</h3>
-        <span class="learn-note">1,000 weighted ${copy.subject}</span>
+        <h3>Four possible outcomes (2×2 Confusion Matrix)</h3>
+        <span class="learn-note">1,000 weighted ${copy.subject} · arranged in the exact same 2×2 positions as the matrix above</span>
       </div>
       <div class="outcome-grid">
         ${['fn', 'tp', 'tn', 'fp'].map(key => `
           <div class="outcome-card" style="--outcome-color:${CONFIG.colors[key]}">
+            <span class="outcome-pos">${quadrantLabels[key]}</span>
             <div class="outcome-head">
               <strong>${key.toUpperCase()} · ${formatCount(metrics[key])}</strong>
               ${miniMatrix([key])}
@@ -2453,22 +2542,24 @@
           </div>`).join('')}
       </div>
       <div class="balance-message">
-        <p><b>Why balance matters.</b> ${genericMode ? 'More actual positives create more true positives relative to false alarms.' : 'When flu is more common, more positive tests come from people who really have flu.'}</p>
+        <p><b>${genericMode ? 'Why class imbalance drives Precision (the Base-Rate Fallacy).' : 'Why a rare disease creates mostly false alarms.'}</b> ${genericMode ? 'Because TPR and FPR normalize within their own ground-truth rows, changing the class prior p scales each row uniformly without changing TPR or FPR. Precision slices vertically across both rows, so when p is small, even a low FPR on a large negative class produces many FP.' : 'When flu is rare (say 10% sick), 900 out of 1,000 people are healthy. Even a small 4% false-alarm rate on 900 healthy people creates 36 false alarms—diluting the 96 true catches down to 72.7% Precision.'}</p>
         <p>With the ${copy.cutoff} and ${copy.separation} fixed, changing the ${share} changes <b>Precision</b> while <b>TPR</b> and <b>FPR</b> stay fixed wherever both rates are defined.</p>
       </div>
-      <details><summary>How this demonstration works</summary><p>There are 1,000 weighted ${copy.subject}. Changing the ${share} changes how many belong to each group. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two groups’ scores overlap.</p><p class="learn-note">These are simulated scores. A score is a signal used for a decision; it is not automatically a probability. Matrix counts are rounded for readability. Formulas use the precise expected counts, which can be fractional.</p></details>`;
+      <details><summary>How this demonstration works</summary><p>There are 1,000 weighted ${copy.subject}. Changing the ${share} changes how many belong to each actual row. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two score distributions overlap.</p><p class="learn-note">These are simulated continuous scores. A score is a ranking signal used with a threshold; Precision is the calibrated posterior probability for the region above the threshold. Matrix counts are rounded for readability, while formulas use exact expected counts.</p></details>`;
 
     getElement('learn-formulas').innerHTML = `
       <div class="learn-intro">
-        <h3>Every metric is a fraction of two regions</h3>
-        <p>Each rate asks: <b>how many of the reference group (denominator) landed in the target outcome (numerator)?</b> Notice in the 2×2 mini-maps how <b>TPR</b> and <b>FPR</b> slice horizontally along a single row, whereas <b>Precision</b> slices vertically down the positive column. Hover over or tap any part of a fraction below to outline it above.</p>
+        <h3>${genericMode ? 'Row normalization (Likelihoods) vs. Column normalization (Posterior)' : 'Same top number (TP), different bottom group: why TPR ≠ Precision'}</h3>
+        <p>${genericMode
+          ? 'Notice that <b>TPR (Recall)</b> and <b>Precision (PPV)</b> share the exact same numerator (<b>TP</b>), but divide by perpendicular slices of the confusion matrix. <b>TPR</b> and <b>FPR</b> divide horizontally by a single ground-truth row (so the class prior <b>p</b> cancels out), whereas <b>Precision</b> divides vertically by the <b>Predicted +</b> column (mixing both rows). Hover or tap any part of a fraction below to outline its region above.'
+          : 'Look at <b>TPR</b> and <b>Precision</b> below: both have the <b>exact same top number (TP = sick people caught)</b>! The only difference is who you divide by. <b>TPR</b> divides horizontally by <b>all sick people</b> (top row), while <b>Precision</b> divides vertically by <b>all positive tests</b> (right column, which mixes sick catches with healthy false alarms). Hover or tap any part of a fraction below to outline it above.'}</p>
       </div>
       <div class="learn-grid">${Object.entries(metricGroups).map(([name, rule]) => `
         <article class="learn-card formula-card metric-detail" style="--metric-color:${metricColors[name]}">
           <div class="metric-heading">
             <div>
               <h3>${rule.label}</h3>
-              <span class="slice-badge">${miniMatrix([rule.numerator], rule.denominator)} ${name === 'precision' ? 'Column rate' : 'Row rate'}</span>
+              <span class="slice-badge">${miniMatrix([rule.numerator], rule.denominator)} ${name === 'precision' ? 'Column rate (vertical slice)' : 'Row rate (horizontal slice)'}</span>
             </div>
             <strong>${formatPercent(metrics[name])}</strong>
           </div>
@@ -2480,44 +2571,59 @@
               <span><button class="formula-term" data-explain="${name}" data-part="denominator" aria-pressed="false" type="button" aria-label="Highlight ${rule.denominator.join(' plus ').toUpperCase()} for ${rule.label}">${rule.denominator.join(' + ').toUpperCase()}</button></span>
             </span>
           </div>
+          <div class="word-eq" aria-hidden="true">
+            <span>In plain words =</span>
+            <span class="fraction">
+              <span>${wordFractions[name][0]}</span>
+              <span>${wordFractions[name][1]}</span>
+            </span>
+          </div>
           <p class="live-calculation" id="calculation-${name}">${calculation(name)}</p>
           <p class="learn-note"><b>${conditions[name]}</b> · ${aliases[name]}</p>
           <p class="formula-feedback">Outlined in the graphs above · tap again or press Esc to clear.</p>
         </article>`).join('')}</div>
       <p class="learn-note" style="margin-top:14px">Solid underline: the numerator counted. Dashed underline: the denominator group it is divided by. A rate is N/A when its denominator is zero. Display rounding never changes a calculation.</p>`;
 
-    const decimal = n => Number(n.toFixed(4)).toString();
     const numericBayes = Number.isFinite(tpr) && Number.isFinite(fpr)
       ? `${decimal(tpr)} × ${decimal(p)} ÷ [${decimal(tpr)} × ${decimal(p)} + ${decimal(fpr)} × ${decimal(1 - p)}] = ${formatPercent(precision)}`
       : `Using expected counts: ${formatCount(tp)} ÷ (${formatCount(tp)} + ${formatCount(fp)}) = ${formatPercent(precision)}.`;
     const comparisonFor = sharePct => calculateMetrics(
       classifyExamples(generateExamples(sharePct * 10, separation), threshold)
     );
-    getElement('learn-bayes').innerHTML = `
+    getElement('bayesThreshold').value = elements.threshold.value;
+    getElement('bayesThresholdOut').value = `${elements.threshold.value}%`;
+    getElement('bayesSeparation').value = elements.separation.value;
+    getElement('bayesSeparationOut').value = `${Math.round(separation * 100)}%`;
+    getElement('bayesPrevalence').value = elements.prevalence.value;
+    getElement('bayesPrevalenceOut').value = `${elements.prevalence.value}%`;
+    getElement('learn-bayes-intro').innerHTML = `
       <div class="learn-intro">
-        <h3>${genericMode ? 'Bayes’ theorem: flipping the condition from TPR to Precision' : 'Bayes’ theorem: from a positive test to the chance of flu'}</h3>
-        <p>Start with how common ${genericMode ? 'the positive class' : 'flu'} is (prior <b>p = ${formatPercent(p)}</b>). Then combine true detections (<b>TPR</b>) and false alarms (<b>FPR</b>) to find the posterior probability <b>${conditions.precision}</b>.</p>
-      </div>
+        <h3>${genericMode ? 'Bayes’ theorem: inverting P(predicted + | actual +) into P(actual + | predicted +)' : 'Bayes’ theorem in 3 natural steps: from 1,000 people to your chance of flu'}</h3>
+        <p>${genericMode
+          ? `Start with the class prior <b>p = ${formatPercent(p)}</b>. Weighting the positive likelihood (<b>TPR</b>) by <b>p</b> and the false-alarm likelihood (<b>FPR</b>) by <b>1 − p</b> yields the exact posterior probability <b>${conditions.precision}</b>.`
+          : `The easiest way to understand Bayes’ theorem is with <b>1,000 people</b>: first split them by how common flu is (<b>p = ${formatPercent(p)}</b>), next count how many from each row get a <b>Test +</b>, and finally take the sick share of all positive tests (<b>${conditions.precision}</b>).`}</p>
+      </div>`;
+    getElement('learn-bayes-body').innerHTML = `
       <div class="bayes-flow">
         <div class="flow-step">
-          <div class="flow-heading"><span class="step-index">1</span><span>Prior · Base rate</span></div>
+          <div class="flow-heading"><span class="step-index">1</span><span>${genericMode ? 'Prior · Class balance (N = 1,000)' : 'Prior · Start with 1,000 people'}</span></div>
           <div class="count-row">
-            <div style="flex:1"><span>${copy.actualPositive}</span><small>p = ${formatPercent(p)} of 1,000</small><div class="prior-bar" aria-hidden="true"><span style="width:${100 * p}%"></span></div></div>
+            <div style="flex:1"><span>${copy.actualPositive}</span><small>1,000 × p (${formatPercent(p)})</small><div class="prior-bar" aria-hidden="true"><span style="width:${100 * p}%"></span></div></div>
             <strong>${formatCount(tp + fn)}</strong>
           </div>
           <div class="count-row">
-            <div style="flex:1"><span>${copy.actualNegative}</span><small>1 − p = ${formatPercent(1 - p)} of 1,000</small><div class="prior-bar neg" aria-hidden="true"><span style="width:${100 * (1 - p)}%"></span></div></div>
+            <div style="flex:1"><span>${copy.actualNegative}</span><small>1,000 × (1 − p) (${formatPercent(1 - p)})</small><div class="prior-bar neg" aria-hidden="true"><span style="width:${100 * (1 - p)}%"></span></div></div>
             <strong>${formatCount(fp + tn)}</strong>
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-heading"><span class="step-index">2</span><span>Evidence · <span id="bayesPositiveTotal">${formatCount(tp + fp)}</span> ${copy.predictedPositive}</span></div>
           <div class="count-row true-result">
-            <div><span>${genericMode ? 'True positives (TP)' : 'Flu detected (TP)'}</span><small>TPR (${formatPercent(tpr)}) × ${formatCount(tp + fn)}</small></div>
+            <div><span>${genericMode ? 'True positives (TP)' : 'Sick people caught (TP)'}</span><small>TPR (${formatPercent(tpr)}) × ${formatCount(tp + fn)}</small></div>
             <strong data-evidence="tp">${formatCount(tp)}</strong>
           </div>
           <div class="count-row false-result">
-            <div><span>False alarms (FP)</span><small>FPR (${formatPercent(fpr)}) × ${formatCount(fp + tn)}</small></div>
+            <div><span>${genericMode ? 'False positives (FP)' : 'Healthy false alarms (FP)'}</span><small>FPR (${formatPercent(fpr)}) × ${formatCount(fp + tn)}</small></div>
             <strong data-evidence="fp">${formatCount(fp)}</strong>
           </div>
           <div class="evidence-bar" aria-hidden="true">
@@ -2534,28 +2640,34 @@
                 <span>Precision</span>
               </div>
             </div>
-            <p class="result-caption">${!Number.isFinite(precision) ? copy.noPositives : `${formatCount(tp)} of ${formatCount(tp + fp)} positive ${genericMode ? 'predictions are actual +' : 'tests have flu'}.`}</p>
+            <p class="result-caption">${!Number.isFinite(precision) ? copy.noPositives : `${formatCount(tp)} of ${formatCount(tp + fp)} positive ${genericMode ? 'predictions are actual +' : 'tests truly have flu'}.`}</p>
           </div>
         </div>
       </div>
       <div class="bayes-math">
         <div>
-          <h3>Bayes’ theorem in rate form</h3>
-          <p>The bar <b>|</b> means <b>“given”</b>. TPR and FPR condition on the actual group (${conditions.tpr} and ${conditions.fpr}), while Precision flips the condition to ask about a positive result (${conditions.precision}).</p>
+          <h3>${genericMode ? 'Exact Bayesian derivation: Counts, Rates, and Odds' : 'Why the 1,000-person count formula equals Bayes’ formula'}</h3>
+          <p>The vertical bar <b>|</b> means <b>“given”</b> (which group we restrict our attention to). Because <b>TP = 1,000 × TPR × p</b> and <b>FP = 1,000 × FPR × (1 − p)</b>, the population size <b>1,000 cancels out</b> from top and bottom—turning expected counts into Bayes’ exact rate formula for <b>${conditions.precision}</b>.</p>
           <p class="live-calculation" id="bayesCalculation">${numericBayes}</p>
-          <p class="learn-note" id="bayesEdge">${!Number.isFinite(precision) ? 'There are no positive predictions at these settings, so precision is N/A.' : !Number.isFinite(tpr) || !Number.isFinite(fpr) ? 'One actual group is empty, so its rate is N/A. The expected counts still give precision for the positive predictions that exist.' : 'The same precision as in the graph, calculated from TPR, FPR, and the prior p.'}</p>
+          <p class="learn-note" id="bayesEdge">${!Number.isFinite(precision) ? 'There are no positive predictions at these settings, so precision is N/A.' : !Number.isFinite(tpr) || !Number.isFinite(fpr) ? 'One actual group is empty, so its rate is N/A. The expected counts still give precision for the positive predictions that exist.' : `Positive Likelihood Ratio (LR+ = TPR ÷ FPR): ${lrText}. Dividing TP by FP gives Posterior Odds = LR+ × Prior Odds.`}</p>
         </div>
-        <div>
-          <div class="equation" aria-label="P of A given B equals P of B given A times P of A divided by P of B">
-            <span><b>P(A | B)</b> =</span>
-            <span class="fraction"><span>P(B | A) × P(A)</span><span>P(B)</span></span>
+        <div class="derivation-box">
+          <div class="derivation-step">
+            <small>1. Conditional probability (Bayes’ rule)</small>
+            <div class="equation" aria-label="P of A given B equals P of B given A times P of A divided by P of B">
+              <span><b>P(A | B)</b> =</span>
+              <span class="fraction"><span>P(B | A) × P(A)</span><span>P(B | A) × P(A) + P(B | not A) × P(not A)</span></span>
+            </div>
           </div>
-          <div class="equation" aria-label="Precision equals TPR times p divided by TPR times p plus FPR times one minus p">
-            <span><b>Precision</b> =</span>
-            <span class="fraction">
-              <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span></span>
-              <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span> + <span class="math-pill fpr">FPR</span> × (1 − <span class="math-pill prior">p</span>)</span>
-            </span>
+          <div class="derivation-step">
+            <small>2. Cancel N = 1,000 from TP ÷ (TP + FP)</small>
+            <div class="equation" aria-label="Precision equals TPR times p divided by TPR times p plus FPR times one minus p">
+              <span><b>Precision</b> =</span>
+              <span class="fraction">
+                <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span></span>
+                <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span> + <span class="math-pill fpr">FPR</span> × (1 − <span class="math-pill prior">p</span>)</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -2743,6 +2855,16 @@
       selectLearningTab(tabLink.dataset.learnTab, true);
     }
   });
+  for (const [bayesId, topId] of [
+    ['bayesPrevalence', 'prevalence'],
+    ['bayesThreshold', 'threshold'],
+    ['bayesSeparation', 'separation']
+  ]) {
+    getElement(bayesId).addEventListener('input', event => {
+      elements[topId].value = event.target.value;
+      update();
+    });
+  }
   for (const name of Object.keys(metricGroups)) {
     const card = getElement(`${name}Card`);
     card.addEventListener('pointerenter', event => {
