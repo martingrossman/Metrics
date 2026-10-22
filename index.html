@@ -1303,6 +1303,15 @@
   .derivation-step { background: #fff; border: 1px solid #e4dcf5; border-radius: 11px; padding: 10px 14px; }
   .derivation-step small { display: block; font-size: 11px; font-weight: 700; color: #6337b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
   .bayes-controls { margin: 16px 0 20px; border-color: #dfd5f7; background: #fcfbff; }
+  .layout-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .layout-card { border: 1px solid #e4e8f0; border-radius: 12px; padding: 10px 12px; background: #fff; min-width: 0; }
+  .layout-card:first-child { border-color: #cdbdf0; background: #fbf9ff; }
+  .layout-card b { display: block; font-size: 12px; margin-bottom: 6px; }
+  .layout-card small { display: block; font-size: 11px; color: #526886; margin-top: 6px; line-height: 1.3; }
+  .layout-matrix { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 3px; align-items: center; }
+  .layout-head { font-size: 10px; color: #526886; text-align: center; white-space: nowrap; }
+  .layout-head.row { text-align: right; padding-right: 3px; }
+  .layout-cell { text-align: center; font-size: 12px; font-weight: 800; padding: 6px 0; border-radius: 5px; background: color-mix(in srgb, var(--c) 20%, white); border: 1px solid color-mix(in srgb, var(--c) 45%, white); color: color-mix(in srgb, var(--c) 70%, black); }
   .learning .metrics { position: static; }
   @media (max-width: 1169px) {
     .group-sub { display: none; }
@@ -1322,6 +1331,7 @@
     .metric-detail .question { min-height: 0; }
     .metric-detail .metric-heading strong { font-size: 28px; }
     .outcome-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .layout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .outcome-card { padding: 12px; }
     .flow-step + .flow-step::before { content: '↓'; top: -23px; left: calc(50% - 6px); }
     .flow-heading { margin-bottom: 8px; }
@@ -1432,7 +1442,7 @@
   <label class="control">
    <span class="control-header">
     <span>
-     <span data-term="thresholdLabel">Sensitivity to the flu signal</span>
+     <span data-term="thresholdLabel">How easily the test says +</span>
     </span>
     <output class="val" id="thresholdOut">
      50%
@@ -1441,10 +1451,10 @@
    <input id="threshold" max="100" min="0" step="1" type="range" value="50"/>
    <span class="endpoints">
     <span>
-     <span data-term="thresholdLow">0% · Less sensitive</span>
+     <span data-term="thresholdLow">0% · Never says +</span>
     </span>
     <span>
-     <span data-term="thresholdHigh">100% · More sensitive</span>
+     <span data-term="thresholdHigh">100% · Always says +</span>
     </span>
    </span>
   </label>
@@ -1653,13 +1663,13 @@
    <div class="card controls bayes-controls" aria-label="Bayes interactive controls">
     <label class="control">
      <span class="control-header">
-      <span><span data-term="thresholdLabel">Sensitivity to the flu signal</span></span>
+      <span><span data-term="thresholdLabel">How easily the test says +</span></span>
       <output class="val" id="bayesThresholdOut">50%</output>
      </span>
      <input id="bayesThreshold" data-sync="threshold" max="100" min="0" step="1" type="range" value="50"/>
      <span class="endpoints">
-      <span><span data-term="thresholdLow">0% · Less sensitive</span></span>
-      <span><span data-term="thresholdHigh">100% · More sensitive</span></span>
+      <span><span data-term="thresholdLow">0% · Never says +</span></span>
+      <span><span data-term="thresholdHigh">100% · Always says +</span></span>
      </span>
     </label>
     <label class="control">
@@ -1689,7 +1699,7 @@
   </div>
  </section>
  <p class="foot" id="footNote">
-  1,000 weighted cases. Counts are expected values and may be fractional. Sick portion changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
+  1,000 people (averages). Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and separation.
  </p>
  <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
 </main>
@@ -1792,7 +1802,7 @@
     flu: {
       introduction: getElement('intro').innerHTML,
       share: 'Sick portion', shareTitle: 'Percentage of people who actually have flu',
-      thresholdLabel: 'Sensitivity to the flu signal', thresholdLow: '0% · Less sensitive', thresholdHigh: '100% · More sensitive',
+      thresholdLabel: 'How easily the test says +', thresholdLow: '0% · Never says +', thresholdHigh: '100% · Always says +',
       separationLabel: 'How different the two groups are', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
       actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
       predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
@@ -1800,9 +1810,9 @@
       tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
       fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
       amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
-      subject: 'people', cutoff: 'signal sensitivity',
+      subject: 'people', cutoff: 'test cutoff',
       separation: 'score separation', fixedCaption: 'Fixed with sick portion', precisionCaption: 'Depends on sick portion',
-      noPositives: 'No positive tests at this sensitivity setting.',
+      noPositives: 'No positive tests at this setting.',
       scorePanel: 'Flu test score graph', plot: 'Flu test score threshold',
       matrixPanel: 'Flu test results', controls: 'Flu test controls',
       bar: 'People with flu versus false alarms among positive tests'
@@ -1843,7 +1853,7 @@
     for (const share of [10, 50]) {
       elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
     }
-    getElement('footNote').textContent = `1,000 weighted ${copy.subject}. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same ${copy.cutoff} and ${copy.separation}.`;
+    getElement('footNote').textContent = `Numbers are averages for a group of 1,000 ${copy.subject}. ${copy.share} changes the counts and Precision; TPR and FPR stay fixed at the same ${copy.cutoff} and ${copy.separation}.`;
     getElement('markerKey').textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
     document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
     document.querySelectorAll('.metric')[0].title = genericMode
@@ -1866,7 +1876,7 @@
     return {
       prevalencePct,
       positiveCount: Math.round(prevalencePct * CONFIG.totalExamples / 100),
-      // Flu sensitivity increases to the right; the equivalent ML cutoff decreases.
+      // Flu "how easily the test says +" increases to the right; the equivalent ML cutoff decreases.
       threshold: (genericMode ? Number(elements.threshold.value) : 100 - Number(elements.threshold.value)) / 100,
       separation: Number(elements.separation.value) / 100
     };
@@ -2483,6 +2493,38 @@
         ${['fn', 'tp', 'tn', 'fp'].map(cell => `<i class="mini-cell${numOutcomes.includes(cell) ? ' num' : denomOutcomes.includes(cell) ? ' denom' : ''}"></i>`).join('')}
       </span>`;
     const decimal = n => Number(n.toFixed(4)).toString();
+    const comparisonFor = sharePct => calculateMetrics(
+      classifyExamples(generateExamples(sharePct * 10, separation), threshold)
+    );
+    // Live 10% example so the "rare" story always matches the current test settings.
+    const rare = comparisonFor(10);
+    const rareHealthy = formatCount(rare.fp + rare.tn);
+    const rareStory = !Number.isFinite(rare.precision)
+      ? (genericMode
+        ? 'At this threshold nothing is predicted positive, so Precision is N/A at p = 10%.'
+        : 'At this setting nobody tests positive, so Precision is N/A when 10% are sick.')
+      : (genericMode
+        ? `Live example at p = 10%: ${rareHealthy} of 1,000 cases are negative. An FPR of ${formatPercent(rare.fpr)} on that large negative row gives ${formatCount(rare.fp)} FP, against ${formatCount(rare.tp)} TP from the positive row, so Precision = ${formatPercent(rare.precision)}.`
+        : `When flu is rare (10% sick), ${rareHealthy} of 1,000 people are healthy. A ${formatPercent(rare.fpr)} false-alarm rate on ${rareHealthy} healthy people creates ${formatCount(rare.fp)} false alarms, next to only ${formatCount(rare.tp)} true catches, so Precision is ${formatPercent(rare.precision)}.`);
+    // The same four cells in common textbook/library layouts (rows × columns).
+    const axis = genericMode
+      ? { ap: 'Act +', an: 'Act −', pp: 'Pred +', pn: 'Pred −' }
+      : { ap: 'Sick', an: 'Healthy', pp: 'Test +', pn: 'Test −' };
+    const layouts = [
+      { name: 'This site', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (− first)`, rows: [axis.ap, axis.an], cols: [axis.pn, axis.pp], cells: [['fn', 'tp'], ['tn', 'fp']] },
+      { name: 'scikit-learn (Python)', note: 'Rows: actual · Columns: predicted · negative first', rows: [axis.an, axis.ap], cols: [axis.pn, axis.pp], cells: [['tn', 'fp'], ['fn', 'tp']] },
+      { name: 'Wikipedia / many ML texts', note: 'Rows: actual · Columns: predicted · positive first', rows: [axis.ap, axis.an], cols: [axis.pp, axis.pn], cells: [['tp', 'fn'], ['fp', 'tn']] },
+      { name: 'Medical textbooks', note: 'Rows: test result · Columns: true condition', rows: [axis.pp, axis.pn], cols: [axis.ap, axis.an], cells: [['tp', 'fp'], ['fn', 'tn']] }
+    ];
+    const layoutCard = layout => `
+      <div class="layout-card">
+        <b>${layout.name}</b>
+        <div class="layout-matrix" aria-label="${layout.name}: top row ${layout.cells[0].join(', ').toUpperCase()}; bottom row ${layout.cells[1].join(', ').toUpperCase()}">
+          <span></span><span class="layout-head">${layout.cols[0]}</span><span class="layout-head">${layout.cols[1]}</span>
+          ${layout.cells.map((row, i) => `<span class="layout-head row">${layout.rows[i]}</span>${row.map(cell => `<span class="layout-cell" style="--c:${CONFIG.colors[cell]}">${cell.toUpperCase()}</span>`).join('')}`).join('')}
+        </div>
+        <small>${layout.note}</small>
+      </div>`;
     const lrText = Number.isFinite(tpr) && Number.isFinite(fpr)
       ? (fpr > 0 ? `${Number((tpr / fpr).toFixed(1))}×` : (tpr > 0 ? '∞ (0 false alarms)' : '0×'))
       : 'N/A';
@@ -2528,7 +2570,7 @@
       </div>
       <div class="section-heading">
         <h3>Four possible outcomes (2×2 Confusion Matrix)</h3>
-        <span class="learn-note">1,000 weighted ${copy.subject} · arranged in the exact same 2×2 positions as the matrix above</span>
+        <span class="learn-note">Averages for 1,000 ${copy.subject} · same 2×2 positions as the matrix above</span>
       </div>
       <div class="outcome-grid">
         ${['fn', 'tp', 'tn', 'fp'].map(key => `
@@ -2541,11 +2583,17 @@
             <span>${meanings[key]}</span>
           </div>`).join('')}
       </div>
+      <div class="section-heading">
+        <h3>Other layouts you’ll see</h3>
+        <span class="learn-note">Same four cells, different positions · always read the row and column labels first</span>
+      </div>
+      <div class="layout-grid">${layouts.map(layoutCard).join('')}</div>
+      <p class="learn-note">The names never move with the layout: <b>TP</b> and <b>FN</b> are always the actual-positive ${genericMode ? 'cases' : 'people'}; <b>TP</b> and <b>FP</b> are always the positive ${genericMode ? 'predictions' : 'tests'}. Only their place on the page changes.</p>
       <div class="balance-message">
-        <p><b>${genericMode ? 'Why class imbalance drives Precision (the Base-Rate Fallacy).' : 'Why a rare disease creates mostly false alarms.'}</b> ${genericMode ? 'Because TPR and FPR normalize within their own ground-truth rows, changing the class prior p scales each row uniformly without changing TPR or FPR. Precision slices vertically across both rows, so when p is small, even a low FPR on a large negative class produces many FP.' : 'When flu is rare (say 10% sick), 900 out of 1,000 people are healthy. Even a small 4% false-alarm rate on 900 healthy people creates 36 false alarms—diluting the 96 true catches down to 72.7% Precision.'}</p>
+        <p><b>${genericMode ? 'Why class imbalance drives Precision (the Base-Rate Fallacy).' : 'Why a rare disease creates mostly false alarms.'}</b> ${genericMode ? 'Because TPR and FPR normalize within their own ground-truth rows, changing the class prior p scales each row uniformly without changing TPR or FPR. Precision slices vertically across both rows, so when p is small, even a low FPR on a large negative class produces many FP.' : ''} ${rareStory}</p>
         <p>With the ${copy.cutoff} and ${copy.separation} fixed, changing the ${share} changes <b>Precision</b> while <b>TPR</b> and <b>FPR</b> stay fixed wherever both rates are defined.</p>
       </div>
-      <details><summary>How this demonstration works</summary><p>There are 1,000 weighted ${copy.subject}. Changing the ${share} changes how many belong to each actual row. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two score distributions overlap.</p><p class="learn-note">These are simulated continuous scores. A score is a ranking signal used with a threshold; Precision is the calibrated posterior probability for the region above the threshold. Matrix counts are rounded for readability, while formulas use exact expected counts.</p></details>`;
+      <details><summary>How this demonstration works</summary><p>The demo follows a group of 1,000 ${copy.subject}. Changing the ${share} changes how many belong to each actual row. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two score distributions overlap.</p><p class="learn-note">These are simulated continuous scores. A score is a ranking signal used with a threshold; Precision is the calibrated posterior probability for the region above the threshold. The matrix rounds counts to whole ${copy.subject} for readability. Behind the scenes every count is an average (an expected value), so formulas may use decimals such as 72.7 ${copy.subject}—rounding never changes a result.</p></details>`;
 
     getElement('learn-formulas').innerHTML = `
       <div class="learn-intro">
@@ -2587,9 +2635,6 @@
     const numericBayes = Number.isFinite(tpr) && Number.isFinite(fpr)
       ? `${decimal(tpr)} × ${decimal(p)} ÷ [${decimal(tpr)} × ${decimal(p)} + ${decimal(fpr)} × ${decimal(1 - p)}] = ${formatPercent(precision)}`
       : `Using expected counts: ${formatCount(tp)} ÷ (${formatCount(tp)} + ${formatCount(fp)}) = ${formatPercent(precision)}.`;
-    const comparisonFor = sharePct => calculateMetrics(
-      classifyExamples(generateExamples(sharePct * 10, separation), threshold)
-    );
     getElement('bayesThreshold').value = elements.threshold.value;
     getElement('bayesThresholdOut').value = `${elements.threshold.value}%`;
     getElement('bayesSeparation').value = elements.separation.value;
@@ -2759,7 +2804,7 @@
     elements.thresholdOut.value = `${elements.threshold.value}%`;
     elements.threshold.setAttribute('aria-valuetext', genericMode
       ? `${threshold.toFixed(2)} decision threshold`
-      : `${elements.threshold.value}% sensitivity setting; signal cutoff ${threshold.toFixed(2)}`);
+      : `${elements.threshold.value}% — how easily the test says positive; score cutoff ${threshold.toFixed(2)}`);
     elements.threshold.title = genericMode
       ? 'Scores at or above this threshold are predicted positive.'
       : 'Move right to detect weaker flu signals: more flu detections and more false alarms.';
