@@ -347,13 +347,13 @@
   }
 
   .population-header div:nth-child(2) {
-    background: rgb(239, 244, 255);
-    color: rgb(44, 103, 194);
+    background: rgb(255, 240, 242);
+    color: rgb(201, 72, 89);
   }
 
   .population-header div:nth-child(3) {
-    background: rgb(255, 240, 242);
-    color: rgb(201, 72, 89);
+    background: rgb(239, 244, 255);
+    color: rgb(44, 103, 194);
   }
 
   .population {
@@ -1537,10 +1537,10 @@
     <div>
     </div>
     <div>
-     <span data-term="predictedNegative">Test −</span>
+     <span data-term="predictedPositive">Test +</span>
     </div>
     <div>
-     <span data-term="predictedPositive">Test +</span>
+     <span data-term="predictedNegative">Test −</span>
     </div>
    </div>
    <div class="population">
@@ -1552,18 +1552,6 @@
      <small id="pCount">
        500 cases
      </small>
-    </div>
-    <div class="group fn">
-     <div class="group-top">
-      <span>
-       FN<small class="group-sub" data-term="fnLegend"> · Flu missed</small>
-      </span>
-      <strong id="fnNum">
-       0
-      </strong>
-     </div>
-     <div class="tiles" id="fnTiles">
-     </div>
     </div>
     <div class="group tp">
      <div class="group-top">
@@ -1577,24 +1565,24 @@
      <div class="tiles" id="tpTiles">
      </div>
     </div>
+    <div class="group fn">
+     <div class="group-top">
+      <span>
+       FN<small class="group-sub" data-term="fnLegend"> · Flu missed</small>
+      </span>
+      <strong id="fnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fnTiles">
+     </div>
+    </div>
     <div class="row-label">
      <span data-term="actualNegative">Actual no&nbsp;flu</span>
      <br/>
      <small id="nCount">
        500 cases
      </small>
-    </div>
-    <div class="group tn">
-     <div class="group-top">
-      <span>
-       TN<small class="group-sub" data-term="tnLegend"> · No flu, test −</small>
-      </span>
-      <strong id="tnNum">
-       0
-      </strong>
-     </div>
-     <div class="tiles" id="tnTiles">
-     </div>
     </div>
     <div class="group fp">
      <div class="group-top">
@@ -1606,6 +1594,18 @@
       </strong>
      </div>
      <div class="tiles" id="fpTiles">
+     </div>
+    </div>
+    <div class="group tn">
+     <div class="group-top">
+      <span>
+       TN<small class="group-sub" data-term="tnLegend"> · No flu, test −</small>
+      </span>
+      <strong id="tnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tnTiles">
      </div>
     </div>
    </div>
@@ -1789,9 +1789,9 @@
   let formulaPreview = null;
   let formulaPinned = null;
   const metricGroups = {
-    tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
-    fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
-    precision: { label: 'Precision', numerator: 'tp', denominator: ['tp', 'fp'], area: '1 / 3 / 3 / 4', numeratorArea: '1 / 3 / 2 / 4' }
+    tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
+    fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
+    precision: { label: 'Precision', numerator: 'tp', denominator: ['tp', 'fp'], area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' }
   };
   let hoveredMetric = null;
   let focusedMetric = null;
@@ -1805,7 +1805,7 @@
       thresholdLabel: 'How easily the test says +', thresholdLow: '0% · Never says +', thresholdHigh: '100% · Always says +',
       separationLabel: 'How different the two groups are', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
       actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
-      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
+      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: '← Flu test score',
       minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
       tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
       fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
@@ -1823,7 +1823,7 @@
       thresholdLabel: 'Decision threshold', thresholdLow: '0% · More predicted +', thresholdHigh: '100% · Fewer predicted +',
       separationLabel: 'Class separation', separationLow: 'Overlapping', separationHigh: 'Fully separated',
       actualPositive: 'Actual +', actualNegative: 'Actual −',
-      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: 'Positive class score →',
+      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: '← Positive class score',
       minimum: '0% · all negative', maximum: '100% · all positive',
       tpLegend: ' · True positive', fpLegend: ' · False positive',
       fnLegend: ' · False negative', tnLegend: ' · True negative',
@@ -2101,35 +2101,36 @@
     const dotRadius = compact ? 6.5 : 8;
     const rowStep = shortPhone ? 9 : compact ? 12 : 16;
     const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
-    plotRegions = { left, width, top, bottom, midY, cutoff: left + width * threshold };
+    const scoreToX = score => left + width * (1 - score);
+    const cutoff = scoreToX(threshold);
+    plotRegions = { left, width, top, bottom, midY, cutoff };
 
     svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
-    const scoreToX = score => left + width * score;
     const draw = (tag, attributes, text) => {
       const element = createSvgElement(tag, attributes, text);
       svg.appendChild(element);
       return element;
     };
 
-    // Background: predicted-negative left, predicted-positive right.
+    // Background: predicted-positive left, predicted-negative right.
     draw('rect', {
-      x: left, y: top, width: width * threshold, height: bottom - top,
-      fill: '#eef4ff'
+      x: left, y: top, width: cutoff - left, height: bottom - top,
+      fill: '#fff1f3'
     });
     draw('rect', {
-      x: scoreToX(threshold), y: top,
-      width: width * (1 - threshold), height: bottom - top,
-      fill: '#fff1f3'
+      x: cutoff, y: top,
+      width: left + width - cutoff, height: bottom - top,
+      fill: '#eef4ff'
     });
 
     draw('text', {
       x: left, y: headerY,
-      fill: '#3465b7', 'font-size': 32, 'font-weight': 700
-    }, copy.predictedNegative);
-    draw('text', {
-      x: left + width, y: headerY, 'text-anchor': 'end',
       fill: '#c54757', 'font-size': 32, 'font-weight': 700
     }, copy.predictedPositive);
+    draw('text', {
+      x: left + width, y: headerY, 'text-anchor': 'end',
+      fill: '#3465b7', 'font-size': 32, 'font-weight': 700
+    }, copy.predictedNegative);
 
     draw('line', {
       x1: left, y1: midY, x2: left + width, y2: midY,
@@ -2180,11 +2181,11 @@
           'pointer-events': 'none', 'aria-hidden': 'true'
         });
       };
-      buildSide(0, threshold, CONFIG.colors[leftOutcome]);
-      buildSide(threshold, 1, CONFIG.colors[rightOutcome]);
+      buildSide(threshold, 1, CONFIG.colors[leftOutcome]);
+      buildSide(0, threshold, CONFIG.colors[rightOutcome]);
     }
-    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'fn', 'tp', positiveCount);
-    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'tn', 'fp', CONFIG.totalExamples - positiveCount);
+    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'tp', 'fn', positiveCount);
+    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'fp', 'tn', CONFIG.totalExamples - positiveCount);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
@@ -2226,7 +2227,7 @@
         });
         addHoverLink(dot, example);
         dot.appendChild(createSvgElement('title', {},
-          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(' →', '').toLowerCase()} ${example.score.toFixed(3)}`));
+          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(/^[←\s]+|[→\s]+$/g, '').toLowerCase()} ${example.score.toFixed(3)}`));
       }
     }
 
@@ -2265,7 +2266,7 @@
       stroke: '#8c9bb0'
     });
 
-    for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
+    for (const tick of [1, 0.75, 0.5, 0.25, 0]) {
       draw('text', {
         x: scoreToX(tick), y: tickY, 'text-anchor': 'middle',
         'font-size': 28, fill: '#526886'
@@ -2326,7 +2327,7 @@
     key.replaceChildren(`${definition.label} = `, numerator, ' ÷ ', denominator);
 
     const { left, width, top, bottom, midY, cutoff } = plotRegions;
-    const x = selected === 'precision' ? cutoff : left;
+    const endX = selected === 'precision' ? cutoff : left + width;
     const y = selected === 'fpr' ? midY : top;
     const endY = selected === 'tpr' ? midY : bottom;
     const region = createSvgElement('g', { class: 'metric-regions', 'pointer-events': 'none', 'aria-hidden': 'true' });
@@ -2335,8 +2336,8 @@
       'vector-effect': 'non-scaling-stroke', rx: 5,
       ...(dashed ? { 'stroke-dasharray': '6 4', class: 'denominator-region' } : { class: 'numerator-region' })
     }));
-    if (part !== 'numerator') outline({ x: x - 3, y: y - 3, width: left + width - x + 6, height: endY - y + 6 }, '#8056d9', true);
-    if (part !== 'denominator') outline({ x: cutoff + 3, y: y + 3, width: Math.max(0, left + width - cutoff - 6),
+    if (part !== 'numerator') outline({ x: left - 3, y: y - 3, width: endX - left + 6, height: endY - y + 6 }, '#8056d9', true);
+    if (part !== 'denominator') outline({ x: left + 3, y: y + 3, width: Math.max(0, cutoff - left - 6),
       height: (selected === 'fpr' ? bottom : midY) - y - 6 }, color, false);
     elements.scorePlot.insertBefore(region, elements.scorePlot.querySelector('.threshold-drag'));
   }
@@ -2451,15 +2452,15 @@
       fp: 'False alarm: person does not have the flu, yet the test came back positive (Test +).'
     };
     const quadrantLabels = genericMode ? {
-      fn: 'Top-left · Actual +, Predicted −',
-      tp: 'Top-right · Actual +, Predicted +',
-      tn: 'Bottom-left · Actual −, Predicted −',
-      fp: 'Bottom-right · Actual −, Predicted +'
+      tp: 'Top-left · Actual +, Predicted +',
+      fn: 'Top-right · Actual +, Predicted −',
+      fp: 'Bottom-left · Actual −, Predicted +',
+      tn: 'Bottom-right · Actual −, Predicted −'
     } : {
-      fn: 'Top-left · Sick, Test −',
-      tp: 'Top-right · Sick, Test +',
-      tn: 'Bottom-left · Healthy, Test −',
-      fp: 'Bottom-right · Healthy, Test +'
+      tp: 'Top-left · Sick, Test +',
+      fn: 'Top-right · Sick, Test −',
+      fp: 'Bottom-left · Healthy, Test +',
+      tn: 'Bottom-right · Healthy, Test −'
     };
     const wordFractions = genericMode ? {
       tpr: ['True positives (TP)', 'All actual positives (TP + FN)'],
@@ -2490,7 +2491,7 @@
     };
     const miniMatrix = (numOutcomes, denomOutcomes = []) => `
       <span class="mini-matrix" aria-hidden="true">
-        ${['fn', 'tp', 'tn', 'fp'].map(cell => `<i class="mini-cell${numOutcomes.includes(cell) ? ' num' : denomOutcomes.includes(cell) ? ' denom' : ''}"></i>`).join('')}
+        ${['tp', 'fn', 'fp', 'tn'].map(cell => `<i class="mini-cell${numOutcomes.includes(cell) ? ' num' : denomOutcomes.includes(cell) ? ' denom' : ''}"></i>`).join('')}
       </span>`;
     const decimal = n => Number(n.toFixed(4)).toString();
     const comparisonFor = sharePct => calculateMetrics(
@@ -2511,10 +2512,10 @@
       ? { ap: 'Act +', an: 'Act −', pp: 'Pred +', pn: 'Pred −' }
       : { ap: 'Sick', an: 'Healthy', pp: 'Test +', pn: 'Test −' };
     const layouts = [
-      { name: 'This site', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (− first)`, rows: [axis.ap, axis.an], cols: [axis.pn, axis.pp], cells: [['fn', 'tp'], ['tn', 'fp']] },
+      { name: 'This site & Wikipedia', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (+ first)`, rows: [axis.ap, axis.an], cols: [axis.pp, axis.pn], cells: [['tp', 'fn'], ['fp', 'tn']] },
       { name: 'scikit-learn (Python)', note: 'Rows: actual · Columns: predicted · negative first', rows: [axis.an, axis.ap], cols: [axis.pn, axis.pp], cells: [['tn', 'fp'], ['fn', 'tp']] },
-      { name: 'Wikipedia / many ML texts', note: 'Rows: actual · Columns: predicted · positive first', rows: [axis.ap, axis.an], cols: [axis.pp, axis.pn], cells: [['tp', 'fn'], ['fp', 'tn']] },
-      { name: 'Medical textbooks', note: 'Rows: test result · Columns: true condition', rows: [axis.pp, axis.pn], cols: [axis.ap, axis.an], cells: [['tp', 'fp'], ['fn', 'tn']] }
+      { name: 'Score-axis order (Negative first)', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (− first)`, rows: [axis.ap, axis.an], cols: [axis.pn, axis.pp], cells: [['fn', 'tp'], ['tn', 'fp']] },
+      { name: 'Medical textbooks (transposed)', note: 'Rows: test result · Columns: true condition', rows: [axis.pp, axis.pn], cols: [axis.ap, axis.an], cells: [['tp', 'fp'], ['fn', 'tn']] }
     ];
     const layoutCard = layout => `
       <div class="layout-card">
@@ -2573,7 +2574,7 @@
         <span class="learn-note">Averages for 1,000 ${copy.subject} · same 2×2 positions as the matrix above</span>
       </div>
       <div class="outcome-grid">
-        ${['fn', 'tp', 'tn', 'fp'].map(key => `
+        ${['tp', 'fn', 'fp', 'tn'].map(key => `
           <div class="outcome-card" style="--outcome-color:${CONFIG.colors[key]}">
             <span class="outcome-pos">${quadrantLabels[key]}</span>
             <div class="outcome-head">
@@ -2600,7 +2601,7 @@
         <h3>${genericMode ? 'Row normalization (Likelihoods) vs. Column normalization (Posterior)' : 'Same top number (TP), different bottom group: why TPR ≠ Precision'}</h3>
         <p>${genericMode
           ? 'Notice that <b>TPR (Recall)</b> and <b>Precision (PPV)</b> share the exact same numerator (<b>TP</b>), but divide by perpendicular slices of the confusion matrix. <b>TPR</b> and <b>FPR</b> divide horizontally by a single ground-truth row (so the class prior <b>p</b> cancels out), whereas <b>Precision</b> divides vertically by the <b>Predicted +</b> column (mixing both rows). Hover or tap any part of a fraction below to outline its region above.'
-          : 'Look at <b>TPR</b> and <b>Precision</b> below: both have the <b>exact same top number (TP = sick people caught)</b>! The only difference is who you divide by. <b>TPR</b> divides horizontally by <b>all sick people</b> (top row), while <b>Precision</b> divides vertically by <b>all positive tests</b> (right column, which mixes sick catches with healthy false alarms). Hover or tap any part of a fraction below to outline it above.'}</p>
+          : 'Look at <b>TPR</b> and <b>Precision</b> below: both have the <b>exact same top number (TP = sick people caught)</b>! The only difference is who you divide by. <b>TPR</b> divides horizontally by <b>all sick people</b> (top row), while <b>Precision</b> divides vertically by <b>all positive tests</b> (left column, which mixes sick catches with healthy false alarms). Hover or tap any part of a fraction below to outline it above.'}</p>
       </div>
       <div class="learn-grid">${Object.entries(metricGroups).map(([name, rule]) => `
         <article class="learn-card formula-card metric-detail" style="--metric-color:${metricColors[name]}">
@@ -2782,7 +2783,9 @@
   function moveThreshold(event) {
     if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
     event.preventDefault();
-    setPlotThreshold((plotPointerX(event) - thresholdDrag.offset - CONFIG.plot.left) / CONFIG.plot.width * 100);
+    const targetCutoff = plotPointerX(event) - thresholdDrag.offset;
+    const fraction = (targetCutoff - CONFIG.plot.left) / CONFIG.plot.width;
+    setPlotThreshold((1 - fraction) * 100);
   }
 
   function endThresholdDrag(event) {
@@ -2956,7 +2959,7 @@
     event.preventDefault();
     thresholdDrag = {
       pointerId: event.pointerId,
-      offset: plotPointerX(event) - CONFIG.plot.left - readSettings().threshold * CONFIG.plot.width
+      offset: plotPointerX(event) - plotRegions.cutoff
     };
     elements.scorePlot.setPointerCapture(event.pointerId);
     elements.scorePlot.focus({ preventScroll: true });

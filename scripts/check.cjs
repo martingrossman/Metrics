@@ -186,9 +186,9 @@ console.log(`Model: ${combinations} combinations passed.`);
       assert.equal(await page.locator('#precision').textContent(), precision);
     }
     await page.locator('#reset').click();
-    assert.equal(await page.locator('#plot text').last().textContent(), 'Flu test score →');
+    assert.equal(await page.locator('#plot text').last().textContent(), '← Flu test score');
     assert.deepEqual(await page.locator('#plot text').allTextContents().then(labels =>
-      labels.filter(label => /^\d\.\d\d$/.test(label))), ['0.00', '0.25', '0.50', '0.75', '1.00']);
+      labels.filter(label => /^\d\.\d\d$/.test(label))), ['1.00', '0.75', '0.50', '0.25', '0.00']);
     // Both charts retain exact weights; matrix labels round only for display.
     for (const prevalence of [1, 10, 50, 99]) {
       await setSlider('prevalence', prevalence);
