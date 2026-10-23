@@ -1,0 +1,2 @@
+# agent coding
+"Read AGENT.md carefully and follow all layout, typography, and zero-scroll rules strictly. Scaffold the complete single-viewport application for cmatrixlab.com with the top bar, interactive 2x2 confusion matrix, threshold/imbalance sliders, derived metrics grid with cross-highlighting, and the executive/engineer inspector panel."

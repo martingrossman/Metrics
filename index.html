@@ -174,7 +174,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .control:has(#prevalence) .val, .control:has(#bayesPrevalence) .val {
+  .control:has(#prevalence) .val, .control:has(#bayesPrevalence) .val, .control:has(#tradeoffPrevalence) .val {
     background: #f1edff;
     color: rgb(119, 81, 206);
   }
@@ -212,7 +212,7 @@
     cursor: pointer;
   }
 
-  .control input#prevalence, .control input#bayesPrevalence {
+  .control input#prevalence, .control input#bayesPrevalence, .control input#tradeoffPrevalence {
     accent-color: rgb(128, 90, 213);
     color: rgb(128, 90, 213);
   }
@@ -770,6 +770,7 @@
 
   /* Tablet: stack the synchronized charts. */
   @media (max-width: 1050px) {
+    .preset-select { display: none !important; }
     :root { --font-metric: 32px; }
     .population { --matrix-row-height: 140px; }
     .controls {
@@ -801,6 +802,8 @@
     }
     .top-right { gap: 6px; }
     .reset { padding: 6px 10px; }
+    .preset-select { display: none !important; }
+    .graph-toggle-group { display: none !important; }
   }
 
   @media (max-width: 685px) {
@@ -1181,8 +1184,49 @@
   }
   /* Optional learning layer; the default dashboard stays compact. */
   [hidden] { display: none !important; }
-  .learning-entry { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0; }
-  .learning-entry .key { margin: 0; }
+  .preset-select { font-family: Inter, system-ui, sans-serif; font-size: var(--font-body); font-weight: 600; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--text); }
+  .preset-select:focus-visible { outline: 2px solid #246cf0; }
+  .learning-entry { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 0; }
+  .learning-entry .key { margin: 0; white-space: nowrap; }
+  @media (min-width: 768px) and (max-width: 960px) {
+    .learning-entry .key { display: none; }
+  }
+  .graph-toggle-group { display: inline-flex; align-items: center; gap: 2px; background: #edf2f7; border-radius: 6px; padding: 2px; }
+  .graph-tab { font-family: Inter, system-ui, sans-serif; font-size: 11px; font-weight: 600; padding: 2px 7px; border: none; background: transparent; color: #526886; border-radius: 4px; cursor: pointer; line-height: 1.2; white-space: nowrap; }
+  .graph-tab:hover { color: #1e293b; }
+  .graph-tab.active { background: #ffffff; color: #1a56db; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .views.single-4up { grid-template-columns: 1fr !important; }
+  body.four-up-active .story,
+  body.four-up-active .legend,
+  body.four-up-active .foot { display: none !important; }
+  body.four-up-active .container { padding-top: 5px; padding-bottom: 5px; }
+  body.four-up-active .top { margin-bottom: 3px; }
+  body.four-up-active .metrics { margin-bottom: 4px; gap: 8px; }
+  body.four-up-active .metric { padding: 4px 14px; }
+  body.four-up-active .metric strong { font-size: 25px; }
+  body.four-up-active .controls { padding: 6px 14px; margin-bottom: 4px; gap: 14px; }
+  body.four-up-active .control { gap: 2px; }
+  body.four-up-active .learning-entry { margin-bottom: 3px; }
+  body.four-up-active #scorePanel { padding: 8px 10px; }
+  body.four-up-active .insight { margin-top: 4px; padding: 5px 14px; }
+  .views.single-4up #plotsWrapper {
+    height: clamp(440px, calc(100vh - 282px), 780px) !important;
+  }
+  .views.single-4up #plotsWrapper .plot {
+    max-height: none !important;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+  }
+  .four-up-container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; margin: 10px 0; background: #fff; border: 1px solid #e4e8f0; border-radius: 16px; padding: 14px; }
+  .four-up-container .curve-svg { max-width: 100%; width: 100%; max-height: 220px; }
+  .four-up-container .auc-badge, .four-up-container .signal-badge, .four-up-container .pr-badge { margin-bottom: 6px; padding: 4px 10px; }
+  .four-up-container .curve-legend { margin-top: 4px; }
+  @media (max-width: 767px) {
+    .four-up-container { grid-template-columns: 1fr; }
+  }
   .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; }
   .learn-toggle[aria-expanded="true"] { background: #f2edff; }
   .metric-formula { display: none; font-size: var(--font-caption); color: #526886; font-weight: 500; margin-top: 5px; letter-spacing: 0; }
@@ -1302,7 +1346,7 @@
   .derivation-box { display: grid; gap: 10px; }
   .derivation-step { background: #fff; border: 1px solid #e4dcf5; border-radius: 11px; padding: 10px 14px; }
   .derivation-step small { display: block; font-size: 11px; font-weight: 700; color: #6337b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
-  .bayes-controls { margin: 16px 0 20px; border-color: #dfd5f7; background: #fcfbff; }
+  .bayes-controls, .tradeoff-controls { margin: 16px 0 20px; border-color: #dfd5f7; background: #fcfbff; }
   .layout-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
   .layout-card { border: 1px solid #e4e8f0; border-radius: 12px; padding: 10px 12px; background: #fff; min-width: 0; }
   .layout-card:first-child { border-color: #cdbdf0; background: #fbf9ff; }
@@ -1313,6 +1357,39 @@
   .layout-head.row { text-align: right; padding-right: 3px; }
   .layout-cell { text-align: center; font-size: 12px; font-weight: 800; padding: 6px 0; border-radius: 5px; background: color-mix(in srgb, var(--c) 20%, white); border: 1px solid color-mix(in srgb, var(--c) 45%, white); color: color-mix(in srgb, var(--c) 70%, black); }
   .learning .metrics { position: static; }
+  .accuracy-card { background: #fbfcfe; border: 1px solid #dce3ee; border-radius: 16px; padding: 20px; margin: 20px 0; }
+  .accuracy-header { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .accuracy-metric { text-align: right; }
+  .accuracy-metric strong { display: block; font-size: 30px; color: #1a6fbf; line-height: 1.1; }
+  .accuracy-metric span { font-size: 11px; color: #526886; }
+  .paradox-callout { background: #fff8eb; border-left: 3px solid #f2a527; border-radius: 0 10px 10px 0; padding: 12px 16px; margin-top: 12px; font-size: 13px; line-height: 1.5; }
+  .paradox-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn-demo { border: 1px solid #8056d9; background: #f0eaff; color: #6337b8; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+  .btn-demo:hover { background: #e3d7fa; }
+  .btn-demo.secondary { border-color: #cbd5e1; background: #fff; color: #526886; font-weight: 500; }
+  .btn-demo.secondary:hover { background: #f8fafc; color: #1e293b; }
+  .f1-card { background: #f6faff; border: 1px solid #cfe0f5; border-radius: 16px; padding: 20px; margin: 24px 0; }
+  .f1-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .f1-score { font-size: 32px; color: #155bb5; line-height: 1.1; }
+  .f1-equation { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 16px 0; font-size: 15px; }
+  .curve-container { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: center; margin: 20px 0; background: #fff; border: 1px solid #e4e8f0; border-radius: 16px; padding: 20px; }
+  @media (max-width: 767px) {
+    .curve-container { grid-template-columns: 1fr; }
+  }
+  .curve-svg { width: 100%; max-width: 320px; display: block; border-radius: 10px; background: #fbfcfe; border: 1px solid #e8edf5; margin: 0 auto; }
+  .curve-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: #526886; margin-top: 8px; justify-content: center; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+  .auc-badge, .signal-badge, .pr-badge { display: inline-flex; align-items: baseline; gap: 8px; background: #eef7ff; border: 1px solid #c2e0fc; border-radius: 10px; padding: 6px 14px; font-size: 13px; color: #105ba3; font-weight: 700; margin-bottom: 12px; }
+  .auc-badge strong, .signal-badge strong, .pr-badge strong { font-size: 22px; }
+  .cost-scenario-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+  @media (max-width: 767px) {
+    .cost-scenario-grid { grid-template-columns: 1fr; }
+  }
+  .cost-card { text-align: left; background: #fff; border: 1px solid #dce3ee; border-radius: 12px; padding: 14px; font: inherit; cursor: pointer; transition: border-color 0.15s, background 0.15s; color: inherit; }
+  .cost-card:hover { border-color: #8056d9; background: #faf8ff; }
+  .cost-card.active { border-color: #8056d9; background: #fbf9ff; box-shadow: inset 0 0 0 1px #8056d9; }
+  .cost-card b { display: block; font-size: 13px; color: #1e293b; margin-bottom: 4px; }
+  .cost-card small { display: block; font-size: 11.5px; color: #526886; line-height: 1.35; }
   @media (max-width: 1169px) {
     .group-sub { display: none; }
   }
@@ -1347,8 +1424,10 @@
     .formula-term { min-height: 44px; }
   }
   @media (max-width: 650px) and (orientation: portrait) {
-    .container > .learning-entry { order: 3; gap: 6px; }
+    .container > .learning-entry { order: 3; gap: 6px; justify-content: center; }
     .learning-entry .key { font-size: 10px; }
+    .graph-toggle-group { display: none !important; }
+    .preset-select { display: none !important; }
     .container > .controls { margin-bottom: 0; }
     .container > .learn-panel { order: 6; }
     .learning .metric-formula { font-size: 10px; }
@@ -1394,6 +1473,13 @@
    <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
   </div>
   <div class="top-right">
+   <select class="preset-select" id="presetSelect" aria-label="Scenario Presets" title="Scenario Presets">
+    <option value="balanced">Balanced (50/50)</option>
+    <option value="screening">Screening (High Recall)</option>
+    <option value="spam">Spam Filter (High Precision)</option>
+    <option value="fraud">Fraud (Extreme Imbalance)</option>
+    <option value="custom" disabled hidden>Preset: Custom</option>
+   </select>
    <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
    <button class="reset learn-toggle" id="learnToggle" type="button" aria-expanded="false" aria-controls="learnPanel">Learn more</button>
    <button class="reset" id="reset">
@@ -1525,15 +1611,33 @@
   </span>
  </div>
  <div class="learning-entry">
+  <div class="graph-toggle-group" role="tablist" aria-label="View mode selector">
+   <button type="button" class="graph-tab active" id="tabGraphScores" role="tab" aria-selected="true" data-graph-view="scores" title="Default view: Score Plot on left, 2x2 Confusion Matrix on right">Default (Scores + Matrix)</button>
+   <button type="button" class="graph-tab" id="tabGraphSplit" role="tab" aria-selected="false" data-graph-view="split" title="Advanced view: One big 4-Up graph (Score Plot, Gaussians, ROC Curve, and PR Curve)">4-Up Graph</button>
+   <button type="button" class="graph-tab" id="tabGraphGauss" role="tab" aria-selected="false" data-graph-view="gauss" title="Prior-weighted Gaussian distributions scaling with sick portion">Gaussians</button>
+   <button type="button" class="graph-tab" id="tabGraphRoc" role="tab" aria-selected="false" data-graph-view="roc" title="ROC curve with live operating point">ROC</button>
+   <button type="button" class="graph-tab" id="tabGraphPr" role="tab" aria-selected="false" data-graph-view="pr" title="Precision-Recall curve shifting with sick portion">PR</button>
+   <button type="button" class="graph-tab" id="tabGraphBayes" role="tab" aria-selected="false" data-graph-view="bayes" title="Precision vs. prevalence curve">Bayes</button>
+  </div>
   <p class="key" id="markerKey">Full marker = 10 people; smaller = partial.</p>
  </div>
  <section class="views">
   <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
-   <svg aria-label="Flu test score threshold" aria-description="Drag the blue line left or right, or use the arrow keys." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="horizontal" tabindex="0" class="plot" id="plot" role="slider" viewBox="0 0 650 440">
-   </svg>
+   <div id="plotsWrapper" style="display:flex; gap:8px; width:100%; height:100%;">
+    <svg aria-label="Flu test score threshold" aria-description="Drag the blue line left or right, or use the arrow keys." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="horizontal" tabindex="0" class="plot" id="plot" role="slider" viewBox="0 0 650 440">
+    </svg>
+    <svg aria-label="Prior-weighted Gaussian score distributions" class="plot gauss-plot" id="gaussPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+    <svg aria-label="ROC curve: TPR versus FPR" class="plot roc-plot" id="rocPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+    <svg aria-label="Precision-Recall curve" class="plot pr-plot" id="prPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+    <svg aria-label="Precision versus prevalence curve" class="plot bayes-plot" id="bayesPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+   </div>
   </div>
   <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
-   <div class="population-header">
+   <div class="population-header" id="matrixPopHeader">
     <div>
     </div>
     <div>
@@ -1543,7 +1647,7 @@
      <span data-term="predictedNegative">Test −</span>
     </div>
    </div>
-   <div class="population">
+   <div class="population" id="matrixPopulation">
     <div class="metric-outline metric-denominator" id="matrixDenominator" aria-hidden="true"></div>
     <div class="metric-outline metric-numerator" id="matrixNumerator" aria-hidden="true"></div>
     <div class="row-label">
@@ -1655,6 +1759,7 @@
    <button id="tab-basics" data-step="01" type="button" role="tab" aria-controls="learn-basics" aria-selected="true">The basics</button>
    <button id="tab-formulas" data-step="02" type="button" role="tab" aria-controls="learn-formulas" aria-selected="false" tabindex="-1">Formulas</button>
    <button id="tab-bayes" data-step="03" type="button" role="tab" aria-controls="learn-bayes" aria-selected="false" tabindex="-1">Bayes</button>
+   <button id="tab-tradeoffs" data-step="04" type="button" role="tab" aria-controls="learn-tradeoffs" aria-selected="false" tabindex="-1">ROC &amp; Trade-offs</button>
   </div>
   <div id="learn-basics" role="tabpanel" aria-labelledby="tab-basics" tabindex="0"></div>
   <div id="learn-formulas" role="tabpanel" aria-labelledby="tab-formulas" tabindex="0" hidden></div>
@@ -1696,6 +1801,45 @@
     </label>
    </div>
    <div id="learn-bayes-body"></div>
+  </div>
+  <div id="learn-tradeoffs" role="tabpanel" aria-labelledby="tab-tradeoffs" tabindex="0" hidden>
+   <div id="learn-tradeoffs-intro"></div>
+   <div class="card controls tradeoff-controls" aria-label="Trade-offs interactive controls">
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="thresholdLabel">How easily the test says +</span></span>
+      <output class="val" id="tradeoffThresholdOut">50%</output>
+     </span>
+     <input id="tradeoffThreshold" data-sync="threshold" max="100" min="0" step="1" type="range" value="50"/>
+     <span class="endpoints">
+      <span><span data-term="thresholdLow">0% · Never says +</span></span>
+      <span><span data-term="thresholdHigh">100% · Always says +</span></span>
+     </span>
+    </label>
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="separationLabel">How different the two groups are</span></span>
+      <output class="val" id="tradeoffSeparationOut">60%</output>
+     </span>
+     <input id="tradeoffSeparation" data-sync="separation" max="100" min="0" step="1" type="range" value="60"/>
+     <span class="endpoints">
+      <span><span data-term="separationLow">Hard to tell apart</span></span>
+      <span><span data-term="separationHigh">Easy to tell apart</span></span>
+     </span>
+    </label>
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="share">Sick portion</span></span>
+      <output class="val" id="tradeoffPrevalenceOut">50%</output>
+     </span>
+     <input id="tradeoffPrevalence" data-sync="prevalence" max="100" min="0" step="1" type="range" value="50"/>
+     <span class="endpoints">
+      <span><span data-term="minimum">0% · no one has flu</span></span>
+      <span><span data-term="maximum">100% · everyone has flu</span></span>
+     </span>
+    </label>
+   </div>
+   <div id="learn-tradeoffs-body"></div>
   </div>
  </section>
  <p class="foot" id="footNote">
@@ -1792,6 +1936,12 @@
     tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
     fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
     precision: { label: 'Precision', numerator: 'tp', denominator: ['tp', 'fp'], area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' }
+  };
+  const allMetricDefinitions = {
+    ...metricGroups,
+    tnr: { label: 'Specificity', numerator: 'tn', denominator: ['tn', 'fp'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+    npv: { label: 'NPV', numerator: 'tn', denominator: ['tn', 'fn'], area: '1 / 3 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+    fnr: { label: 'Miss Rate', numerator: 'fn', denominator: ['fn', 'tp'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' }
   };
   let hoveredMetric = null;
   let focusedMetric = null;
@@ -1995,13 +2145,25 @@
     const fn = weightedCount(groups.fn);
     const tn = weightedCount(groups.tn);
     const predictedPositiveCount = tp + fp;
+    const predictedNegativeCount = tn + fn;
+    const tpr = tp + fn > 0 ? groups.tp.length / (groups.tp.length + groups.fn.length) : NaN;
+    const fpr = fp + tn > 0 ? groups.fp.length / (groups.fp.length + groups.tn.length) : NaN;
+    const precision = predictedPositiveCount ? tp / predictedPositiveCount : NaN;
+    const tnr = fp + tn > 0 ? groups.tn.length / (groups.fp.length + groups.tn.length) : NaN;
+    const npv = predictedNegativeCount ? tn / predictedNegativeCount : NaN;
+    const fnr = tp + fn > 0 ? groups.fn.length / (groups.tp.length + groups.fn.length) : NaN;
+    const accuracy = (tp + tn) / (tp + fn + fp + tn);
+    const f1 = Number.isFinite(precision) && Number.isFinite(tpr) && precision + tpr > 0
+      ? (2 * precision * tpr) / (precision + tpr)
+      : NaN;
 
     return {
       tp, fp, fn, tn,
       predictedPositiveCount,
-      tpr: tp + fn > 0 ? groups.tp.length / (groups.tp.length + groups.fn.length) : NaN,
-      fpr: fp + tn > 0 ? groups.fp.length / (groups.fp.length + groups.tn.length) : NaN,
-      precision: predictedPositiveCount ? tp / predictedPositiveCount : NaN
+      predictedNegativeCount,
+      tpr, fpr, precision,
+      tnr, npv, fnr,
+      accuracy, f1
     };
   }
 
@@ -2082,30 +2244,36 @@
 
   // ----- Plot: each score appears at the same x coordinate in its row. -----
 
-  function renderScorePlot(examples, threshold, positiveCount) {
-    const svg = elements.scorePlot;
+  function renderScorePlot(examples, threshold, positiveCount, targetSvg = elements.scorePlot) {
+    const svg = targetSvg;
+    if (!svg) return;
+    const isPrimary = svg === elements.scorePlot;
     svg.replaceChildren();
     const copy = terminology[genericMode ? 'generic' : 'flu'];
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
     const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
-    const { left, width } = CONFIG.plot;
-    const top = compact ? 42 : CONFIG.plot.top;
-    const bottom = shortPhone ? 212 : compact ? 270 : CONFIG.plot.bottom;
-    const midY = shortPhone ? 128 : compact ? 154 : 205;
-    const positiveRow = shortPhone ? 86 : compact ? 98 : CONFIG.plot.positiveRow;
-    const negativeRow = shortPhone ? 170 : compact ? 214 : CONFIG.plot.negativeRow;
-    const headerY = compact ? 36 : 38;
-    const tickY = shortPhone ? 240 : compact ? 298 : 387;
-    const axisLabelY = shortPhone ? 270 : compact ? 328 : 430;
-    const dotRadius = compact ? 6.5 : 8;
-    const rowStep = shortPhone ? 9 : compact ? 12 : 16;
+    const splitMode = activeGraphView === 'split';
+    const left = splitMode ? 155 : CONFIG.plot.left;
+    const width = splitMode ? 475 : CONFIG.plot.width;
+    const top = splitMode ? 36 : compact ? 42 : CONFIG.plot.top;
+    const bottom = splitMode ? 206 : shortPhone ? 212 : compact ? 270 : CONFIG.plot.bottom;
+    const midY = splitMode ? 121 : shortPhone ? 128 : compact ? 154 : 205;
+    const positiveRow = splitMode ? 78 : shortPhone ? 86 : compact ? 98 : CONFIG.plot.positiveRow;
+    const negativeRow = splitMode ? 164 : shortPhone ? 170 : compact ? 214 : CONFIG.plot.negativeRow;
+    const headerY = splitMode ? 27 : compact ? 36 : 38;
+    const tickY = splitMode ? 232 : shortPhone ? 240 : compact ? 298 : 387;
+    const axisLabelY = splitMode ? 260 : shortPhone ? 270 : compact ? 328 : 430;
+    const dotRadius = splitMode ? 6.8 : compact ? 6.5 : 8;
+    const rowStep = splitMode ? 9.5 : shortPhone ? 9 : compact ? 12 : 16;
     const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
     const scoreToX = score => left + width * (1 - score);
     const cutoff = scoreToX(threshold);
-    plotRegions = { left, width, top, bottom, midY, cutoff };
+    if (isPrimary) {
+      plotRegions = { left, width, top, bottom, midY, cutoff };
+    }
 
-    svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
     const draw = (tag, attributes, text) => {
       const element = createSvgElement(tag, attributes, text);
       svg.appendChild(element);
@@ -2125,11 +2293,11 @@
 
     draw('text', {
       x: left, y: headerY,
-      fill: '#c54757', 'font-size': 32, 'font-weight': 700
+      fill: '#c54757', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
     }, copy.predictedPositive);
     draw('text', {
       x: left + width, y: headerY, 'text-anchor': 'end',
-      fill: '#3465b7', 'font-size': 32, 'font-weight': 700
+      fill: '#3465b7', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
     }, copy.predictedNegative);
 
     draw('line', {
@@ -2138,15 +2306,15 @@
     });
 
     function drawPopulationLabel(count, label, rowY) {
-      const labelY = rowY + (compact ? 6 : 8);
+      const labelY = rowY + (splitMode || compact ? 6 : 8);
       const attributes = {
-        x: left - 15, 'text-anchor': 'end',
-        'font-size': 28, 'font-weight': 700, fill: '#1f3556'
+        x: left - 14, 'text-anchor': 'end',
+        'font-size': splitMode ? 21 : 28, 'font-weight': 700, fill: '#1f3556'
       };
-      draw('text', { ...attributes, y: labelY - 12 }, label);
+      draw('text', { ...attributes, y: labelY - (splitMode ? 10 : 12) }, label);
       draw('text', {
-        ...attributes, y: labelY + 16,
-        'font-size': 20, 'font-weight': 500, fill: '#526886'
+        ...attributes, y: labelY + (splitMode ? 13 : 16),
+        'font-size': splitMode ? 15 : 20, 'font-weight': 500, fill: '#526886'
       }, `${count} ${copy.subject}`);
     }
 
@@ -2157,10 +2325,11 @@
     const { separation } = readSettings();
     const meanOffset = 0.30 * separation;
     const sigma = 0.16 - 0.09 * separation;
-    const envelopeHalfHeight = shortPhone ? 28 : compact ? 36 : 52;
+    const envelopeHalfHeight = splitMode ? 32 : shortPhone ? 28 : compact ? 36 : 52;
+    const maxRowWeight = Math.max(positiveCount, CONFIG.totalExamples - positiveCount, 1);
     function drawDensityEnvelope(mean, centerY, leftOutcome, rightOutcome, rowWeight) {
       if (rowWeight <= 0) return;
-      const scale = envelopeHalfHeight * (0.45 + 0.55 * Math.sqrt(rowWeight / CONFIG.totalExamples));
+      const scale = envelopeHalfHeight * (0.14 + 0.86 * (rowWeight / maxRowWeight));
       const buildSide = (startS, endS, color) => {
         if (endS - startS < 1e-4) return;
         const steps = 28;
@@ -2176,8 +2345,8 @@
         }
         draw('path', {
           d: `M ${upper.join(' L ')} L ${lower.join(' L ')} Z`,
-          fill: color, 'fill-opacity': 0.12,
-          stroke: color, 'stroke-opacity': 0.28, 'stroke-width': 1,
+          fill: color, 'fill-opacity': 0.20,
+          stroke: color, 'stroke-opacity': 0.55, 'stroke-width': 1.5,
           'pointer-events': 'none', 'aria-hidden': 'true'
         });
       };
@@ -2225,7 +2394,9 @@
           fill: CONFIG.colors[example.outcome],
           stroke: '#fff', 'stroke-width': 1, class: 'point'
         });
-        addHoverLink(dot, example);
+        if (isPrimary) {
+          addHoverLink(dot, example);
+        }
         dot.appendChild(createSvgElement('title', {},
           `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(/^[←\s]+|[→\s]+$/g, '').toLowerCase()} ${example.score.toFixed(3)}`));
       }
@@ -2240,27 +2411,29 @@
       'stroke-width': 2, 'stroke-dasharray': '6 5',
       'pointer-events': 'none'
     });
-    // A wide invisible target makes the line easy to grab with a finger.
-    // Pointer capture belongs to the persistent SVG, since its children redraw.
-    const dragTarget = draw('g', { class: 'threshold-drag', 'aria-hidden': 'true' });
-    dragTarget.appendChild(createSvgElement('title', {}, 'Drag left or right to change the threshold'));
-    dragTarget.appendChild(createSvgElement('line', {
-      x1: scoreToX(threshold), x2: scoreToX(threshold), y1: top, y2: bottom,
-      stroke: 'transparent', 'stroke-width': 44,
-      'vector-effect': 'non-scaling-stroke', 'pointer-events': 'stroke'
-    }));
-    dragTarget.appendChild(createSvgElement('rect', {
-      x: scoreToX(threshold) - 20, y: midY - 12, width: 40, height: 24,
-      rx: 7, fill: '#fff', stroke: '#246cf0', 'stroke-width': 2,
-      class: 'threshold-grip'
-    }));
-    dragTarget.appendChild(createSvgElement('path', {
-      d: `M ${scoreToX(threshold) - 6} ${midY - 5} l -5 5 l 5 5 M ${scoreToX(threshold) + 6} ${midY - 5} l 5 5 l -5 5`,
-      fill: 'none', stroke: '#246cf0', 'stroke-width': 2,
-      'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pointer-events': 'none'
-    }));
-    svg.setAttribute('aria-valuenow', Math.round(threshold * 100));
-    svg.setAttribute('aria-valuetext', `${threshold.toFixed(2)} score threshold`);
+    if (isPrimary) {
+      // A wide invisible target makes the line easy to grab with a finger.
+      // Pointer capture belongs to the persistent SVG, since its children redraw.
+      const dragTarget = draw('g', { class: 'threshold-drag', 'aria-hidden': 'true' });
+      dragTarget.appendChild(createSvgElement('title', {}, 'Drag left or right to change the threshold'));
+      dragTarget.appendChild(createSvgElement('line', {
+        x1: scoreToX(threshold), x2: scoreToX(threshold), y1: top, y2: bottom,
+        stroke: 'transparent', 'stroke-width': 44,
+        'vector-effect': 'non-scaling-stroke', 'pointer-events': 'stroke'
+      }));
+      dragTarget.appendChild(createSvgElement('rect', {
+        x: scoreToX(threshold) - 20, y: midY - 12, width: 40, height: 24,
+        rx: 7, fill: '#fff', stroke: '#246cf0', 'stroke-width': 2,
+        class: 'threshold-grip'
+      }));
+      dragTarget.appendChild(createSvgElement('path', {
+        d: `M ${scoreToX(threshold) - 6} ${midY - 5} l -5 5 l 5 5 M ${scoreToX(threshold) + 6} ${midY - 5} l 5 5 l -5 5`,
+        fill: 'none', stroke: '#246cf0', 'stroke-width': 2,
+        'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pointer-events': 'none'
+      }));
+      svg.setAttribute('aria-valuenow', Math.round(threshold * 100));
+      svg.setAttribute('aria-valuetext', `${threshold.toFixed(2)} score threshold`);
+    }
     draw('line', {
       x1: left, x2: left + width, y1: bottom, y2: bottom,
       stroke: '#8c9bb0'
@@ -2269,20 +2442,728 @@
     for (const tick of [1, 0.75, 0.5, 0.25, 0]) {
       draw('text', {
         x: scoreToX(tick), y: tickY, 'text-anchor': 'middle',
-        'font-size': 28, fill: '#526886'
+        'font-size': splitMode ? 20 : 28, fill: '#526886'
       }, tick.toFixed(2));
     }
     draw('text', {
       x: left + width / 2, y: axisLabelY, 'text-anchor': 'middle',
-      'font-size': 32, 'font-weight': 700, fill: '#526886'
+      'font-size': splitMode ? 22 : 32, 'font-weight': 700, fill: '#526886'
     }, copy.scoreLabel);
+  }
+
+  // ----- Dashboard Operating Curves & Independent Left/Right Panel Switching -----
+
+  let activeGraphView = 'scores';
+
+  function setGraphView(view) {
+    activeGraphView = view;
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.classList.toggle('four-up-active', view === 'split');
+    }
+    if (typeof document.querySelectorAll === 'function') {
+      document.querySelectorAll('[data-graph-view]').forEach(btn => {
+        const isActive = btn.dataset.graphView === view;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
+      });
+    }
+
+    const viewsSection = typeof document.querySelector === 'function' ? document.querySelector('.views') : null;
+    const matrixPanel = getElement('matrixPanel');
+    const wrapper = getElement('plotsWrapper');
+    const allPlots = [
+      ['scores', elements.scorePlot],
+      ['gauss', getElement('gaussPlot')],
+      ['roc', getElement('rocPlot')],
+      ['pr', getElement('prPlot')],
+      ['bayes', getElement('bayesPlot')]
+    ];
+
+    if (view === 'split') {
+      if (viewsSection) viewsSection.classList.add('single-4up');
+      if (matrixPanel) matrixPanel.style.display = 'none';
+      if (wrapper) {
+        wrapper.style.display = 'grid';
+        wrapper.style.gridTemplateColumns = '1fr 1fr';
+        wrapper.style.gridTemplateRows = '1fr 1fr';
+        wrapper.style.gap = '10px';
+      }
+      for (const [key, el] of allPlots) {
+        if (!el) continue;
+        const show = key === 'scores' || key === 'gauss' || key === 'roc' || key === 'pr';
+        el.style.display = show ? 'block' : 'none';
+        el.style.width = '100%';
+        el.style.height = '100%';
+        el.style.flex = '';
+        el.style.minWidth = '0';
+      }
+    } else {
+      if (viewsSection) viewsSection.classList.remove('single-4up');
+      if (matrixPanel) matrixPanel.style.display = '';
+      if (wrapper) {
+        wrapper.style.display = 'flex';
+        wrapper.style.gridTemplateColumns = '';
+        wrapper.style.gridTemplateRows = '';
+        wrapper.style.gap = '8px';
+      }
+      for (const [key, el] of allPlots) {
+        if (!el) continue;
+        const show = key === view;
+        el.style.display = show ? 'block' : 'none';
+        el.style.width = '100%';
+        el.style.height = '';
+        el.style.flex = '';
+        el.style.minWidth = '';
+      }
+    }
+    if (latestMetrics) {
+      update();
+    }
+  }
+
+  function renderDashboardGaussPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('gaussPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const p = Number(elements.prevalence.value) / 100;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+
+    const padL = compact ? 55 : 62;
+    const padT = splitMode ? 34 : compact ? 42 : 55;
+    const pw = splitMode ? 368 : compact ? 260 : 350;
+    const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    const scoreToX = s => padL + (1 - s) * pw;
+    const cutoffX = clamp(scoreToX(threshold), padL, padR);
+
+    // Subtle background regions for Predicted + vs Predicted -
+    draw('rect', {
+      x: padL, y: padT, width: Math.max(0, cutoffX - padL), height: ph,
+      fill: '#fff1f3', 'fill-opacity': 0.55
+    });
+    draw('rect', {
+      x: cutoffX, y: padT, width: Math.max(0, padR - cutoffX), height: ph,
+      fill: '#eef4ff', 'fill-opacity': 0.55
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = 1 - step / 4;
+      const x = scoreToX(val);
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+      draw('text', {
+        x: x, y: padB + (splitMode || compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (splitMode ? 36 : compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, copy.scoreLabel);
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': splitMode || compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, genericMode ? 'Prior-Weighted Density' : 'Population Density');
+
+    draw('text', {
+      x: padL, y: splitMode ? 23 : compact ? 28 : 34, fill: '#1e293b',
+      'font-size': splitMode ? 16 : compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'Prior-Weighted Gaussians' : 'Gaussian Distributions by Sick Portion');
+
+    // Scale Gaussian peak heights by prior proportions p and (1 - p)
+    const maxPrior = Math.max(p, 1 - p, 0.01);
+    const maxPeakH = ph * 0.82;
+    const posScale = (p / maxPrior) * maxPeakH;
+    const negScale = ((1 - p) / maxPrior) * maxPeakH;
+
+    const buildAreaPath = (sStart, sEnd, mu, scale) => {
+      if (sEnd - sStart <= 1e-4 || scale <= 0.1) return '';
+      const steps = 40;
+      let d = `M ${scoreToX(sEnd).toFixed(1)} ${padB.toFixed(1)}`;
+      for (let i = 0; i <= steps; i++) {
+        const s = sEnd - (sEnd - sStart) * (i / steps);
+        const x = scoreToX(s);
+        const dens = Math.exp(-0.5 * ((s - mu) / sd) ** 2);
+        const y = padB - dens * scale;
+        d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+      }
+      d += ` L ${scoreToX(sStart).toFixed(1)} ${padB.toFixed(1)} Z`;
+      return d;
+    };
+
+    // Shaded outcome areas under the two prior-weighted Gaussians
+    const tnArea = buildAreaPath(0, threshold, muNeg, negScale);
+    const fpArea = buildAreaPath(threshold, 1, muNeg, negScale);
+    const fnArea = buildAreaPath(0, threshold, muPos, posScale);
+    const tpArea = buildAreaPath(threshold, 1, muPos, posScale);
+
+    if (tnArea) draw('path', { d: tnArea, fill: CONFIG.colors.tn, 'fill-opacity': 0.24 });
+    if (fpArea) draw('path', { d: fpArea, fill: CONFIG.colors.fp, 'fill-opacity': 0.34 });
+    if (fnArea) draw('path', { d: fnArea, fill: CONFIG.colors.fn, 'fill-opacity': 0.32 });
+    if (tpArea) draw('path', { d: tpArea, fill: CONFIG.colors.tp, 'fill-opacity': 0.32 });
+
+    // Full Gaussian outline curves
+    let posCurve = '';
+    let negCurve = '';
+    for (let i = 0; i <= 60; i++) {
+      const s = 1 - i / 60;
+      const x = scoreToX(s);
+      const yPos = padB - Math.exp(-0.5 * ((s - muPos) / sd) ** 2) * posScale;
+      const yNeg = padB - Math.exp(-0.5 * ((s - muNeg) / sd) ** 2) * negScale;
+      posCurve += (i === 0 ? `M ${x.toFixed(1)} ${yPos.toFixed(1)}` : ` L ${x.toFixed(1)} ${yPos.toFixed(1)}`);
+      negCurve += (i === 0 ? `M ${x.toFixed(1)} ${yNeg.toFixed(1)}` : ` L ${x.toFixed(1)} ${yNeg.toFixed(1)}`);
+    }
+    draw('path', { d: negCurve, fill: 'none', stroke: '#64748b', 'stroke-width': 2.8, 'stroke-linecap': 'round' });
+    draw('path', { d: posCurve, fill: 'none', stroke: '#0ea976', 'stroke-width': 3.2, 'stroke-linecap': 'round' });
+
+    // Peak labels showing current percentages
+    const posPeakX = clamp(scoreToX(muPos), padL + 45, padR - 45);
+    const posPeakY = Math.max(padT + 18, padB - posScale - 8);
+    draw('text', {
+      x: posPeakX, y: posPeakY, 'text-anchor': 'middle',
+      fill: '#0ea976', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `${copy.actualPositive} (${Math.round(p * 100)}%)`);
+
+    const negPeakX = clamp(scoreToX(muNeg), padL + 45, padR - 45);
+    const negPeakY = Math.max(padT + 18, padB - negScale - 8);
+    draw('text', {
+      x: negPeakX, y: negPeakY, 'text-anchor': 'middle',
+      fill: '#475569', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `${copy.actualNegative} (${Math.round((1 - p) * 100)}%)`);
+
+    // Threshold line
+    draw('line', {
+      x1: cutoffX, y1: padT, x2: cutoffX, y2: padB,
+      stroke: '#246cf0', 'stroke-width': 2.5, 'stroke-dasharray': '5 4'
+    });
+    draw('text', {
+      x: clamp(cutoffX, padL + 36, padR - 36), y: padT + 14, 'text-anchor': 'middle',
+      fill: '#1d4ed8', 'font-size': 11, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `Cutoff ${threshold.toFixed(2)}`);
+
+    if (!compact) {
+      draw('rect', {
+        x: 440, y: padT, width: 198, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('rect', {
+        x: 450, y: padT + 10, width: 178, height: splitMode ? 44 : 52,
+        fill: '#f0fdf4', stroke: '#bbf7d0', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 25 : 29), fill: '#15803d', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+      }, 'PRIOR PROPORTIONS');
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 44 : 48), fill: '#166534', 'font-size': 14, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${Math.round(p * 100)}% vs ${Math.round((1 - p) * 100)}%`);
+
+      draw('text', { x: 450, y: padT + (splitMode ? 72 : 84), fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'SHADED AREAS (N = 1,000)');
+      draw('text', { x: 450, y: padT + (splitMode ? 92 : 104), fill: '#0ea976', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `TP Area: ${Math.round(metrics.tp)} (${copy.predictedPositive})`);
+      draw('text', { x: 450, y: padT + (splitMode ? 112 : 122), fill: '#e64b60', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `FP Area: ${Math.round(metrics.fp)} (False alarm)`);
+      draw('text', { x: 450, y: padT + (splitMode ? 132 : 140), fill: '#d97706', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `FN Area: ${Math.round(metrics.fn)} (Missed)`);
+      draw('text', { x: 450, y: padT + (splitMode ? 152 : 158), fill: '#64748b', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `TN Area: ${Math.round(metrics.tn)} (${copy.predictedNegative})`);
+
+      if (splitMode) {
+        draw('text', { x: 450, y: padT + 174, fill: '#1d4ed8', 'font-size': 12.5, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif' }, `Precision: ${formatPercent(metrics.precision)}`);
+      } else {
+        draw('rect', {
+          x: 450, y: padT + 174, width: 178, height: 118,
+          fill: '#fffbeb', stroke: '#fde68a', 'stroke-width': 1, rx: 6
+        });
+        draw('text', { x: 458, y: padT + 192, fill: '#b45309', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'WHY PRECISION DROPS');
+        draw('text', { x: 458, y: padT + 208, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Drag "Sick portion" slider:');
+        draw('text', { x: 458, y: padT + 224, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'When p is small (e.g. 10%), the');
+        draw('text', { x: 458, y: padT + 240, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'green curve shrinks while the');
+        draw('text', { x: 458, y: padT + 256, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'red FP tail stays huge—swamping');
+        draw('text', { x: 458, y: padT + 272, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'true positives left of cutoff!');
+      }
+    }
+  }
+
+  function renderDashboardPrPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('prPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const { tpr, precision } = metrics;
+    const p = Number(elements.prevalence.value) / 100;
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+
+    const padL = compact ? 55 : 66;
+    const padT = splitMode ? 34 : compact ? 42 : 55;
+    const pw = splitMode ? 364 : compact ? 260 : 340;
+    const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = padL + val * pw;
+      const y = padB - val * ph;
+
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        draw('line', { x1: padL, y1: y, x2: padR, y2: y, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+
+      draw('text', {
+        x: x, y: padB + (splitMode || compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+
+      draw('text', {
+        x: padL - 8, y: y + 4, 'text-anchor': 'end',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (splitMode ? 36 : compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'Recall (True Positive Rate / TPR)' : 'Recall / Sensitivity (Sick Caught · TPR)');
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': splitMode || compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, 'Precision (PPV)');
+
+    draw('text', {
+      x: padL, y: splitMode ? 23 : compact ? 28 : 34, fill: '#1e293b',
+      'font-size': splitMode ? 16 : compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, 'Precision–Recall (PR) Curve');
+
+    // Horizontal No-Skill Baseline at y = p
+    const baseY = padB - clamp(p, 0, 1) * ph;
+    draw('line', {
+      x1: padL, y1: baseY, x2: padR, y2: baseY,
+      stroke: '#94a3b8', 'stroke-width': 1.5, 'stroke-dasharray': '5 5'
+    });
+    draw('text', {
+      x: padR - 6, y: Math.max(padT + 12, baseY - 5), 'text-anchor': 'end',
+      fill: '#64748b', 'font-size': 10, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `Baseline p = ${Math.round(p * 100)}%`);
+
+    let prPath = '';
+    let prAuc = 0;
+    const pts = [];
+    for (let step = 0; step <= 60; step++) {
+      const z = -3.8 + (step / 60) * 7.6;
+      const t = muPos - z * sd;
+      const rec = clamp(1 - normalCdf((t - muPos) / sd), 0, 1);
+      const fprPt = clamp(1 - normalCdf((t - muNeg) / sd), 0, 1);
+      const prec = p <= 0 ? 0 : p >= 1 ? 1 : (rec === 0 && fprPt === 0) ? 1 : (p * rec) / (p * rec + (1 - p) * fprPt);
+      pts.push({ r: rec, p: clamp(prec, 0, 1) });
+    }
+    pts.unshift({ r: 0, p: p <= 0 ? 0 : (muPos > muNeg ? 1 : p) });
+    pts.push({ r: 1, p: clamp(p, 0, 1) });
+
+    for (let i = 0; i < pts.length; i++) {
+      const x = padL + pts[i].r * pw;
+      const y = padB - pts[i].p * ph;
+      prPath += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      if (i > 0) {
+        prAuc += 0.5 * (pts[i].p + pts[i - 1].p) * Math.max(0, pts[i].r - pts[i - 1].r);
+      }
+    }
+
+    const prFill = `${prPath} L ${padR} ${padB} L ${padL} ${padB} Z`;
+    draw('path', { d: prFill, fill: 'rgba(128, 86, 217, 0.09)' });
+    draw('path', { d: prPath, fill: 'none', stroke: '#7c3aed', 'stroke-width': 3.5, 'stroke-linecap': 'round' });
+
+    if (Number.isFinite(tpr) && Number.isFinite(precision)) {
+      const dotX = padL + clamp(tpr, 0, 1) * pw;
+      const dotY = padB - clamp(precision, 0, 1) * ph;
+
+      draw('line', { x1: dotX, y1: padB, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('line', { x1: padL, y1: dotY, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('circle', { cx: dotX, cy: dotY, r: 12, fill: 'rgba(225, 29, 72, 0.15)' });
+      draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#e11d48', stroke: '#ffffff', 'stroke-width': 2.5 });
+    }
+
+    if (!compact) {
+      draw('rect', {
+        x: 440, y: padT, width: 198, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('rect', {
+        x: 450, y: padT + 10, width: 178, height: splitMode ? 44 : 48,
+        fill: '#f5f3ff', stroke: '#ddd6fe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 26 : 30), fill: '#5b21b6', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+      }, 'PR-AUC (AVG PRECISION)');
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 46 : 50), fill: '#6d28d9', 'font-size': splitMode ? 16 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${prAuc.toFixed(3)} (Base ${p.toFixed(2)})`);
+
+      draw('text', { x: 450, y: padT + (splitMode ? 72 : 84), fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'OPERATING POINT');
+      draw('text', { x: 450, y: padT + (splitMode ? 94 : 104), fill: '#246cf0', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `Precision: ${formatPercent(precision)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 114 : 124), fill: '#0ea976', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `Recall (TPR): ${formatPercent(tpr)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 134 : 144), fill: '#334155', 'font-size': 12, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif' }, `Cutoff: ${elements.threshold.value}%`);
+
+      if (splitMode) {
+        draw('rect', {
+          x: 450, y: padT + 144, width: 178, height: 34,
+          fill: '#faf5ff', stroke: '#e9d5ff', 'stroke-width': 1, rx: 5
+        });
+        draw('text', { x: 458, y: padT + 159, fill: '#6b21a8', 'font-size': 10.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'SHIFTS WITH SICK PORTION');
+        draw('text', { x: 458, y: padT + 172, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, `Chance baseline y = ${Math.round(p * 100)}%`);
+      } else {
+        draw('rect', {
+          x: 450, y: padT + 162, width: 178, height: 130,
+          fill: '#faf5ff', stroke: '#e9d5ff', 'stroke-width': 1, rx: 6
+        });
+        draw('text', { x: 458, y: padT + 180, fill: '#6b21a8', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'SENSITIVE TO IMBALANCE');
+        draw('text', { x: 458, y: padT + 196, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Unlike the ROC curve, moving');
+        draw('text', { x: 458, y: padT + 212, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, '"Sick portion" (p) bends this');
+        draw('text', { x: 458, y: padT + 228, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'entire curve and shifts the');
+        draw('text', { x: 458, y: padT + 244, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'dashed chance baseline (y = p).');
+        draw('text', { x: 458, y: padT + 264, fill: '#581c87', 'font-size': 10, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'Use 4-Up Graph to compare');
+        draw('text', { x: 458, y: padT + 278, fill: '#581c87', 'font-size': 10, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'ROC vs PR side-by-side!');
+      }
+    }
+  }
+
+  function renderDashboardRocPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('rocPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const { tpr, fpr } = metrics;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+    const dPrime = (2 * meanOffset) / sd;
+    const auc = normalCdf(dPrime / Math.SQRT2);
+
+    const padL = compact ? 55 : 66;
+    const padT = splitMode ? 34 : compact ? 42 : 55;
+    const pw = splitMode ? 364 : compact ? 260 : 340;
+    const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = padL + val * pw;
+      const y = padB - val * ph;
+
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        draw('line', { x1: padL, y1: y, x2: padR, y2: y, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+
+      draw('text', {
+        x: x, y: padB + (splitMode || compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+
+      draw('text', {
+        x: padL - 8, y: y + 4, 'text-anchor': 'end',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (splitMode ? 36 : compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'False Positive Rate (FPR)' : 'False Alarm Rate (Healthy with positive test)');
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': splitMode || compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, genericMode ? 'True Positive Rate (TPR)' : 'Detection Rate (Sensitivity)');
+
+    draw('text', {
+      x: padL, y: splitMode ? 23 : compact ? 28 : 34, fill: '#1e293b',
+      'font-size': splitMode ? 16 : compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, 'ROC Operating Curve');
+
+    draw('line', {
+      x1: padL, y1: padB, x2: padR, y2: padT,
+      stroke: '#94a3b8', 'stroke-width': 1.5, 'stroke-dasharray': '5 5'
+    });
+
+    let rocPath = `M ${padL} ${padB}`;
+    for (let step = 0; step <= 60; step++) {
+      const t = 1 - step / 60;
+      const ptFpr = 1 - normalCdf((t - muNeg) / sd);
+      const ptTpr = 1 - normalCdf((t - muPos) / sd);
+      const x = padL + clamp(ptFpr, 0, 1) * pw;
+      const y = padB - clamp(ptTpr, 0, 1) * ph;
+      rocPath += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+    }
+    const aucFill = `${rocPath} L ${padR} ${padB} Z`;
+
+    draw('path', { d: aucFill, fill: 'rgba(36, 108, 240, 0.08)' });
+    draw('path', { d: rocPath, fill: 'none', stroke: '#246cf0', 'stroke-width': 3.5, 'stroke-linecap': 'round' });
+
+    if (Number.isFinite(fpr) && Number.isFinite(tpr)) {
+      const dotX = padL + clamp(fpr, 0, 1) * pw;
+      const dotY = padB - clamp(tpr, 0, 1) * ph;
+
+      draw('line', { x1: dotX, y1: padB, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('line', { x1: padL, y1: dotY, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('circle', { cx: dotX, cy: dotY, r: 12, fill: 'rgba(225, 29, 72, 0.15)' });
+      draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#e11d48', stroke: '#ffffff', 'stroke-width': 2.5 });
+    }
+
+    if (!compact) {
+      draw('rect', {
+        x: 440, y: padT, width: 198, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('rect', {
+        x: 450, y: padT + 10, width: 178, height: splitMode ? 44 : 48,
+        fill: '#eff6ff', stroke: '#bfdbfe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 26 : 30), fill: '#1e40af', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+      }, 'AREA UNDER CURVE (AUC)');
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 46 : 50), fill: '#1d4ed8', 'font-size': splitMode ? 16 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${auc.toFixed(3)} ${auc >= 0.95 ? '★ Excellent' : auc >= 0.8 ? 'Good' : 'Fair'}`);
+
+      draw('text', { x: 450, y: padT + (splitMode ? 72 : 84), fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'OPERATING POINT');
+      draw('text', { x: 450, y: padT + (splitMode ? 94 : 104), fill: '#0ea976', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `TPR: ${formatPercent(tpr)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 114 : 124), fill: '#e64b60', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `FPR: ${formatPercent(fpr)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 134 : 144), fill: '#334155', 'font-size': 12, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif' }, `Cutoff: ${elements.threshold.value}%`);
+
+      if (splitMode) {
+        draw('rect', {
+          x: 450, y: padT + 144, width: 178, height: 34,
+          fill: '#f0fdf4', stroke: '#bbf7d0', 'stroke-width': 1, rx: 5
+        });
+        draw('text', { x: 458, y: padT + 159, fill: '#15803d', 'font-size': 10.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'INVARIANT TO SICK PORTION');
+        draw('text', { x: 458, y: padT + 172, fill: '#166534', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Red dot stays fixed when p moves!');
+      } else {
+        draw('rect', {
+          x: 447, y: padT + 160, width: 176, height: 60,
+          fill: '#f0fdf4', stroke: '#bbf7d0', 'stroke-width': 1, rx: 6
+        });
+        draw('text', { x: 455, y: padT + 176, fill: '#15803d', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'ROW NORMALIZATION');
+        draw('text', { x: 455, y: padT + 192, fill: '#166534', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Moving prevalence (portion p)');
+        draw('text', { x: 455, y: padT + 206, fill: '#166534', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'does NOT move this red dot!');
+
+        draw('text', { x: 447, y: padT + 240, fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'DECISION TRADE-OFFS');
+        const drawScenarioPill = (y, label, targetCutoff) => {
+          const g = draw('g', { style: 'cursor: pointer;', 'data-cost-scenario': targetCutoff });
+          const isActive = Math.abs((genericMode ? threshold : 1 - threshold) * 100 - targetCutoff) <= 6;
+          const rect = createSvgElement('rect', {
+            x: 447, y: y, width: 176, height: 26, rx: 4,
+            fill: isActive ? '#8056d9' : '#f8fafc',
+            stroke: isActive ? '#6d28d9' : '#cbd5e1',
+            'stroke-width': 1
+          });
+          g.appendChild(rect);
+          const txt = createSvgElement('text', {
+            x: 455, y: y + 17, fill: isActive ? '#ffffff' : '#1e293b',
+            'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+          }, `${label} (${targetCutoff}%)`);
+          g.appendChild(txt);
+          g.addEventListener('click', () => {
+            elements.threshold.value = genericMode ? (100 - targetCutoff) : targetCutoff;
+            update();
+          });
+        };
+        drawScenarioPill(padT + 250, '🚨 Screening', 80);
+        drawScenarioPill(padT + 280, '⚖️ Balanced', 50);
+      }
+    }
+  }
+
+  function renderDashboardBayesPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('bayesPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const { tpr, fpr, precision } = metrics;
+    const p = Number(elements.prevalence.value) / 100;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const padL = compact ? 55 : 75;
+    const padT = compact ? 42 : 55;
+    const pw = compact ? 260 : 340;
+    const ph = shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = padL + val * pw;
+      const y = padB - val * ph;
+
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        draw('line', { x1: padL, y1: y, x2: padR, y2: y, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+
+      draw('text', {
+        x: x, y: padB + (compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${(val * 100).toFixed(0)}%`);
+
+      draw('text', {
+        x: padL - 8, y: y + 4, 'text-anchor': 'end',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${(val * 100).toFixed(0)}%`);
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'Prior Prevalence (p)' : 'Sick Portion in Population (p)');
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, 'Posterior Precision (PPV)');
+
+    draw('text', {
+      x: padL, y: compact ? 28 : 34, fill: '#1e293b',
+      'font-size': compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, 'Bayes Base-Rate Curve');
+
+    let bayesPath = '';
+    const valid = Number.isFinite(tpr) && Number.isFinite(fpr) && (tpr > 0 || fpr > 0);
+    if (valid) {
+      for (let step = 0; step <= 60; step++) {
+        const ptP = Math.max(0.001, Math.min(0.999, step / 60));
+        const prec = (tpr * ptP) / (tpr * ptP + fpr * (1 - ptP));
+        const x = padL + ptP * pw;
+        const y = padB - prec * ph;
+        bayesPath += (step === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      }
+    }
+    if (bayesPath) {
+      draw('path', { d: `${bayesPath} L ${padR} ${padB} L ${padL} ${padB} Z`, fill: 'rgba(36, 108, 240, 0.08)' });
+      draw('path', { d: bayesPath, fill: 'none', stroke: '#246cf0', 'stroke-width': 3.5, 'stroke-linecap': 'round' });
+    }
+
+    if (Number.isFinite(precision)) {
+      const dotX = padL + clamp(p, 0, 1) * pw;
+      const dotY = padB - clamp(precision, 0, 1) * ph;
+      draw('line', { x1: dotX, y1: padB, x2: dotX, y2: dotY, stroke: '#246cf0', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('line', { x1: padL, y1: dotY, x2: dotX, y2: dotY, stroke: '#246cf0', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('circle', { cx: dotX, cy: dotY, r: 12, fill: 'rgba(36, 108, 240, 0.15)' });
+      draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#246cf0', stroke: '#ffffff', 'stroke-width': 2.5 });
+    }
+
+    if (!compact) {
+      draw('rect', {
+        x: 435, y: padT, width: 200, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('text', { x: 447, y: padT + 24, fill: '#1e40af', 'font-size': 13, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif' }, 'LIVE BAYESIAN INFERENCE');
+      draw('text', { x: 447, y: padT + 50, fill: '#334155', 'font-size': 12, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif' }, `Prior p: ${formatPercent(p)}`);
+      draw('text', { x: 447, y: padT + 72, fill: '#246cf0', 'font-size': 15, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif' }, `Precision: ${formatPercent(precision)}`);
+
+      draw('rect', {
+        x: 447, y: padT + 92, width: 176, height: 95,
+        fill: '#fffbeb', stroke: '#fef3c7', 'stroke-width': 1, rx: 6
+      });
+      draw('text', { x: 455, y: padT + 110, fill: '#b45309', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'BASE-RATE FALLACY');
+      draw('text', { x: 455, y: padT + 128, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Notice the steep drop on left!');
+      draw('text', { x: 455, y: padT + 144, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'When p < 10%, false alarms from');
+      draw('text', { x: 455, y: padT + 160, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'negative class swamp catches.');
+      draw('text', { x: 455, y: padT + 176, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Drag "Sick portion" slider to move!');
+    }
   }
 
   // ----- Population view: 2×2 outcome groups from the SAME examples. -----
 
   function renderMetricHighlight() {
     const selected = activeMetric();
-    const definition = metricGroups[selected];
+    const definition = allMetricDefinitions[selected];
     const part = (formulaPreview || formulaPinned)?.part;
     const included = part === 'numerator' && definition ? [definition.numerator] : definition?.denominator;
     document.querySelectorAll('[data-explain]').forEach(button => {
@@ -2290,8 +3171,10 @@
     });
     for (const name of Object.keys(metricGroups)) {
       const card = getElement(`${name}Card`);
-      card.classList.toggle('active', name === selected);
-      card.setAttribute('aria-pressed', String(name === pinnedMetric));
+      if (card) {
+        card.classList.toggle('active', name === selected);
+        card.setAttribute('aria-pressed', String(name === pinnedMetric));
+      }
     }
     elements.scorePlot.querySelector('.metric-regions')?.remove();
     elements.scorePlot.querySelectorAll('.point').forEach(dot => {
@@ -2327,18 +3210,37 @@
     key.replaceChildren(`${definition.label} = `, numerator, ' ÷ ', denominator);
 
     const { left, width, top, bottom, midY, cutoff } = plotRegions;
-    const endX = selected === 'precision' ? cutoff : left + width;
-    const y = selected === 'fpr' ? midY : top;
-    const endY = selected === 'tpr' ? midY : bottom;
     const region = createSvgElement('g', { class: 'metric-regions', 'pointer-events': 'none', 'aria-hidden': 'true' });
     const outline = (bounds, stroke, dashed) => region.appendChild(createSvgElement('rect', {
       ...bounds, fill: 'none', stroke, 'stroke-width': 2,
       'vector-effect': 'non-scaling-stroke', rx: 5,
       ...(dashed ? { 'stroke-dasharray': '6 4', class: 'denominator-region' } : { class: 'numerator-region' })
     }));
-    if (part !== 'numerator') outline({ x: left - 3, y: y - 3, width: endX - left + 6, height: endY - y + 6 }, '#8056d9', true);
-    if (part !== 'denominator') outline({ x: left + 3, y: y + 3, width: Math.max(0, cutoff - left - 6),
-      height: (selected === 'fpr' ? bottom : midY) - y - 6 }, color, false);
+
+    let denomBounds;
+    if (selected === 'precision') {
+      denomBounds = { x: left - 3, y: top - 3, width: cutoff - left + 6, height: bottom - top + 6 };
+    } else if (selected === 'npv') {
+      denomBounds = { x: cutoff - 3, y: top - 3, width: left + width - cutoff + 6, height: bottom - top + 6 };
+    } else if (selected === 'tpr' || selected === 'fnr') {
+      denomBounds = { x: left - 3, y: top - 3, width: width + 6, height: midY - top + 6 };
+    } else {
+      denomBounds = { x: left - 3, y: midY - 3, width: width + 6, height: bottom - midY + 6 };
+    }
+
+    let numBounds;
+    if (definition.numerator === 'tp') {
+      numBounds = { x: left + 3, y: top + 3, width: Math.max(0, cutoff - left - 6), height: midY - top - 6 };
+    } else if (definition.numerator === 'fp') {
+      numBounds = { x: left + 3, y: midY + 3, width: Math.max(0, cutoff - left - 6), height: bottom - midY - 6 };
+    } else if (definition.numerator === 'fn') {
+      numBounds = { x: cutoff + 3, y: top + 3, width: Math.max(0, left + width - cutoff - 6), height: midY - top - 6 };
+    } else {
+      numBounds = { x: cutoff + 3, y: midY + 3, width: Math.max(0, left + width - cutoff - 6), height: bottom - midY - 6 };
+    }
+
+    if (part !== 'numerator') outline(denomBounds, '#8056d9', true);
+    if (part !== 'denominator') outline(numBounds, color, false);
     elements.scorePlot.insertBefore(region, elements.scorePlot.querySelector('.threshold-drag'));
   }
 
@@ -2412,6 +3314,483 @@
   // ============================================================
   // 5. UI CONTROLS — SINGLE SOURCE OF TRUTH
   // ============================================================
+
+  function renderPrevalenceCurve(tpr, fpr, currentP, currentPrecision, genericMode) {
+    const w = 320, h = 180;
+    const padL = 42, padR = 20, padT = 20, padB = 40;
+    const pw = w - padL - padR;
+    const ph = h - padT - padB;
+
+    let pathD = '';
+    const validRates = Number.isFinite(tpr) && Number.isFinite(fpr) && (tpr > 0 || fpr > 0);
+
+    if (validRates) {
+      for (let i = 0; i <= 50; i++) {
+        const ptP = Math.max(0.001, Math.min(0.999, i / 50));
+        const prec = (tpr * ptP) / (tpr * ptP + fpr * (1 - ptP));
+        const x = padL + ptP * pw;
+        const y = padT + (1 - prec) * ph;
+        pathD += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      }
+    }
+
+    const fillD = pathD ? `${pathD} L ${(padL + pw).toFixed(1)} ${(padT + ph).toFixed(1)} L ${padL.toFixed(1)} ${(padT + ph).toFixed(1)} Z` : '';
+    const hasPrecision = Number.isFinite(currentPrecision);
+    const dotX = Number.isFinite(currentP) ? (padL + currentP * pw).toFixed(1) : null;
+    const dotY = hasPrecision ? (padT + (1 - currentPrecision) * ph).toFixed(1) : null;
+
+    return `
+      <div class="curve-container">
+        <div>
+          <svg class="curve-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Precision versus prevalence curve">
+            <line x1="${padL}" y1="${padT}" x2="${padL + pw}" y2="${padT}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="${padL}" y1="${padT + ph / 2}" x2="${padL + pw}" y2="${padT + ph / 2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="${padL}" y1="${padT + ph}" x2="${padL + pw}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL + pw / 2}" y1="${padT}" x2="${padL + pw / 2}" y2="${padT + ph}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <text x="${padL - 6}" y="${padT + 4}" font-size="10" fill="#64748b" text-anchor="end">100%</text>
+            <text x="${padL - 6}" y="${padT + ph / 2 + 3}" font-size="10" fill="#64748b" text-anchor="end">50%</text>
+            <text x="${padL - 6}" y="${padT + ph + 3}" font-size="10" fill="#64748b" text-anchor="end">0%</text>
+            <text x="${padL}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">0%</text>
+            <text x="${padL + pw / 2}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">50%</text>
+            <text x="${padL + pw}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">100%</text>
+
+            <text x="${padL + pw / 2}" y="${padT + ph + 30}" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">Prior Prevalence (p)</text>
+            <text transform="rotate(-90)" x="${-(padT + ph / 2)}" y="12" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">Precision</text>
+
+            ${fillD ? `<path d="${fillD}" fill="rgba(36, 108, 240, 0.08)"/>` : ''}
+            ${pathD ? `<path d="${pathD}" fill="none" stroke="#246cf0" stroke-width="2.5" stroke-linecap="round"/>` : ''}
+            ${dotX && dotY ? `
+              <line x1="${dotX}" y1="${padT + ph}" x2="${dotX}" y2="${dotY}" stroke="#246cf0" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <line x1="${padL}" y1="${dotY}" x2="${dotX}" y2="${dotY}" stroke="#246cf0" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <circle cx="${dotX}" cy="${dotY}" r="5.5" fill="#246cf0" stroke="#ffffff" stroke-width="2"/>
+            ` : ''}
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#246cf0"></i> Live position: p = ${formatPercent(currentP)}, Precision = ${hasPrecision ? formatPercent(currentPrecision) : 'N/A'}</span>
+          </div>
+        </div>
+        <div>
+          <h4 style="margin:0 0 6px 0;font-size:15px;color:#1e293b;">${genericMode ? 'The Base-Rate Curve: Why Precision Drops at Low p' : 'The Base-Rate Curve: Why Rare Diseases Deceive'}</h4>
+          <p style="margin:0 0 10px 0;font-size:13px;color:#475569;line-height:1.5;">
+            ${genericMode
+              ? 'Even with high sensitivity and specificity, the precision curve drops steeply toward zero as the positive class becomes rare (p → 0). At low prevalence, almost all positive predictions come from the abundant negative class.'
+              : 'Notice how steep the curve is on the left! Even with a high-quality test, when a disease is rare (low p), a positive test is more likely to be a false alarm than a true case. Slide <b>Sick portion</b> above to move the blue dot along this curve.'}
+          </p>
+          <p class="learn-note">Moving the cutoff or separation changes the curve shape; moving the portion slider travels along it.</p>
+        </div>
+      </div>`;
+  }
+
+  function renderTradeoffsTab(metrics, separation, threshold, genericMode) {
+    const { tpr, fpr, precision } = metrics;
+    const p = Number(elements.prevalence.value) / 100;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+    const dPrime = (2 * meanOffset) / sd;
+    const auc = normalCdf(dPrime / Math.SQRT2);
+
+    const w = 480, h = 220;
+    const padL = 42, padR = 20, padT = 20, padB = 40;
+    const pw = w - padL - padR;
+    const ph = h - padT - padB;
+
+    let rocD = `M ${padL.toFixed(1)} ${(padT + ph).toFixed(1)}`;
+    for (let step = 0; step <= 50; step++) {
+      const t = 1 - step / 50;
+      const ptFpr = 1 - normalCdf((t - muNeg) / sd);
+      const ptTpr = 1 - normalCdf((t - muPos) / sd);
+      const x = padL + clamp(ptFpr, 0, 1) * pw;
+      const y = padT + (1 - clamp(ptTpr, 0, 1)) * ph;
+      rocD += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+    }
+    const aucFillD = `${rocD} L ${(padL + pw).toFixed(1)} ${(padT + ph).toFixed(1)} Z`;
+
+    const hasPoint = Number.isFinite(fpr) && Number.isFinite(tpr);
+    const dotX = hasPoint ? (padL + clamp(fpr, 0, 1) * pw).toFixed(1) : null;
+    const dotY = hasPoint ? (padT + (1 - clamp(tpr, 0, 1)) * ph).toFixed(1) : null;
+
+    // Precision-Recall Curve computation
+    let prD = '';
+    let prAuc = 0;
+    const prPts = [];
+    for (let step = 0; step <= 50; step++) {
+      const z = -3.8 + (step / 50) * 7.6;
+      const t = muPos - z * sd;
+      const rec = clamp(1 - normalCdf((t - muPos) / sd), 0, 1);
+      const fprPt = clamp(1 - normalCdf((t - muNeg) / sd), 0, 1);
+      const prec = p <= 0 ? 0 : p >= 1 ? 1 : (rec === 0 && fprPt === 0) ? 1 : (p * rec) / (p * rec + (1 - p) * fprPt);
+      prPts.push({ r: rec, p: clamp(prec, 0, 1) });
+    }
+    prPts.unshift({ r: 0, p: p <= 0 ? 0 : (muPos > muNeg ? 1 : p) });
+    prPts.push({ r: 1, p: clamp(p, 0, 1) });
+
+    for (let i = 0; i < prPts.length; i++) {
+      const x = padL + prPts[i].r * pw;
+      const y = padT + (1 - prPts[i].p) * ph;
+      prD += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      if (i > 0) {
+        prAuc += 0.5 * (prPts[i].p + prPts[i - 1].p) * Math.max(0, prPts[i].r - prPts[i - 1].r);
+      }
+    }
+    const prFillD = `${prD} L ${(padL + pw).toFixed(1)} ${(padT + ph).toFixed(1)} L ${padL.toFixed(1)} ${(padT + ph).toFixed(1)} Z`;
+    const prBaseY = (padT + (1 - clamp(p, 0, 1)) * ph).toFixed(1);
+    const hasPrPoint = Number.isFinite(tpr) && Number.isFinite(precision);
+    const prDotX = hasPrPoint ? (padL + clamp(tpr, 0, 1) * pw).toFixed(1) : null;
+    const prDotY = hasPrPoint ? (padT + (1 - clamp(precision, 0, 1)) * ph).toFixed(1) : null;
+
+    const cutoffPct = Math.round((genericMode ? threshold : 1 - threshold) * 100);
+
+    // Prior-weighted Gaussians scaled by p and (1 - p)
+    const miniMeanOffset = 0.30 * separation;
+    const miniSd = 0.16 - 0.09 * separation;
+    const miniMuPos = 0.5 + miniMeanOffset;
+    const miniMuNeg = 0.5 - miniMeanOffset;
+    const miniCutoffX = 42 + (1 - threshold) * 418;
+    const maxPrior = Math.max(p, 1 - p, 0.01);
+    const posScale = (p / maxPrior) * 128;
+    const negScale = ((1 - p) / maxPrior) * 128;
+
+    const buildMiniArea = (sStart, sEnd, mu, scale) => {
+      if (sEnd - sStart <= 1e-4 || scale <= 0.1) return '';
+      const steps = 36;
+      let d = `M ${(42 + (1 - sEnd) * 418).toFixed(1)} 180`;
+      for (let i = 0; i <= steps; i++) {
+        const s = sEnd - (sEnd - sStart) * (i / steps);
+        const x = 42 + (1 - s) * 418;
+        const dens = Math.exp(-0.5 * ((s - mu) / miniSd) ** 2);
+        const y = 180 - dens * scale;
+        d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+      }
+      d += ` L ${(42 + (1 - sStart) * 418).toFixed(1)} 180 Z`;
+      return d;
+    };
+
+    const miniTnArea = buildMiniArea(0, threshold, miniMuNeg, negScale);
+    const miniFpArea = buildMiniArea(threshold, 1, miniMuNeg, negScale);
+    const miniFnArea = buildMiniArea(0, threshold, miniMuPos, posScale);
+    const miniTpArea = buildMiniArea(threshold, 1, miniMuPos, posScale);
+
+    let posCurveD = '';
+    let negCurveD = '';
+    for (let i = 0; i <= 50; i++) {
+      const score = 1 - i / 50;
+      const x = 42 + (1 - score) * 418;
+      const posDensity = Math.exp(-0.5 * ((score - miniMuPos) / miniSd) ** 2);
+      const negDensity = Math.exp(-0.5 * ((score - miniMuNeg) / miniSd) ** 2);
+      const yPos = 180 - posDensity * posScale;
+      const yNeg = 180 - negDensity * negScale;
+      posCurveD += (i === 0 ? `M ${x.toFixed(1)} ${yPos.toFixed(1)}` : ` L ${x.toFixed(1)} ${yPos.toFixed(1)}`);
+      negCurveD += (i === 0 ? `M ${x.toFixed(1)} ${yNeg.toFixed(1)}` : ` L ${x.toFixed(1)} ${yNeg.toFixed(1)}`);
+    }
+
+    const buildGaussCard = () => `
+        <div>
+          <div class="signal-badge" style="background:#f0fdf4; border-color:#bbf7d0; color:#15803d;">
+            Prior-Weighted Gaussians: <strong>${Math.round(p * 100)}% vs ${Math.round((1 - p) * 100)}%</strong>
+          </div>
+          <svg class="curve-svg" viewBox="0 0 480 220" role="img" aria-label="Score distributions and threshold cutoff">
+            <rect x="42" y="30" width="${Math.max(0, miniCutoffX - 42).toFixed(1)}" height="150" fill="#fff1f3" fill-opacity="0.5"/>
+            <rect x="${miniCutoffX.toFixed(1)}" y="30" width="${Math.max(0, 460 - miniCutoffX).toFixed(1)}" height="150" fill="#eef4ff" fill-opacity="0.5"/>
+            ${miniTnArea ? `<path d="${miniTnArea}" fill="#a4afc0" fill-opacity="0.24"/>` : ''}
+            ${miniFpArea ? `<path d="${miniFpArea}" fill="#e64b60" fill-opacity="0.34"/>` : ''}
+            ${miniFnArea ? `<path d="${miniFnArea}" fill="#f2a527" fill-opacity="0.32"/>` : ''}
+            ${miniTpArea ? `<path d="${miniTpArea}" fill="#0ea976" fill-opacity="0.32"/>` : ''}
+            <line x1="42" y1="180" x2="460" y2="180" stroke="#cbd5e1" stroke-width="1.5"/>
+            <path d="${negCurveD}" fill="none" stroke="#64748b" stroke-width="2.8"/>
+            <path d="${posCurveD}" fill="none" stroke="#0ea976" stroke-width="2.8"/>
+            <line x1="${miniCutoffX}" y1="30" x2="${miniCutoffX}" y2="180" stroke="#246cf0" stroke-width="2.5" stroke-dasharray="4 3"/>
+            <text x="${miniCutoffX}" y="24" fill="#1d4ed8" font-size="11.5" font-weight="700" text-anchor="middle">Cutoff: ${threshold.toFixed(2)} (${elements.threshold.value}%)</text>
+            <text x="42" y="196" fill="#64748b" font-size="10.5">1.00</text>
+            <text x="251" y="196" fill="#64748b" font-size="10.5" text-anchor="middle">0.50</text>
+            <text x="460" y="196" fill="#64748b" font-size="10.5" text-anchor="end">0.00</text>
+            <text x="54" y="${Math.max(44, 180 - posScale - 6).toFixed(1)}" fill="#0ea976" font-size="11.5" font-weight="700">${copy.actualPositive} (${Math.round(p * 100)}%)</text>
+            <text x="448" y="${Math.max(44, 180 - negScale - 6).toFixed(1)}" fill="#475569" font-size="11.5" font-weight="700" text-anchor="end">${copy.actualNegative} (${Math.round((1 - p) * 100)}%)</text>
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#0ea976"></i> TP (${Math.round(metrics.tp)})</span>
+            <span><i class="legend-dot" style="background:#e64b60"></i> FP (${Math.round(metrics.fp)})</span>
+            <span><i class="legend-dot" style="background:#f2a527"></i> FN (${Math.round(metrics.fn)})</span>
+            <span><i class="legend-dot" style="background:#a4afc0"></i> TN (${Math.round(metrics.tn)})</span>
+          </div>
+        </div>`;
+
+    const buildRocCard = isPrimaryRoc => `
+        <div>
+          <div class="${isPrimaryRoc ? 'auc-badge' : 'signal-badge'}">
+            Area Under Curve (AUC): <strong>${auc.toFixed(3)}</strong>
+            <span>${auc >= 0.95 ? '(Excellent)' : auc >= 0.8 ? '(Good)' : '(Fair)'}</span>
+          </div>
+          <svg class="curve-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="ROC curve: TPR versus FPR">
+            <line x1="${padL}" y1="${padT + ph}" x2="${padL + pw}" y2="${padT}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <line x1="${padL}" y1="${padT}" x2="${padL + pw}" y2="${padT}" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="${padL}" y1="${padT + ph / 2}" x2="${padL + pw}" y2="${padT + ph / 2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="${padL}" y1="${padT + ph}" x2="${padL + pw}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL + pw / 2}" y1="${padT}" x2="${padL + pw / 2}" y2="${padT + ph}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <text x="${padL - 6}" y="${padT + 4}" font-size="10" fill="#64748b" text-anchor="end">1.0</text>
+            <text x="${padL - 6}" y="${padT + ph / 2 + 3}" font-size="10" fill="#64748b" text-anchor="end">0.5</text>
+            <text x="${padL - 6}" y="${padT + ph + 3}" font-size="10" fill="#64748b" text-anchor="end">0.0</text>
+            <text x="${padL}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">0.0</text>
+            <text x="${padL + pw / 2}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">0.5</text>
+            <text x="${padL + pw}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">1.0</text>
+
+            <text x="${padL + pw / 2}" y="${padT + ph + 30}" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">False Positive Rate (FPR)</text>
+            <text transform="rotate(-90)" x="${-(padT + ph / 2)}" y="12" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">True Positive Rate (TPR)</text>
+
+            <path d="${aucFillD}" fill="rgba(36, 108, 240, 0.09)"/>
+            <path d="${rocD}" fill="none" stroke="#246cf0" stroke-width="2.5" stroke-linecap="round"/>
+
+            ${dotX && dotY ? `
+              <line x1="${dotX}" y1="${padT + ph}" x2="${dotX}" y2="${dotY}" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <line x1="${padL}" y1="${dotY}" x2="${dotX}" y2="${dotY}" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <circle cx="${dotX}" cy="${dotY}" r="6.5" fill="#e11d48" stroke="#ffffff" stroke-width="2.5"/>
+            ` : ''}
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#e11d48"></i> Fixed with p: TPR = ${formatPercent(tpr)}, FPR = ${formatPercent(fpr)}</span>
+          </div>
+        </div>`;
+
+    const buildPrCard = () => `
+        <div>
+          <div class="pr-badge" style="background:#f5f3ff; border-color:#ddd6fe; color:#5b21b6;">
+            PR-AUC (Avg Precision): <strong>${prAuc.toFixed(3)}</strong>
+            <span>(Base p=${p.toFixed(2)})</span>
+          </div>
+          <svg class="curve-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Precision-Recall curve: Precision versus TPR">
+            <line x1="${padL}" y1="${prBaseY}" x2="${padL + pw}" y2="${prBaseY}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <text x="${padL + pw - 4}" y="${Math.max(padT + 10, Number(prBaseY) - 4)}" font-size="9" font-weight="600" fill="#64748b" text-anchor="end">Baseline p = ${Math.round(p * 100)}%</text>
+            <line x1="${padL}" y1="${padT}" x2="${padL + pw}" y2="${padT}" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="${padL}" y1="${padT + ph / 2}" x2="${padL + pw}" y2="${padT + ph / 2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="${padL}" y1="${padT + ph}" x2="${padL + pw}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL + pw / 2}" y1="${padT}" x2="${padL + pw / 2}" y2="${padT + ph}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <text x="${padL - 6}" y="${padT + 4}" font-size="10" fill="#64748b" text-anchor="end">1.0</text>
+            <text x="${padL - 6}" y="${padT + ph / 2 + 3}" font-size="10" fill="#64748b" text-anchor="end">0.5</text>
+            <text x="${padL - 6}" y="${padT + ph + 3}" font-size="10" fill="#64748b" text-anchor="end">0.0</text>
+            <text x="${padL}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">0.0</text>
+            <text x="${padL + pw / 2}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">0.5</text>
+            <text x="${padL + pw}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">1.0</text>
+
+            <text x="${padL + pw / 2}" y="${padT + ph + 30}" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">Recall / Sensitivity (TPR)</text>
+            <text transform="rotate(-90)" x="${-(padT + ph / 2)}" y="12" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">Precision (PPV)</text>
+
+            <path d="${prFillD}" fill="rgba(124, 58, 237, 0.09)"/>
+            <path d="${prD}" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+
+            ${prDotX && prDotY ? `
+              <line x1="${prDotX}" y1="${padT + ph}" x2="${prDotX}" y2="${prDotY}" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <line x1="${padL}" y1="${prDotY}" x2="${prDotX}" y2="${prDotY}" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <circle cx="${prDotX}" cy="${prDotY}" r="6.5" fill="#e11d48" stroke="#ffffff" stroke-width="2.5"/>
+            ` : ''}
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#7c3aed"></i> Shifts with p: Prec = ${formatPercent(precision)}, Rec = ${formatPercent(tpr)}</span>
+          </div>
+        </div>`;
+
+    const buildBayesCard = () => {
+      let bayesD = '';
+      const validB = Number.isFinite(tpr) && Number.isFinite(fpr) && (tpr > 0 || fpr > 0);
+      if (validB) {
+        for (let i = 0; i <= 50; i++) {
+          const ptP = Math.max(0.001, Math.min(0.999, i / 50));
+          const prec = (tpr * ptP) / (tpr * ptP + fpr * (1 - ptP));
+          const x = padL + ptP * pw;
+          const y = padT + (1 - prec) * ph;
+          bayesD += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+        }
+      }
+      const bayesFillD = bayesD ? `${bayesD} L ${(padL + pw).toFixed(1)} ${(padT + ph).toFixed(1)} L ${padL.toFixed(1)} ${(padT + ph).toFixed(1)} Z` : '';
+      const bDotX = Number.isFinite(p) ? (padL + p * pw).toFixed(1) : null;
+      const bDotY = Number.isFinite(precision) ? (padT + (1 - precision) * ph).toFixed(1) : null;
+      return `
+        <div>
+          <div class="signal-badge" style="background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8;">
+            Bayes Posterior: <strong>${formatPercent(precision)}</strong>
+            <span>(at p=${Math.round(p * 100)}%)</span>
+          </div>
+          <svg class="curve-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Bayes Precision versus prevalence curve">
+            <line x1="${padL}" y1="${padT}" x2="${padL + pw}" y2="${padT}" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="${padL}" y1="${padT + ph / 2}" x2="${padL + pw}" y2="${padT + ph / 2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="${padL}" y1="${padT + ph}" x2="${padL + pw}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + ph}" stroke="#cbd5e1" stroke-width="1.5"/>
+            <line x1="${padL + pw / 2}" y1="${padT}" x2="${padL + pw / 2}" y2="${padT + ph}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="${padL - 6}" y="${padT + 4}" font-size="10" fill="#64748b" text-anchor="end">100%</text>
+            <text x="${padL - 6}" y="${padT + ph / 2 + 3}" font-size="10" fill="#64748b" text-anchor="end">50%</text>
+            <text x="${padL - 6}" y="${padT + ph + 3}" font-size="10" fill="#64748b" text-anchor="end">0%</text>
+            <text x="${padL}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">0%</text>
+            <text x="${padL + pw / 2}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">50%</text>
+            <text x="${padL + pw}" y="${padT + ph + 16}" font-size="10" fill="#64748b" text-anchor="middle">100%</text>
+            <text x="${padL + pw / 2}" y="${padT + ph + 30}" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">Prior Prevalence (p)</text>
+            <text transform="rotate(-90)" x="${-(padT + ph / 2)}" y="12" font-size="11" font-weight="600" fill="#334155" text-anchor="middle">Precision (PPV)</text>
+            ${bayesFillD ? `<path d="${bayesFillD}" fill="rgba(36, 108, 240, 0.09)"/>` : ''}
+            ${bayesD ? `<path d="${bayesD}" fill="none" stroke="#246cf0" stroke-width="2.5" stroke-linecap="round"/>` : ''}
+            ${bDotX && bDotY ? `
+              <line x1="${bDotX}" y1="${padT + ph}" x2="${bDotX}" y2="${bDotY}" stroke="#246cf0" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <line x1="${padL}" y1="${bDotY}" x2="${bDotX}" y2="${bDotY}" stroke="#246cf0" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <circle cx="${bDotX}" cy="${bDotY}" r="6.5" fill="#246cf0" stroke="#ffffff" stroke-width="2.5"/>
+            ` : ''}
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#246cf0"></i> Prior p = ${formatPercent(p)} → Precision = ${formatPercent(precision)}</span>
+          </div>
+        </div>`;
+    };
+
+    const buildMatrixCard = () => `
+        <div>
+          <div class="signal-badge" style="background:#f8fafc; border-color:#cbd5e1; color:#1e293b;">
+            2×2 Matrix: <strong>Acc ${formatPercent(metrics.accuracy)}</strong>
+            <span>(Prec ${formatPercent(precision)})</span>
+          </div>
+          <svg class="curve-svg" viewBox="0 0 320 220" role="img" aria-label="2x2 Confusion Matrix">
+            <rect x="68" y="8" width="116" height="22" rx="5" fill="#fff0f2"/>
+            <text x="126" y="23" text-anchor="middle" fill="#c94859" font-size="11" font-weight="800">${copy.predictedPositive}</text>
+            <rect x="192" y="8" width="116" height="22" rx="5" fill="#eff4ff"/>
+            <text x="250" y="23" text-anchor="middle" fill="#2c67c2" font-size="11" font-weight="800">${copy.predictedNegative}</text>
+
+            <text x="62" y="68" text-anchor="end" fill="#1e293b" font-size="10.5" font-weight="800">${copy.actualPositive}</text>
+            <text x="62" y="82" text-anchor="end" fill="#64748b" font-size="9.5">${Math.round(metrics.tp + metrics.fn)}</text>
+            <text x="62" y="156" text-anchor="end" fill="#1e293b" font-size="10.5" font-weight="800">${copy.actualNegative.replace(/\u00a0/g, ' ')}</text>
+            <text x="62" y="170" text-anchor="end" fill="#64748b" font-size="9.5">${Math.round(metrics.fp + metrics.tn)}</text>
+
+            <rect x="68" y="36" width="116" height="82" rx="8" fill="#f1fbf7" stroke="#cceee0" stroke-width="1.5"/>
+            <text x="78" y="54" fill="#1e293b" font-size="11" font-weight="800">TP</text>
+            <text x="174" y="60" text-anchor="end" fill="#0ea976" font-size="20" font-weight="800">${Math.round(metrics.tp)}</text>
+            <text x="78" y="106" fill="#475569" font-size="10" font-weight="700">TPR: ${formatPercent(tpr)}</text>
+
+            <rect x="192" y="36" width="116" height="82" rx="8" fill="#fff9ef" stroke="#f8e2b9" stroke-width="1.5"/>
+            <text x="202" y="54" fill="#1e293b" font-size="11" font-weight="800">FN</text>
+            <text x="298" y="60" text-anchor="end" fill="#d97706" font-size="20" font-weight="800">${Math.round(metrics.fn)}</text>
+            <text x="202" y="106" fill="#475569" font-size="10" font-weight="700">FNR: ${formatPercent(metrics.fnr)}</text>
+
+            <rect x="68" y="126" width="116" height="82" rx="8" fill="#fff3f5" stroke="#f7ced5" stroke-width="1.5"/>
+            <text x="78" y="144" fill="#1e293b" font-size="11" font-weight="800">FP</text>
+            <text x="174" y="150" text-anchor="end" fill="#e64b60" font-size="20" font-weight="800">${Math.round(metrics.fp)}</text>
+            <text x="78" y="196" fill="#475569" font-size="10" font-weight="700">FPR: ${formatPercent(fpr)}</text>
+
+            <rect x="192" y="126" width="116" height="82" rx="8" fill="#f6f8fb" stroke="#dde3ec" stroke-width="1.5"/>
+            <text x="202" y="144" fill="#1e293b" font-size="11" font-weight="800">TN</text>
+            <text x="298" y="150" text-anchor="end" fill="#64748b" font-size="20" font-weight="800">${Math.round(metrics.tn)}</text>
+            <text x="202" y="196" fill="#475569" font-size="10" font-weight="700">TNR: ${formatPercent(metrics.tnr)}</text>
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#0ea976"></i> TP ${Math.round(metrics.tp)}</span>
+            <span><i class="legend-dot" style="background:#e64b60"></i> FP ${Math.round(metrics.fp)}</span>
+            <span><i class="legend-dot" style="background:#f2a527"></i> FN ${Math.round(metrics.fn)}</span>
+            <span><i class="legend-dot" style="background:#a4afc0"></i> TN ${Math.round(metrics.tn)}</span>
+          </div>
+        </div>`;
+
+    const buildScoresCard = () => {
+      const posScaleRow = (p / maxPrior) * 32;
+      const negScaleRow = ((1 - p) / maxPrior) * 32;
+      const buildRowEnv = (centerY, mu, sc, leftCol, rightCol) => {
+        if (sc <= 0.5) return '';
+        const side = (s0, s1, col) => {
+          if (s1 - s0 <= 1e-4) return '';
+          const up = [], dn = [];
+          for (let i = 0; i <= 20; i++) {
+            const s = s0 + (s1 - s0) * (i / 20);
+            const x = 65 + (1 - s) * 235;
+            const dy = Math.exp(-0.5 * ((s - mu) / miniSd) ** 2) * sc;
+            up.push(`${x.toFixed(1)} ${(centerY - dy).toFixed(1)}`);
+            dn.unshift(`${x.toFixed(1)} ${(centerY + dy).toFixed(1)}`);
+          }
+          return `<path d="M ${up.join(' L ')} L ${dn.join(' L ')} Z" fill="${col}" fill-opacity="0.28" stroke="${col}" stroke-width="1.2"/>`;
+        };
+        return side(threshold, 1, leftCol) + side(0, threshold, rightCol);
+      };
+      const scoreCutX = 65 + (1 - threshold) * 235;
+      return `
+        <div>
+          <div class="signal-badge" style="background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8;">
+            Score Cutoff: <strong>${threshold.toFixed(2)}</strong>
+            <span>(${elements.threshold.value}%)</span>
+          </div>
+          <svg class="curve-svg" viewBox="0 0 320 220" role="img" aria-label="1D Score distribution and cutoff">
+            <rect x="65" y="28" width="${Math.max(0, scoreCutX - 65).toFixed(1)}" height="152" fill="#fff1f3"/>
+            <rect x="${scoreCutX.toFixed(1)}" y="28" width="${Math.max(0, 300 - scoreCutX).toFixed(1)}" height="152" fill="#eef4ff"/>
+            <text x="68" y="21" fill="#c54757" font-size="10.5" font-weight="800">${copy.predictedPositive}</text>
+            <text x="297" y="21" text-anchor="end" fill="#3465b7" font-size="10.5" font-weight="800">${copy.predictedNegative}</text>
+            <line x1="65" y1="104" x2="300" y2="104" stroke="#dbe4ef" stroke-width="1"/>
+            <text x="59" y="64" text-anchor="end" fill="#1e293b" font-size="10" font-weight="800">${copy.actualPositive}</text>
+            <text x="59" y="76" text-anchor="end" fill="#64748b" font-size="9">${Math.round(metrics.tp + metrics.fn)}</text>
+            <text x="59" y="140" text-anchor="end" fill="#1e293b" font-size="10" font-weight="800">${copy.actualNegative.replace(/\u00a0/g, ' ')}</text>
+            <text x="59" y="152" text-anchor="end" fill="#64748b" font-size="9">${Math.round(metrics.fp + metrics.tn)}</text>
+            ${buildRowEnv(66, miniMuPos, posScaleRow, CONFIG.colors.tp, CONFIG.colors.fn)}
+            ${buildRowEnv(142, miniMuNeg, negScaleRow, CONFIG.colors.fp, CONFIG.colors.tn)}
+            <line x1="${scoreCutX.toFixed(1)}" y1="28" x2="${scoreCutX.toFixed(1)}" y2="180" stroke="#246cf0" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="65" y1="180" x2="300" y2="180" stroke="#8c9bb0" stroke-width="1"/>
+            <text x="65" y="195" fill="#64748b" font-size="10">1.00</text>
+            <text x="182.5" y="195" fill="#64748b" font-size="10" text-anchor="middle">0.50</text>
+            <text x="300" y="195" fill="#64748b" font-size="10" text-anchor="end">0.00</text>
+          </svg>
+          <div class="curve-legend">
+            <span><i class="legend-dot" style="background:#246cf0"></i> Cutoff = ${threshold.toFixed(2)} · Pos = ${Math.round(p * 100)}%</span>
+          </div>
+        </div>`;
+    };
+
+    const renderedCards = [
+      buildGaussCard(),
+      buildRocCard(true),
+      buildPrCard(),
+      buildBayesCard()
+    ].join('');
+
+    return `
+      <div class="four-up-container">
+        ${renderedCards}
+      </div>
+      <div>
+        <h4 style="margin:14px 0 6px 0;font-size:15px;color:#1e293b;">${genericMode ? 'Why Compare Gaussians, ROC, and Precision–Recall Together?' : 'How Sick Portion Changes Gaussians & Precision–Recall (While ROC Stays Fixed)'}</h4>
+        <p style="margin:0 0 10px 0;font-size:13px;color:#475569;line-height:1.5;">
+          ${genericMode
+            ? '<b>ROC</b> plots TPR vs. FPR (row-normalized rates), so it remains invariant when class prevalence changes. <b>Precision–Recall (PR)</b> plots Precision vs. TPR—as the positive class becomes rare (low p), the positive Gaussian shrinks and false alarms from the negative tail pull the PR curve downward.'
+            : `Drag the <b>${copy.share}</b> slider above: watch the green <b>${copy.actualPositive} Gaussian</b> grow or shrink relative to the gray <b>${copy.actualNegative} Gaussian</b>. The <b>ROC curve</b> stays completely fixed, whereas the <b>Precision–Recall curve</b> bends dramatically because false alarms (red FP tail) overwhelm true catches when p is small!`}
+        </p>
+        <div class="paradox-callout" style="background:#f0fdf4;border-color:#16a34a;margin-top:12px;">
+          <b>✨ Key Insight — ROC vs. PR under Imbalance:</b>
+          Move the <b>${genericMode ? 'Positive portion' : 'Sick portion'}</b> slider to <b>10%</b> or <b>1%</b>. The ROC red dot <b>does not move at all</b>, while the Precision–Recall curve and Gaussian heights immediately reveal the true false-alarm burden!
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <h3>Error Costs: Which mistake is worse?</h3>
+        <span class="learn-note">Select a real-world scenario to apply the optimal decision cutoff</span>
+      </div>
+      <div class="cost-scenario-grid">
+        <button class="cost-card${Math.abs(cutoffPct - 80) <= 6 ? ' active' : ''}" type="button" data-cost-scenario="screening">
+          <b>🚨 1. Screening / Safety First</b>
+          <small>${genericMode
+            ? 'Missed positives (FN) are catastrophic (e.g. fatal illness or fraud). High TPR (low threshold), tolerating more false alarms (FP).'
+            : 'Missing flu lets illness spread to vulnerable people. Cutoff set to 80% to catch nearly every case.'}</small>
+        </button>
+        <button class="cost-card${Math.abs(cutoffPct - 50) <= 6 ? ' active' : ''}" type="button" data-cost-scenario="balanced">
+          <b>⚖️ 2. Balanced (Equal Weight)</b>
+          <small>${genericMode
+            ? 'False alarms and missed positives have comparable costs. Standard 50% decision threshold.'
+            : 'False alarms and missed cases are equally undesirable. Standard 50% cutoff.'}</small>
+        </button>
+        <button class="cost-card${Math.abs(cutoffPct - 20) <= 6 ? ' active' : ''}" type="button" data-cost-scenario="conservative">
+          <b>🛡️ 3. Conservative / High Stakes</b>
+          <small>${genericMode
+            ? 'False alarms (FP) are catastrophic (e.g. invasive surgery or deleting critical emails). High specificity, accepting some missed cases.'
+            : 'Treatment carries harsh side effects. Cutoff set to 20% to ensure only clear positive cases are treated.'}</small>
+        </button>
+      </div>
+    `;
+  }
 
   function renderLearning(metrics) {
     latestMetrics = metrics;
@@ -2594,7 +3973,77 @@
         <p><b>${genericMode ? 'Why class imbalance drives Precision (the Base-Rate Fallacy).' : 'Why a rare disease creates mostly false alarms.'}</b> ${genericMode ? 'Because TPR and FPR normalize within their own ground-truth rows, changing the class prior p scales each row uniformly without changing TPR or FPR. Precision slices vertically across both rows, so when p is small, even a low FPR on a large negative class produces many FP.' : ''} ${rareStory}</p>
         <p>With the ${copy.cutoff} and ${copy.separation} fixed, changing the ${share} changes <b>Precision</b> while <b>TPR</b> and <b>FPR</b> stay fixed wherever both rates are defined.</p>
       </div>
+      <div class="section-heading">
+        <h3>${genericMode ? 'Overall Accuracy & The Accuracy Paradox' : 'Overall Accuracy & The False Security Trap'}</h3>
+        <span class="learn-note">Why accuracy alone can be dangerously deceptive on rare events</span>
+      </div>
+      <div class="accuracy-card">
+        <div class="accuracy-header">
+          <div>
+            <h4 style="margin:0 0 4px 0;font-size:16px;color:#1e293b;">${genericMode ? 'Model Accuracy: (TP + TN) ÷ Total' : 'Test Accuracy: (All correct results ÷ Total)'}</h4>
+            <span class="learn-note">${formatCount(metrics.tp + metrics.tn)} out of 1,000 cases correctly classified</span>
+          </div>
+          <div class="accuracy-metric">
+            <strong id="liveAccuracy">${formatPercent(metrics.accuracy)}</strong>
+            <span>Accuracy</span>
+          </div>
+        </div>
+        <p style="margin:8px 0 0 0;font-size:13.5px;color:#334155;line-height:1.5;">
+          ${genericMode
+            ? `<b>Accuracy</b> combines true hits (${formatCount(metrics.tp)} TP) and correct rejections (${formatCount(metrics.tn)} TN) into a single overall percentage.`
+            : `<b>Accuracy</b> measures how often the test gives the right answer: catching flu (${formatCount(metrics.tp)} TP) plus clearing healthy people (${formatCount(metrics.tn)} TN).`}
+        </p>
+        <div class="paradox-callout">
+          <b>⚠️ ${genericMode ? 'The Accuracy Paradox' : 'The False Security Trap'}:</b>
+          ${genericMode
+            ? `When the positive class is rare (e.g. p = 10%), a "dummy" model that predicts negative 100% of the time gets <b>${formatPercent(1 - p)} accuracy</b>, despite having <b>TPR = 0%</b> and finding zero true cases.`
+            : `When flu is rare (e.g. 10% sick), a broken test that says "Negative" to every single patient achieves an impressive <b>${formatPercent(1 - p)} accuracy</b>—while failing to catch a single sick person (TPR = 0%)!`}
+          <div class="paradox-actions">
+            <button class="btn-demo" id="demoAlwaysNegative" type="button">⚡ Demo: Always predict Negative</button>
+            <button class="btn-demo secondary" id="demoDefaultCutoff" type="button">Reset cutoff</button>
+          </div>
+        </div>
+      </div>
       <details><summary>How this demonstration works</summary><p>The demo follows a group of 1,000 ${copy.subject}. Changing the ${share} changes how many belong to each actual row. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two score distributions overlap.</p><p class="learn-note">These are simulated continuous scores. A score is a ranking signal used with a threshold; Precision is the calibrated posterior probability for the region above the threshold. The matrix rounds counts to whole ${copy.subject} for readability. Behind the scenes every count is an average (an expected value), so formulas may use decimals such as 72.7 ${copy.subject}—rounding never changes a result.</p></details>`;
+
+    const extraMetricInfo = {
+      tnr: {
+        label: genericMode ? 'Specificity (TNR)' : 'Specificity (Healthy cleared)',
+        numOutcomes: ['tn'],
+        denomOutcomes: ['tn', 'fp'],
+        isColumn: false,
+        color: '#0d9488',
+        question: genericMode ? 'Given actual −, what fraction does the model correctly predict as −?' : 'If a person does NOT have the flu, what is the chance of correctly clearing them?',
+        alias: genericMode ? 'True negative rate (1 − FPR)' : 'True negative rate / Healthy clear rate',
+        condition: genericMode ? 'P(predicted − | actual −)' : 'P(test − | no flu)',
+        wordFraction: genericMode ? ['True negatives (TN)', 'All actual negatives (TN + FP)'] : ['Healthy cleared (TN)', 'All healthy people (TN + FP)'],
+        calculation: `${formatCount(metrics.tn)} ÷ (${formatCount(metrics.tn)} + ${formatCount(metrics.fp)}) = ${formatPercent(metrics.tnr)}`
+      },
+      npv: {
+        label: genericMode ? 'NPV (Negative Predictive Value)' : 'NPV (True chance you are healthy)',
+        numOutcomes: ['tn'],
+        denomOutcomes: ['tn', 'fn'],
+        isColumn: true,
+        color: '#0284c7',
+        question: genericMode ? 'Given predicted −, what is the posterior probability of actual −?' : 'If a person gets a negative test (Test −), what is the chance they truly do not have the flu?',
+        alias: genericMode ? 'Negative predictive value' : 'Post-test probability of being healthy',
+        condition: genericMode ? 'P(actual − | predicted −)' : 'P(no flu | test −)',
+        wordFraction: genericMode ? ['True negatives (TN)', 'All predicted negatives (TN + FN)'] : ['Healthy cleared (TN)', 'All negative tests (TN + FN)'],
+        calculation: `${formatCount(metrics.tn)} ÷ (${formatCount(metrics.tn)} + ${formatCount(metrics.fn)}) = ${formatPercent(metrics.npv)}`
+      },
+      fnr: {
+        label: genericMode ? 'Miss Rate (FNR)' : 'Miss Rate (Flu missed)',
+        numOutcomes: ['fn'],
+        denomOutcomes: ['tp', 'fn'],
+        isColumn: false,
+        color: '#e11d48',
+        question: genericMode ? 'Given actual +, what fraction does the model mistakenly miss as −?' : 'If a person really has the flu, what is the chance the test misses it?',
+        alias: genericMode ? 'False negative rate (1 − TPR)' : 'False negative rate / Missed flu rate',
+        condition: genericMode ? 'P(predicted − | actual +)' : 'P(test − | flu)',
+        wordFraction: genericMode ? ['Missed positives (FN)', 'All actual positives (TP + FN)'] : ['Flu missed (FN)', 'All sick people (TP + FN)'],
+        calculation: `${formatCount(metrics.fn)} ÷ (${formatCount(metrics.tp)} + ${formatCount(metrics.fn)}) = ${formatPercent(metrics.fnr)}`
+      }
+    };
 
     getElement('learn-formulas').innerHTML = `
       <div class="learn-intro">
@@ -2631,17 +4080,76 @@
           <p class="learn-note"><b>${conditions[name]}</b> · ${aliases[name]}</p>
           <p class="formula-feedback">Outlined in the graphs above · tap again or press Esc to clear.</p>
         </article>`).join('')}</div>
+
+      <div class="section-heading" style="margin-top:28px">
+        <h3>${genericMode ? 'The Other Half: Specificity (TNR), NPV, and Miss Rate (FNR)' : 'The Negative Outcomes: Specificity, NPV, and Miss Rate'}</h3>
+        <span class="learn-note">How the test behaves on negative predictions and missed cases</span>
+      </div>
+      <div class="learn-grid">${Object.entries(extraMetricInfo).map(([name, rule]) => `
+        <article class="learn-card formula-card metric-detail" style="--metric-color:${rule.color}">
+          <div class="metric-heading">
+            <div>
+              <h3>${rule.label}</h3>
+              <span class="slice-badge">${miniMatrix(rule.numOutcomes, rule.denomOutcomes)} ${rule.isColumn ? 'Column rate (vertical slice)' : 'Row rate (horizontal slice)'}</span>
+            </div>
+            <strong>${formatPercent(metrics[name])}</strong>
+          </div>
+          <p class="question">${rule.question}</p>
+          <div class="equation" aria-label="${rule.label}: ${rule.numOutcomes.join('').toUpperCase()} divided by ${rule.denomOutcomes.join(' plus ').toUpperCase()}">
+            <span><b>${rule.label}</b> =</span>
+            <span class="fraction">
+              <span><button class="formula-term" data-explain="${name}" data-part="numerator" aria-pressed="false" type="button" aria-label="Highlight ${rule.numOutcomes.join('').toUpperCase()} for ${rule.label}">${rule.numOutcomes.join('').toUpperCase()}</button></span>
+              <span><button class="formula-term" data-explain="${name}" data-part="denominator" aria-pressed="false" type="button" aria-label="Highlight ${rule.denomOutcomes.join(' plus ').toUpperCase()} for ${rule.label}">${rule.denomOutcomes.join(' + ').toUpperCase()}</button></span>
+            </span>
+          </div>
+          <div class="word-eq" aria-hidden="true">
+            <span>In plain words =</span>
+            <span class="fraction">
+              <span>${rule.wordFraction[0]}</span>
+              <span>${rule.wordFraction[1]}</span>
+            </span>
+          </div>
+          <p class="live-calculation" id="calculation-${name}">${rule.calculation}</p>
+          <p class="learn-note"><b>${rule.condition}</b> · ${rule.alias}</p>
+          <p class="formula-feedback">Outlined in the graphs above · tap again or press Esc to clear.</p>
+        </article>`).join('')}</div>
+
+      <div class="f1-card">
+        <div class="f1-heading">
+          <div>
+            <h3 style="margin:0 0 4px 0">${genericMode ? 'F1 Score (Balanced F-measure)' : 'F1 Score (Summary of Precision & Recall)'}</h3>
+            <span class="learn-note">Harmonic mean of Precision and Recall (TPR)</span>
+          </div>
+          <div class="f1-score">
+            <strong>${Number.isFinite(metrics.f1) ? (metrics.f1).toFixed(3) : 'N/A'}</strong>
+            <span style="font-size:12px;color:#526886;display:block;">${formatPercent(metrics.f1)}</span>
+          </div>
+        </div>
+        <div class="f1-equation">
+          <span><b>F1</b> = 2 ×</span>
+          <span class="fraction">
+            <span>Precision × Recall</span>
+            <span>Precision + Recall</span>
+          </span>
+          <span>= 2 ×</span>
+          <span class="fraction">
+            <span>${formatPercent(metrics.precision)} × ${formatPercent(metrics.tpr)}</span>
+            <span>${formatPercent(metrics.precision)} + ${formatPercent(metrics.tpr)}</span>
+          </span>
+          <span>= <b>${Number.isFinite(metrics.f1) ? metrics.f1.toFixed(3) : 'N/A'}</b></span>
+        </div>
+        <p style="margin:10px 0 0 0;font-size:13px;color:#334155;line-height:1.5;">
+          ${genericMode
+            ? '<b>Why harmonic mean?</b> Unlike an arithmetic average, the harmonic mean heavily penalizes extreme imbalances: if either Precision or Recall drops near 0, F1 collapses toward 0.<br><b>Key limitation:</b> F1 completely ignores <b>True Negatives (TN)</b>. In highly imbalanced datasets, a model with good F1 can still make many false alarms relative to the negative population.'
+            : '<b>Why use F1?</b> It penalizes tests that sacrifice one metric for the other: if either Precision or Recall is terrible, F1 is dragged down.<br><b>Important caveat:</b> F1 ignores healthy people who tested negative (TN)—it only looks at catches and mistakes among positive results.'}
+        </p>
+      </div>
+
       <p class="learn-note" style="margin-top:14px">Solid underline: the numerator counted. Dashed underline: the denominator group it is divided by. A rate is N/A when its denominator is zero. Display rounding never changes a calculation.</p>`;
 
     const numericBayes = Number.isFinite(tpr) && Number.isFinite(fpr)
       ? `${decimal(tpr)} × ${decimal(p)} ÷ [${decimal(tpr)} × ${decimal(p)} + ${decimal(fpr)} × ${decimal(1 - p)}] = ${formatPercent(precision)}`
       : `Using expected counts: ${formatCount(tp)} ÷ (${formatCount(tp)} + ${formatCount(fp)}) = ${formatPercent(precision)}.`;
-    getElement('bayesThreshold').value = elements.threshold.value;
-    getElement('bayesThresholdOut').value = `${elements.threshold.value}%`;
-    getElement('bayesSeparation').value = elements.separation.value;
-    getElement('bayesSeparationOut').value = `${Math.round(separation * 100)}%`;
-    getElement('bayesPrevalence').value = elements.prevalence.value;
-    getElement('bayesPrevalenceOut').value = `${elements.prevalence.value}%`;
     getElement('learn-bayes-intro').innerHTML = `
       <div class="learn-intro">
         <h3>${genericMode ? 'Bayes’ theorem: inverting P(predicted + | actual +) into P(actual + | predicted +)' : 'Bayes’ theorem in 3 natural steps: from 1,000 people to your chance of flu'}</h3>
@@ -2717,6 +4225,7 @@
           </div>
         </div>
       </div>
+      ${renderPrevalenceCurve(tpr, fpr, p, precision, genericMode)}
       <div class="section-heading">
         <h3>Compare 10% vs. 50% ${share}</h3>
         <span class="learn-note">Same ${copy.cutoff} and ${copy.separation} · tap a card to switch</span>
@@ -2737,6 +4246,21 @@
         <div class="notation-row"><p><b>FPR</b></p><p>${conditions.fpr}</p><p>${questions.fpr} (${formatPercent(fpr)})</p></div>
         <div class="notation-row"><p><b>Precision</b></p><p>${conditions.precision}</p><p>${questions.precision} (${formatPercent(precision)})</p></div>
       </div>`;
+
+    const introEl = getElement('learn-tradeoffs-intro');
+    if (introEl) {
+      introEl.innerHTML = `
+        <div class="learn-intro">
+          <h3>${genericMode ? 'The Operating Characteristic (ROC) & Decision Trade-offs' : 'Trade-offs & The ROC Curve: Choosing Your Mistakes'}</h3>
+          <p>${genericMode
+            ? 'A classifier produces continuous scores; moving the decision threshold trades off <b>True Positive Rate (Sensitivity)</b> against <b>False Positive Rate (Fall-out)</b>. The <b>ROC curve</b> plots every operating point achievable by varying the threshold.'
+            : 'Medical tests and detection systems cannot be perfect: making a test more sensitive to catch every sick person inherently creates more false alarms. The <b>ROC curve</b> plots this fundamental trade-off across all cutoffs.'}</p>
+        </div>`;
+    }
+    const bodyEl = getElement('learn-tradeoffs-body');
+    if (bodyEl) {
+      bodyEl.innerHTML = renderTradeoffsTab(metrics, separation, threshold, genericMode);
+    }
   }
 
   function setLearningMode(open) {
@@ -2753,13 +4277,16 @@
   function selectLearningTab(tab, focus = false) {
     learningTab = tab;
     formulaPreview = formulaPinned = null;
-    for (const name of ['basics', 'formulas', 'bayes']) {
+    for (const name of ['basics', 'formulas', 'bayes', 'tradeoffs']) {
       const button = getElement(`tab-${name}`);
-      button.setAttribute('aria-selected', String(name === tab));
-      button.tabIndex = name === tab ? 0 : -1;
-      getElement(`learn-${name}`).hidden = name !== tab;
+      if (button) {
+        button.setAttribute('aria-selected', String(name === tab));
+        button.tabIndex = name === tab ? 0 : -1;
+      }
+      const panel = getElement(`learn-${name}`);
+      if (panel) panel.hidden = name !== tab;
     }
-    if (focus) getElement(`tab-${tab}`).focus();
+    if (focus) getElement(`tab-${tab}`)?.focus();
     renderMetricHighlight();
   }
 
@@ -2822,12 +4349,56 @@
     const metrics = calculateMetrics(groups);
     const countGroups = createCountGroups(groups);
 
-    renderScorePlot(Object.values(countGroups).flat(), threshold, positiveCount);
+    const flatExamples = Object.values(countGroups).flat();
+    renderScorePlot(flatExamples, threshold, positiveCount, elements.scorePlot);
+    renderDashboardGaussPlot(metrics, separation, threshold, genericMode, getElement('gaussPlot'));
+    renderDashboardRocPlot(metrics, separation, threshold, genericMode, getElement('rocPlot'));
+    renderDashboardPrPlot(metrics, separation, threshold, genericMode, getElement('prPlot'));
+    renderDashboardBayesPlot(metrics, separation, threshold, genericMode, getElement('bayesPlot'));
     renderPopulationGrid(countGroups, metrics);
     renderMetrics(metrics);
     renderLearning(metrics);
     highlightExample(null);
     renderMetricHighlight();
+
+    for (const prefix of ['bayes', 'tradeoff']) {
+      const tThresh = getElement(`${prefix}Threshold`);
+      if (tThresh) {
+        if (document.activeElement !== tThresh) {
+          tThresh.value = elements.threshold.value;
+        }
+        const out = getElement(`${prefix}ThresholdOut`);
+        if (out) out.value = `${elements.threshold.value}%`;
+      }
+      const tSep = getElement(`${prefix}Separation`);
+      if (tSep) {
+        if (document.activeElement !== tSep) {
+          tSep.value = elements.separation.value;
+        }
+        const out = getElement(`${prefix}SeparationOut`);
+        if (out) out.value = `${Math.round(separation * 100)}%`;
+      }
+      const tPrev = getElement(`${prefix}Prevalence`);
+      if (tPrev) {
+        if (document.activeElement !== tPrev) {
+          tPrev.value = elements.prevalence.value;
+        }
+        const out = getElement(`${prefix}PrevalenceOut`);
+        if (out) out.value = `${elements.prevalence.value}%`;
+      }
+    }
+
+    const presetSelect = getElement('presetSelect');
+    if (presetSelect) {
+      const p = Number(elements.prevalence.value);
+      const t = Number(elements.threshold.value);
+      const s = Number(elements.separation.value);
+      if (p === 50 && t === 50 && s === 60) presetSelect.value = 'balanced';
+      else if (p === 10 && t === (genericMode ? 20 : 80) && s === 60) presetSelect.value = 'screening';
+      else if (p === 20 && t === (genericMode ? 80 : 20) && s === 60) presetSelect.value = 'spam';
+      else if (p === 1 && t === 50 && s === 75) presetSelect.value = 'fraud';
+      else presetSelect.value = 'custom';
+    }
   }
 
   function reset() {
@@ -2836,6 +4407,9 @@
     elements.prevalence.value = CONFIG.defaultPrevalence;
     elements.threshold.value = genericMode ? CONFIG.defaultThreshold * 100 : 100 - CONFIG.defaultThreshold * 100;
     elements.separation.value = CONFIG.defaultSeparation;
+    const presetSelect = getElement('presetSelect');
+    if (presetSelect) presetSelect.value = 'balanced';
+    setGraphView('scores');
     update();
   }
 
@@ -2847,22 +4421,26 @@
   elements.reset.addEventListener('click', reset);
   getElement('learnToggle').addEventListener('click', () => {
     setLearningMode(!learningMode);
-    if (learningMode) getElement('learnPanel').scrollIntoView({ block: 'start' });
   });
   getElement('closeLearn').addEventListener('click', () => {
     setLearningMode(false);
     getElement('learnToggle').focus({ preventScroll: true });
-    getElement('learnToggle').scrollIntoView({ block: 'center' });
   });
-  for (const [index, name] of ['basics', 'formulas', 'bayes'].entries()) {
+  const learningTabNames = ['basics', 'formulas', 'bayes', 'tradeoffs'];
+  for (const [index, name] of learningTabNames.entries()) {
     const tab = getElement(`tab-${name}`);
+    if (!tab) continue;
     tab.addEventListener('click', () => selectLearningTab(name));
     tab.addEventListener('keydown', event => {
-      const names = ['basics', 'formulas', 'bayes'];
-      const next = { ArrowRight: (index + 1) % 3, ArrowLeft: (index + 2) % 3, Home: 0, End: 2 }[event.key];
+      const next = {
+        ArrowRight: (index + 1) % learningTabNames.length,
+        ArrowLeft: (index - 1 + learningTabNames.length) % learningTabNames.length,
+        Home: 0,
+        End: learningTabNames.length - 1
+      }[event.key];
       if (next === undefined) return;
       event.preventDefault();
-      selectLearningTab(names[next], true);
+      selectLearningTab(learningTabNames[next], true);
     });
   }
   const learnPanel = getElement('learnPanel');
@@ -2891,6 +4469,29 @@
       hoveredMetric = focusedMetric = pinnedMetric = null;
       renderMetricHighlight();
     }
+    const demoNeg = event.target.closest('#demoAlwaysNegative');
+    if (demoNeg) {
+      elements.threshold.value = genericMode ? 100 : 0;
+      if (Number(elements.prevalence.value) > 20) {
+        elements.prevalence.value = 10;
+      }
+      update();
+      demoNeg.focus({ preventScroll: true });
+    }
+    const demoReset = event.target.closest('#demoDefaultCutoff');
+    if (demoReset) {
+      elements.threshold.value = 50;
+      update();
+      demoReset.focus({ preventScroll: true });
+    }
+    const costScenario = event.target.closest('[data-cost-scenario]');
+    if (costScenario) {
+      const type = costScenario.dataset.costScenario;
+      const targetCutoff = type === 'screening' ? 80 : (type === 'conservative' ? 20 : 50);
+      elements.threshold.value = genericMode ? (100 - targetCutoff) : targetCutoff;
+      update();
+      costScenario.focus({ preventScroll: true });
+    }
     const preset = event.target.closest('[data-learn-share]');
     if (preset) {
       const share = preset.dataset.learnShare;
@@ -2903,16 +4504,61 @@
       selectLearningTab(tabLink.dataset.learnTab, true);
     }
   });
-  for (const [bayesId, topId] of [
-    ['bayesPrevalence', 'prevalence'],
-    ['bayesThreshold', 'threshold'],
-    ['bayesSeparation', 'separation']
-  ]) {
-    getElement(bayesId).addEventListener('input', event => {
-      elements[topId].value = event.target.value;
+  if (typeof document.querySelectorAll === 'function') {
+    document.querySelectorAll('[data-graph-view]').forEach(tab => {
+      tab.addEventListener('click', () => setGraphView(tab.dataset.graphView));
+    });
+  }
+  const presetSelect = getElement('presetSelect');
+  if (presetSelect) {
+    presetSelect.addEventListener('change', event => {
+      const choice = event.target.value;
+      if (choice === 'balanced') {
+        elements.prevalence.value = 50;
+        elements.threshold.value = 50;
+        elements.separation.value = 60;
+      } else if (choice === 'screening') {
+        elements.prevalence.value = 10;
+        elements.threshold.value = genericMode ? 20 : 80;
+        elements.separation.value = 60;
+      } else if (choice === 'spam') {
+        elements.prevalence.value = 20;
+        elements.threshold.value = genericMode ? 80 : 20;
+        elements.separation.value = 60;
+      } else if (choice === 'fraud') {
+        elements.prevalence.value = 1;
+        elements.threshold.value = 50;
+        elements.separation.value = 75;
+      }
       update();
     });
   }
+  for (const [subId, topId] of [
+    ['bayesPrevalence', 'prevalence'],
+    ['bayesThreshold', 'threshold'],
+    ['bayesSeparation', 'separation'],
+    ['tradeoffPrevalence', 'prevalence'],
+    ['tradeoffThreshold', 'threshold'],
+    ['tradeoffSeparation', 'separation']
+  ]) {
+    const input = getElement(subId);
+    if (input) {
+      input.addEventListener('input', event => {
+        elements[topId].value = event.target.value;
+        update();
+      });
+    }
+  }
+  learnPanel.addEventListener('input', event => {
+    const target = event.target;
+    if (target && target.dataset && target.dataset.sync) {
+      const topId = target.dataset.sync;
+      if (elements[topId]) {
+        elements[topId].value = target.value;
+        update();
+      }
+    }
+  });
   for (const name of Object.keys(metricGroups)) {
     const card = getElement(`${name}Card`);
     card.addEventListener('pointerenter', event => {
