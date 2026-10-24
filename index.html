@@ -112,6 +112,8 @@
     align-items: center;
     gap: 8px;
   }
+  .scenario-picker { display: flex; align-items: center; gap: 6px; }
+  .scenario-picker label { color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1.1; white-space: nowrap; }
 
 
   .card {
@@ -417,6 +419,7 @@
   .matrix-layout-btn .layout-label-long { display: inline; }
   .matrix-layout-btn .layout-label-short { display: none; }
   @media (max-width: 650px) {
+    .scenario-picker { display: grid; gap: 1px; }
     .matrix-layout-cell {
       padding: 1px 2px;
     }
@@ -1644,6 +1647,8 @@
     }
   }
   @media (max-width: 480px) {
+    .scenario-picker { gap: 1px; }
+    .scenario-picker label { font-size: 10px; }
     .top { gap: 4px; }
     .brand { gap: 4px; font-size: 14px; }
     .brand-credit { display: none; }
@@ -1685,15 +1690,17 @@
    <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
   </div>
   <div class="top-right">
-   <select class="preset-select" id="presetSelect" aria-label="Choose a scenario" title="Choose a scenario">
-    <option value="balanced">🩺 Flu Test (50/50)</option>
-    <option value="car">🚗 Car Braking (AEB Sensor)</option>
-    <option value="screening">🔬 Flu Screening (10% Sick)</option>
-    <option value="spam">📧 Spam Filter (Email)</option>
-    <option value="fraud">💳 Fraud Alert (1% Rare)</option>
-    <option value="generic">🤖 Generic ML</option>
+   <div class="scenario-picker">
+   <label for="presetSelect">Try an example</label>
+   <select class="preset-select" id="presetSelect" title="Choose an example or use standard ML terms">
+    <option value="balanced">Medical test</option>
+    <option value="car">Car braking</option>
+    <option value="spam">Spam filter</option>
+    <option value="fraud">Fraud detection</option>
+    <option value="generic">Generic ML</option>
     <option value="custom" disabled hidden>Preset: Custom</option>
    </select>
+   </div>
    <a href="cheatsheet.html" class="reset ref-top-btn" id="refTopBtn" title="32 metrics cheatsheet: formula, when good, when it fails" aria-label="Metrics cheatsheet">📋<span class="ref-long"> Cheatsheet</span><span class="ref-short"></span></a>
    <button class="reset" id="reset" aria-label="Reset" title="Reset">
     <span class="reset-word">Reset </span>↺
@@ -3676,8 +3683,6 @@
         presetSelect.value = 'car';
       } else if (activeDomain === 'flu' && p === 50 && t === 50 && s === 60) {
         presetSelect.value = 'balanced';
-      } else if (activeDomain === 'flu' && p === 10 && t === 80 && s === 60) {
-        presetSelect.value = 'screening';
       } else if (activeDomain === 'spam' && p === 40 && t === 45 && s === 55) {
         presetSelect.value = 'spam';
       } else if (activeDomain === 'fraud' && p === 1 && t === 50 && s === 60) {
@@ -3686,7 +3691,7 @@
         presetSelect.value = 'custom';
       }
       const customOption = presetSelect.querySelector('option[value="custom"]');
-      if (customOption) customOption.textContent = 'Custom: ' + (genericMode ? 'Generic ML' : {flu:'Flu',car:'Car AEB',spam:'Spam',fraud:'Fraud'}[activeDomain]);
+      if (customOption) customOption.textContent = 'Custom: ' + (genericMode ? 'Generic ML' : {flu:'Medical test',car:'Car braking',spam:'Spam filter',fraud:'Fraud detection'}[activeDomain]);
     }
   }
 
@@ -3790,12 +3795,6 @@
         genericMode = false;
         elements.prevalence.value = 50;
         elements.threshold.value = 50;
-        elements.separation.value = 60;
-      } else if (choice === 'screening') {
-        activeDomain = 'flu';
-        genericMode = false;
-        elements.prevalence.value = 10;
-        elements.threshold.value = 80;
         elements.separation.value = 60;
       } else if (choice === 'spam') {
         activeDomain = 'spam';

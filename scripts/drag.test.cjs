@@ -25,6 +25,11 @@ for (const device of [
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(url);
+      assert.equal(await page.locator('label[for="presetSelect"]').textContent(), 'Try an example');
+      assert.equal(await page.locator('label[for="presetSelect"]').isVisible(), true);
+      assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
+      assert.deepEqual(await page.locator('#presetSelect option:not([disabled])').allTextContents(),
+        ['Medical test', 'Car braking', 'Spam filter', 'Fraud detection', 'Generic ML']);
       const cdp = device.touch ? await page.context().newCDPSession(page) : null;
       const point = fraction => page.evaluate(fraction => {
         const plot = document.getElementById('plot');

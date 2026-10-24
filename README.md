@@ -11,9 +11,11 @@ GitHub Pages.
 Drag the blue threshold line in the first graph with a mouse or finger, or use
 the matching slider. You can also focus the graph and use the arrow keys.
 
-Use the scenario dropdown to load Flu, AEB, Spam, Fraud, or Generic ML wording
-and settings. Editing a slider marks the selection as Custom while keeping the
-current scenario context. Reset returns to the balanced Flu preset.
+Use **Try an example** to choose Medical test, Car braking, Spam filter, Fraud
+detection, or Generic ML. The medical example opens first. Use the existing 10%
+and 50% population buttons to compare class balance within the same example.
+Editing a slider marks the selection as Custom while keeping the current example
+context. Reset returns to the medical example with a 50/50 population.
 
 Hover over a metric or tap it on your phone to see its calculation in both
 graphs. A solid outline marks the numerator; a dashed outline marks the total
