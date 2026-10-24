@@ -117,7 +117,10 @@ test('P1 features test', async () => {
     assert.equal(await page.locator('#plot text').last().textContent(), 'Flu test score →');
     assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
 
-    // 7. Verify Confusion Matrix Layout Toggle Button (Standard -> Matches Graph -> scikit-learn)
+    // 7. Default is graph-aligned; cycle through all supported layouts.
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'graph');
+    await page.locator('#matrixLayoutBtn').click(); // scikit
+    await page.locator('#matrixLayoutBtn').click(); // standard
     assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'standard');
     const initialTp = await page.locator('.group.tp').boundingBox();
     const initialFn = await page.locator('.group.fn').boundingBox();
@@ -157,13 +160,14 @@ test('P1 features test', async () => {
     await page.locator('#matrixLayoutBtn').click();
     assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'standard');
 
-    // Reset restores standard layout
-    await page.locator('#matrixLayoutBtn').click(); // now graph
+    // Reset restores graph-aligned layout
+    await page.locator('#matrixLayoutBtn').click(); // graph
+    await page.locator('#matrixLayoutBtn').click(); // scikit
     await page.locator('#reset').click();
-    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'standard');
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'graph');
     const resetTp = await page.locator('.group.tp').boundingBox();
     const resetFn = await page.locator('.group.fn').boundingBox();
-    assert.ok(resetTp.x < resetFn.x, 'Reset restores standard TP left of FN');
+    assert.ok(resetFn.x < resetTp.x, 'Reset restores graph-aligned FN left of TP');
 
     // Clicking layout card in Learn Mode applies layout
     await page.goto(pathToFileURL(path.resolve(__dirname, '../learn.html')).href);

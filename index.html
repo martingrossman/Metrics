@@ -1871,11 +1871,11 @@
    </div>
   </div>
   <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
-   <div class="population-header" id="matrixPopHeader">
+   <div class="population-header layout-graph" id="matrixPopHeader">
     <div class="matrix-layout-cell">
-     <button type="button" class="matrix-layout-btn" id="matrixLayoutBtn" aria-label="Confusion matrix layout: Standard. Click to cycle layout." title="Current layout: Standard (Wikipedia). Click to cycle to Matches graph." data-layout="standard">
-      <span class="layout-label-long">Standard</span>
-      <span class="layout-label-short">Standard</span>
+     <button type="button" class="matrix-layout-btn" id="matrixLayoutBtn" aria-label="Confusion matrix layout: Matches graph. Click to cycle layout." title="Current layout: Matches graph (Score order). Click to switch to scikit-learn." data-layout="graph">
+      <span class="layout-label-long">Matches graph</span>
+      <span class="layout-label-short">Graph</span>
       <span class="layout-btn-icon" aria-hidden="true">⇄</span>
      </button>
     </div>
@@ -1886,7 +1886,7 @@
      <span data-term="predictedNegative">Test −</span>
     </div>
    </div>
-   <div class="population" id="matrixPopulation">
+   <div class="population layout-graph" id="matrixPopulation">
     <div class="metric-outline metric-denominator" id="matrixDenominator" aria-hidden="true"></div>
     <div class="metric-outline metric-numerator" id="matrixNumerator" aria-hidden="true"></div>
     <div class="row-label row-pos" id="posRowLabel">
@@ -2074,7 +2074,7 @@
   // Terminology is presentation state only; the model and slider state are shared.
   let genericMode = false;
   let activeDomain = 'flu';
-  let activeMatrixLayout = 'standard';
+  let activeMatrixLayout = 'graph';
   let formulaPreview = null;
   let formulaPinned = null;
   const metricGroups = {
@@ -3720,7 +3720,7 @@
     const presetSelect = getElement('presetSelect');
     if (presetSelect) presetSelect.value = 'balanced';
     setGraphView('scores');
-    setMatrixLayout('standard');
+    setMatrixLayout('graph');
     renderTerminology();
     update();
   }
@@ -3734,7 +3734,7 @@
     },
     graph: {
       long: 'Matches graph',
-      short: 'Graph match',
+      short: 'Graph',
       title: 'Current layout: Matches graph (Score order). Click to switch to scikit-learn.'
     },
     scikit: {
