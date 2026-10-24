@@ -1048,24 +1048,32 @@
     }
 
     .metric {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+      font-size: var(--font-caption);
+      line-height: 1.1;
       min-width: 0px;
       padding: 5px 8px 3px;
       border-radius: 9px;
     }
 
     .metric-label {
+      display: contents;
       font-size: var(--font-caption);
       line-height: 1.1;
     }
 
     .metric-label small {
+      order: 3;
       font-size: 10px;
       line-height: 1.2;
       margin-top: 2px;
     }
 
     .metric strong {
+      order: 2;
       display: block;
       letter-spacing: -0.5px;
       font-size: var(--font-metric);
@@ -1263,7 +1271,7 @@
       padding: 2px 6px 1px;
       flex-direction: column;
       align-items: flex-start;
-      gap: 1px;
+      gap: 0;
     }
     .metric-label small {
       display: block;
