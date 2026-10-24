@@ -123,6 +123,20 @@ for (const device of [
         await page.keyboard.press('Escape');
         assert.equal(await page.locator('.metric-regions').count(), 0);
       }
+      // Example changes must not truncate or push the top-card captions outside their cards.
+      for (const example of ['balanced', 'car', 'spam', 'fraud', 'generic']) {
+        await page.locator('#presetSelect').selectOption(example);
+        for (const view of ['scores', 'split']) {
+          await page.locator(`[data-graph-view="${view}"]`).click();
+          const clipped = await page.locator('.metric-label small').evaluateAll(nodes => nodes.filter(node => {
+            const card = node.closest('.metric').getBoundingClientRect();
+            const bounds = node.getBoundingClientRect();
+            return node.scrollWidth > node.clientWidth + 1 || node.scrollHeight > node.clientHeight + 1 ||
+              bounds.left < card.left || bounds.right > card.right;
+          }).map(node => node.textContent.trim()));
+          assert.deepEqual(clipped, [], `${example}, ${view}: clipped metric caption`);
+        }
+      }
       assert.deepEqual(errors, []);
     } finally {
       await browser.close();
