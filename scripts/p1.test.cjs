@@ -116,6 +116,63 @@ test('P1 features test', async () => {
     assert.equal(await page.locator('#plot text').last().textContent(), 'Flu test score →');
     assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
 
+    // 7. Verify Confusion Matrix Layout Toggle Button (Standard -> Matches Graph -> scikit-learn)
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'standard');
+    const initialTp = await page.locator('.group.tp').boundingBox();
+    const initialFn = await page.locator('.group.fn').boundingBox();
+    assert.ok(initialTp.x < initialFn.x, 'Standard layout has TP left of FN');
+    let posHead = await page.locator('.col-pos').boundingBox();
+    let negHead = await page.locator('.col-neg').boundingBox();
+    assert.ok(Math.abs(posHead.y - negHead.y) < 2, 'Standard layout headers are vertically aligned');
+
+    // Click button to cycle to Graph-aligned layout (Matches Score Plot: Negative on Left, Positive on Right)
+    await page.locator('#matrixLayoutBtn').click();
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'graph');
+    const graphTp = await page.locator('.group.tp').boundingBox();
+    const graphFn = await page.locator('.group.fn').boundingBox();
+    const graphTn = await page.locator('.group.tn').boundingBox();
+    const graphFp = await page.locator('.group.fp').boundingBox();
+    assert.ok(graphFn.x < graphTp.x, 'Graph layout has FN on left and TP on right');
+    assert.ok(graphTn.x < graphFp.x, 'Graph layout has TN on left and FP on right');
+    assert.ok(graphFn.y < graphTn.y, 'Graph layout has positive row on top');
+    posHead = await page.locator('.col-pos').boundingBox();
+    negHead = await page.locator('.col-neg').boundingBox();
+    assert.ok(Math.abs(posHead.y - negHead.y) < 2, 'Graph layout headers are vertically aligned');
+
+    // Click button again to cycle to scikit-learn layout (Negative class 0 first)
+    await page.locator('#matrixLayoutBtn').click();
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'scikit');
+    const scikitTn = await page.locator('.group.tn').boundingBox();
+    const scikitFp = await page.locator('.group.fp').boundingBox();
+    const scikitFn = await page.locator('.group.fn').boundingBox();
+    const scikitTp = await page.locator('.group.tp').boundingBox();
+    assert.ok(scikitTn.x < scikitFp.x && scikitTn.y < scikitFn.y, 'scikit-learn has TN top-left');
+    assert.ok(scikitTp.x > scikitFn.x && scikitTp.y > scikitFp.y, 'scikit-learn has TP bottom-right');
+    posHead = await page.locator('.col-pos').boundingBox();
+    negHead = await page.locator('.col-neg').boundingBox();
+    assert.ok(Math.abs(posHead.y - negHead.y) < 2, 'scikit-learn layout headers are vertically aligned');
+
+    // Click button again to cycle back to standard layout
+    await page.locator('#matrixLayoutBtn').click();
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'standard');
+
+    // Reset restores standard layout
+    await page.locator('#matrixLayoutBtn').click(); // now graph
+    await page.locator('#reset').click();
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'standard');
+    const resetTp = await page.locator('.group.tp').boundingBox();
+    const resetFn = await page.locator('.group.fn').boundingBox();
+    assert.ok(resetTp.x < resetFn.x, 'Reset restores standard TP left of FN');
+
+    // Clicking layout card in Learn Mode applies layout
+    await page.locator('#learnToggle').click();
+    await page.locator('#tab-basics').click();
+    await page.locator('[data-apply-layout="graph"]').click();
+    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'graph');
+    await page.locator('#closeLearn').click();
+
+    await page.locator('#reset').click();
+
   } finally {
     await browser.close();
   }

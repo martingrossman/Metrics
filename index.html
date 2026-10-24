@@ -334,8 +334,12 @@
   .population-header {
     display: grid;
     grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto;
     gap: 8px;
     margin-bottom: 8px;
+  }
+  .population-header > div {
+    grid-row: 1;
   }
 
   .population-header div:not(:first-child) {
@@ -355,6 +359,125 @@
     background: rgb(239, 244, 255);
     color: rgb(44, 103, 194);
   }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .matrix-layout-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+  }
+  .matrix-layout-btn {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 8px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  .matrix-layout-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+  .matrix-layout-btn:active {
+    background: #edf2f7;
+    transform: scale(0.98);
+  }
+  .matrix-layout-btn:focus-visible {
+    outline: 2px solid #246cf0;
+    outline-offset: 1px;
+  }
+  .matrix-layout-btn .layout-btn-icon {
+    font-size: 12px;
+    color: #475569;
+    line-height: 1;
+  }
+  .matrix-layout-btn .layout-label-long { display: inline; }
+  .matrix-layout-btn .layout-label-short { display: none; }
+  @media (max-width: 650px) {
+    .matrix-layout-cell {
+      padding: 1px 2px;
+    }
+    .matrix-layout-btn {
+      font-size: 9.5px;
+      padding: 4px 4px;
+      border-radius: 6px;
+      gap: 3px;
+    }
+    .matrix-layout-btn .layout-btn-icon {
+      font-size: 10px;
+    }
+    .matrix-layout-btn .layout-label-long { display: none; }
+    .matrix-layout-btn .layout-label-short { display: inline; }
+  }
+
+  /* Matrix Layout: Standard (Default) */
+  .population-header.layout-standard .col-pos,
+  .population-header:not(.layout-graph):not(.layout-scikit) .col-pos { grid-row: 1; grid-column: 2; }
+  .population-header.layout-standard .col-neg,
+  .population-header:not(.layout-graph):not(.layout-scikit) .col-neg { grid-row: 1; grid-column: 3; }
+
+  .population.layout-standard .row-pos,
+  .population:not(.layout-graph):not(.layout-scikit) .row-pos { grid-row: 1; grid-column: 1; }
+  .population.layout-standard .group.tp,
+  .population:not(.layout-graph):not(.layout-scikit) .group.tp { grid-row: 1; grid-column: 2; }
+  .population.layout-standard .group.fn,
+  .population:not(.layout-graph):not(.layout-scikit) .group.fn { grid-row: 1; grid-column: 3; }
+
+  .population.layout-standard .row-neg,
+  .population:not(.layout-graph):not(.layout-scikit) .row-neg { grid-row: 2; grid-column: 1; }
+  .population.layout-standard .group.fp,
+  .population:not(.layout-graph):not(.layout-scikit) .group.fp { grid-row: 2; grid-column: 2; }
+  .population.layout-standard .group.tn,
+  .population:not(.layout-graph):not(.layout-scikit) .group.tn { grid-row: 2; grid-column: 3; }
+
+  /* Matrix Layout: Matches Graph (Score Order: Negative on Left, Positive on Right) */
+  .population-header.layout-graph .col-neg { grid-row: 1; grid-column: 2; }
+  .population-header.layout-graph .col-pos { grid-row: 1; grid-column: 3; }
+
+  .population.layout-graph .row-pos { grid-row: 1; grid-column: 1; }
+  .population.layout-graph .group.fn { grid-row: 1; grid-column: 2; }
+  .population.layout-graph .group.tp { grid-row: 1; grid-column: 3; }
+
+  .population.layout-graph .row-neg { grid-row: 2; grid-column: 1; }
+  .population.layout-graph .group.tn { grid-row: 2; grid-column: 2; }
+  .population.layout-graph .group.fp { grid-row: 2; grid-column: 3; }
+
+  /* Matrix Layout: scikit-learn (Negative class 0 first in rows and columns) */
+  .population-header.layout-scikit .col-neg { grid-row: 1; grid-column: 2; }
+  .population-header.layout-scikit .col-pos { grid-row: 1; grid-column: 3; }
+
+  .population.layout-scikit .row-neg { grid-row: 1; grid-column: 1; }
+  .population.layout-scikit .group.tn { grid-row: 1; grid-column: 2; }
+  .population.layout-scikit .group.fp { grid-row: 1; grid-column: 3; }
+
+  .population.layout-scikit .row-pos { grid-row: 2; grid-column: 1; }
+  .population.layout-scikit .group.fn { grid-row: 2; grid-column: 2; }
+  .population.layout-scikit .group.tp { grid-row: 2; grid-column: 3; }
 
   .population {
     position: relative;
@@ -1133,10 +1256,26 @@
     .container > .story { margin: 0 2px 4px; font-size: var(--font-body); line-height: 1.25; }
     .container > .legend { display: none; }
     .container > .controls { margin-bottom: 5px; }
-    .control, .control input[type="range"] { min-height: 30px; height: 30px; }
+    .control, .control input[type="range"] { min-height: 28px; height: 28px; }
     .container > .metrics { padding: 2px 0; }
-    .metric { padding: 4px 8px 2px; }
-    .metric-label small { display: none; }
+    .metric {
+      padding: 3px 6px 2px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+    }
+    .metric-label small {
+      display: block;
+      font-size: 8.5px;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .metric strong {
+      font-size: 19px;
+      line-height: 1;
+    }
     .panel { padding-top: 4px; padding-bottom: 4px; }
     .population { --matrix-row-height: 53px; gap: 4px; }
     .population-header { margin-bottom: 4px; gap: 4px; }
@@ -1681,26 +1820,31 @@
   </div>
   <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
    <div class="population-header" id="matrixPopHeader">
-    <div>
+    <div class="matrix-layout-cell">
+     <button type="button" class="matrix-layout-btn" id="matrixLayoutBtn" aria-label="Confusion matrix layout: Standard. Click to cycle layout." title="Current layout: Standard (Wikipedia). Click to cycle to Matches graph." data-layout="standard">
+      <span class="layout-label-long">Standard</span>
+      <span class="layout-label-short">Standard</span>
+      <span class="layout-btn-icon" aria-hidden="true">⇄</span>
+     </button>
     </div>
-    <div>
+    <div class="col-head col-pos">
      <span data-term="predictedPositive">Test +</span>
     </div>
-    <div>
+    <div class="col-head col-neg">
      <span data-term="predictedNegative">Test −</span>
     </div>
    </div>
    <div class="population" id="matrixPopulation">
     <div class="metric-outline metric-denominator" id="matrixDenominator" aria-hidden="true"></div>
     <div class="metric-outline metric-numerator" id="matrixNumerator" aria-hidden="true"></div>
-    <div class="row-label">
+    <div class="row-label row-pos" id="posRowLabel">
      <span data-term="actualPositive">Actual flu</span>
      <br/>
      <small id="pCount">
        500 cases
      </small>
     </div>
-    <div class="group tp">
+    <div class="group tp" id="groupTp">
      <div class="group-top">
       <span>
        TP<small class="group-sub" data-term="tpLegend"> · Flu detected</small>
@@ -1712,7 +1856,7 @@
      <div class="tiles" id="tpTiles">
      </div>
     </div>
-    <div class="group fn">
+    <div class="group fn" id="groupFn">
      <div class="group-top">
       <span>
        FN<small class="group-sub" data-term="fnLegend"> · Flu missed</small>
@@ -1724,7 +1868,7 @@
      <div class="tiles" id="fnTiles">
      </div>
     </div>
-    <div class="row-label">
+    <div class="row-label row-neg" id="negRowLabel">
      <span data-term="actualNegative">Actual no&nbsp;flu</span>
      <br/>
      <small id="nCount">
@@ -1971,6 +2115,7 @@
   // Terminology is presentation state only; the model and slider state are shared.
   let genericMode = false;
   let activeDomain = 'flu';
+  let activeMatrixLayout = 'standard';
   let learningMode = false;
   let learningTab = 'basics';
   let latestMetrics = null;
@@ -3345,8 +3490,35 @@
     }
     highlightExample(null);
     const color = CONFIG.colors[definition.numerator];
-    outer.style.gridArea = definition.area;
-    inner.style.gridArea = definition.numeratorArea;
+    const layoutAreas = {
+      standard: {
+        tpr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
+        fpr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
+        precision: { area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' },
+        tnr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        npv: { area: '1 / 3 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        fnr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' }
+      },
+      graph: {
+        tpr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+        fpr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        precision: { area: '1 / 3 / 3 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+        tnr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
+        npv: { area: '1 / 2 / 3 / 3', numeratorArea: '2 / 2 / 3 / 3' },
+        fnr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' }
+      },
+      scikit: {
+        tpr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        fpr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+        precision: { area: '1 / 3 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        tnr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
+        npv: { area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' },
+        fnr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' }
+      }
+    };
+    const currentAreas = layoutAreas[activeMatrixLayout] || layoutAreas.standard;
+    outer.style.gridArea = currentAreas[selected]?.area || definition.area;
+    inner.style.gridArea = currentAreas[selected]?.numeratorArea || definition.numeratorArea;
     inner.style.borderColor = color;
     const numerator = document.createElement('span');
     numerator.className = 'formula-numerator';
@@ -4039,14 +4211,13 @@
       ? { ap: 'Act +', an: 'Act −', pp: 'Pred +', pn: 'Pred −' }
       : { ap: 'Sick', an: 'Healthy', pp: 'Test +', pn: 'Test −' };
     const layouts = [
-      { name: 'This site & Wikipedia', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (+ first)`, rows: [axis.ap, axis.an], cols: [axis.pp, axis.pn], cells: [['tp', 'fn'], ['fp', 'tn']] },
-      { name: 'scikit-learn (Python)', note: 'Rows: actual · Columns: predicted · negative first', rows: [axis.an, axis.ap], cols: [axis.pn, axis.pp], cells: [['tn', 'fp'], ['fn', 'tp']] },
-      { name: 'Score-axis order (Negative first)', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (− first)`, rows: [axis.ap, axis.an], cols: [axis.pn, axis.pp], cells: [['fn', 'tp'], ['tn', 'fp']] },
-      { name: 'Medical textbooks (transposed)', note: 'Rows: test result · Columns: true condition', rows: [axis.pp, axis.pn], cols: [axis.ap, axis.an], cells: [['tp', 'fp'], ['fn', 'tn']] }
+      { key: 'standard', name: 'Standard (Wikipedia / Medical)', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (+ first)`, rows: [axis.ap, axis.an], cols: [axis.pp, axis.pn], cells: [['tp', 'fn'], ['fp', 'tn']] },
+      { key: 'graph', name: 'Matches graph (Score order)', note: `Rows: actual (+ first) · Columns: ${genericMode ? 'predicted' : 'test'} (− first)`, rows: [axis.ap, axis.an], cols: [axis.pn, axis.pp], cells: [['fn', 'tp'], ['tn', 'fp']] },
+      { key: 'scikit', name: 'scikit-learn (Python / ML)', note: 'Rows: actual · Columns: predicted · negative first', rows: [axis.an, axis.ap], cols: [axis.pn, axis.pp], cells: [['tn', 'fp'], ['fn', 'tp']] }
     ];
     const layoutCard = layout => `
-      <div class="layout-card">
-        <b>${layout.name}</b>
+      <div class="layout-card" data-apply-layout="${layout.key}" style="cursor: pointer;" title="Click to use ${layout.name} in the dashboard above">
+        <b>${layout.name} ${activeMatrixLayout === layout.key ? '✓ Active' : ''}</b>
         <div class="layout-matrix" aria-label="${layout.name}: top row ${layout.cells[0].join(', ').toUpperCase()}; bottom row ${layout.cells[1].join(', ').toUpperCase()}">
           <span></span><span class="layout-head">${layout.cols[0]}</span><span class="layout-head">${layout.cols[1]}</span>
           ${layout.cells.map((row, i) => `<span class="layout-head row">${layout.rows[i]}</span>${row.map(cell => `<span class="layout-cell" style="--c:${CONFIG.colors[cell]}">${cell.toUpperCase()}</span>`).join('')}`).join('')}
@@ -4576,8 +4747,60 @@
     const presetSelect = getElement('presetSelect');
     if (presetSelect) presetSelect.value = 'balanced';
     setGraphView('scores');
+    setMatrixLayout('standard');
     renderTerminology();
     update();
+  }
+
+  const MATRIX_LAYOUTS = ['standard', 'graph', 'scikit'];
+  const MATRIX_LAYOUT_CONFIG = {
+    standard: {
+      long: 'Standard',
+      short: 'Standard',
+      title: 'Current layout: Standard (Wikipedia). Click to switch to Matches graph.'
+    },
+    graph: {
+      long: 'Matches graph',
+      short: 'Graph match',
+      title: 'Current layout: Matches graph (Score order). Click to switch to scikit-learn.'
+    },
+    scikit: {
+      long: 'scikit-learn',
+      short: 'scikit',
+      title: 'Current layout: scikit-learn (Python). Click to switch to Standard.'
+    }
+  };
+
+  function cycleMatrixLayout() {
+    const idx = MATRIX_LAYOUTS.indexOf(activeMatrixLayout);
+    const next = MATRIX_LAYOUTS[(idx + 1) % MATRIX_LAYOUTS.length];
+    setMatrixLayout(next);
+  }
+
+  function setMatrixLayout(layout) {
+    activeMatrixLayout = layout;
+    const popHeader = getElement('matrixPopHeader');
+    const pop = getElement('matrixPopulation');
+    const btn = getElement('matrixLayoutBtn');
+    if (btn) {
+      btn.dataset.layout = layout;
+      const conf = MATRIX_LAYOUT_CONFIG[layout] || MATRIX_LAYOUT_CONFIG.standard;
+      const longSpan = btn.querySelector('.layout-label-long');
+      const shortSpan = btn.querySelector('.layout-label-short');
+      if (longSpan) longSpan.textContent = conf.long;
+      if (shortSpan) shortSpan.textContent = conf.short;
+      btn.title = conf.title;
+      btn.setAttribute('aria-label', `Confusion matrix layout: ${conf.long}. Click to switch.`);
+    }
+    if (popHeader) {
+      popHeader.classList.remove('layout-standard', 'layout-graph', 'layout-scikit');
+      popHeader.classList.add(`layout-${layout}`);
+    }
+    if (pop) {
+      pop.classList.remove('layout-standard', 'layout-graph', 'layout-scikit');
+      pop.classList.add(`layout-${layout}`);
+    }
+    renderMetricHighlight();
   }
 
   for (const slider of [
@@ -4628,6 +4851,12 @@
   learnPanel.addEventListener('pointerout', clearPreview);
   learnPanel.addEventListener('focusout', clearPreview);
   learnPanel.addEventListener('click', event => {
+    const layoutCard = event.target.closest('[data-apply-layout]');
+    if (layoutCard) {
+      setMatrixLayout(layoutCard.dataset.applyLayout);
+      renderLearning(latestMetrics);
+      return;
+    }
     const term = event.target.closest('[data-explain]');
     if (term) {
       const next = { metric: term.dataset.explain, part: term.dataset.part };
@@ -4677,6 +4906,13 @@
     });
   }
   const presetSelect = getElement('presetSelect');
+  const matrixLayoutBtn = getElement('matrixLayoutBtn');
+  if (matrixLayoutBtn) {
+    matrixLayoutBtn.addEventListener('click', () => {
+      cycleMatrixLayout();
+    });
+  }
+
   if (presetSelect) {
     presetSelect.addEventListener('change', event => {
       const choice = event.target.value;

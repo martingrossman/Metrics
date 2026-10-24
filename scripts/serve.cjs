@@ -70,10 +70,20 @@ function start() {
     for (const address of Object.values(os.networkInterfaces()).flat()) {
       if (address.family === 'IPv4' && !address.internal) {
         console.log(`Same Wi-Fi:   http://${address.address}:${port}/`);
+        console.log(`Direct IP:    http://${address.address}/`);
       }
     }
     console.log('\nSave an HTML edit, then refresh on your other device. Ctrl+C stops sharing.');
   });
+
+  // Also listen on standard HTTP port 80 if available, so mobile users can type just the IP address without :8080
+  if (port !== 80) {
+    const port80Server = createServer();
+    port80Server.on('error', () => {});
+    port80Server.listen(80, '0.0.0.0', () => {
+      console.log('Also active on standard port 80 (http://<ip>/)');
+    });
+  }
 }
 
 if (require.main === module) {
