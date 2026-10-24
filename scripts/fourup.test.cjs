@@ -29,7 +29,9 @@ for (const device of [
       for (const id of ['plot','gaussPlot','rocPlot','prPlot']) {
         assert.equal(await page.locator(`#${id}`).isVisible(), true);
         assert.equal(await page.locator(`#${id}`).getAttribute('viewBox'), '0 0 650 270');
+        assert.match(await page.locator(`#${id}`).evaluate(svg => getComputedStyle(svg).touchAction), /pan-y/);
       }
+      assert.match(await page.locator('#plot .threshold-drag').evaluate(handle => getComputedStyle(handle).touchAction), /pan-y/);
       assert.equal(await page.locator('#matrixPanel').isVisible(), false);
       assert.deepEqual(await values(), baseline);
       assert.equal(await page.locator('#gaussPlot').textContent().then(text => text.includes('WHY PRECISION DROPS')), false);
@@ -75,3 +77,58 @@ for (const device of [
     }
   });
 }
+
+test('4-up touch swipes scroll over chart centers and keep horizontal cutoff dragging', {
+  skip: !fs.existsSync(chromium.executablePath())
+}, async () => {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true });
+    await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
+    await page.locator('#tabGraphSplit').tap();
+    const cdp = await page.context().newCDPSession(page);
+    const swipe = async (start, end) => {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...start, id: 1 }] });
+      for (let step = 1; step <= 8; step++) {
+        await cdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove', touchPoints: [{ x: start.x + (end.x - start.x) * step / 8, y: start.y + (end.y - start.y) * step / 8, id: 1 }]
+        });
+        await page.waitForTimeout(20);
+      }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+    const gripPoint = () => page.locator('#plot .threshold-grip').evaluate(grip => {
+      const rect = grip.getBoundingClientRect();
+      return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+    });
+
+    for (const selector of ['#gaussPlot', '#plot']) {
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.waitForTimeout(150);
+      const start = selector === '#plot' ? await gripPoint() : await page.locator(selector).evaluate(svg => {
+        const rect = svg.getBoundingClientRect();
+        return { x: rect.x + rect.width / 2, y: Math.min(rect.y + rect.height / 2, innerHeight - 20) };
+      });
+      await swipe(start, { x: start.x, y: start.y - 120 });
+      await page.waitForFunction(() => scrollY > 30);
+      assert.equal(await page.locator('#threshold').inputValue(), '50');
+      assert.equal(await page.locator('#plot').evaluate(svg => svg.classList.contains('dragging')), false);
+    }
+
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(150);
+    const start = await gripPoint();
+    const end = await page.locator('#plot').evaluate(svg => {
+      const point = svg.createSVGPoint();
+      point.x = 155 + 0.75 * 475;
+      point.y = 121;
+      const screen = point.matrixTransform(svg.getScreenCTM());
+      return { x: screen.x, y: screen.y };
+    });
+    await swipe(start, end);
+    await page.waitForFunction(() => document.getElementById('threshold').value === '25');
+    assert.equal(await page.evaluate(() => scrollY), 0);
+  } finally {
+    await browser.close();
+  }
+});
