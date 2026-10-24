@@ -1790,14 +1790,14 @@
      Sick portion
     </label>
     <span class="balance-values">
-    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set sick portion to 10%">10%</button>
-    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set sick portion to 50%">50%</button>
+    <button class="balance-preset" id="balance10" type="button" aria-pressed="true" aria-label="Set sick portion to 10%">10%</button>
+    <button class="balance-preset" id="balance50" type="button" aria-pressed="false" aria-label="Set sick portion to 50%">50%</button>
     <output class="val" id="prevalenceOut">
-     50%
+     10%
     </output>
     </span>
    </span>
-   <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="50"/>
+   <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="10"/>
    <span class="endpoints">
     <span>
      <span data-term="minimum">0% · no one has flu</span>
@@ -2011,7 +2011,7 @@
     totalExamples: 1000,
     caseUnit: 10,            // Cases per full dot/square
     samplesPerClass: 50,
-    defaultPrevalence: 50,   // Percent of actual positives
+    defaultPrevalence: 10,   // Percent of actual positives
     defaultThreshold: 0.50,  // Score >= threshold -> predicted positive
     defaultSeparation: 60,   // 0 = overlapping; 100 = perfectly separable
     colors: {
@@ -3681,7 +3681,7 @@
         presetSelect.value = (p === 50 && t === 50 && s === 60) ? 'generic' : 'custom';
       } else if (activeDomain === 'car' && p === 15 && t === 60 && s === 70) {
         presetSelect.value = 'car';
-      } else if (activeDomain === 'flu' && p === 50 && t === 50 && s === 60) {
+      } else if (activeDomain === 'flu' && p === 10 && t === 50 && s === 60) {
         presetSelect.value = 'balanced';
       } else if (activeDomain === 'spam' && p === 40 && t === 45 && s === 55) {
         presetSelect.value = 'spam';
@@ -3793,7 +3793,7 @@
       } else if (choice === 'balanced') {
         activeDomain = 'flu';
         genericMode = false;
-        elements.prevalence.value = 50;
+        elements.prevalence.value = 10;
         elements.threshold.value = 50;
         elements.separation.value = 60;
       } else if (choice === 'spam') {

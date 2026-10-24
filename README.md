@@ -15,7 +15,7 @@ Use **Try an example** to choose Medical test, Car braking, Spam filter, Fraud
 detection, or Generic ML. The medical example opens first. Use the existing 10%
 and 50% population buttons to compare class balance within the same example.
 Editing a slider marks the selection as Custom while keeping the current example
-context. Reset returns to the medical example with a 50/50 population.
+context. Reset returns to the medical example with a 10% sick population.
 
 Hover over a metric or tap it on your phone to see its calculation in both
 graphs. A solid outline marks the numerator; a dashed outline marks the total

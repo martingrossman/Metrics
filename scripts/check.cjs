@@ -121,7 +121,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       }
     }
     await page.locator('#reset').click();
-    assert.equal(await page.locator('#prevalence').inputValue(), '50');
+    assert.equal(await page.locator('#prevalence').inputValue(), '10');
     assert.equal(await page.locator('#threshold').inputValue(), '50');
     assert.equal(await page.locator('#separation').inputValue(), '60');
     // In the flu view, moving sensitivity right admits weaker signals.
@@ -174,6 +174,7 @@ console.log(`Model: ${combinations} combinations passed.`);
     assert.equal(await page.locator('#presetSelect option:checked').textContent(), 'Custom: Generic ML');
     await page.locator('#presetSelect').selectOption('balanced');
     assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
+    await setSlider('prevalence', 50);
     await setSlider('threshold', 63);
     assert.deepEqual(await numericState(), genericState);
     assert.equal(await page.locator('#shareLabel').textContent(), 'Sick portion');
@@ -183,7 +184,7 @@ console.log(`Model: ${combinations} combinations passed.`);
     await page.locator('#balance10').click();
     assert.equal(await page.locator('#prevalence').inputValue(), '10');
     await page.locator('#reset').click();
-    assert.equal(await page.locator('#prevalence').inputValue(), '50');
+    assert.equal(await page.locator('#prevalence').inputValue(), '10');
     // The visible story: change only class balance, keeping the model fixed.
     for (const [prevalence, precision] of [[1, '19.5%'], [10, '72.7%'], [50, '96%'], [90, '99.5%'], [99, '100%']]) {
       await setSlider('prevalence', prevalence);

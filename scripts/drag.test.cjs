@@ -28,6 +28,8 @@ for (const device of [
       assert.equal(await page.locator('label[for="presetSelect"]').textContent(), 'Try an example');
       assert.equal(await page.locator('label[for="presetSelect"]').isVisible(), true);
       assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
+      assert.equal(await page.locator('#prevalence').inputValue(), '10');
+      assert.equal(await page.locator('#balance10').getAttribute('aria-pressed'), 'true');
       assert.deepEqual(await page.locator('#presetSelect option:not([disabled])').allTextContents(),
         ['Medical test', 'Car braking', 'Spam filter', 'Fraud detection', 'Generic ML']);
       const cdp = device.touch ? await page.context().newCDPSession(page) : null;
@@ -59,7 +61,7 @@ for (const device of [
         await page.waitForFunction(value => document.getElementById('plot').getAttribute('aria-valuenow') === String(value), cutoff);
         assert.equal(await page.locator('#threshold').inputValue(), String(generic ? cutoff : 100 - cutoff));
         assert.equal(await page.locator('#plot').getAttribute('aria-valuenow'), String(cutoff));
-        assert.equal(await page.locator('#prevalence').inputValue(), '50');
+        assert.equal(await page.locator('#prevalence').inputValue(), generic ? '50' : '10');
         assert.equal(await page.locator('#separation').inputValue(), '60');
       };
       const state = () => page.locator('#tpr, #fpr, #precision, #tpNum, #fpNum, #fnNum, #tnNum').allTextContents();

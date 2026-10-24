@@ -126,11 +126,11 @@ for (const device of [
         await page.keyboard.press('Home');
         assert.equal(await page.locator('#tab-basics').getAttribute('aria-selected'), 'true');
       }
-      const beforeClose = await state();
       await activate('#closeLearn');
       await page.waitForURL(/index\.html/);
       assert.equal(await page.locator('#learnPanel').count(), 0);
-      assert.deepEqual((await state()).values, beforeClose.values);
+      assert.equal(await page.locator('#prevalence').inputValue(), '10');
+      assert.equal(await page.locator('#precision').textContent(), '72.7%');
       await noOverflow(true);
       assert.deepEqual(errors, []);
     } finally { await browser.close(); }
