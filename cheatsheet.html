@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -34,9 +34,18 @@ dd { margin:0; }
 label { font-size:12px; font-weight:600; color:var(--muted); }
 input,select { width:100%; min-width:0; min-height:44px; border:1px solid #9aa6b6; border-radius:6px; padding:8px 10px; color:var(--text); background:#fff; font-size:16px; }
 .results { margin:8px 0 0; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.list-tools { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.list-tools .results { margin:0; }
+#fold-all { border:0; padding:0 4px; font-size:12px; }
 main { padding-bottom:24px; }
 section { margin-top:24px; }
-h2 { margin:0; padding-bottom:8px; border-bottom:2px solid var(--line); font-size:13px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+h2 { margin:0; border-bottom:2px solid var(--line); font-size:13px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+.group-toggle { display:flex; align-items:center; gap:10px; width:100%; padding:8px 0; border:0; border-radius:0; background:transparent; color:inherit; text-align:left; letter-spacing:inherit; text-transform:inherit; }
+.group-toggle:hover { background:var(--soft); }
+.group-title { flex:1; }
+.group-count { color:var(--muted); font-weight:400; font-size:12px; letter-spacing:0; text-transform:none; white-space:nowrap; }
+.chevron { display:inline-block; font-size:16px; transform:rotate(0deg); }
+.group-toggle[aria-expanded="true"] .chevron { transform:rotate(90deg); }
 .metric { display:grid; grid-template-columns:190px minmax(0,1fr); gap:10px; padding-block:16px; border-bottom:1px solid var(--line); break-inside:avoid; }
 h3 { font-size:16px; line-height:1.4; margin:0; }
 .alias,.direction { display:block; font-size:12px; color:var(--muted); margin-top:4px; }
@@ -65,6 +74,8 @@ button { min-height:44px; padding:8px 12px; border:1px solid var(--line); border
   .wrap { max-width:none; }
   section { margin-top:16px; }
   .metric { padding-block:10px; }
+  .group-content[hidden] { display:block; }
+  .chevron { display:none; }
 }
 </style>
 </head>
@@ -96,7 +107,7 @@ button { min-height:44px; padding:8px 12px; border:1px solid var(--line); border
       <option value="all">All metrics</option><option value="core">Core</option><option value="imb">Imbalance</option><option value="err">Error rates</option><option value="rank">Ranking</option><option value="ops">In practice</option>
     </select></div>
   </div>
-  <p class="results" id="results" role="status" aria-live="polite" aria-atomic="true"></p>
+  <div class="list-tools"><p class="results" id="results" role="status" aria-live="polite" aria-atomic="true"></p><button id="fold-all" type="button" aria-controls="list">Collapse all</button></div>
 </div></div>
 <main class="wrap" id="list" tabindex="-1"></main>
 <noscript><p class="wrap">Enable JavaScript to browse the metrics, or open the <a href="reference.html">full reference</a>.</p></noscript>
@@ -140,6 +151,22 @@ const M = [
 const list = document.getElementById('list');
 const q = document.getElementById('q');
 const category = document.getElementById('category');
+const foldAll = document.getElementById('fold-all');
+const collapsed = new Set();
+const isFiltered = () => Boolean(q.value.trim()) || category.value !== 'all';
+function updateFoldControl() {
+  const toggles = [...list.querySelectorAll('.group-toggle')];
+  foldAll.hidden = !toggles.length;
+  foldAll.textContent = toggles.some(button => button.getAttribute('aria-expanded') === 'false') ? 'Expand all' : 'Collapse all';
+}
+function setExpanded(button, expanded) {
+  button.setAttribute('aria-expanded', String(expanded));
+  document.getElementById(button.getAttribute('aria-controls')).hidden = !expanded;
+  if (!isFiltered()) {
+    if (expanded) collapsed.delete(button.dataset.group);
+    else collapsed.add(button.dataset.group);
+  }
+}
 const normalize = s => s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[’'−–-]/g,'');
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function render() {
@@ -150,21 +177,34 @@ function render() {
     const rows = M.filter(m => m[0] === key && terms.every(term => normalize(m.slice(1).join(' ') + ' ' + title).includes(term)));
     if (!rows.length) continue;
     shown += rows.length;
-    html += `<section aria-labelledby="section-${key}"><h2 id="section-${key}">${title}</h2>`;
+    const expanded = isFiltered() || !collapsed.has(key);
+    html += `<section aria-labelledby="section-${key}"><h2 id="section-${key}"><button class="group-toggle" type="button" data-group="${key}" aria-expanded="${expanded}" aria-controls="metrics-${key}"><span class="group-title">${title}</span><span class="group-count">${rows.length} ${rows.length === 1 ? 'metric' : 'metrics'}</span><span class="chevron" aria-hidden="true">›</span></button></h2><div class="group-content" id="metrics-${key}"${expanded ? '' : ' hidden'}>`;
     html += rows.map(([,name,alias,formula,meaning,caveat,direction]) => `
       <article class="metric">
         <div><h3>${esc(name)}</h3>${alias ? `<span class="alias">${esc(alias)}</span>` : ''}<span class="direction">${esc(direction)}</span></div>
         <div><p class="meaning"><span class="marker good" aria-hidden="true">✓</span>${esc(meaning)}</p><code class="formula">${esc(formula)}</code><p class="caveat"><span class="marker bad" aria-hidden="true">✗</span><strong>Watch for:</strong> ${esc(caveat)}</p></div>
       </article>`).join('');
-    html += '</section>';
+    html += '</div></section>';
   }
   list.innerHTML = shown ? html : '<div class="empty"><p>No metrics match these filters. Try another keyword or show all metrics.</p><button type="button" id="reset">Clear filters</button></div>';
   document.getElementById('results').textContent = `${shown} of ${M.length} metrics`;
+  updateFoldControl();
   if (shown && category.value === 'all' && !terms.length) list.insertAdjacentHTML('beforeend','<p class="source">Further reading: <a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn metric definitions</a>.</p>');
 }
 q.addEventListener('input',render);
 category.addEventListener('change',render);
+foldAll.addEventListener('click', () => {
+  const expanded = foldAll.textContent === 'Expand all';
+  list.querySelectorAll('.group-toggle').forEach(button => setExpanded(button, expanded));
+  updateFoldControl();
+});
 list.addEventListener('click',e => {
+  const toggle = e.target.closest('.group-toggle');
+  if (toggle) {
+    setExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+    updateFoldControl();
+    return;
+  }
   if (e.target.id !== 'reset') return;
   q.value = '';
   category.value = 'all';
