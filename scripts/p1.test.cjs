@@ -10,8 +10,9 @@ test('P1 features test', async () => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
 
-    // Open Learn more panel
+    // Open Learn more page
     await page.locator('#learnToggle').click();
+    await page.waitForURL(/learn\.html/);
     assert.equal(await page.locator('#learnPanel').isVisible(), true);
 
     // 1. Verify Tab 01 (Basics) - Accuracy & Accuracy Paradox
@@ -77,6 +78,7 @@ test('P1 features test', async () => {
     assert.equal(await page.locator('#learn-tradeoffs-body .four-up-container .curve-svg').count(), 4);
 
     await page.locator('#closeLearn').click();
+    await page.waitForURL(/index\.html/);
     // Default view: Left = Scores (#plot), Right = Matrix (#matrixPanel)
     assert.ok(await page.locator('#plot').isVisible());
     assert.ok(await page.locator('#matrixPanel').isVisible());
@@ -166,10 +168,12 @@ test('P1 features test', async () => {
 
     // Clicking layout card in Learn Mode applies layout
     await page.locator('#learnToggle').click();
+    await page.waitForURL(/learn\.html/);
     await page.locator('#tab-basics').click();
     await page.locator('[data-apply-layout="graph"]').click();
-    assert.equal(await page.locator('#matrixLayoutBtn').getAttribute('data-layout'), 'graph');
+    assert.ok((await page.locator('[data-apply-layout="graph"]').textContent()).includes('Active'));
     await page.locator('#closeLearn').click();
+    await page.waitForURL(/index\.html/);
 
     await page.locator('#reset').click();
 

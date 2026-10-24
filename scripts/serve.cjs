@@ -12,7 +12,13 @@ function createServer(root = path.join(__dirname, '..')) {
     ['/reference.html', 'reference.html'],
     ['/reference', 'reference.html'],
     ['/checklist.html', 'reference.html'],
-    ['/checklist', 'reference.html']
+    ['/checklist', 'reference.html'],
+    ['/cheatsheet.html', 'cheatsheet.html'],
+    ['/cheatsheet', 'cheatsheet.html'],
+    ['/simple.html', 'cheatsheet.html'],
+    ['/simple', 'cheatsheet.html'],
+    ['/learn.html', 'learn.html'],
+    ['/learn', 'learn.html']
   ]);
 
   return http.createServer((request, response) => {
@@ -27,7 +33,13 @@ function createServer(root = path.join(__dirname, '..')) {
     }
 
     const pathname = request.url.split('?')[0];
-    const filename = pages.get(pathname);
+    let filename = pages.get(pathname);
+    if (!filename && pathname.length > 1) {
+      const candidate = pathname.slice(1).endsWith('.html') ? pathname.slice(1) : `${pathname.slice(1)}.html`;
+      if (fs.existsSync(path.join(root, candidate))) {
+        filename = candidate;
+      }
+    }
     if (pathname === '/favicon.ico') {
       response.writeHead(204);
       response.end();

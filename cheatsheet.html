@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!-- CMatrixLab Cheatsheet -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Metrics Cheatsheet · CMatrixLab</title>
+<meta name="description" content="32 classification metrics: formula, when it's good, when it fails.">
+<style>
+  :root {
+    --text: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --bg: #ffffff;
+    --soft: #f6f7f9;
+    --accent: #2563eb;
+    --good: #047857;
+    --bad: #b91c1c;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
+
+  /* Header */
+  header { padding: 14px 0 6px; }
+  .back { font-size: 14px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 24px; line-height: 1.2; margin: 8px 0 4px; letter-spacing: -0.3px; }
+  .sub { color: var(--muted); font-size: 15px; }
+  .legend { margin-top: 10px; font-size: 14px; color: var(--muted); }
+  .legend b { color: var(--text); font-family: var(--mono); font-weight: 600; }
+
+  /* Sticky search + chips */
+  .bar {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,255,255,0.97);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 0 8px;
+  }
+  .search {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px; /* 16px prevents iOS zoom on focus */
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--soft);
+    color: var(--text);
+    outline: none;
+  }
+  .search:focus { border-color: var(--accent); background: #fff; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; margin-top: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none;
+    font: inherit; font-size: 14px;
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .chip.on { background: var(--text); border-color: var(--text); color: #fff; }
+
+  /* Sections + rows */
+  h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin: 26px 0 2px;
+  }
+  .m { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .m:last-child { border-bottom: 0; }
+  .name { font-size: 18px; font-weight: 700; line-height: 1.3; }
+  .alias { font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .f {
+    display: block;
+    margin: 6px 0 8px;
+    padding: 6px 10px;
+    background: var(--soft);
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 15px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .g, .b { font-size: 15.5px; padding-left: 22px; position: relative; }
+  .g + .b { margin-top: 3px; }
+  .g::before, .b::before { position: absolute; left: 0; font-weight: 700; }
+  .g::before { content: "✓"; color: var(--good); }
+  .b::before { content: "✗"; color: var(--bad); }
+
+  .empty { padding: 30px 0; color: var(--muted); text-align: center; }
+  footer { margin: 30px 0 40px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (min-width: 700px) {
+    h1 { font-size: 28px; }
+  }
+  @media print {
+    .bar { display: none; }
+    .m { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="back" href="index.html">← CMatrixLab</a>
+    <h1>Metrics Cheatsheet</h1>
+    <p class="sub">32 metrics · formula · ✓ use it when · ✗ it fails when</p>
+    <p class="legend"><b>TP</b> hit · <b>TN</b> correct reject · <b>FP</b> false alarm · <b>FN</b> miss · <b>N</b> total · <b>P</b> precision · <b>R</b> recall</p>
+  </header>
+</div>
+
+<div class="bar">
+  <div class="wrap">
+    <input id="q" class="search" type="search" placeholder="Search… (recall, imbalance, F1)" aria-label="Search metrics" autocomplete="off">
+    <div class="chips" id="chips">
+      <button class="chip on" data-c="all">All</button>
+      <button class="chip" data-c="core">Core</button>
+      <button class="chip" data-c="imb">Imbalance</button>
+      <button class="chip" data-c="err">Errors</button>
+      <button class="chip" data-c="rank">Ranking</button>
+      <button class="chip" data-c="ops">Real-world</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap" id="list"></main>
+
+<div class="wrap">
+  <footer>
+    Want more detail? <a href="reference.html">Full reference guide →</a>
+  </footer>
+</div>
+
+<script>
+const SECTIONS = {
+  core: 'Core',
+  imb:  'Imbalance-aware',
+  err:  'Errors & negative class',
+  rank: 'Ranking & probability',
+  ops:  'Real-world / safety'
+};
+
+// [category, name, alias, formula, good, bad]
+const M = [
+  ['core','Accuracy','','(TP + TN) / N','Classes are balanced and both errors cost the same.','Rare positives: "always no" scores 99% and catches nothing.'],
+  ['core','Precision','PPV','TP / (TP + FP)','False alarms are expensive.','Flag one easy case → 100%, while missing the rest.'],
+  ['core','Recall','TPR, sensitivity','TP / (TP + FN)','Missing a positive is dangerous.','Flag everything → 100%, with tons of false alarms.'],
+  ['core','Specificity','TNR','TN / (TN + FP)','You need to clear negatives reliably.','Looks great when negatives dominate, even with many alarms.'],
+  ['core','F1','','2TP / (2TP + FP + FN)','One number balancing P and R.','Ignores TN; assumes misses and alarms cost the same.'],
+  ['core','Fβ','','(1+β²)·P·R / (β²·P + R)','You know whether P or R matters more.','β is a judgement call; still ignores TN.'],
+  ['core','F2','β = 2','5·P·R / (4·P + R)','Recall matters more (screening).','Rewards models that spam false alarms.'],
+  ['core','F0.5','β = 0.5','1.25·P·R / (0.25·P + R)','Precision matters more (auto-actions).','Rewards timid models that miss positives.'],
+
+  ['imb','Balanced accuracy','','(TPR + TNR) / 2','Imbalanced data; 0.5 = random.','Weights both classes equally, whatever the real costs.'],
+  ['imb','G-mean','','√(TPR · TNR)','Both classes must work.','Drops to 0 if one rate is 0.'],
+  ['imb','Youden’s J','informedness','TPR + TNR − 1','Picking a threshold on the ROC curve.','Treats sensitivity and specificity as equal.'],
+  ['imb','MCC','Matthews','(TP·TN − FP·FN) / √((TP+FP)(TP+FN)(TN+FP)(TN+FN))','Best single score; uses all four cells.','Undefined if a row/column is empty; hard to explain.'],
+  ['imb','Cohen’s κ','kappa','(pₒ − pₑ) / (1 − pₑ)','Agreement beyond chance.','Shifts with prevalence; hard to compare across datasets.'],
+  ['imb','Jaccard / IoU','','TP / (TP + FP + FN)','Overlap, segmentation, detection.','Ignores TN; hides whether errors are misses or alarms.'],
+  ['imb','Markedness','','PPV + NPV − 1','How informative the predictions are.','Prevalence-sensitive; undefined if a class is never predicted.'],
+
+  ['err','FPR','false alarm rate','FP / (FP + TN)','Share of negatives wrongly flagged.','Tiny rate × millions of negatives = thousands of alarms.'],
+  ['err','FNR','miss rate','FN / (FN + TP)','Share of positives missed.','Ignores false alarms completely.'],
+  ['err','FDR','1 − precision','FP / (TP + FP)','How often an alert is wrong.','Changes with prevalence, not just model quality.'],
+  ['err','FOR','1 − NPV','FN / (TN + FN)','Misses hiding among the negatives.','Looks tiny on rare events even with poor recall.'],
+  ['err','NPV','','TN / (TN + FN)','Trust in a negative result.','High just because positives are rare.'],
+  ['err','Error rate','1 − accuracy','(FP + FN) / N','Overall share of mistakes.','Mixes misses and alarms together.'],
+  ['err','Fowlkes–Mallows','','√(P · R)','Geometric mix of P and R.','Ignores TN; no error costs.'],
+  ['err','Diagnostic odds ratio','DOR','(TP · TN) / (FP · FN)','Class separation, prevalence-free.','Infinite when an error count is 0.'],
+
+  ['rank','ROC-AUC','','∫ TPR d(FPR)','Ranking quality across thresholds.','Looks great on imbalanced data while precision is poor.'],
+  ['rank','PR-AUC','','∫ P d(R)','Rare positives where precision matters.','Depends on prevalence; interpolation varies.'],
+  ['rank','Average precision','AP / mAP','Σ (Rₖ − Rₖ₋₁) · Pₖ','Object detection, retrieval.','Different matching rules → different numbers.'],
+  ['rank','Log loss','cross-entropy','−mean(y·ln p + (1−y)·ln(1−p))','Judging probability quality.','One confident wrong answer explodes the score.'],
+  ['rank','Brier score','','mean((p − y)²)','Calibration; 0 = perfect.','Looks good on rare events by predicting the base rate.'],
+
+  ['ops','False alarms per hour / km','FP/h, FP/km','FP / exposure time or distance','Continuous systems (cars, video).','Needs real driving/runtime logs, not just a test set.'],
+  ['ops','Detection latency','','t(detected) − t(first visible)','Braking, tracking, reaction budgets.','Frame-level tests can’t measure it.'],
+  ['ops','Recall lower bound','95% one-sided','Lower confidence bound on TPR','Safety sign-off (SOTIF, medical).','Needs large samples; one miss hurts a lot.'],
+  ['ops','Recall per scenario','ODD slices','TP / (TP + FN) per scenario','Finds blind spots (night, rain, glare).','Small slices → noisy numbers.']
+];
+
+const list = document.getElementById('list');
+const q = document.getElementById('q');
+let cat = 'all';
+
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  let html = '', shown = 0;
+  for (const key of Object.keys(SECTIONS)) {
+    if (cat !== 'all' && cat !== key) continue;
+    const rows = M.filter(m => m[0] === key && (!term || m.slice(1).join(' ').toLowerCase().includes(term)));
+    if (!rows.length) continue;
+    shown += rows.length;
+    html += `<h2>${SECTIONS[key]}</h2>` + rows.map(([, n, a, f, g, b]) => `
+      <div class="m">
+        <div class="name">${esc(n)}${a ? `<span class="alias">${esc(a)}</span>` : ''}</div>
+        <code class="f">${esc(f)}</code>
+        <p class="g">${esc(g)}</p>
+        <p class="b">${esc(b)}</p>
+      </div>`).join('');
+  }
+  list.innerHTML = shown ? html : '<p class="empty">No metric matches.</p>';
+}
+
+q.addEventListener('input', render);
+document.getElementById('chips').addEventListener('click', e => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === btn));
+  cat = btn.dataset.c;
+  render();
+});
+render();
+</script>
+</body>
+</html>

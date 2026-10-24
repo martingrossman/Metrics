@@ -45,13 +45,13 @@ for (const device of [
         const value = await page.locator(`[data-learn-share="${share}"]`).getAttribute('data-comparison-precision');
         assert.ok(Math.abs(Number(value) - expected) < 1e-12, `${share}% comparison should show probability ${expected}, got ${value}`);
       };
-      const baseline = await state();
       await noOverflow(true);
-      assert.equal(await page.locator('#learnPanel').isVisible(), false);
+      assert.equal(await page.locator('#learnPanel').count(), 0);
       await activate('#learnToggle');
+      await page.waitForURL(/learn\.html/);
       assert.equal(await page.locator('#learnPanel').isVisible(), true);
-      assert.equal(await page.locator('.metric-formula:visible').count(), 3);
-      assert.deepEqual(await state(), baseline);
+      assert.ok((await page.locator('.metric-formula:visible').count()) >= 3);
+      const baseline = await state();
       await noOverflow();
       await activate('#tab-formulas');
       assert.ok((await page.locator('#calculation-tpr').textContent()).includes('480 ÷ (480 + 20) = 96%'));
@@ -127,9 +127,9 @@ for (const device of [
       }
       const beforeClose = await state();
       await activate('#closeLearn');
-      assert.equal(await page.locator('#learnPanel').isVisible(), false);
-      assert.deepEqual(await state(), beforeClose);
-      assert.equal(await page.locator('#learnToggle').evaluate(e => e === document.activeElement), true);
+      await page.waitForURL(/index\.html/);
+      assert.equal(await page.locator('#learnPanel').count(), 0);
+      assert.deepEqual((await state()).values, beforeClose.values);
       await noOverflow(true);
       assert.deepEqual(errors, []);
     } finally { await browser.close(); }

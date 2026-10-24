@@ -513,6 +513,266 @@
       font-weight: 700;
       color: var(--primary);
     }
+    
+    
+    /* Decision Tree Styles */
+    .decision-tree-card {
+      margin: 18px 0 24px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .tree-root {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .tree-root::after {
+      content: '';
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 24px;
+      background: #cbd5e1;
+    }
+    .root-node {
+      background: #ffffff;
+      border: 2px solid #2563eb;
+      border-radius: 12px;
+      padding: 12px 24px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.1);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .root-node strong {
+      font-size: 15px;
+      color: #1e3a8a;
+    }
+    .root-node .tree-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .tree-branches {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+    .tree-branches::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 16.6%;
+      right: 16.6%;
+      height: 2px;
+      background: #cbd5e1;
+    }
+    .tree-branch {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .tree-branch::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 12px;
+      background: #cbd5e1;
+    }
+    .branch-node {
+      height: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.15s;
+    }
+    .tree-branch:hover .branch-node {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.08);
+      transform: translateY(-2px);
+    }
+    .branch-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    .branch-badge.safety { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .branch-badge.imbalanced { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .branch-badge.symmetric { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .branch-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .branch-desc {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.4;
+      margin: 0 0 12px;
+      flex: 1;
+    }
+    .branch-kpis {
+      font-size: 11.5px;
+      background: #f8fafc;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .kpi-tag.pri strong { color: #1d4ed8; }
+    .kpi-tag.sec strong { color: #475569; }
+    .kpi-tag.trap strong { color: #b45309; }
+    .branch-select-btn {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--primary);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s;
+    }
+    .tree-branch:hover .branch-select-btn {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    @media (max-width: 860px) {
+      .tree-branches {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .tree-branches::before, .tree-branch::before, .tree-root::after {
+        display: none;
+      }
+    }
+
+    .scenario-detail-box {
+      margin-top: 16px;
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 18px 22px;
+      box-shadow: var(--shadow-sm);
+    }
+    .scenario-detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .scenario-detail-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .scenario-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .scenario-badge-pri {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .scenario-badge-sec {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .scenario-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .scenario-detail-col {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .scenario-detail-col.trap {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+    .scenario-detail-col.trap h4 {
+      color: #b45309;
+    }
+    .scenario-detail-col.kpi {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .scenario-detail-col.kpi h4 {
+      color: #15803d;
+    }
+    .scenario-detail-col h4 {
+      margin: 0 0 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+    }
+    .scenario-detail-col p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #1e293b;
+    }
+    .scenario-load-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 7px;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(37,99,235,0.2);
+      transition: background 0.15s;
+    }
+    .scenario-load-btn:hover {
+      background: #1d4ed8;
+    }
+    
     .callout-box {
       margin-top: 16px;
       background: #f0fdf4;
@@ -561,6 +821,9 @@
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
+        <a href="cheatsheet.html" class="back-btn" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;" title="Open simple cards cheatsheet">
+          ⚡ Simple Cheatsheet
+        </a>
         <button type="button" class="back-btn" style="background:#f1f5f9; color:#334155; border-color:#cbd5e1;" onclick="window.print()">
           🖨️ Print / PDF
         </button>
@@ -594,24 +857,217 @@
     </div>
 
     <div class="category-pills">
-      <button type="button" class="cat-btn active" data-category="all">All Metrics <span class="cat-count">32</span></button>
-      <button type="button" class="cat-btn" data-category="core">1. Core Metrics <span class="cat-count">8</span></button>
-      <button type="button" class="cat-btn" data-category="imbalance">2. Imbalance-Aware <span class="cat-count">7</span></button>
-      <button type="button" class="cat-btn" data-category="error">3. Negative & Errors <span class="cat-count">8</span></button>
-      <button type="button" class="cat-btn" data-category="ranking">4. Ranking & Probability <span class="cat-count">5</span></button>
-      <button type="button" class="cat-btn" data-category="operational">5. Operational & Safety <span class="cat-count">7</span></button>
-      <button type="button" class="cat-btn" data-category="calculator">6. Interactive Calculator</button>
-      <button type="button" class="cat-btn" data-category="guide">7. Which Should You Use?</button>
+      <button type="button" class="cat-btn active" data-category="all">All Sections &amp; Metrics <span class="cat-count">32</span></button>
+      <button type="button" class="cat-btn" data-category="guide">🎯 1. Decision Tree &amp; Guide</button>
+      <button type="button" class="cat-btn" data-category="core">2. Core Metrics <span class="cat-count">8</span></button>
+      <button type="button" class="cat-btn" data-category="imbalance">3. Imbalance-Aware <span class="cat-count">7</span></button>
+      <button type="button" class="cat-btn" data-category="error">4. Negative &amp; Errors <span class="cat-count">8</span></button>
+      <button type="button" class="cat-btn" data-category="ranking">5. Ranking &amp; Prob <span class="cat-count">5</span></button>
+      <button type="button" class="cat-btn" data-category="operational">6. Operational &amp; Safety <span class="cat-count">7</span></button>
+      <button type="button" class="cat-btn" data-category="calculator">7. Interactive Calculator</button>
     </div>
   </div>
 
   <!-- Content Container -->
   <main class="main-wrap">
 
+    <!-- 1. Which Metrics Should You Actually Use? (Decision Tree & Practical Guide) -->
+    <section class="metric-section" id="sec-guide" data-category="guide">
+      <div class="section-header">
+        <h2>1. Which Metrics Should You Actually Use?</h2>
+        <span class="section-badge badge-operational">Decision Framework</span>
+      </div>
+
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:14px; line-height:1.5;">
+        Selecting the right classification metric comes down to four critical questions: <strong>class prevalence</strong>, <strong>asymmetric error costs</strong> (cost of FN vs. FP), <strong>operating threshold mode</strong>, and <strong>continuous operational exposure</strong> (30 FPS, driving km). Use the decision tree below or click any real-world domain card to inspect recommended criteria:
+      </p>
+
+      <!-- Interactive Visual Decision Tree -->
+      <div class="decision-tree-card" aria-label="Classification Metrics Decision Tree">
+        <div class="tree-root">
+          <div class="root-node">
+            <span>🎯</span>
+            <strong>What is your Classification Goal?</strong>
+            <span class="tree-sub">Identify your operating environment &amp; error cost asymmetry</span>
+          </div>
+        </div>
+        <div class="tree-branches">
+          <!-- Branch 1: Safety & Continuous Exposure -->
+          <div class="tree-branch" onclick="selectScenario('automotive')">
+            <div class="branch-node">
+              <span class="branch-badge safety">Safety &amp; Continuous Exposure</span>
+              <div class="branch-title">🚗 Automotive &amp; 🩺 Medical</div>
+              <p class="branch-desc">Missed positive is hazardous (FN is fatal); continuous high-frequency exposure (30 FPS, vehicle km, patient screening).</p>
+              <div class="branch-kpis">
+                <div class="kpi-tag pri">Primary: <strong>TPR (Recall), FP/km, FP/hour</strong></div>
+                <div class="kpi-tag sec">Secondary: <strong>Detection Latency, FNR, NPV</strong></div>
+                <div class="kpi-tag trap">Avoid: <strong>F1, Accuracy (ignores exposure time)</strong></div>
+              </div>
+              <button type="button" class="branch-select-btn">Inspect Automotive &amp; Medical →</button>
+            </div>
+          </div>
+
+          <!-- Branch 2: Rare Positives & Asymmetric Costs -->
+          <div class="tree-branch" onclick="selectScenario('fraud')">
+            <div class="branch-node">
+              <span class="branch-badge imbalanced">Rare Positives &amp; Fixed Queue</span>
+              <div class="branch-title">💳 Fraud &amp; 📉 Defect Detection</div>
+              <p class="branch-desc">Positives are rare (&lt; 2%); human review capacity is capped; false alarms trigger alert fatigue and queue backlog.</p>
+              <div class="branch-kpis">
+                <div class="kpi-tag pri">Primary: <strong>PR-AUC, Precision (PPV), MCC</strong></div>
+                <div class="kpi-tag sec">Secondary: <strong>F<sub>0.5</sub> / F<sub>2</sub>, Cost-Weighted Loss</strong></div>
+                <div class="kpi-tag trap">Avoid: <strong>ROC-AUC, Accuracy (inflated by massive TN)</strong></div>
+              </div>
+              <button type="button" class="branch-select-btn">Inspect Fraud &amp; Imbalance →</button>
+            </div>
+          </div>
+
+          <!-- Branch 3: Symmetric & Calibrated Risk -->
+          <div class="tree-branch" onclick="selectScenario('balanced')">
+            <div class="branch-node">
+              <span class="branch-badge symmetric">Symmetric / Calibrated Risk</span>
+              <div class="branch-title">⚖️ Balanced A/B &amp; 🎲 Probabilities</div>
+              <p class="branch-desc">Classes are ~50/50, or downstream system requires true posterior confidence P(Y = 1 | X) (pricing, odds).</p>
+              <div class="branch-kpis">
+                <div class="kpi-tag pri">Primary: <strong>Accuracy, MCC, Log Loss, Brier</strong></div>
+                <div class="kpi-tag sec">Secondary: <strong>Expected Calibration Error (ECE)</strong></div>
+                <div class="kpi-tag trap">Avoid: <strong>Uncalibrated logits, Single-class rates</strong></div>
+              </div>
+              <button type="button" class="branch-select-btn">Inspect Balanced &amp; Probability →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:15px; margin:20px 0 10px; color:#0f172a;">Real-World Domain Archetypes (Click to Inspect &amp; Test)</h3>
+      <div class="scenario-grid">
+        <div class="scenario-card active" data-app="balanced">
+          <div class="scenario-title">⚖️ Balanced Binary Classification</div>
+          <div class="rec-tag">Primary: <span>Accuracy, MCC</span></div>
+          <div class="rec-tag">Secondary: Precision, Recall</div>
+        </div>
+        <div class="scenario-card" data-app="imbalanced">
+          <div class="scenario-title">📉 Highly Imbalanced Datasets</div>
+          <div class="rec-tag">Primary: <span>PR-AUC, MCC</span></div>
+          <div class="rec-tag">Secondary: F1, Balanced Accuracy</div>
+        </div>
+        <div class="scenario-card" data-app="medical">
+          <div class="scenario-title">🩺 Medical Screening</div>
+          <div class="rec-tag">Primary: <span>Recall (TPR), FNR</span></div>
+          <div class="rec-tag">Secondary: Specificity, NPV</div>
+        </div>
+        <div class="scenario-card" data-app="fraud">
+          <div class="scenario-title">💳 Fraud Detection</div>
+          <div class="rec-tag">Primary: <span>Precision, Recall</span></div>
+          <div class="rec-tag">Secondary: PR-AUC, F<sub>β</sub></div>
+        </div>
+        <div class="scenario-card" data-app="object">
+          <div class="scenario-title">📷 Object Detection</div>
+          <div class="rec-tag">Primary: <span>Recall, AP</span></div>
+          <div class="rec-tag">Secondary: Precision, FP/frame</div>
+        </div>
+        <div class="scenario-card" data-app="automotive">
+          <div class="scenario-title">🚗 Automotive Hazard Detection (AEB)</div>
+          <div class="rec-tag">Primary: <span>TPR, FP/hour, FP/km</span></div>
+          <div class="rec-tag">Secondary: Detection Latency, FNR</div>
+        </div>
+        <div class="scenario-card" data-app="safety">
+          <div class="scenario-title">🛡️ Safety-Critical Perception Validation</div>
+          <div class="rec-tag">Primary: <span>TPR 1-sided bound, FP rate</span></div>
+          <div class="rec-tag">Secondary: Scenario recall, Latency</div>
+        </div>
+        <div class="scenario-card" data-app="prob">
+          <div class="scenario-title">🎲 Probability Prediction</div>
+          <div class="rec-tag">Primary: <span>Log Loss, Brier Score</span></div>
+          <div class="rec-tag">Secondary: Calibration plots, ROC-AUC</div>
+        </div>
+      </div>
+
+      <!-- Interactive Scenario Detail View -->
+      <div id="scenarioDetailContainer" class="scenario-detail-box"></div>
+
+      <!-- Executive Decision Matrix Table -->
+      <div style="margin-top:24px; overflow-x:auto;">
+        <h3 style="font-size:15px; margin:0 0 10px; color:#0f172a;">Executive Decision Matrix (Cheat Sheet)</h3>
+        <table class="metric-table" style="font-size:13px;">
+          <thead>
+            <tr>
+              <th style="width:23%;">Application Domain</th>
+              <th style="width:27%;">Recommended Primary</th>
+              <th style="width:25%;">Recommended Secondary</th>
+              <th style="width:25%;">Critical Metric to Avoid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>🚗 Automotive AEB / FCW</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">TPR (Recall), FP/km, FP/hour</span></td>
+              <td>Detection Latency (ms), FNR</td>
+              <td><span style="color:#dc2626; font-weight:600;">Accuracy, F1</span> (ignores continuous exposure)</td>
+            </tr>
+            <tr>
+              <td><strong>🛡️ Safety Validation (SOTIF)</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">TPR 1-sided bound, Hazard Rate</span></td>
+              <td>ODD Scenario Recall, Latency</td>
+              <td><span style="color:#dc2626; font-weight:600;">Aggregate F1/Accuracy</span> (masks edge cases)</td>
+            </tr>
+            <tr>
+              <td><strong>🩺 Medical Screening</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">Recall (TPR), FNR (Miss Rate)</span></td>
+              <td>Specificity (TNR), NPV</td>
+              <td><span style="color:#dc2626; font-weight:600;">Precision alone</span> (base-rate trap)</td>
+            </tr>
+            <tr>
+              <td><strong>💳 Fraud Detection</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">Precision (PPV), Recall, PR-AUC</span></td>
+              <td>F<sub>0.5</sub> / F<sub>2</sub>, Cost-Weighted Loss</td>
+              <td><span style="color:#dc2626; font-weight:600;">Standard Accuracy</span> (bogus 99% score)</td>
+            </tr>
+            <tr>
+              <td><strong>📷 Object Detection</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">mAP@[.5:.95], Recall</span></td>
+              <td>Precision, FP/Image (FPPI)</td>
+              <td><span style="color:#dc2626; font-weight:600;">Accuracy</span> (requires spatial IoU overlap)</td>
+            </tr>
+            <tr>
+              <td><strong>📉 Highly Imbalanced</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">PR-AUC, MCC</span></td>
+              <td>F1, Balanced Accuracy</td>
+              <td><span style="color:#dc2626; font-weight:600;">ROC-AUC</span> (inflated by massive TN)</td>
+            </tr>
+            <tr>
+              <td><strong>⚖️ Balanced Classification</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">Accuracy, MCC</span></td>
+              <td>Precision, Recall, F1</td>
+              <td><span style="color:#dc2626; font-weight:600;">Single-class Precision/Recall</span></td>
+            </tr>
+            <tr>
+              <td><strong>🎲 Probability Prediction</strong></td>
+              <td><span style="font-weight:700; color:#1d4ed8;">Log Loss, Brier Score</span></td>
+              <td>Expected Calibration Error (ECE)</td>
+              <td><span style="color:#dc2626; font-weight:600;">Hard 0/1 Accuracy</span> (ignores confidence)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout-box" style="margin-top:20px;">
+        <strong>⚠️ Crucial Automotive &amp; Safety Recommendation:</strong>
+        <p style="margin-top:6px;">
+          For automotive perception in particular, do <strong>not</strong> rely on Accuracy, F1, or even MCC alone. A detector with 99.7% TPR and a detector with 99.0% TPR have drastically different road safety consequences, even when aggregate F1 numbers appear identical.
+        </p>
+        <p style="margin-top:6px;">
+          For a rigorous algorithm KPI framework, use <strong>TPR with a one-sided confidence bound</strong>, <strong>FP/km or FP/hour</strong>, and <strong>Detection Latency</strong> broken down by explicit driving scenarios (e.g. night, glare, cut-in).
+        </p>
+      </div>
+    </section>
+
+    
+
     <!-- 1. Core Classification Metrics -->
     <section class="metric-section" id="sec-core" data-category="core">
       <div class="section-header">
-        <h2>1. Core Classification Metrics</h2>
+        <h2>2. Core Classification Metrics</h2>
         <span class="section-badge badge-core">8 Metrics</span>
       </div>
       <div class="table-responsive">
@@ -721,7 +1177,7 @@
     <!-- 2. Imbalance-Aware Metrics -->
     <section class="metric-section" id="sec-imbalance" data-category="imbalance">
       <div class="section-header">
-        <h2>2. Imbalance-Aware Metrics</h2>
+        <h2>3. Imbalance-Aware Metrics</h2>
         <span class="section-badge badge-imbalance">7 Metrics</span>
       </div>
       <div class="table-responsive">
@@ -820,7 +1276,7 @@
     <!-- 3. Negative-Class and Error Metrics -->
     <section class="metric-section" id="sec-error" data-category="error">
       <div class="section-header">
-        <h2>3. Negative-Class and Error Metrics</h2>
+        <h2>4. Negative-Class and Error Metrics</h2>
         <span class="section-badge badge-error">8 Metrics</span>
       </div>
       <div class="table-responsive">
@@ -930,7 +1386,7 @@
     <!-- 4. Ranking and Probability Metrics -->
     <section class="metric-section" id="sec-ranking" data-category="ranking">
       <div class="section-header">
-        <h2>4. Ranking and Probability Metrics</h2>
+        <h2>5. Ranking and Probability Metrics</h2>
         <span class="section-badge badge-ranking">5 Metrics</span>
       </div>
       <div class="table-responsive">
@@ -1192,70 +1648,7 @@
       </div>
     </section>
 
-    <!-- 7. Which Metrics Should You Actually Use? -->
-    <section class="metric-section" id="sec-guide" data-category="guide">
-      <div class="section-header">
-        <h2>7. Which Metrics Should You Actually Use?</h2>
-        <span class="section-badge badge-operational">Decision Framework</span>
-      </div>
-
-      <p style="color:var(--text-muted); font-size:14px; margin-bottom:14px;">
-        Click any real-world application below to inspect recommended primary and secondary evaluation criteria:
-      </p>
-
-      <div class="scenario-grid">
-        <div class="scenario-card active" data-app="balanced">
-          <div class="scenario-title">⚖️ Balanced Binary Classification</div>
-          <div class="rec-tag">Primary: <span>Accuracy, MCC</span></div>
-          <div class="rec-tag">Secondary: Precision, Recall</div>
-        </div>
-        <div class="scenario-card" data-app="imbalanced">
-          <div class="scenario-title">📉 Highly Imbalanced Datasets</div>
-          <div class="rec-tag">Primary: <span>PR-AUC, MCC</span></div>
-          <div class="rec-tag">Secondary: F1, Balanced Accuracy</div>
-        </div>
-        <div class="scenario-card" data-app="medical">
-          <div class="scenario-title">🩺 Medical Screening</div>
-          <div class="rec-tag">Primary: <span>Recall (TPR), FNR</span></div>
-          <div class="rec-tag">Secondary: Specificity, NPV</div>
-        </div>
-        <div class="scenario-card" data-app="fraud">
-          <div class="scenario-title">💳 Fraud Detection</div>
-          <div class="rec-tag">Primary: <span>Precision, Recall</span></div>
-          <div class="rec-tag">Secondary: PR-AUC, F<sub>β</sub></div>
-        </div>
-        <div class="scenario-card" data-app="object">
-          <div class="scenario-title">📷 Object Detection</div>
-          <div class="rec-tag">Primary: <span>Recall, AP</span></div>
-          <div class="rec-tag">Secondary: Precision, FP/frame</div>
-        </div>
-        <div class="scenario-card" data-app="automotive">
-          <div class="scenario-title">🚗 Automotive Hazard Detection (AEB)</div>
-          <div class="rec-tag">Primary: <span>TPR, FP/hour, FP/km</span></div>
-          <div class="rec-tag">Secondary: Detection Latency, FNR</div>
-        </div>
-        <div class="scenario-card" data-app="safety">
-          <div class="scenario-title">🛡️ Safety-Critical Perception Validation</div>
-          <div class="rec-tag">Primary: <span>TPR 1-sided bound, FP rate</span></div>
-          <div class="rec-tag">Secondary: Scenario recall, Latency</div>
-        </div>
-        <div class="scenario-card" data-app="prob">
-          <div class="scenario-title">🎲 Probability Prediction</div>
-          <div class="rec-tag">Primary: <span>Log Loss, Brier Score</span></div>
-          <div class="rec-tag">Secondary: Calibration plots, ROC-AUC</div>
-        </div>
-      </div>
-
-      <div class="callout-box">
-        <strong>⚠️ Crucial Automotive &amp; Safety Recommendation:</strong>
-        <p style="margin-top:6px;">
-          For automotive perception in particular, do <strong>not</strong> rely on Accuracy, F1, or even MCC alone. A detector with 99.7% TPR and a detector with 99.0% TPR have drastically different road safety consequences, even when aggregate F1 numbers appear identical.
-        </p>
-        <p style="margin-top:6px;">
-          For a rigorous algorithm KPI framework, use <strong>TPR with a one-sided confidence bound</strong>, <strong>FP/km or FP/hour</strong>, and <strong>Detection Latency</strong> broken down by explicit driving scenarios (e.g. night, glare, cut-in).
-        </p>
-      </div>
-    </section>
+    
 
   </main>
 
@@ -1390,13 +1783,164 @@
       inp.addEventListener('input', updateCalculator);
     });
 
-    // 3. Scenario Cards Click
+    // 3. Scenario Cards & Interactive Inspection
+    const scenarioData = {
+      balanced: {
+        title: "⚖️ Balanced Binary Classification",
+        context: "Both positive and negative classes are equally represented in deployment (~50/50), with symmetric error costs (FP cost ≈ FN cost).",
+        primary: ["Accuracy", "MCC"],
+        secondary: ["Precision", "Recall", "F1-Score"],
+        trapTitle: "⚠️ The Hidden Drift Trap",
+        trap: "Training data is often artificially balanced by undersampling or SMOTE. If the actual production environment has 1% positives, accuracy evaluated on balanced data gives dangerously misleading expectations.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "Accuracy ≥ 90%, MCC ≥ 0.80. Verify that both Precision and Recall remain balanced and check that positive prevalence p = 0.50 holds in deployment.",
+        tp: 450, fp: 40, fn: 50, tn: 460
+      },
+      imbalanced: {
+        title: "📉 Highly Imbalanced Datasets (Rare Event Detection)",
+        context: "Positive cases are naturally rare (0.1% to 5%), common in manufacturing defect detection, rare equipment failures, and anomaly alerts.",
+        primary: ["PR-AUC", "MCC"],
+        secondary: ["F1-Score", "Balanced Accuracy", "G-Mean"],
+        trapTitle: "⚠️ The Accuracy Trap & ROC-AUC Illusion",
+        trap: "A dummy model predicting 100% negative achieves 99% accuracy on a 1% positive dataset while catching 0 defects! Furthermore, ROC-AUC looks deceptively high (> 0.95) because massive TN suppresses FPR. PR-AUC and MCC are immune to this illusion.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "PR-AUC > 0.70, MCC > 0.60, Balanced Accuracy > 85%. Never report standard Accuracy alone on imbalanced distributions.",
+        tp: 70, fp: 140, fn: 30, tn: 9760
+      },
+      medical: {
+        title: "🩺 Medical Screening & Early Diagnosis",
+        context: "Screening asymptomatic populations for serious diseases (e.g., mammography, infectious flu, sepsis). High asymmetric cost of missed disease (FN).",
+        primary: ["Recall (TPR / Sensitivity)", "FNR (Miss Rate)"],
+        secondary: ["Specificity (TNR)", "Negative Predictive Value (NPV)"],
+        trapTitle: "⚠️ The Base-Rate Fallacy (Low Precision)",
+        trap: "Even with 98% Sensitivity and 95% Specificity, if disease prevalence is 1%, Precision (PPV) is only ~16%! 84% of all positive screens will be false alarms requiring secondary diagnostic confirmation.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "Sensitivity / Recall ≥ 98%, FNR ≤ 2%, NPV ≥ 99.9%. Operational protocol must account for confirmatory follow-up costs (biopsy, PCR) for false alarms.",
+        tp: 98, fp: 495, fn: 2, tn: 9405
+      },
+      fraud: {
+        title: "💳 Financial Fraud & Security Intrusion",
+        context: "High-volume payment transactions or server logs where a fixed-capacity team of human fraud analysts reviews flagged alerts.",
+        primary: ["Precision (PPV)", "Recall (TPR)", "PR-AUC"],
+        secondary: ["F0.5 / F2 Score", "Dollar-Weighted Expected Loss"],
+        trapTitle: "⚠️ Alert Fatigue & Queue Overload",
+        trap: "If Precision falls below 20%, 80% of human review time is wasted investigating bogus alerts. High-dollar fraud cases expire in the review backlog and clear before inspection.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "Precision ≥ 70%, Recall ≥ 85%, Dollar-Weighted Catch Rate > 92%. Optimize threshold against the dollar-cost matrix (Investigation Cost vs. Fraud Loss).",
+        tp: 85, fp: 35, fn: 15, tn: 9865
+      },
+      object: {
+        title: "📷 Computer Vision & Object Detection (2D/3D)",
+        context: "Bounding box and point cloud object detection across varied scales, aspect ratios, and occlusions.",
+        primary: ["Average Precision (AP / mAP@[.5:.95])", "Recall (TPR)"],
+        secondary: ["Precision", "False Positives per Image (FPPI)"],
+        trapTitle: "⚠️ NMS Duplicate Detections & IoU Sensitivity",
+        trap: "High recall with a loose IoU threshold (0.50) can look strong on benchmarks, but spatial misalignment causes robotic grippers to collide and autonomous vehicles to misjudge stopping distance.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "mAP@[.50] ≥ 0.85, mAP@[.50:.95] ≥ 0.65, FPPI ≤ 0.05. Always inspect Precision-Recall curves across IoU thresholds (0.50 to 0.95).",
+        tp: 850, fp: 100, fn: 150, tn: 8900
+      },
+      automotive: {
+        title: "🚗 Automotive Hazard Detection (AEB / Collision Avoidance)",
+        context: "Autonomous Emergency Braking (AEB) and Forward Collision Warning (FCW) operating continuously at 30 to 60 FPS in high-speed traffic.",
+        primary: ["True Positive Rate (TPR)", "False Alarms per Distance (FP/1,000 km)", "False Alarms per Hour"],
+        secondary: ["Detection Latency (ms)", "Time-To-Collision (TTC) Margin", "FNR"],
+        trapTitle: "⚠️ The F1 Score & Per-Frame Specificity Fallacy",
+        trap: "At 30 FPS, an apparently spectacular 99.99% specificity still produces ~11 phantom brake activations per hour! On a highway, a single phantom braking event can cause a fatal rear-end pileup. F1 score is completely irrelevant here.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "Euro NCAP safety standard: TPR > 99.5% in standardized crash scenarios; Phantom braking < 1 event per 100,000 km; End-to-end detection latency < 100 ms.",
+        tp: 995, fp: 2, fn: 5, tn: 98998
+      },
+      safety: {
+        title: "🛡️ Safety-Critical Perception Validation (ISO 21448 SOTIF)",
+        context: "ASIL-D perception validation across complex Operational Design Domains (ODD), edge cases, and sensor degradation.",
+        primary: ["One-sided Lower Confidence Bound on TPR", "Hazard Exposure Rate"],
+        secondary: ["ODD-Specific Recall (Night, Glare, Rain)", "Detection Latency"],
+        trapTitle: "⚠️ The Aggregate Benchmark Trap",
+        trap: "Never validate safety on aggregated datasets! A system with 99.9% overall recall may have 0% recall on dark-clothing pedestrians in wet asphalt nighttime glare. SOTIF requires disaggregated slice validation.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "One-sided 95% Clopper-Pearson lower bound on TPR ≥ 99.0% for every critical operational slice. No single scenario below minimum safety gate.",
+        tp: 495, fp: 10, fn: 5, tn: 9490
+      },
+      prob: {
+        title: "🎲 Calibrated Probability Prediction",
+        context: "Probabilistic forecasting, medical risk scoring, and multi-stage decision trees requiring true posterior confidence P(Y=1|X).",
+        primary: ["Log Loss (Cross-Entropy)", "Brier Score (Mean Squared Error)"],
+        secondary: ["Expected Calibration Error (ECE)", "Reliability Diagrams", "ROC-AUC"],
+        trapTitle: "⚠️ The Overconfident Deep Net Trap",
+        trap: "Modern deep neural networks often output uncalibrated probabilities (e.g., predicting 0.99 for cases with actual 70% true frequency). ROC-AUC can be 1.00 while calibration is disastrously distorted.",
+        kpiTitle: "🎯 Industry Rule of Thumb",
+        kpi: "Brier Score ≤ 0.08, ECE ≤ 0.03. Use Platt scaling, isotonic regression, or temperature scaling to calibrate logits before deployment.",
+        tp: 420, fp: 110, fn: 80, tn: 390
+      }
+    };
+
+    function renderScenarioDetail(appKey) {
+      const data = scenarioData[appKey] || scenarioData.balanced;
+      const container = document.getElementById('scenarioDetailContainer');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="scenario-detail-header">
+          <div class="scenario-detail-title">${data.title}</div>
+          <div class="scenario-badges">
+            <span class="scenario-badge-pri">Primary: ${data.primary.join(', ')}</span>
+            <span class="scenario-badge-sec">Secondary: ${data.secondary.join(', ')}</span>
+          </div>
+        </div>
+        <p style="margin:0 0 12px; font-size:13.5px; color:#334155; line-height:1.5;">${data.context}</p>
+        <div class="scenario-detail-grid">
+          <div class="scenario-detail-col trap">
+            <h4>${data.trapTitle}</h4>
+            <p>${data.trap}</p>
+          </div>
+          <div class="scenario-detail-col kpi">
+            <h4>${data.kpiTitle}</h4>
+            <p>${data.kpi}</p>
+          </div>
+        </div>
+        <button type="button" class="scenario-load-btn" onclick="loadScenarioNumbers('${appKey}')">
+          ⚡ Load ${data.title.split(' ')[1]} Numbers into 2×2 Calculator (TP=${data.tp}, FP=${data.fp}, FN=${data.fn}, TN=${data.tn})
+        </button>
+      `;
+    }
+
+    
+    window.selectScenario = function(appKey) {
+      document.querySelectorAll('.scenario-card').forEach(c => {
+        c.classList.toggle('active', c.dataset.app === appKey);
+      });
+      renderScenarioDetail(appKey);
+      const detailEl = document.getElementById('scenarioDetailContainer');
+      if (detailEl) {
+        detailEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    window.loadScenarioNumbers = function(appKey) {
+      const data = scenarioData[appKey];
+      if (!data) return;
+      inTP.value = data.tp;
+      inFP.value = data.fp;
+      inFN.value = data.fn;
+      inTN.value = data.tn;
+      updateCalculator();
+      const calcEl = document.getElementById('sec-calculator');
+      if (calcEl) {
+        calcEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
     document.querySelectorAll('.scenario-card').forEach(card => {
       card.addEventListener('click', () => {
         document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
+        renderScenarioDetail(card.dataset.app);
       });
     });
+
+    // Initial render
+    renderScenarioDetail('balanced');
 
     updateCalculator();
   </script>
