@@ -4,6 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { chromium, webkit } = require('playwright');
+const { runInNewContext } = require('node:vm');
+
+// Read the app's settings so tuning sensitivity does not require duplicate edits here.
+const dragSettings = runInNewContext('(' + fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8')
+  .match(/const GROUP_DRAG = Object\.freeze\((\{[\s\S]*?\})\);/)[1] + ')');
 
 const url = pathToFileURL(path.join(__dirname, '..', 'index.html')).href;
 
@@ -141,9 +146,18 @@ for (const device of [
           const threshold=await page.locator('#threshold').inputValue();
           await input('touchStart',{x:start.x,y:start.y});
           assert.equal(await page.locator('#separation').inputValue(),'60','No jump on grab');
+          await input('touchMove',{x:start.x+30,y:start.y});
+          await page.waitForFunction(()=>Number(document.getElementById('separation').value)>60);
+          const fineChange=Number(await page.locator('#separation').inputValue())-60;
+          assert.ok(fineChange<=5,'Short horizontal drags give fine control');
+          await input('touchMove',{x:start.x+90,y:start.y});
+          await page.waitForFunction(change=>Number(document.getElementById('separation').value)-60>change*3,fineChange);
           for(const separation of [80,20,100,0,60]) {
             const target=separation===100?110:separation===0?-10:separation;
-            await input('touchMove',{x:start.x+direction*(target-60)/100*0.30*width*start.scale,y:start.y});
+            const change=(target-60)/100;
+            const distance=Math.sign(change)*Math.pow(Math.abs(change),1/dragSettings.responseExponent)
+              *Math.max(dragSettings.minDistancePixels,width*start.scale*dragSettings.horizontalWidthScale);
+            await input('touchMove',{x:start.x+distance,y:start.y});
             // Native pointer coordinates can round by a screen pixel in WebKit.
             await page.waitForFunction(value=>Math.abs(Number(document.getElementById('separation').value)-value)<=2,separation);
             const actual=Number(await page.locator('#separation').inputValue());

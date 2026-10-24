@@ -2046,6 +2046,15 @@
     }
   });
 
+  // Group dragging: edit these settings to tune both mouse and touch gestures.
+  const GROUP_DRAG = Object.freeze({
+    activationPixels: 6,       // Movement before locking to the horizontal or vertical axis.
+    minDistancePixels: 280,    // Higher = less sensitive, especially on small screens.
+    horizontalWidthScale: 0.8, // Higher = slower separation changes on wide graphs.
+    verticalHeightScale: 1.5,  // Higher = slower proportion changes on tall graphs.
+    responseExponent: 1.7     // 1 = linear; higher = gentler start, faster long drags.
+  });
+
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const getElement = id => document.getElementById(id);
 
@@ -3610,18 +3619,18 @@
     event.preventDefault();
     const dx=event.clientX-separationDrag.clientX, dy=event.clientY-separationDrag.clientY;
     if(!separationDrag.axis) {
-      if(Math.hypot(dx,dy)<6) return;
+      if(Math.hypot(dx,dy)<GROUP_DRAG.activationPixels) return;
       separationDrag.axis=Math.abs(dx)>=Math.abs(dy)?'x':'y';
     }
     const vertical=separationDrag.axis==='y';
-    // Ease into proportion changes: short drags provide fine control, longer drags accelerate.
-    const verticalDistance=-dy/Math.max(280,separationDrag.height*1.5);
-    const delta=vertical ? Math.sign(verticalDistance)*Math.pow(Math.abs(verticalDistance),1.7)
-      : (plotPointerX(event)-separationDrag.startX)/plotRegions.width/0.30;
+    // Both axes ease in for fine control and accelerate on longer drags.
+    const scale=vertical?separationDrag.height*GROUP_DRAG.verticalHeightScale
+      :separationDrag.width*GROUP_DRAG.horizontalWidthScale;
+    const distance=(vertical?-dy:dx)/Math.max(GROUP_DRAG.minDistancePixels,scale);
+    const delta=Math.sign(distance)*Math.pow(Math.abs(distance),GROUP_DRAG.responseExponent);
     const control=vertical?elements.prevalence:elements.separation;
     const initial=vertical?separationDrag.startPrevalence:separationDrag.startValue;
-    const direction=vertical?1:separationDrag.direction;
-    const next=String(Math.round(clamp(initial+direction*delta*100,0,100)));
+    const next=String(Math.round(clamp(initial+delta*100,0,100)));
     if(control.value===next) return;
     control.value=next;
     update();
@@ -3938,10 +3947,11 @@
     const target=event.target.closest('[data-separation-direction]');
     if(!target || !event.isPrimary || event.button!==0 || thresholdDrag || separationDrag) return;
     event.preventDefault();
-    separationDrag={pointerId:event.pointerId,direction:Number(target.dataset.separationDirection),
-      startX:plotPointerX(event),startValue:Number(elements.separation.value),
+    separationDrag={pointerId:event.pointerId,
+      startValue:Number(elements.separation.value),
       clientX:event.clientX,clientY:event.clientY,startPrevalence:Number(elements.prevalence.value),
-      height:(plotRegions.bottom-plotRegions.top)*elements.scorePlot.getScreenCTM().d,axis:null};
+      height:(plotRegions.bottom-plotRegions.top)*elements.scorePlot.getScreenCTM().d,
+      width:plotRegions.width*elements.scorePlot.getScreenCTM().a,axis:null};
     elements.scorePlot.setPointerCapture(event.pointerId);
     elements.scorePlot.classList.add('dragging');
     highlightExample(null);
