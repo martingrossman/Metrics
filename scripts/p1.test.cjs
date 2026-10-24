@@ -94,6 +94,28 @@ test('P1 features test', async () => {
     assert.ok(await page.locator('#plot').isVisible());
     assert.ok(await page.locator('#matrixPanel').isVisible());
 
+    // 6. Verify Real-World Domain Presets (Car Braking AEB and Spam Filter)
+    await page.locator('#presetSelect').selectOption('car');
+    assert.ok((await page.locator('#intro').textContent()).includes('emergency brakes'));
+    assert.equal(await page.locator('#plot text').last().textContent(), 'Collision risk score →');
+    assert.equal(await page.locator('#prevalence').inputValue(), '15');
+    assert.equal(await page.locator('#presetSelect').inputValue(), 'car');
+
+    await page.locator('#presetSelect').selectOption('spam');
+    assert.ok((await page.locator('#intro').textContent()).includes('Spam folder'));
+    assert.equal(await page.locator('#plot text').last().textContent(), 'Spam confidence score →');
+    assert.equal(await page.locator('#presetSelect').inputValue(), 'spam');
+    const spamDefaultPrec = await page.locator('#precision').textContent();
+    assert.equal(spamDefaultPrec, '96.6%');
+    // Moving spam portion changes precision (demonstrating base-rate fallacy)
+    await page.locator('#prevalence').evaluate((e, v) => { e.value = v; e.dispatchEvent(new Event('input', {bubbles:true})); }, 10);
+    const spamLowPrec = await page.locator('#precision').textContent();
+    assert.equal(spamLowPrec, '82.7%');
+
+    await page.locator('#reset').click();
+    assert.equal(await page.locator('#plot text').last().textContent(), 'Flu test score →');
+    assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
+
   } finally {
     await browser.close();
   }

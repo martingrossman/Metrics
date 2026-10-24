@@ -1,4 +1,4 @@
-﻿const http = require('node:http');
+const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
@@ -12,7 +12,9 @@ function createServer(root = path.join(__dirname, '..')) {
   ]);
 
   return http.createServer((request, response) => {
-    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+    response.setHeader('Pragma', 'no-cache');
+    response.setHeader('Expires', '0');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       response.writeHead(405, { Allow: 'GET, HEAD' });
@@ -35,6 +37,9 @@ function createServer(root = path.join(__dirname, '..')) {
 
     try {
       const content = fs.readFileSync(path.join(root, filename));
+      const remote = request.socket?.remoteAddress?.replace(/^.*:/, '') || 'client';
+      const time = new Date().toLocaleTimeString();
+      console.log(`[${time}] ${request.method} ${request.url} from ${remote} -> 200 OK (${content.length} bytes)`);
       response.writeHead(200, {
         'Content-Type': 'text/html; charset=utf-8',
         'Content-Length': content.length

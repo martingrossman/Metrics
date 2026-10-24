@@ -770,7 +770,8 @@
 
   /* Tablet: stack the synchronized charts. */
   @media (max-width: 1050px) {
-    .preset-select { display: none !important; }
+    .brand-credit { display: none; }
+    .preset-select { display: inline-block; font-size: 12px; padding: 3px 6px; }
     :root { --font-metric: 32px; }
     .population { --matrix-row-height: 140px; }
     .controls {
@@ -800,10 +801,11 @@
       gap: 0;
       line-height: 1.2;
     }
-    .top-right { gap: 6px; }
-    .reset { padding: 6px 10px; }
-    .preset-select { display: none !important; }
-    .graph-toggle-group { display: none !important; }
+    .top-right { gap: 4px; }
+    .reset { padding: 4px 8px; font-size: 11px; }
+    .preset-select { display: inline-block; max-width: 125px; font-size: 11px; padding: 2px 4px; }
+    .graph-toggle-group { display: inline-flex; flex-wrap: nowrap; gap: 2px; padding: 2px; }
+    .graph-tab { padding: 2px 6px; font-size: 11px; }
   }
 
   @media (max-width: 685px) {
@@ -1191,6 +1193,17 @@
   @media (min-width: 768px) and (max-width: 960px) {
     .learning-entry .key { display: none; }
   }
+  .tab-long { display: inline; }
+  .tab-short { display: none; }
+  @media (max-width: 650px) {
+    .tab-long { display: none; }
+    .tab-short { display: inline; }
+    .brand-credit { display: none; }
+    .preset-select { display: inline-block; max-width: 110px; font-size: 10.5px; padding: 2px; }
+  }
+  @media (max-width: 355px) {
+    .preset-select { display: none !important; }
+  }
   .graph-toggle-group { display: inline-flex; align-items: center; gap: 2px; background: #edf2f7; border-radius: 6px; padding: 2px; }
   .graph-tab { font-family: Inter, system-ui, sans-serif; font-size: 11px; font-weight: 600; padding: 2px 7px; border: none; background: transparent; color: #526886; border-radius: 4px; cursor: pointer; line-height: 1.2; white-space: nowrap; }
   .graph-tab:hover { color: #1e293b; }
@@ -1424,20 +1437,48 @@
     .formula-term { min-height: 44px; }
   }
   @media (max-width: 650px) and (orientation: portrait) {
-    .container > .learning-entry { order: 3; gap: 6px; justify-content: center; }
-    .learning-entry .key { font-size: 10px; }
-    .graph-toggle-group { display: none !important; }
-    .preset-select { display: none !important; }
+    .container > .learning-entry { order: 3; gap: 4px; justify-content: center; margin-bottom: 0; }
+    .learning-entry .key { display: none; }
+    .graph-toggle-group { display: inline-flex; flex-wrap: nowrap; gap: 2px; padding: 1px 2px; }
+    .graph-tab { padding: 2px 5px; font-size: 10px; }
+    .brand-credit { display: none; }
     .container > .controls { margin-bottom: 0; }
     .container > .learn-panel { order: 6; }
     .learning .metric-formula { font-size: 10px; }
+    body.four-up-active #scorePanel {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+    .views.single-4up #plotsWrapper {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      gap: 12px !important;
+    }
+    .views.single-4up #plotsWrapper .plot {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 650 / 270;
+      padding: 6px !important;
+      background: #ffffff !important;
+      border: 1px solid #dce3ee !important;
+      border-radius: 14px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    }
+    body.four-up-active, body.four-up-active .container {
+      overflow-y: auto !important;
+      height: auto !important;
+    }
   }
   @media (max-width: 480px) {
     .top { gap: 4px; }
     .brand { gap: 4px; font-size: 14px; }
-    .brand-credit { font-size: 9px; letter-spacing: -0.3px; }
+    .brand-credit { display: none; }
     .top-right { gap: 3px; }
     .top-right .reset { padding: 3px 5px; font-size: 10px; }
+    .top-right .preset-select { max-width: 102px; font-size: 10px; padding: 2px 3px; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .learn-panel:not([hidden]) { animation: learn-in 180ms ease-out; }
@@ -1474,10 +1515,12 @@
   </div>
   <div class="top-right">
    <select class="preset-select" id="presetSelect" aria-label="Scenario Presets" title="Scenario Presets">
-    <option value="balanced">Balanced (50/50)</option>
-    <option value="screening">Screening (High Recall)</option>
-    <option value="spam">Spam Filter (High Precision)</option>
-    <option value="fraud">Fraud (Extreme Imbalance)</option>
+    <option value="balanced">🩺 Flu Test (50/50)</option>
+    <option value="car">🚗 Car Braking (AEB Sensor)</option>
+    <option value="screening">🔬 Flu Screening (10% Sick)</option>
+    <option value="spam">📧 Spam Filter (Email)</option>
+    <option value="fraud">💳 Fraud Alert (1% Rare)</option>
+    <option value="generic">🤖 Generic ML</option>
     <option value="custom" disabled hidden>Preset: Custom</option>
    </select>
    <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
@@ -1493,7 +1536,7 @@
    <span class="metric-label">
     TPR
     <small>
-     <span data-term="fixedCaption">Fixed with sick portion</span>
+     <span data-term="tprCaption">Tested + from sick (fixed)</span>
     </small>
    </span>
    <strong id="tpr">
@@ -1504,7 +1547,7 @@
    <span class="metric-label">
     FPR
     <small>
-     <span data-term="fixedCaption">Fixed with sick portion</span>
+     <span data-term="fprCaption">Tested + from healthy (fixed)</span>
     </small>
    </span>
    <strong id="fpr">
@@ -1515,7 +1558,7 @@
    <span class="metric-label">
     Precision
     <small>
-     <span data-term="precisionCaption">Depends on sick portion</span>
+     <span data-term="precisionCaption">Truly sick among test +</span>
     </small>
    </span>
    <strong id="precision">
@@ -1612,9 +1655,9 @@
  </div>
  <div class="learning-entry">
   <div class="graph-toggle-group" role="tablist" aria-label="View mode selector">
-   <button type="button" class="graph-tab active" id="tabGraphScores" role="tab" aria-selected="true" data-graph-view="scores" title="Default view: Score Plot on left, 2x2 Confusion Matrix on right">Default (Scores + Matrix)</button>
-   <button type="button" class="graph-tab" id="tabGraphSplit" role="tab" aria-selected="false" data-graph-view="split" title="Advanced view: One big 4-Up graph (Score Plot, Gaussians, ROC Curve, and PR Curve)">4-Up Graph</button>
-   <button type="button" class="graph-tab" id="tabGraphGauss" role="tab" aria-selected="false" data-graph-view="gauss" title="Prior-weighted Gaussian distributions scaling with sick portion">Gaussians</button>
+   <button type="button" class="graph-tab active" id="tabGraphScores" role="tab" aria-selected="true" data-graph-view="scores" title="Default view: Score Plot on left, 2x2 Confusion Matrix on right"><span class="tab-long">Default (Scores + Matrix)</span><span class="tab-short">Default</span></button>
+   <button type="button" class="graph-tab" id="tabGraphSplit" role="tab" aria-selected="false" data-graph-view="split" title="Advanced view: One big 4-Up graph (Score Plot, Gaussians, ROC Curve, and PR Curve)"><span class="tab-long">4-Up Graph</span><span class="tab-short">4-Up</span></button>
+   <button type="button" class="graph-tab" id="tabGraphGauss" role="tab" aria-selected="false" data-graph-view="gauss" title="Prior-weighted Gaussian distributions scaling with sick portion"><span class="tab-long">Gaussians</span><span class="tab-short">Gauss</span></button>
    <button type="button" class="graph-tab" id="tabGraphRoc" role="tab" aria-selected="false" data-graph-view="roc" title="ROC curve with live operating point">ROC</button>
    <button type="button" class="graph-tab" id="tabGraphPr" role="tab" aria-selected="false" data-graph-view="pr" title="Precision-Recall curve shifting with sick portion">PR</button>
    <button type="button" class="graph-tab" id="tabGraphBayes" role="tab" aria-selected="false" data-graph-view="bayes" title="Precision vs. prevalence curve">Bayes</button>
@@ -1927,6 +1970,7 @@
 
   // Terminology is presentation state only; the model and slider state are shared.
   let genericMode = false;
+  let activeDomain = 'flu';
   let learningMode = false;
   let learningTab = 'basics';
   let latestMetrics = null;
@@ -1955,17 +1999,71 @@
       thresholdLabel: 'How easily the test says +', thresholdLow: '0% · Never says +', thresholdHigh: '100% · Always says +',
       separationLabel: 'How different the two groups are', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
       actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
-      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: '← Flu test score',
+      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
       minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
       tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
       fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
       amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
       subject: 'people', cutoff: 'test cutoff',
-      separation: 'score separation', fixedCaption: 'Fixed with sick portion', precisionCaption: 'Depends on sick portion',
+      separation: 'score separation', tprCaption: 'Tested + from sick (fixed)', fprCaption: 'Tested + from healthy (fixed)', precisionCaption: 'Truly sick among test +', fixedCaption: 'Fixed with sick portion',
       noPositives: 'No positive tests at this setting.',
       scorePanel: 'Flu test score graph', plot: 'Flu test score threshold',
       matrixPanel: 'Flu test results', controls: 'Flu test controls',
       bar: 'People with flu versus false alarms among positive tests'
+    },
+    car: {
+      introduction: '<strong>Your car’s sensor slams the emergency brakes! Is there really an obstacle ahead?</strong> In autonomous emergency braking (AEB), safety demands high sensitivity (TPR), but phantom braking (FP) risks rear-end crashes.<br>Compare how obstacle frequency and sensor confidence trade off crash avoidance against phantom stops.',
+      share: 'Obstacle portion', shareTitle: 'Percentage of driving situations with an actual obstacle',
+      thresholdLabel: 'Braking sensitivity', thresholdLow: '0% · Never brakes', thresholdHigh: '100% · Emergency brake easily',
+      separationLabel: 'Sensor obstacle separation', separationLow: 'Rain / fog noise', separationHigh: 'Clear lidar / camera radar',
+      actualPositive: 'Obstacle', actualNegative: 'Clear road',
+      predictedNegative: 'Drive on (−)', predictedPositive: 'Brake! (+)', scoreLabel: 'Collision risk score →',
+      minimum: '0% · clear highway', maximum: '100% · constant obstacles',
+      tpLegend: ' · Crash avoided', fpLegend: ' · Phantom braking',
+      fnLegend: ' · Missed obstacle!', tnLegend: ' · Smooth driving',
+      amongPositive: 'Among emergency braking events:', correctLabel: 'real obstacles', falseLabel: 'phantom stops',
+      subject: 'road events', cutoff: 'braking trigger',
+      separation: 'sensor clarity', tprCaption: 'Braked from obstacles (fixed)', fprCaption: 'Braked from clear road (fixed)', precisionCaption: 'Real obstacle when braking', fixedCaption: 'Fixed with obstacle rate',
+      noPositives: 'Car never brakes at this threshold.',
+      scorePanel: 'Collision risk score graph', plot: 'Collision risk threshold',
+      matrixPanel: 'Braking decision matrix', controls: 'Sensor and braking controls',
+      bar: 'Real obstacles avoided versus phantom stops'
+    },
+    spam: {
+      introduction: '<strong>An email was sent to your Spam folder. Is it really junk—or an important email?</strong> That’s precision. In spam filtering, a false alarm (good email discarded) is far worse than junk reaching your Inbox.<br>Notice how spam rate in incoming email shifts precision, even with a fixed classification model.',
+      share: 'Spam portion', shareTitle: 'Percentage of incoming emails that are junk/spam',
+      thresholdLabel: 'Filter aggressiveness', thresholdLow: '0% · Let everything in', thresholdHigh: '100% · Aggressive spam filter',
+      separationLabel: 'Spam filter accuracy', separationLow: 'Subtle phishing', separationHigh: 'Blatant spam markers',
+      actualPositive: 'Spam email', actualNegative: 'Good email',
+      predictedNegative: 'Inbox (−)', predictedPositive: 'Spam (+)', scoreLabel: 'Spam confidence score →',
+      minimum: '0% · pristine inbox', maximum: '100% · flood of spam',
+      tpLegend: ' · Spam blocked', fpLegend: ' · Good email lost!',
+      fnLegend: ' · Spam in Inbox', tnLegend: ' · Kept in Inbox',
+      amongPositive: 'Among emails sent to Spam:', correctLabel: 'actual spam', falseLabel: 'good mail lost',
+      subject: 'emails', cutoff: 'filter cutoff',
+      separation: 'filter separation', tprCaption: 'Spam caught from spam (fixed)', fprCaption: 'Good mail sent to spam (fixed)', precisionCaption: 'Real spam in Spam folder', fixedCaption: 'Fixed with spam volume',
+      noPositives: 'No emails classified as spam.',
+      scorePanel: 'Spam score graph', plot: 'Spam filter threshold',
+      matrixPanel: 'Spam filter matrix', controls: 'Email filter controls',
+      bar: 'Spam caught versus good emails sent to spam'
+    },
+    fraud: {
+      introduction: '<strong>Your card was declined for suspicious activity. Is it a real thief or a false alarm?</strong> Credit card fraud is rare (~1–2%), so even an accurate detector produces false alarms due to the base-rate fallacy.<br>See why high sensitivity causes frequent card blocks when fraud is rare.',
+      share: 'Fraud portion', shareTitle: 'Percentage of transactions that are actual fraud',
+      thresholdLabel: 'Security aggressiveness', thresholdLow: '0% · Approve all charges', thresholdHigh: '100% · Block easily',
+      separationLabel: 'Fraud pattern detection', separationLow: 'Sophisticated fraud', separationHigh: 'Obvious anomalies',
+      actualPositive: 'Fraud charge', actualNegative: 'Legit charge',
+      predictedNegative: 'Approve (−)', predictedPositive: 'Block! (+)', scoreLabel: 'Fraud risk score →',
+      minimum: '0% · zero fraud', maximum: '100% · all fraud',
+      tpLegend: ' · Fraud caught', fpLegend: ' · Card declined',
+      fnLegend: ' · Fraud missed', tnLegend: ' · Normal sale',
+      amongPositive: 'Among blocked charges:', correctLabel: 'real fraud', falseLabel: 'false alarms',
+      subject: 'charges', cutoff: 'security cutoff',
+      separation: 'pattern separation', tprCaption: 'Fraud caught (fixed)', fprCaption: 'False alarms on legit sales (fixed)', precisionCaption: 'Real fraud among blocked', fixedCaption: 'Fixed with fraud rate',
+      noPositives: 'No charges blocked at this security level.',
+      scorePanel: 'Fraud score graph', plot: 'Fraud detection threshold',
+      matrixPanel: 'Fraud detection matrix', controls: 'Security rule controls',
+      bar: 'Fraud caught versus legitimate shoppers blocked'
     },
     generic: {
       introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive portion).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
@@ -1973,13 +2071,13 @@
       thresholdLabel: 'Decision threshold', thresholdLow: '0% · More predicted +', thresholdHigh: '100% · Fewer predicted +',
       separationLabel: 'Class separation', separationLow: 'Overlapping', separationHigh: 'Fully separated',
       actualPositive: 'Actual +', actualNegative: 'Actual −',
-      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: '← Positive class score',
+      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: 'Positive class score →',
       minimum: '0% · all negative', maximum: '100% · all positive',
       tpLegend: ' · True positive', fpLegend: ' · False positive',
       fnLegend: ' · False negative', tnLegend: ' · True negative',
       amongPositive: 'Among predicted positives:', correctLabel: 'correct', falseLabel: 'false alarms',
       subject: 'cases', cutoff: 'decision threshold',
-      separation: 'class separation', fixedCaption: 'Fixed with balance', precisionCaption: 'Depends on balance',
+      separation: 'class separation', tprCaption: 'Tested + from actual + (fixed)', fprCaption: 'Tested + from actual − (fixed)', precisionCaption: 'Actual + among predicted +', fixedCaption: 'Fixed with balance',
       noPositives: 'No positive predictions at this threshold.',
       scorePanel: 'Positive class score graph', plot: 'Decision threshold on the positive class score graph',
       matrixPanel: 'Confusion matrix', controls: 'Model controls',
@@ -1988,7 +2086,7 @@
   };
 
   function renderTerminology() {
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
     // Both introductions are trusted local copy, never user-supplied HTML.
     getElement('intro').innerHTML = copy.introduction;
     document.querySelectorAll('[data-term]').forEach(element => {
@@ -2008,16 +2106,24 @@
     document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
     document.querySelectorAll('.metric')[0].title = genericMode
       ? 'TPR = TP / all actual positives. Fixed when class balance changes at the same threshold and separation.'
-      : 'TPR = portion of people with flu who test positive. Fixed when sick portion changes with the same test settings.';
+      : (activeDomain === 'flu'
+        ? 'TPR = portion of people with flu who test positive. Fixed when sick portion changes with the same test settings.'
+        : `TPR = portion of ${copy.actualPositive.toLowerCase()} correctly detected.`);
     document.querySelectorAll('.metric')[1].title = genericMode
       ? 'FPR = FP / all actual negatives. Fixed when class balance changes at the same threshold and separation.'
-      : 'FPR = portion of people without flu who get a positive test. Fixed when sick portion changes with the same test settings.';
+      : (activeDomain === 'flu'
+        ? 'FPR = portion of people without flu who get a positive test. Fixed when sick portion changes with the same test settings.'
+        : `FPR = portion of ${copy.actualNegative.toLowerCase()} getting a false alarm.`);
     document.querySelectorAll('.metric')[2].title = genericMode
       ? 'Precision = TP / (TP + FP). Changes as the actual positive portion changes.'
-      : 'Precision = chance a person has flu after a positive test in this group.';
-    elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? 'Flu example' : 'Generic ML';
-    elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? 'Flu' : 'ML';
-    elements.modeToggle.title = genericMode ? 'Switch to the flu example' : 'Switch to generic ML terminology';
+      : (activeDomain === 'flu'
+        ? 'Precision = chance a person has flu after a positive test in this group.'
+        : `Precision = chance of ${copy.actualPositive.toLowerCase()} after a positive decision.`);
+    const domainShort = activeDomain === 'car' ? 'Car' : (activeDomain === 'spam' ? 'Spam' : (activeDomain === 'fraud' ? 'Fraud' : 'Flu'));
+    const domainLong = activeDomain === 'car' ? 'Car AEB' : (activeDomain === 'spam' ? 'Spam Filter' : (activeDomain === 'fraud' ? 'Fraud Alert' : 'Flu example'));
+    elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? domainLong : 'Generic ML';
+    elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? domainShort : 'ML';
+    elements.modeToggle.title = genericMode ? `Switch to ${domainLong}` : 'Switch to generic ML terminology';
     elements.modeToggle.setAttribute('aria-label', elements.modeToggle.title);
   }
 
@@ -2249,7 +2355,7 @@
     if (!svg) return;
     const isPrimary = svg === elements.scorePlot;
     svg.replaceChildren();
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
     const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
@@ -2267,7 +2373,7 @@
     const dotRadius = splitMode ? 6.8 : compact ? 6.5 : 8;
     const rowStep = splitMode ? 9.5 : shortPhone ? 9 : compact ? 12 : 16;
     const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
-    const scoreToX = score => left + width * (1 - score);
+    const scoreToX = score => left + width * score;
     const cutoff = scoreToX(threshold);
     if (isPrimary) {
       plotRegions = { left, width, top, bottom, midY, cutoff };
@@ -2280,25 +2386,25 @@
       return element;
     };
 
-    // Background: predicted-positive left, predicted-negative right.
+    // Background: predicted-negative left, predicted-positive right.
     draw('rect', {
       x: left, y: top, width: cutoff - left, height: bottom - top,
-      fill: '#fff1f3'
+      fill: '#eef4ff'
     });
     draw('rect', {
       x: cutoff, y: top,
       width: left + width - cutoff, height: bottom - top,
-      fill: '#eef4ff'
+      fill: '#fff1f3'
     });
 
     draw('text', {
       x: left, y: headerY,
-      fill: '#c54757', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
-    }, copy.predictedPositive);
-    draw('text', {
-      x: left + width, y: headerY, 'text-anchor': 'end',
       fill: '#3465b7', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
     }, copy.predictedNegative);
+    draw('text', {
+      x: left + width, y: headerY, 'text-anchor': 'end',
+      fill: '#c54757', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
+    }, copy.predictedPositive);
 
     draw('line', {
       x1: left, y1: midY, x2: left + width, y2: midY,
@@ -2350,11 +2456,11 @@
           'pointer-events': 'none', 'aria-hidden': 'true'
         });
       };
-      buildSide(threshold, 1, CONFIG.colors[leftOutcome]);
-      buildSide(0, threshold, CONFIG.colors[rightOutcome]);
+      buildSide(0, threshold, CONFIG.colors[leftOutcome]);
+      buildSide(threshold, 1, CONFIG.colors[rightOutcome]);
     }
-    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'tp', 'fn', positiveCount);
-    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'fp', 'tn', CONFIG.totalExamples - positiveCount);
+    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'fn', 'tp', positiveCount);
+    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'tn', 'fp', CONFIG.totalExamples - positiveCount);
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
@@ -2439,7 +2545,31 @@
       stroke: '#8c9bb0'
     });
 
-    for (const tick of [1, 0.75, 0.5, 0.25, 0]) {
+    // Subtle quadrant corner badges linking Score Plot regions to Confusion Matrix
+    const badgeW = splitMode ? 32 : 38;
+    const badgeH = splitMode ? 17 : 20;
+    const badgeFontSize = splitMode ? 11 : 12;
+    const drawBadge = (bx, by, text, bg, border) => {
+      draw('rect', {
+        x: bx, y: by, width: badgeW, height: badgeH, rx: 4,
+        fill: bg, stroke: border, 'stroke-width': 1, 'pointer-events': 'none', 'aria-hidden': 'true'
+      });
+      draw('text', {
+        x: bx + badgeW / 2, y: by + badgeH - (splitMode ? 4 : 5), 'text-anchor': 'middle',
+        fill: border, 'font-size': badgeFontSize, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif',
+        'pointer-events': 'none', 'aria-hidden': 'true'
+      }, text);
+    };
+    // Top-Left: FN (Actual +, Predicted -)
+    drawBadge(left + 6, top + 6, 'FN', '#fffbeb', '#d97706');
+    // Top-Right: TP (Actual +, Predicted +)
+    drawBadge(left + width - badgeW - 6, top + 6, 'TP', '#ecfdf5', '#059669');
+    // Bottom-Left: TN (Actual -, Predicted -)
+    drawBadge(left + 6, bottom - badgeH - 6, 'TN', '#f1f5f9', '#475569');
+    // Bottom-Right: FP (Actual -, Predicted +)
+    drawBadge(left + width - badgeW - 6, bottom - badgeH - 6, 'FP', '#fef2f2', '#dc2626');
+
+    for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
       draw('text', {
         x: scoreToX(tick), y: tickY, 'text-anchor': 'middle',
         'font-size': splitMode ? 20 : 28, fill: '#526886'
@@ -2527,7 +2657,7 @@
     svg.replaceChildren();
 
     const p = Number(elements.prevalence.value) / 100;
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
     const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
@@ -2541,7 +2671,7 @@
 
     const padL = compact ? 55 : 62;
     const padT = splitMode ? 34 : compact ? 42 : 55;
-    const pw = splitMode ? 368 : compact ? 260 : 350;
+    const pw = (compact || splitMode) ? 565 : 350;
     const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
     const padB = padT + ph;
     const padR = padL + pw;
@@ -2557,21 +2687,21 @@
       fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
     });
 
-    const scoreToX = s => padL + (1 - s) * pw;
+    const scoreToX = s => padL + s * pw;
     const cutoffX = clamp(scoreToX(threshold), padL, padR);
 
-    // Subtle background regions for Predicted + vs Predicted -
+    // Subtle background regions for Predicted - (left) vs Predicted + (right)
     draw('rect', {
       x: padL, y: padT, width: Math.max(0, cutoffX - padL), height: ph,
-      fill: '#fff1f3', 'fill-opacity': 0.55
+      fill: '#eef4ff', 'fill-opacity': 0.55
     });
     draw('rect', {
       x: cutoffX, y: padT, width: Math.max(0, padR - cutoffX), height: ph,
-      fill: '#eef4ff', 'fill-opacity': 0.55
+      fill: '#fff1f3', 'fill-opacity': 0.55
     });
 
     for (let step = 0; step <= 4; step++) {
-      const val = 1 - step / 4;
+      const val = step / 4;
       const x = scoreToX(val);
       if (step > 0 && step < 4) {
         draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
@@ -2607,15 +2737,15 @@
     const buildAreaPath = (sStart, sEnd, mu, scale) => {
       if (sEnd - sStart <= 1e-4 || scale <= 0.1) return '';
       const steps = 40;
-      let d = `M ${scoreToX(sEnd).toFixed(1)} ${padB.toFixed(1)}`;
+      let d = `M ${scoreToX(sStart).toFixed(1)} ${padB.toFixed(1)}`;
       for (let i = 0; i <= steps; i++) {
-        const s = sEnd - (sEnd - sStart) * (i / steps);
+        const s = sStart + (sEnd - sStart) * (i / steps);
         const x = scoreToX(s);
         const dens = Math.exp(-0.5 * ((s - mu) / sd) ** 2);
         const y = padB - dens * scale;
         d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
       }
-      d += ` L ${scoreToX(sStart).toFixed(1)} ${padB.toFixed(1)} Z`;
+      d += ` L ${scoreToX(sEnd).toFixed(1)} ${padB.toFixed(1)} Z`;
       return d;
     };
 
@@ -2634,7 +2764,7 @@
     let posCurve = '';
     let negCurve = '';
     for (let i = 0; i <= 60; i++) {
-      const s = 1 - i / 60;
+      const s = i / 60;
       const x = scoreToX(s);
       const yPos = padB - Math.exp(-0.5 * ((s - muPos) / sd) ** 2) * posScale;
       const yNeg = padB - Math.exp(-0.5 * ((s - muNeg) / sd) ** 2) * negScale;
@@ -2669,7 +2799,7 @@
       fill: '#1d4ed8', 'font-size': 11, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
     }, `Cutoff ${threshold.toFixed(2)}`);
 
-    if (!compact) {
+    if (!compact && !splitMode) {
       draw('rect', {
         x: 440, y: padT, width: 198, height: ph,
         fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
@@ -2729,7 +2859,7 @@
 
     const padL = compact ? 55 : 66;
     const padT = splitMode ? 34 : compact ? 42 : 55;
-    const pw = splitMode ? 364 : compact ? 260 : 340;
+    const pw = (compact || splitMode) ? 565 : 340;
     const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
     const padB = padT + ph;
     const padR = padL + pw;
@@ -2830,7 +2960,16 @@
       draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#e11d48', stroke: '#ffffff', 'stroke-width': 2.5 });
     }
 
-    if (!compact) {
+    if (compact || splitMode) {
+      draw('rect', {
+        x: padR - 165, y: padT + 8, width: 157, height: 26,
+        fill: '#f5f3ff', stroke: '#ddd6fe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: padR - 86, y: padT + 25, 'text-anchor': 'middle',
+        fill: '#5b21b6', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `PR-AUC = ${prAuc.toFixed(3)}`);
+    } else {
       draw('rect', {
         x: 440, y: padT, width: 198, height: ph,
         fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
@@ -2881,7 +3020,7 @@
     svg.replaceChildren();
 
     const { tpr, fpr } = metrics;
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
     const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
@@ -2897,7 +3036,7 @@
 
     const padL = compact ? 55 : 66;
     const padT = splitMode ? 34 : compact ? 42 : 55;
-    const pw = splitMode ? 364 : compact ? 260 : 340;
+    const pw = (compact || splitMode) ? 565 : 340;
     const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
     const padB = padT + ph;
     const padR = padL + pw;
@@ -2979,7 +3118,16 @@
       draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#e11d48', stroke: '#ffffff', 'stroke-width': 2.5 });
     }
 
-    if (!compact) {
+    if (compact || splitMode) {
+      draw('rect', {
+        x: padR - 155, y: padT + 8, width: 147, height: 26,
+        fill: '#eff6ff', stroke: '#bfdbfe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: padR - 81, y: padT + 25, 'text-anchor': 'middle',
+        fill: '#1d4ed8', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `AUC = ${auc.toFixed(3)} ★`);
+    } else {
       draw('rect', {
         x: 440, y: padT, width: 198, height: ph,
         fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
@@ -3051,7 +3199,7 @@
 
     const { tpr, fpr, precision } = metrics;
     const p = Number(elements.prevalence.value) / 100;
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
 
     const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
     const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
@@ -3059,7 +3207,7 @@
 
     const padL = compact ? 55 : 75;
     const padT = compact ? 42 : 55;
-    const pw = compact ? 260 : 340;
+    const pw = compact ? 565 : 340;
     const ph = shortPhone ? 190 : compact ? 230 : 310;
     const padB = padT + ph;
     const padR = padL + pw;
@@ -3191,7 +3339,7 @@
     if (part === 'denominator') inner.style.display = 'none';
     const key = getElement('markerKey');
     if (!definition) {
-      const copy = terminology[genericMode ? 'generic' : 'flu'];
+      const copy = terminology[genericMode ? 'generic' : activeDomain];
       key.textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
       return;
     }
@@ -3219,9 +3367,9 @@
 
     let denomBounds;
     if (selected === 'precision') {
-      denomBounds = { x: left - 3, y: top - 3, width: cutoff - left + 6, height: bottom - top + 6 };
+      denomBounds = { x: cutoff - 3, y: top - 3, width: Math.max(0, left + width - cutoff + 6), height: bottom - top + 6 };
     } else if (selected === 'npv') {
-      denomBounds = { x: cutoff - 3, y: top - 3, width: left + width - cutoff + 6, height: bottom - top + 6 };
+      denomBounds = { x: left - 3, y: top - 3, width: Math.max(0, cutoff - left + 6), height: bottom - top + 6 };
     } else if (selected === 'tpr' || selected === 'fnr') {
       denomBounds = { x: left - 3, y: top - 3, width: width + 6, height: midY - top + 6 };
     } else {
@@ -3230,13 +3378,13 @@
 
     let numBounds;
     if (definition.numerator === 'tp') {
-      numBounds = { x: left + 3, y: top + 3, width: Math.max(0, cutoff - left - 6), height: midY - top - 6 };
-    } else if (definition.numerator === 'fp') {
-      numBounds = { x: left + 3, y: midY + 3, width: Math.max(0, cutoff - left - 6), height: bottom - midY - 6 };
-    } else if (definition.numerator === 'fn') {
       numBounds = { x: cutoff + 3, y: top + 3, width: Math.max(0, left + width - cutoff - 6), height: midY - top - 6 };
-    } else {
+    } else if (definition.numerator === 'fp') {
       numBounds = { x: cutoff + 3, y: midY + 3, width: Math.max(0, left + width - cutoff - 6), height: bottom - midY - 6 };
+    } else if (definition.numerator === 'fn') {
+      numBounds = { x: left + 3, y: top + 3, width: Math.max(0, cutoff - left - 6), height: midY - top - 6 };
+    } else {
+      numBounds = { x: left + 3, y: midY + 3, width: Math.max(0, cutoff - left - 6), height: bottom - midY - 6 };
     }
 
     if (part !== 'numerator') outline(denomBounds, '#8056d9', true);
@@ -3245,7 +3393,7 @@
   }
 
   function renderPopulationGrid(groups, metrics) {
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
     for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
       const count = getElement(`${outcome}Num`);
       const formattedCount = formatCount(metrics[outcome]);
@@ -3271,7 +3419,7 @@
 
   function renderMetrics(metrics) {
     const { tp, fp, tpr, fpr, precision, predictedPositiveCount } = metrics;
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
 
     elements.tpr.textContent = formatPercent(tpr);
     elements.fpr.textContent = formatPercent(fpr);
@@ -3386,7 +3534,7 @@
   function renderTradeoffsTab(metrics, separation, threshold, genericMode) {
     const { tpr, fpr, precision } = metrics;
     const p = Number(elements.prevalence.value) / 100;
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
 
     const meanOffset = 0.30 * separation;
     const sd = 0.16 - 0.09 * separation;
@@ -3451,7 +3599,7 @@
     const miniSd = 0.16 - 0.09 * separation;
     const miniMuPos = 0.5 + miniMeanOffset;
     const miniMuNeg = 0.5 - miniMeanOffset;
-    const miniCutoffX = 42 + (1 - threshold) * 418;
+    const miniCutoffX = 42 + threshold * 418;
     const maxPrior = Math.max(p, 1 - p, 0.01);
     const posScale = (p / maxPrior) * 128;
     const negScale = ((1 - p) / maxPrior) * 128;
@@ -3459,15 +3607,15 @@
     const buildMiniArea = (sStart, sEnd, mu, scale) => {
       if (sEnd - sStart <= 1e-4 || scale <= 0.1) return '';
       const steps = 36;
-      let d = `M ${(42 + (1 - sEnd) * 418).toFixed(1)} 180`;
+      let d = `M ${(42 + sStart * 418).toFixed(1)} 180`;
       for (let i = 0; i <= steps; i++) {
-        const s = sEnd - (sEnd - sStart) * (i / steps);
-        const x = 42 + (1 - s) * 418;
+        const s = sStart + (sEnd - sStart) * (i / steps);
+        const x = 42 + s * 418;
         const dens = Math.exp(-0.5 * ((s - mu) / miniSd) ** 2);
         const y = 180 - dens * scale;
         d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
       }
-      d += ` L ${(42 + (1 - sStart) * 418).toFixed(1)} 180 Z`;
+      d += ` L ${(42 + sEnd * 418).toFixed(1)} 180 Z`;
       return d;
     };
 
@@ -3479,8 +3627,8 @@
     let posCurveD = '';
     let negCurveD = '';
     for (let i = 0; i <= 50; i++) {
-      const score = 1 - i / 50;
-      const x = 42 + (1 - score) * 418;
+      const score = i / 50;
+      const x = 42 + score * 418;
       const posDensity = Math.exp(-0.5 * ((score - miniMuPos) / miniSd) ** 2);
       const negDensity = Math.exp(-0.5 * ((score - miniMuNeg) / miniSd) ** 2);
       const yPos = 180 - posDensity * posScale;
@@ -3495,8 +3643,8 @@
             Prior-Weighted Gaussians: <strong>${Math.round(p * 100)}% vs ${Math.round((1 - p) * 100)}%</strong>
           </div>
           <svg class="curve-svg" viewBox="0 0 480 220" role="img" aria-label="Score distributions and threshold cutoff">
-            <rect x="42" y="30" width="${Math.max(0, miniCutoffX - 42).toFixed(1)}" height="150" fill="#fff1f3" fill-opacity="0.5"/>
-            <rect x="${miniCutoffX.toFixed(1)}" y="30" width="${Math.max(0, 460 - miniCutoffX).toFixed(1)}" height="150" fill="#eef4ff" fill-opacity="0.5"/>
+            <rect x="42" y="30" width="${Math.max(0, miniCutoffX - 42).toFixed(1)}" height="150" fill="#eef4ff" fill-opacity="0.5"/>
+            <rect x="${miniCutoffX.toFixed(1)}" y="30" width="${Math.max(0, 460 - miniCutoffX).toFixed(1)}" height="150" fill="#fff1f3" fill-opacity="0.5"/>
             ${miniTnArea ? `<path d="${miniTnArea}" fill="#a4afc0" fill-opacity="0.24"/>` : ''}
             ${miniFpArea ? `<path d="${miniFpArea}" fill="#e64b60" fill-opacity="0.34"/>` : ''}
             ${miniFnArea ? `<path d="${miniFnArea}" fill="#f2a527" fill-opacity="0.32"/>` : ''}
@@ -3506,11 +3654,11 @@
             <path d="${posCurveD}" fill="none" stroke="#0ea976" stroke-width="2.8"/>
             <line x1="${miniCutoffX}" y1="30" x2="${miniCutoffX}" y2="180" stroke="#246cf0" stroke-width="2.5" stroke-dasharray="4 3"/>
             <text x="${miniCutoffX}" y="24" fill="#1d4ed8" font-size="11.5" font-weight="700" text-anchor="middle">Cutoff: ${threshold.toFixed(2)} (${elements.threshold.value}%)</text>
-            <text x="42" y="196" fill="#64748b" font-size="10.5">1.00</text>
+            <text x="42" y="196" fill="#64748b" font-size="10.5">0.00</text>
             <text x="251" y="196" fill="#64748b" font-size="10.5" text-anchor="middle">0.50</text>
-            <text x="460" y="196" fill="#64748b" font-size="10.5" text-anchor="end">0.00</text>
-            <text x="54" y="${Math.max(44, 180 - posScale - 6).toFixed(1)}" fill="#0ea976" font-size="11.5" font-weight="700">${copy.actualPositive} (${Math.round(p * 100)}%)</text>
-            <text x="448" y="${Math.max(44, 180 - negScale - 6).toFixed(1)}" fill="#475569" font-size="11.5" font-weight="700" text-anchor="end">${copy.actualNegative} (${Math.round((1 - p) * 100)}%)</text>
+            <text x="460" y="196" fill="#64748b" font-size="10.5" text-anchor="end">1.00</text>
+            <text x="54" y="${Math.max(44, 180 - negScale - 6).toFixed(1)}" fill="#475569" font-size="11.5" font-weight="700">${copy.actualNegative} (${Math.round((1 - p) * 100)}%)</text>
+            <text x="448" y="${Math.max(44, 180 - posScale - 6).toFixed(1)}" fill="#0ea976" font-size="11.5" font-weight="700" text-anchor="end">${copy.actualPositive} (${Math.round(p * 100)}%)</text>
           </svg>
           <div class="curve-legend">
             <span><i class="legend-dot" style="background:#0ea976"></i> TP (${Math.round(metrics.tp)})</span>
@@ -3807,7 +3955,7 @@
     if (!learningMode) return;
     const { tp, fp, fn, tn, tpr, fpr, precision } = metrics;
     const { separation, threshold } = readSettings();
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
     const p = Number(elements.prevalence.value) / 100;
     const metricColors = { tpr: CONFIG.colors.tp, fpr: CONFIG.colors.fp, precision: '#246cf0' };
     const questions = genericMode ? {
@@ -4312,7 +4460,7 @@
     event.preventDefault();
     const targetCutoff = plotPointerX(event) - thresholdDrag.offset;
     const fraction = (targetCutoff - CONFIG.plot.left) / CONFIG.plot.width;
-    setPlotThreshold((1 - fraction) * 100);
+    setPlotThreshold(fraction * 100);
   }
 
   function endThresholdDrag(event) {
@@ -4337,9 +4485,15 @@
       : `${elements.threshold.value}% — how easily the test says positive; score cutoff ${threshold.toFixed(2)}`);
     elements.threshold.title = genericMode
       ? 'Scores at or above this threshold are predicted positive.'
-      : 'Move right to detect weaker flu signals: more flu detections and more false alarms.';
+      : (activeDomain === 'car'
+        ? 'Move right to brake more sensitively: avoids more crashes, but risks more phantom stops.'
+        : (activeDomain === 'spam'
+          ? 'Move right to filter more aggressively: catches more spam, but risks losing good emails.'
+          : (activeDomain === 'fraud'
+            ? 'Move right to flag more aggressively: catches more fraud, but declines more valid cards.'
+            : 'Move right to detect weaker flu signals: more flu detections and more false alarms.')));
     elements.separationOut.value = `${Math.round(separation * 100)}%`;
-    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
     elements.positiveCount.textContent = `${positiveCount} ${copy.subject}`;
     elements.negativeCount.textContent =
       `${CONFIG.totalExamples - positiveCount} ${copy.subject}`;
@@ -4393,23 +4547,36 @@
       const p = Number(elements.prevalence.value);
       const t = Number(elements.threshold.value);
       const s = Number(elements.separation.value);
-      if (p === 50 && t === 50 && s === 60) presetSelect.value = 'balanced';
-      else if (p === 10 && t === (genericMode ? 20 : 80) && s === 60) presetSelect.value = 'screening';
-      else if (p === 20 && t === (genericMode ? 80 : 20) && s === 60) presetSelect.value = 'spam';
-      else if (p === 1 && t === 50 && s === 75) presetSelect.value = 'fraud';
-      else presetSelect.value = 'custom';
+      if (genericMode) {
+        presetSelect.value = (p === 50 && t === 50 && s === 60) ? 'generic' : 'custom';
+      } else if (activeDomain === 'car' && p === 15 && t === 60 && s === 70) {
+        presetSelect.value = 'car';
+      } else if (activeDomain === 'flu' && p === 50 && t === 50 && s === 60) {
+        presetSelect.value = 'balanced';
+      } else if (activeDomain === 'flu' && p === 10 && t === 80 && s === 60) {
+        presetSelect.value = 'screening';
+      } else if (activeDomain === 'spam' && p === 40 && t === 45 && s === 55) {
+        presetSelect.value = 'spam';
+      } else if (activeDomain === 'fraud' && p === 1 && t === 50 && s === 60) {
+        presetSelect.value = 'fraud';
+      } else {
+        presetSelect.value = 'custom';
+      }
     }
   }
 
   function reset() {
     formulaPreview = formulaPinned = null;
     hoveredMetric = focusedMetric = pinnedMetric = null;
+    activeDomain = 'flu';
+    genericMode = false;
     elements.prevalence.value = CONFIG.defaultPrevalence;
-    elements.threshold.value = genericMode ? CONFIG.defaultThreshold * 100 : 100 - CONFIG.defaultThreshold * 100;
+    elements.threshold.value = 100 - CONFIG.defaultThreshold * 100;
     elements.separation.value = CONFIG.defaultSeparation;
     const presetSelect = getElement('presetSelect');
     if (presetSelect) presetSelect.value = 'balanced';
     setGraphView('scores');
+    renderTerminology();
     update();
   }
 
@@ -4513,23 +4680,43 @@
   if (presetSelect) {
     presetSelect.addEventListener('change', event => {
       const choice = event.target.value;
-      if (choice === 'balanced') {
+      if (choice === 'car') {
+        activeDomain = 'car';
+        genericMode = false;
+        elements.prevalence.value = 15;
+        elements.threshold.value = 60;
+        elements.separation.value = 70;
+      } else if (choice === 'balanced') {
+        activeDomain = 'flu';
+        genericMode = false;
         elements.prevalence.value = 50;
         elements.threshold.value = 50;
         elements.separation.value = 60;
       } else if (choice === 'screening') {
+        activeDomain = 'flu';
+        genericMode = false;
         elements.prevalence.value = 10;
-        elements.threshold.value = genericMode ? 20 : 80;
+        elements.threshold.value = 80;
         elements.separation.value = 60;
       } else if (choice === 'spam') {
-        elements.prevalence.value = 20;
-        elements.threshold.value = genericMode ? 80 : 20;
-        elements.separation.value = 60;
+        activeDomain = 'spam';
+        genericMode = false;
+        elements.prevalence.value = 40;
+        elements.threshold.value = 45;
+        elements.separation.value = 55;
       } else if (choice === 'fraud') {
+        activeDomain = 'fraud';
+        genericMode = false;
         elements.prevalence.value = 1;
         elements.threshold.value = 50;
-        elements.separation.value = 75;
+        elements.separation.value = 60;
+      } else if (choice === 'generic') {
+        genericMode = true;
+        elements.prevalence.value = 50;
+        elements.threshold.value = 50;
+        elements.separation.value = 60;
       }
+      renderTerminology();
       update();
     });
   }
@@ -4645,6 +4832,11 @@
   window.matchMedia('(max-width: 650px) and (orientation: portrait)')
     .addEventListener('change', update);
   window.matchMedia('(max-height: 759px)').addEventListener('change', update);
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('pageshow', event => {
+      if (event.persisted) window.location.reload();
+    });
+  }
 
   update();
 })();

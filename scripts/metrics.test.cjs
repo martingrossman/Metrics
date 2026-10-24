@@ -76,10 +76,10 @@ for (const device of [
           assert.ok(Math.abs(actual.outer[edge] - (outerEdge + (start ? -3 : 3))) < 1);
           assert.ok(Math.abs(actual.inner[edge] - (numeratorBox[edge] + (start ? 3 : -3))) < 1);
         }
-        assert.equal(actual.scoreInner[0], 190 + 3);
-        assert.equal(actual.scoreInner[2], Math.max(0, actual.cutoff - 190 - 6));
-        assert.equal(actual.scoreOuter[0], 190 - 3);
-        assert.equal(actual.scoreOuter[2], name === 'precision' ? Math.max(0, actual.cutoff - 190 + 6) : 410 + 6);
+        assert.equal(actual.scoreInner[0], actual.cutoff + 3);
+        assert.equal(actual.scoreInner[2], Math.max(0, 190 + 410 - actual.cutoff - 6));
+        assert.equal(actual.scoreOuter[0], (name === 'precision' ? actual.cutoff : 190) - 3);
+        assert.equal(actual.scoreOuter[2], name === 'precision' ? Math.max(0, 190 + 410 - actual.cutoff + 6) : 410 + 6);
         assert.equal(actual.scoreInner[1], actual.scoreOuter[1] + 6);
         assert.equal(actual.scoreInner[3] + 6 <= actual.scoreOuter[3], true);
         assert.ok(actual.formula.includes(rule.denominator.join(' + ').toUpperCase()));

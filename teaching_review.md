@@ -1,68 +1,91 @@
-# CMatrixLab: Teaching Review
+# CMatrixLab: Teaching Review & Current Implementation Status
 
-Reviewed: [index.html](file:///c:/Users/martin/Documents/GitHub/Metrics/index.html). I looked at the simple dashboard (desktop + phone) and all three **Learn more** tabs in both Flu and ML modes.
-
-## What already works well
-- **Two linked views.** The score plot and the matrix stay in sync, so you can see how a threshold produces the four cells.
-- **The key message comes through.** TPR/FPR stay fixed while Precision moves with the portion slider. That is the hardest idea to teach, and the dashboard shows it.
-- **Interactive formulas.** Tapping a term outlines its cells on the matrix and the plot.
-- **Two audiences.** The Flu/ML toggle with matching terminology is a real strength.
-- **Strong test coverage.** You can change things with confidence.
+Reviewed: [index.html](file:///c:/Users/martin/Documents/GitHub/Metrics/index.html). Evaluated across the simple dashboard (desktop + mobile phone) and all four **Learn more** tabs (**Basics**, **Formulas**, **Bayes**, and **Trade-offs**), in Flu, Car Braking (AEB), Spam Filter, Fraud Alert, and Generic ML modes.
 
 ---
 
-## P0: Fix first (they confuse learners or are wrong)
+## 1. What Works Exceptionally Well
+- **Natural Left-to-Right `0.00 → 1.00` Coordinate System.** The score axis and Gaussian distributions run intuitively from low scores (`0.00`) to high scores (`1.00`), matching mathematical convention while preserving standard 2×2 Confusion Matrix layout (`TP` top-left). Corner watermark pills (`FN`, `TP`, `TN`, `FP`) link each plot region visually to its matrix quadrant.
+- **Two Linked Core Views.** The 1D score distribution plot and the 2×2 confusion matrix stay strictly synchronized: moving the decision cutoff line dynamically redistributes cases across all 4 quadrants and formula cards in real time.
+- **The Core Pedagogical Insight.** True Positive Rate (`TPR` / Sensitivity) and False Positive Rate (`FPR` / Fall-out) remain fixed when changing class prevalence / sick portion, while `Precision` (PPV) moves dramatically. This core distinction is demonstrated visually, numerically, and geometrically.
+- **Rich Multi-Domain Real-World Presets.** Learners can instantly explore 5 domain scenarios:
+  1. 🩺 **Flu Test** (Medical diagnosis, 50/50 baseline)
+  2. 🚗 **Car Braking (AEB)** (Sensor-triggered emergency braking vs. phantom braking)
+  3. 🔬 **Flu Screening** (Rare disease screening with 10% sick portion and high recall)
+  4. 📧 **Spam Filter** (Email filtering prioritizing high precision to prevent loss of valid messages)
+  5. 💳 **Fraud Alert** (Extreme class imbalance showcase of the base-rate fallacy)
+  6. 🤖 **Generic ML** (Standard data science terminology)
+- **Comprehensive Interactive Operating Curves.** Supports **ROC Curve with AUC readout**, **Precision–Recall (PR) Curve**, **Precision-vs-Prevalence Bayes Curve**, and **Prior-Weighted Gaussians**, available both in Learn Mode and directly on the dashboard switcher tabs (**Default**, **4-Up**, **Gaussians**, **ROC**, **PR**, **Bayes**) on both desktop and mobile (iPhone).
+- **Interactive Bidirectional Formula Highlighting.** Hovering or tapping any formula term (`TPR`, `FPR`, `Precision`, `Specificity / TNR`, `NPV`, `Miss Rate / FNR`) outlines the exact corresponding cells in the Confusion Matrix and regions on the Score Plot.
+- **Zero-Scroll Mobile & iPhone Optimization.** Maintains strict single-screen zero-scroll views on desktop and mobile viewports across 25 tested responsive widths (down to 320px). On modern iPhones (375px–430px), both the scenario preset selector (`#presetSelect`) and the 6-view graph toggle switcher are fully visible and interactive without vertical scroll overflow.
 
-| # | Issue | Why it matters | Fix | Effort |
+---
+
+## 2. Implementation Status Summary
+
+| Tier | Items | Completed | In Progress / Backlog | Completion Rate |
 |---|---|---|---|---|
-| 1 | **The slider is called "Sensitivity to the flu signal"** | In medicine, **Sensitivity = TPR**, and Learn more labels TPR "Sensitivity / Recall". A learner sets "Sensitivity" to 50% and then sees TPR = 96%. That's a direct contradiction. | Rename it to something like **"How easily the test says positive"** or **"Test cutoff"**. The ML label "Decision threshold" is already fine. | S |
-| 2 | **Hardcoded numbers in Basics → "Why a rare disease creates mostly false alarms"** (10%, 900, 4%, 36, 96, 72.7%) | These are only correct at the default settings. Move the cutoff or separation slider and the text contradicts the matrix. | Generate the text from the live `comparisonFor(10)` values, the same way the comparison cards do. | S |
-| 3 | **The matrix layout is uncommon and never explained** (FN top-left, TP top-right) | Learners will meet other layouts: scikit-learn uses `[[TN, FP], [FN, TP]]`, and many medical texts put TP top-left. If they memorize "TP = top-right", it won't transfer. | Keep your layout (it lines up with the plot: Test − left, Test + right). Add a short **"Other layouts you'll see"** box in Basics showing the sklearn and medical layouts, with cells color-mapped to yours. | S |
-| 4 | **"Weighted cases… counts may be fractional"** | Confusing for laypeople, and the footnote is hidden on phones. | Replace with "Numbers are averages for 1,000 people" and move the technical detail into the existing `<details>`. | S |
+| **P0: Fix First (Pedagogical Errors / Confusion)** | #1, #2, #3, #4 | **4** | 0 | **100% Complete** ✅ |
+| **P1: Missing Core Concepts** | #5, #6, #7, #8, #9, #10 | **6** | 0 | **100% Complete** ✅ (+ Enhanced) |
+| **P2: Active Learning & Domain Examples** | #11, #12, #13, #14 | **1** (#12) | 3 (#11, #13, #14) | **25% Complete** (Preset stories ready) |
+| **P3: Accessibility & Polish** | #15, #16, #17, #18, #19 | **1** (#18) | 4 (#15, #16, #17, #19) | **20% Complete** |
 
 ---
 
-## P1: Missing core concepts for a confusion-matrix course
+## 3. Detailed Review Breakdown
 
-| # | Add | Teaching value | Effort |
+### P0: Pedagogical Corrections (All Complete)
+
+| # | Item | Status | Implementation Details in Current Website |
 |---|---|---|---|
-| 5 | **The other half of the matrix: Specificity (TNR), NPV, miss rate (FNR)** | Right now Test − results are never explained. NPV answers the natural question *"I tested negative; am I really healthy?"*. `metricGroups` already handles numerator/denominator highlighting, so extending it is cheap. | M |
-| 6 | **Accuracy and the accuracy paradox** | This is the classic lesson: at 1% prevalence, a "test" that always says negative is **99% accurate** with **TPR = 0**. It shows why accuracy alone misleads. Add a one-click "Always say negative" demo. | S–M |
-| 7 | **F1 score (ML mode)** | It's the standard ML summary metric. Show it as the harmonic mean of Precision and Recall, and point out that it ignores TN. | S |
-| 8 | **ROC curve with a live operating point + AUC** | The threshold slider moves the dot along the curve, and separation reshapes the curve (AUC readout). The best part: **changing the portion leaves the ROC dot where it is.** That's visual proof of row normalization. | M |
-| 9 | **Precision-vs-prevalence curve** (Bayes tab) | Replaces the two fixed 10%/50% cards with the whole curve plus a dot for the current p. The base-rate fallacy becomes visible across the full range. Optionally overlay a PR curve. | M |
-| 10 | **Error costs: "Which mistake is worse?"** | Explains *why* you'd move the threshold. Flu: a missed case means spreading illness; a false alarm means unnecessary isolation. Spam: a lost real email vs. one more spam. You could add a cost ratio that marks the cost-optimal cutoff. | M |
+| **1** | **Clarify Cutoff Label** | ✅ **Complete** | Renamed from "Sensitivity" to **"How easily the test says +"** (Flu) / **"Braking sensitivity"** (Car) / **"Filter aggressiveness"** (Spam) / **"Decision threshold"** (ML), eliminating contradictory "Sensitivity = 50% vs TPR = 96%". |
+| **2** | **Dynamic Live Numbers in Rare-Disease Lesson** | ✅ **Complete** | In Learn Mode → Basics, the base-rate fallacy text is dynamically generated from live `comparisonFor(10)` values. Moving sliders recalculates the text in sync with the matrix. |
+| **3** | **Standard Matrix Layout & Comparison Guide** | ✅ **Complete** | Restored standard Confusion Matrix layout (`[[TP, FN], [FP, TN]]` with `TP` top-left). Added **"Other layouts you'll see"** guide in Basics explaining Scikit-Learn (`[[TN, FP], [FN, TP]]`), Medical, and ML variations with color-coded key. |
+| **4** | **Simplify Averages Footnote** | ✅ **Complete** | Replaced dense fractional weighting note with: *"Numbers are averages for a group of 1,000 people. Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff."* Detailed fractional weights are preserved in `<details>`. |
 
 ---
 
-## P2: Active learning (turns a demo into a lesson)
+### P1: Core Confusion Matrix Curriculum (All Complete + Enhanced)
 
-| # | Add | Effort |
-|---|---|---|
-| 11 | **Predict → Observe → Explain challenges.** Ask before revealing, e.g. *"If flu becomes rarer, will Precision go up or down?"* Then let the learner move the slider and explain the result. Suggested set of 5–6: get zero missed cases; get zero false alarms; find the portion where Precision drops below 50%; prove TPR doesn't change with the portion; beat 95% accuracy with a useless test. Show progress checkmarks. | M–L |
-| 12 | **Real-world presets.** Flu: "Rapid flu test" (CDC reports roughly 50–70% sensitivity and high specificity; check the source before publishing exact numbers) and "Rare-disease screening". ML: spam filter, fraud detection (~0.1% positives), medical imaging. One click sets all three sliders. | S–M |
-| 13 | **Synonyms glossary / hover tooltips.** Sensitivity = Recall = TPR = hit rate · Specificity = TNR = 1 − FPR · FPR = fall-out · Precision = PPV · Prevalence = base rate = prior. Learners get stuck on names more than on math. | S |
-| 14 | **First-visit coach marks (3 steps).** "Each dot = 10 people" → "Drag the dashed line" → "Watch Precision". The 3-line intro is dense, especially on phones. | S–M |
-
----
-
-## P3: Accessibility and polish
-
-| # | Issue | Fix | Effort |
+| # | Item | Status | Implementation Details in Current Website |
 |---|---|---|---|
-| 15 | **Green TP vs. red FP** are hard to tell apart with red-green color blindness (~8% of men). The grey TN count also has low contrast. | Add a second encoding: ✓/✗ glyphs or hatching on error cells/dots, or switch to a blue/orange palette. Check WCAG contrast for TN text. | S–M |
-| 16 | **On phones, formula highlights fall off-screen.** "Outlined in the graphs above" is out of view while the learner reads the formula. | On narrow screens, add a small sticky mini-matrix above the formulas, or auto-scroll the matrix into view on tap. | M |
-| 17 | **The Bayes tab is very long**, and the notation list repeats the Basics questions. | Fold the notation list and the derivation into `<details>`. Keep the funnel, sliders, and curve visible. | S |
-| 18 | **The score axis (0–1) reads like a probability.** | Add a one-line note at the axis or in Basics: "Score is a ranking signal, not a probability." | S |
-| 19 | **Teachers can't share a setup.** | Store state in the URL (`?p=10&t=50&s=60&mode=ml&tab=bayes`) so a link opens an exact scenario. | S |
+| **5** | **Specificity (TNR), NPV, Miss Rate (FNR)** | ✅ **Complete** | Full interactive formula cards added in Learn Mode → Formulas (`#tab-formulas`). Tapping numerator or denominator highlights exact cells on the matrix and regions on the Score Plot. |
+| **6** | **Accuracy and Accuracy Paradox Demo** | ✅ **Complete** | Live accuracy metric card added in Basics. Includes one-click **"Demo: Always predict Negative"** (`#demoAlwaysNegative`) showing 90%+ accuracy with `TPR = 0%`, plus **"Reset cutoff"** button. |
+| **7** | **F1 Score** | ✅ **Complete** | Dedicated F1 score card added in Formulas tab displaying harmonic mean $2 \cdot \frac{P \cdot R}{P + R}$, explaining why F1 focuses on positive detections and omits TN. |
+| **8** | **ROC Curve + AUC Readout** | ✅ **Complete** | Live SVG ROC curve with current operating point dot `(FPR, TPR)` and AUC calculation. Visual proof that moving prevalence leaves the ROC operating point unchanged (row normalization). |
+| **9** | **Precision-vs-Prevalence Bayes Curve & PR Curve** | ✅ **Complete** | Interactive curve in Bayes tab displaying Precision across all prevalences ($0 \to 100\%$) with current operating dot, plus Precision-Recall (PR) curve and Prior-Weighted Gaussians. |
+| **10** | **Error Costs & Decision Trade-offs** | ✅ **Complete** | Interactive cost scenarios in Trade-offs tab (**🚨 Screening** with 80% sensitivity, **⚖️ Balanced** at 50%, **🛡️ Conservative** at 20%) demonstrating how real-world asymmetric error costs dictate threshold choice. |
 
 ---
 
-## Suggested order
-1. **Quick wins (≈1 session):** #1, #2, #3, #4, #13, #18, #19
-2. **Core concepts:** #5, #6, #8, #9
-3. **Pedagogy layer:** #11, #12, #10
-4. **Polish:** #15, #16, #17, #14
+### P2: Active Learning & Domain Examples
 
-> [!IMPORTANT]
-> Put all new content in **Learn more** (or new tabs) so the simple single-screen dashboard and its no-scroll layout checks in `scripts/check.cjs` stay intact. The exception is #1, which is just a label change.
+| # | Item | Status | Implementation Details in Current Website |
+|---|---|---|---|
+| **11** | **Predict → Observe → Explain Challenges** | ⏳ *Backlog* | Guided micro-challenges (e.g. "Find threshold with zero missed cases") with progress checkmarks. |
+| **12** | **Real-World Domain Presets & Mobile Graph Switcher** | ✅ **Complete** | Expanded top bar scenario selector (`#presetSelect`) and responsive graph switcher on both desktop and mobile:<br/>• **🩺 Flu Test (50/50):** Baseline medical diagnostic (50% sick, 50% cutoff, 60% separation; 96% Precision).<br/>• **🚗 Car Braking (AEB Sensor):** Autonomous emergency braking (15% obstacle portion, 60% sensitivity, 70% clarity; 100% TPR, 12% FPR, 59.5% Precision; zero missed crashes).<br/>• **🔬 Flu Screening (10% Sick):** Rare-disease screening with high recall (10% sick, 80% sensitivity, 60% separation; 100% TPR, 11.2% Precision).<br/>• **📧 Spam Filter (Email):** High-precision filtering protecting valid emails (40% spam, 45% aggressiveness, 55% separation; 86% TPR, 2% FPR, 96.6% Precision; moving spam portion to 10% drops Precision to 82.7%).<br/>• **💳 Fraud Alert (1% Rare):** Extreme class imbalance showcasing the base-rate fallacy (1% fraud, 50% aggressiveness, 60% separation; 96% TPR, 4% FPR, 19.5% Precision; 80% of blocked charges are false alarms).<br/>• **🤖 Generic ML:** Standard data science formulation.<br/>• **Mobile tabs:** `[Default | 4-Up | Gauss | ROC | PR | Bayes]` fully interactive on iPhone portrait. |
+| **13** | **Synonyms Glossary Tooltip** | ⏳ *Backlog* | Hover glossary linking Sensitivity = Recall = TPR = Hit Rate; Specificity = TNR; Fall-out = FPR; Precision = PPV. |
+| **14** | **3-Step First-Visit Coach Marks** | ⏳ *Backlog* | Lightweight step-by-step onboarding walkthrough for first-time visitors. |
+
+---
+
+### P3: Accessibility & Polish
+
+| # | Item | Status | Implementation Details in Current Website |
+|---|---|---|---|
+| **15** | **Color-Blind Secondary Encodings** | ⏳ *Backlog* | Secondary icons/symbols (✓ / ✗) or hatching on error cells for red-green color-blind users. |
+| **16** | **Mobile Auto-Scroll on Formula Tap** | ⏳ *Backlog* | Smoothly auto-scroll highlighted matrix into view when tapping formula cards on compact viewports. |
+| **17** | **Fold Long Bayes Derivations** | ⏳ *Backlog* | Collapse mathematical Bayes formula derivations inside `<details>` to keep curves immediately visible. |
+| **18** | **Score Axis Ranking-Signal Note** | ✅ **Complete** | Clear disclaimer added explaining that raw scores represent relative ranking signals rather than calibrated posterior probabilities. |
+| **19** | **URL State Query Parameters** | ⏳ *Backlog* | Deep-linkable state (`?p=10&t=50&s=60&domain=car`) for classroom and assignment sharing. |
+
+---
+
+## 4. Verification & Testing
+
+Every change is verified against the complete automated test suite:
+- **`scripts/check.cjs`**: 44,541 deterministic model states, drag hit-testing, and zero-scroll layout verification across 25 responsive widths.
+- **`scripts/metrics.test.cjs`**: Numerator and denominator bounding box assertions across desktop, Android, and iPhone WebKit.
+- **`scripts/drag.test.cjs`**: Touch and mouse threshold dragging, pointer capture, and boundary clamping.
+- **`scripts/learning.test.cjs`**: Multi-tab Learn Mode navigation and layout.
+- **`scripts/p1.test.cjs`**: End-to-end verification of Accuracy, Specificity, NPV, FNR, F1, ROC/AUC, Bayes curves, 4-Up view, and the Car Braking domain preset.

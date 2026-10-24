@@ -30,7 +30,7 @@ for (const device of [
         const plot = document.getElementById('plot');
         const grip = plot.querySelector('.threshold-grip');
         const p = plot.createSVGPoint();
-        p.x = fraction === null ? Number(grip.getAttribute('x')) + Number(grip.getAttribute('width')) / 2 : 190 + (1 - fraction) * 410;
+        p.x = fraction === null ? Number(grip.getAttribute('x')) + Number(grip.getAttribute('width')) / 2 : 190 + fraction * 410;
         p.y = Number(grip.getAttribute('y')) + Number(grip.getAttribute('height')) / 2;
         const screen = p.matrixTransform(plot.getScreenCTM());
         return { x: screen.x, y: screen.y };
