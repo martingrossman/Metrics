@@ -1379,13 +1379,6 @@
   @media (max-width: 767px) {
     .four-up-container { grid-template-columns: 1fr; }
   }
-  .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; text-decoration: none; }
-  .learn-toggle:hover { background: #f2edff; }
-  .learn-toggle .learn-short { display: none; }
-  @media (max-width: 400px) {
-    .learn-toggle .learn-long { display: none; }
-    .learn-toggle .learn-short { display: inline; }
-  }
   .ref-top-btn { display: inline-flex; align-items: center; gap: 5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; font-weight: 600; text-decoration: none; white-space: nowrap; font-size: 12px; padding: 5px 10px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: background 0.15s, border-color 0.15s; }
   .ref-top-btn:hover { background: #dbeafe; border-color: #93c5fd; }
   .ref-top-btn .ref-long { display: inline; }
@@ -1709,7 +1702,6 @@
     <option value="custom" disabled hidden>Preset: Custom</option>
    </select>
    <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
-   <a href="learn.html" class="reset learn-toggle" id="learnToggle" title="Interactive visual guide: Basics, Formulas, Bayes, Trade-offs"><span class="learn-long">Learn more</span><span class="learn-short">Learn</span> ↗</a>
    <a href="cheatsheet.html" class="reset ref-top-btn" id="refTopBtn" title="32 metrics cheatsheet: formula, when good, when it fails" aria-label="Metrics cheatsheet">📋<span class="ref-long"> Cheatsheet</span><span class="ref-short"></span></a>
    <button class="reset" id="reset" aria-label="Reset" title="Reset">
     <span class="reset-word">Reset </span>↺
@@ -1985,7 +1977,7 @@
   </div>
  </section>
 <p class="foot" id="footNote">
-  1,000 people (averages). Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and separation. · <a href="learn.html" style="color:#6d43bc;font-weight:600;text-decoration:underline;">🎓 Learn More ↗</a> · <a href="cheatsheet.html" style="color:#0f766e;font-weight:600;text-decoration:underline;">📋 Cheatsheet ↗</a> · <a href="reference.html" target="_blank" rel="noopener" style="color:#2563eb;font-weight:600;text-decoration:underline;">📖 Metrics Reference ↗</a>
+  1,000 people (averages). Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and separation. · <a href="cheatsheet.html" style="color:#0f766e;font-weight:600;text-decoration:underline;">📋 Cheatsheet ↗</a> · <a href="reference.html" target="_blank" rel="noopener" style="color:#2563eb;font-weight:600;text-decoration:underline;">📖 Metrics Reference ↗</a>
  </p>
  <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
 </main>
@@ -2071,9 +2063,6 @@
   let genericMode = false;
   let activeDomain = 'flu';
   let activeMatrixLayout = 'standard';
-  let learningMode = false;
-  let learningTab = 'basics';
-  let latestMetrics = null;
   let formulaPreview = null;
   let formulaPinned = null;
   const metricGroups = {
@@ -2746,9 +2735,7 @@
         el.style.minWidth = '';
       }
     }
-    if (latestMetrics) {
-      update();
-    }
+    update();
   }
 
   function renderDashboardGaussPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('gaussPlot')) {
@@ -3611,7 +3598,7 @@
     if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
     event.preventDefault();
     const targetCutoff = plotPointerX(event) - thresholdDrag.offset;
-    const fraction = (targetCutoff - CONFIG.plot.left) / CONFIG.plot.width;
+    const fraction = (targetCutoff - plotRegions.left) / plotRegions.width;
     setPlotThreshold(fraction * 100);
   }
 
@@ -3880,7 +3867,7 @@
     renderMetricHighlight();
   });
   document.addEventListener('pointerdown', event => {
-    if (event.target.closest('.metric, #controls, .views, #modeToggle, #learnPanel, #learnToggle')) return;
+    if (event.target.closest('.metric, #controls, .views, #modeToggle')) return;
     formulaPreview = formulaPinned = null;
     hoveredMetric = focusedMetric = pinnedMetric = null;
     renderMetricHighlight();

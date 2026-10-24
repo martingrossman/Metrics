@@ -16,13 +16,11 @@ graphs. A solid outline marks the numerator; a dashed outline marks the total
 it is divided by. Tap the same metric again to clear it. Keyboard users can
 focus a metric, press Enter to keep its explanation visible, and Escape to clear.
 
-Choose **Learn more** above the graphs for a deeper explanation. The basics,
-Formulas, and Bayes tabs explain the outcomes, show live calculations, and connect
-TPR, FPR, and positive portion to precision using Bayes' theorem. Hover or tap a
-formula term to highlight its numerator or denominator. The 10% and 50% buttons
-in Bayes change only class balance. **Simple view** returns to the compact page.
-The Flu / Generic ML switch applies to both views; opening or closing the learning
-panel preserves all model settings. Reset retains the chosen view and terminology.
+The **Learn more** entry points are temporarily removed from the main page.
+The complete learning view remains in `learn.html` for later work. Open that file
+directly to use its Basics, Formulas, Bayes, and Trade-offs tabs. Its **Simulator**
+link returns to the main page. The cheatsheet and reference remain linked from
+the simulator.
 
 ## Model
 

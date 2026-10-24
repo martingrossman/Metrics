@@ -45,6 +45,12 @@ h3 { font-size:16px; margin:0; }
 .scenario-detail > summary { color:var(--accent); }
 .scenario-body { padding:0 0 12px; max-width:850px; }
 .scenario-body p { margin:0 0 10px; }
+.metric-choice { margin:12px 0; padding:10px; border-left:3px solid var(--accent); background:#f4f8ff; }
+.metric-choice h4 { margin:0 0 8px; font-size:14px; }
+.metric-choice ul { margin:0 0 10px; padding-left:20px; }
+.metric-choice li { margin-bottom:8px; padding-left:2px; }
+.metric-choice .choice-caution { margin-bottom:0; color:var(--muted); }
+.return-scenario a { display:inline-block; padding-block:8px; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 .scenario-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; font-variant-numeric:tabular-nums; }
 .scenario-table th,.scenario-table td { text-align:left; vertical-align:top; padding:8px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
@@ -164,6 +170,7 @@ h2 { margin:0; font-size:13px; font-weight:800; letter-spacing:.06em; text-trans
  <h1>Metrics reference</h1>
  <p class="intro">What does each score tell you? Explore simple explanations and examples from medicine, driving, fraud detection, and more.</p>
  <details class="helper" id="sec-guide"><summary>Help me choose a metric</summary>
+  <p class="muted">Choose by the decision you need to make: finding problems, reducing false alarms, keeping a review queue manageable, or trusting a predicted chance.</p>
   <div class="guide-grid">
    <div class="guide-item"><h3>You do not want to miss a problem</h3><p>Use <strong>recall</strong> to see how many real problems you catch. <strong>FNR</strong> tells you how many you miss.</p><p><strong>Examples:</strong> finding an illness in a medical test, or spotting a pedestrian in front of a car. Check false alarms too, and test situations such as night or rain separately. <a href="#scenario-medical" data-scenario="medical">Medical example</a> · <a href="#scenario-aeb" data-scenario="aeb">AEB example</a></p></div>
    <div class="guide-item"><h3>You want fewer false alarms</h3><p>Use <strong>precision</strong> to check how many alerts are real. <strong>FPR</strong> tells you how often normal cases get flagged.</p><p><strong>Examples:</strong> keeping legitimate emails out of spam, avoiding wrong fraud blocks, or reducing unnecessary car warnings. Check that you still catch enough real problems. <a href="#scenario-blocking" data-scenario="blocking">Automatic-blocking example</a></p></div>
@@ -175,7 +182,8 @@ h2 { margin:0; font-size:13px; font-weight:800; letter-spacing:.06em; text-trans
   <p class="muted">Choose the setting that catches enough problems without causing too many false alarms. <a href="#sec-calculator">Try a scenario in the calculator ↓</a></p>
  </details>
  <details class="helper" id="industry-examples"><summary>Examples by industry: driving, medicine, fraud &amp; more</summary>
-  <p class="muted">Open an example to see what happened, how to read the percentages, and what to ask next. The numbers are made up; published sources explain the testing methods.</p>
+  <p class="muted">Start with the metric recommendation, then use the worked example to see what the numbers mean. The numbers are made up; published sources explain the testing methods.</p>
+  <p class="muted">A cutoff is the score at which a case gets flagged. Changing it changes misses and false alarms.</p>
   <div id="scenario-list"></div>
  </details>
  <details class="helper"><summary>Formula key &amp; reading tips</summary>
@@ -926,7 +934,31 @@ const SCENARIOS = {
     ],
     "result": "In practice, the system rejects 1,049 parts and passes 98,951. Among the passed parts, 50 are faulty.",
     "decision": "Can you accept 50 faulty parts slipping through, and what does it cost to recheck or discard 99 good parts? Check each defect type and production batch too; an overall average can hide a weak spot.",
-    "background": "MVTec AD is a test dataset, not a factory pass mark. An image-level score asks “Is this image faulty?” A defect-location score asks “Did we mark the faulty area correctly?”"
+    "background": "MVTec AD is a test dataset, not a factory pass mark. An image-level score asks “Is this image faulty?” A defect-location score asks “Did we mark the faulty area correctly?”",
+    "choice": {
+      "primary": [
+        2,
+        15
+      ],
+      "why": "Use recall to check missed defects and FPR to check good parts rejected. Read them together, then ask whether the extra rejects are worth catching more defects.",
+      "options": [
+        {
+          "when": "If faulty parts slipping through is the main concern",
+          "metrics": [
+            2
+          ],
+          "text": "Set the minimum recall you need, then compare how many good parts each system rejects while meeting it."
+        },
+        {
+          "when": "If every rejected part needs a manual recheck",
+          "metrics": [
+            1
+          ],
+          "text": "Precision tells you how much of that work finds a real defect. Also count the total parts sent for recheck."
+        }
+      ],
+      "avoid": "Do not lead with accuracy here. Passing every part would already give 99% accuracy while missing all 1,000 faulty parts."
+    }
   },
   "medical": {
     "title": "Medical screening",
@@ -972,7 +1004,24 @@ const SCENARIOS = {
     ],
     "result": "The test finds most people with the condition, but sends many more people without it for follow-up. Both statements can be true at the same time.",
     "decision": "What follow-up will the 593 people with positive results need, and what are the consequences for the 2 people who were missed? The acceptable balance depends on the condition and the purpose of the test.",
-    "background": "FDA guidance asks for the counts, sensitivity, specificity, and 95% confidence intervals. An interval shows the uncertainty from testing only a sample; the same percentage based on 10 people is less precise than one based on 1,000."
+    "background": "FDA guidance asks for the counts, sensitivity, specificity, and 95% confidence intervals. An interval shows the uncertainty from testing only a sample; the same percentage based on 10 people is less precise than one based on 1,000.",
+    "choice": {
+      "primary": [
+        2,
+        3
+      ],
+      "why": "Start with sensitivity (recall): how many people with the condition are found? Keep specificity beside it to show how many people without it avoid a false alarm.",
+      "options": [
+        {
+          "when": "If you need to plan follow-up appointments",
+          "metrics": [
+            1
+          ],
+          "text": "Precision, also called PPV, tells you how many positive results are true positives. Combine it with the total positive-result count to understand the follow-up workload."
+        }
+      ],
+      "avoid": "A positive screening result is not a diagnosis. Choose a balance that fits the test’s purpose, and report sample counts and confidence intervals."
+    }
   },
   "fraud": {
     "title": "Fraud review queue",
@@ -1013,7 +1062,25 @@ const SCENARIOS = {
     ],
     "result": "At 3 minutes per review, all 585 alerts require 29.25 reviewer-hours. If the team can review only 200 payments a day, 385 alerts remain in the queue.",
     "decision": "Can the team finish the queue in time? Compare models at the number of reviews you can actually complete, and check how much fraud value is caught or missed.",
-    "background": "There is no single precision target that fits every fraud team. A review cutoff should reflect staffing, review cost, and fraud losses. Results can change when fraud becomes more or less common."
+    "background": "There is no single precision target that fits every fraud team. A review cutoff should reflect staffing, review cost, and fraud losses. Results can change when fraud becomes more or less common.",
+    "choice": {
+      "primary": [
+        1,
+        2
+      ],
+      "why": "Measure precision and recall at the number of payments the team can review. If the limit is 200 a day, calculate both using the top 200 scored payments.",
+      "options": [
+        {
+          "when": "If you are comparing the overall order of the payment scores",
+          "metrics": [
+            25,
+            24
+          ],
+          "text": "AP or PR-AUC can help compare rankings across cutoffs. Make the final choice using results at your actual review limit."
+        }
+      ],
+      "avoid": "The table below describes all 585 alerts. It cannot tell you how many fraud cases are in the top 200; you need the ranked payments to calculate that. Also compare the value of fraud caught, not just the number of cases."
+    }
   },
   "blocking": {
     "title": "Automatic fraud blocking",
@@ -1054,7 +1121,24 @@ const SCENARIOS = {
     ],
     "result": "A very small FPR can still cause a noticeable customer problem. Here, more than a third of blocked payments are genuine. At ten times the same payment volume and rates, about 500 genuine payments would be blocked.",
     "decision": "Is stopping 90 fraud cases worth wrongly blocking 50 genuine payments? Consider the amounts involved, customer impact, appeals, and whether an extra verification step would be better.",
-    "background": "FPR starts with all genuine payments. Precision starts with all blocked payments. That difference explains how FPR can look tiny while many blocks are wrong."
+    "background": "FPR starts with all genuine payments. Precision starts with all blocked payments. That difference explains how FPR can look tiny while many blocks are wrong.",
+    "choice": {
+      "primary": [
+        15,
+        2
+      ],
+      "why": "First decide how many genuine payments can be wrongly blocked. At that FPR limit, compare recall to see how much fraud each model stops.",
+      "options": [
+        {
+          "when": "If you want to know how many blocks are justified",
+          "metrics": [
+            1
+          ],
+          "text": "Precision answers this directly. Here, only 90 of the 140 blocked payments are fraud."
+        }
+      ],
+      "avoid": "Transaction counts treat a small purchase and a large loss equally. Include payment value and customer impact when choosing the cutoff."
+    }
   },
   "aeb": {
     "title": "AEB / pedestrian detection",
@@ -1110,7 +1194,32 @@ const SCENARIOS = {
     "extra": [
       "Consider a different test with zero unwanted braking events. To get a one-sided 95% upper rate of about 1 event per 100,000 km, you would need about 300,000 km under a constant-rate Poisson model. At an average 50 km/h, that is about 6,000 hours. This is a statistical example, not an industry target or a safety guarantee.",
       "Do not turn camera errors directly into brake events. At 30 frames/second there are 108,000 frames/hour. If all frames are negative, a 0.01% frame-level FPR gives about 10.8 false-positive frames/hour. Several frames may describe one false object, and the braking system may ignore it entirely."
-    ]
+    ],
+    "choice": {
+      "primary": [
+        28,
+        29
+      ],
+      "why": "For the road log below, use unwanted braking events per hour or kilometer. Choose the unit that fits your test and record both time and distance.",
+      "options": [
+        {
+          "when": "If you are checking performance on real hazards",
+          "metrics": [
+            2,
+            32
+          ],
+          "text": "Measure how many hazard events are detected and whether detection happens soon enough. Also check the time and outcome of the braking action."
+        },
+        {
+          "when": "If you are debugging the camera detector",
+          "metrics": [
+            30
+          ],
+          "text": "False positives per frame can help inspect detector output. It does not tell you how often the complete car system brakes wrongly."
+        }
+      ],
+      "avoid": "Keep warnings, false object detections, and unwanted braking as separate event counts. A good detector score alone does not establish good AEB behavior."
+    }
   },
   "vision": {
     "title": "Object detection in images",
@@ -1157,7 +1266,31 @@ const SCENARIOS = {
     ],
     "result": "The detector finds most objects and produces relatively few extra detections in this example. These counts do not show how accurately the boxes fit beyond the chosen matching rule, or which object types are being missed.",
     "decision": "Are the missed objects small, far away, or partly hidden? Does the result stay good when you require tighter box overlap? Keep related video frames together when splitting training and test data.",
-    "background": "COCO AP combines results over 10 box-overlap thresholds, from IoU 0.50 to 0.95. AP at only IoU 0.50 asks an easier matching question. You need the full ranked detection scores to calculate AP; the counts above give only one point."
+    "background": "COCO AP combines results over 10 box-overlap thresholds, from IoU 0.50 to 0.95. AP at only IoU 0.50 asks an easier matching question. You need the full ranked detection scores to calculate AP; the counts above give only one point.",
+    "choice": {
+      "primary": [
+        25
+      ],
+      "why": "Use AP/mAP to compare object detectors across score cutoffs. Keep the same object-matching and box-overlap rules for every model.",
+      "options": [
+        {
+          "when": "If you are choosing the cutoff used by the application",
+          "metrics": [
+            2,
+            1
+          ],
+          "text": "Compare recall and precision at that cutoff. If missed objects matter most, set a false-detection limit and compare how many real objects are found."
+        },
+        {
+          "when": "If extra boxes create work or interruptions",
+          "metrics": [
+            1
+          ],
+          "text": "Check what share of the boxes are correct. Also count false detections per image to estimate the work or interruptions they cause."
+        }
+      ],
+      "avoid": "The table gives results at one cutoff. You cannot calculate AP from these counts alone; you need detection scores across cutoffs."
+    }
   },
   "safety": {
     "title": "Rare hazards and safety testing",
@@ -1204,7 +1337,31 @@ const SCENARIOS = {
     ],
     "result": "The result supports a strong detection rate for the kind of hazards actually tested. It does not automatically cover a different situation, such as rain at night, that was absent from the test.",
     "decision": "Which difficult situations need their own tests? Decide the required recall and confidence level in advance, then collect enough separate examples for each important situation.",
-    "background": "The calculation here is 0.05^(1/300) ≈ 0.9901, assuming independent, representative trials. It is a statistical example, not an ISO acceptance rule. A bound for the whole test does not become a bound for every small subgroup."
+    "background": "The calculation here is 0.05^(1/300) ≈ 0.9901, assuming independent, representative trials. It is a statistical example, not an ISO acceptance rule. A bound for the whole test does not become a bound for every small subgroup.",
+    "choice": {
+      "primary": [
+        2
+      ],
+      "why": "Start with recall and a lower confidence bound beside it. Recall describes what happened in the test; the bound shows how much evidence supports a strong result.",
+      "options": [
+        {
+          "when": "If the system must respond quickly",
+          "metrics": [
+            32
+          ],
+          "text": "Add detection latency so a late detection is not treated as equally useful as a timely one."
+        },
+        {
+          "when": "If you also need to limit false alarms during normal operation",
+          "metrics": [
+            28,
+            29
+          ],
+          "text": "Use events per hour or kilometer from normal-operation logs. Hazard-only trials cannot measure that rate."
+        }
+      ],
+      "avoid": "Report trial counts, misses, and bounds for each important condition. A 100% result in one set of trials does not mean 100% safety in every situation."
+    }
   },
   "probability": {
     "title": "Medical risk and probability scores",
@@ -1250,7 +1407,38 @@ const SCENARIOS = {
     ],
     "result": "This checks calibration: whether predicted chances match observed frequencies. A model can rank patients correctly from lower to higher risk while still giving chances that are too low or too high.",
     "decision": "Do the predictions match outcomes at other risk levels and for important patient groups? Check new patients too. Small groups can give unstable percentages.",
-    "background": "A calibration plot repeats this comparison across several ranges of predicted risk. Brier score and log loss summarize probability quality across individual cases. A good result in this one 20% group does not establish good calibration everywhere."
+    "background": "A calibration plot repeats this comparison across several ranges of predicted risk. Brier score and log loss summarize probability quality across individual cases. A good result in this one 20% group does not establish good calibration everywhere.",
+    "choice": {
+      "primary": [],
+      "primaryLabel": "Calibration plot",
+      "why": "Start here if a number such as “20% risk” will be used as a real chance. Compare predicted chances with observed rates across several risk groups.",
+      "options": [
+        {
+          "when": "If you want one score to compare probability models",
+          "metrics": [
+            27,
+            26
+          ],
+          "text": "Use Brier score or log loss; lower is better. They measure overall probability quality, so still inspect the calibration plot."
+        },
+        {
+          "when": "If you are deciding who gets a follow-up check",
+          "metrics": [
+            2,
+            1
+          ],
+          "text": "Choose a cutoff and check how many people with the condition are found, how reliable positive results are, and how many follow-ups are needed."
+        },
+        {
+          "when": "If you only need to put higher-risk people first",
+          "metrics": [
+            23
+          ],
+          "text": "Check ranking with ROC-AUC. Good ordering does not guarantee accurate percentages."
+        }
+      ],
+      "avoid": "A good result in one 20% group is not enough. Check other risk levels, relevant patient groups, and new data."
+    }
   }
 };
 const PRESET_SCENARIO = {balanced:'factory',rare:'fraud',screening:'medical',precise:'blocking',automotive:'aeb'};
@@ -1263,8 +1451,15 @@ function openScenario(key) {
  detail.scrollIntoView({block:'start'});
  history.replaceState(null,'','#scenario-'+key);
 }
+function scenarioMetricLinks(indices, key, label) {
+ return indices.map(index=>`<a href="#metric-${index}" data-scenario-metric="${index}" data-from-scenario="${key}">${esc(label || METRICS[index].name)}</a>`).join(' + ');
+}
+function renderMetricChoice(s,key) {
+ const c=s.choice;
+ return `<div class="metric-choice"><h4>Which metric should I use?</h4><p><strong>Start with ${c.primary.length?scenarioMetricLinks(c.primary,key):esc(c.primaryLabel)}.</strong> ${esc(c.why)}</p><ul>${c.options.map(o=>`<li><strong>${esc(o.when)}:</strong> ${scenarioMetricLinks(o.metrics,key,o.label)} — ${esc(o.text)}</li>`).join('')}</ul><p class="choice-caution">${esc(c.avoid)}</p></div>`;
+}
 document.getElementById('scenario-list').innerHTML=Object.entries(SCENARIOS).map(([key,s])=>`<details class="scenario-detail" id="scenario-${key}"><summary>${esc(s.title)}</summary><div class="scenario-body">
- <p>${esc(s.intro)}</p><p>${esc(s.setup)}</p>
+ <p>${esc(s.intro)}</p>${renderMetricChoice(s,key)}<p>${esc(s.setup)}</p>
  <table class="scenario-table"><caption class="sr-only">${esc(s.title)}: example results</caption><thead><tr>${s.columns.map(c=>`<th scope="col">${esc(c)}</th>`).join('')}</tr></thead><tbody>${s.rows.map(row=>`<tr>${row.map((cell,i)=>i===0?`<th scope="row">${esc(cell)}</th>`:`<td>${esc(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>
  <p class="scenario-lead">Read the numbers like this:</p><ul class="scenario-steps">${s.steps.map(([label,text])=>`<li><strong>${esc(label)}:</strong> ${esc(text)}</li>`).join('')}</ul>
  <p class="scenario-result">${esc(s.result)}</p><p><strong>To decide whether this is good enough:</strong> ${esc(s.decision)}</p>
@@ -1272,6 +1467,15 @@ document.getElementById('scenario-list').innerHTML=Object.entries(SCENARIOS).map
  <p class="scenario-background">${esc(s.background)}</p>
  ${s.sources.length?`<p class="scenario-sources">Sources: ${s.sources.map(([title,url])=>`<a href="${url}">${esc(title)}</a>`).join(' · ')}</p>`:''}</div></details>`).join('');
 document.addEventListener('click',event=>{
+ const metricLink=event.target.closest('[data-scenario-metric]');
+ if(metricLink) {
+  event.preventDefault();
+  const index=Number(metricLink.dataset.scenarioMetric), key=metricLink.dataset.fromScenario;
+  openRelated(index);
+  const body=document.querySelector('#metric-'+index+' .metric-body');
+  if(body && SCENARIOS[key]) body.insertAdjacentHTML('afterbegin',`<p class="return-scenario"><a href="#scenario-${key}" data-scenario="${key}">← Back to ${esc(SCENARIOS[key].title)}</a></p>`);
+  return;
+ }
  const link=event.target.closest('[data-scenario]');
  if(link){event.preventDefault();openScenario(link.dataset.scenario);}
 });
@@ -1280,7 +1484,7 @@ function renderScenarioContext() {
  const box=document.getElementById('scenario-context');
  if(!key){box.innerHTML='';box.hidden=true;return;}
  const s=SCENARIOS[key];box.hidden=false;
- box.innerHTML=`<h3>${esc(s.title)}: what to keep in mind</h3><p>${esc(s.intro)}</p><p>${esc(s.report)}</p><a href="#scenario-${key}" data-scenario="${key}">See practical numbers, test volume, and sources →</a>`;
+ box.innerHTML=`<h3>${esc(s.title)}: what to keep in mind</h3><p>${esc(s.intro)}</p><p><strong>Start with ${s.choice.primary.length?scenarioMetricLinks(s.choice.primary,key):esc(s.choice.primaryLabel)}.</strong> ${esc(s.choice.why)}</p><a href="#scenario-${key}" data-scenario="${key}">See which metric to choose, with a worked example →</a>`;
 }
 const PRESETS = {balanced:[32,8,12,48],rare:[8,20,2,970],screening:[98,90,2,810],precise:[50,1,50,899],automotive:[98,10,2,890],empty:[0,0,0,0]};
 const inputs=['TP','FP','FN','TN'].map(key=>document.getElementById('in'+key));

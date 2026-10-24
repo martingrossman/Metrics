@@ -47,8 +47,9 @@ for (const device of [
       };
       await noOverflow(true);
       assert.equal(await page.locator('#learnPanel').count(), 0);
-      await activate('#learnToggle');
-      await page.waitForURL(/learn\.html/);
+      assert.equal(await page.locator('a[href="learn.html"]').count(), 0);
+      // Learning is temporarily unlinked from the main page, but preserved separately.
+      await page.goto(pathToFileURL(path.resolve(__dirname, '../learn.html')).href);
       assert.equal(await page.locator('#learnPanel').isVisible(), true);
       assert.ok((await page.locator('.metric-formula:visible').count()) >= 3);
       const baseline = await state();

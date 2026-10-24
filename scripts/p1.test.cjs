@@ -10,9 +10,8 @@ test('P1 features test', async () => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
 
-    // Open Learn more page
-    await page.locator('#learnToggle').click();
-    await page.waitForURL(/learn\.html/);
+    // Open the preserved, temporarily unlinked learning page directly.
+    await page.goto(pathToFileURL(path.resolve(__dirname, '../learn.html')).href);
     assert.equal(await page.locator('#learnPanel').isVisible(), true);
 
     // 1. Verify Tab 01 (Basics) - Accuracy & Accuracy Paradox
@@ -167,8 +166,7 @@ test('P1 features test', async () => {
     assert.ok(resetTp.x < resetFn.x, 'Reset restores standard TP left of FN');
 
     // Clicking layout card in Learn Mode applies layout
-    await page.locator('#learnToggle').click();
-    await page.waitForURL(/learn\.html/);
+    await page.goto(pathToFileURL(path.resolve(__dirname, '../learn.html')).href);
     await page.locator('#tab-basics').click();
     await page.locator('[data-apply-layout="graph"]').click();
     assert.ok((await page.locator('[data-apply-layout="graph"]').textContent()).includes('Active'));
