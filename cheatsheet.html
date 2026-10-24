@@ -1,231 +1,175 @@
-<!DOCTYPE html>
-<!-- CMatrixLab Cheatsheet -->
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Metrics Cheatsheet · CMatrixLab</title>
-<meta name="description" content="32 classification metrics: formula, when it's good, when it fails.">
+<meta name="description" content="32 classification metrics explained simply: meaning, formula, and limitations.">
 <style>
-  :root {
-    --text: #111827;
-    --muted: #6b7280;
-    --line: #e5e7eb;
-    --bg: #ffffff;
-    --soft: #f6f7f9;
-    --accent: #2563eb;
-    --good: #047857;
-    --bad: #b91c1c;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--text);
-    background: var(--bg);
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 680px; margin: 0 auto; padding: 0 18px; }
-
-  /* Header */
-  header { padding: 14px 0 6px; }
-  .back { font-size: 14px; color: var(--accent); text-decoration: none; }
-  h1 { font-size: 24px; line-height: 1.2; margin: 8px 0 4px; letter-spacing: -0.3px; }
-  .sub { color: var(--muted); font-size: 15px; }
-  .legend { margin-top: 10px; font-size: 14px; color: var(--muted); }
-  .legend b { color: var(--text); font-family: var(--mono); font-weight: 600; }
-
-  /* Sticky search + chips */
-  .bar {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(255,255,255,0.97);
-    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-    border-bottom: 1px solid var(--line);
-    padding: 10px 0 8px;
-  }
-  .search {
-    width: 100%;
-    font-family: inherit;
-    font-size: 16px; /* 16px prevents iOS zoom on focus */
-    padding: 9px 12px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: var(--soft);
-    color: var(--text);
-    outline: none;
-  }
-  .search:focus { border-color: var(--accent); background: #fff; }
-  .chips { display: flex; gap: 6px; overflow-x: auto; margin-top: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .chips::-webkit-scrollbar { display: none; }
-  .chip {
-    flex: none;
-    font: inherit; font-size: 14px;
-    padding: 5px 12px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: #fff;
-    color: var(--muted);
-    cursor: pointer;
-  }
-  .chip.on { background: var(--text); border-color: var(--text); color: #fff; }
-
-  /* Sections + rows */
-  h2 {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--muted);
-    margin: 26px 0 2px;
-  }
-  .m { padding: 14px 0; border-bottom: 1px solid var(--line); }
-  .m:last-child { border-bottom: 0; }
-  .name { font-size: 18px; font-weight: 700; line-height: 1.3; }
-  .alias { font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 6px; }
-  .f {
-    display: block;
-    margin: 6px 0 8px;
-    padding: 6px 10px;
-    background: var(--soft);
-    border-radius: 8px;
-    font-family: var(--mono);
-    font-size: 15px;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  .g, .b { font-size: 15.5px; padding-left: 22px; position: relative; }
-  .g + .b { margin-top: 3px; }
-  .g::before, .b::before { position: absolute; left: 0; font-weight: 700; }
-  .g::before { content: "✓"; color: var(--good); }
-  .b::before { content: "✗"; color: var(--bad); }
-
-  .empty { padding: 30px 0; color: var(--muted); text-align: center; }
-  footer { margin: 30px 0 40px; font-size: 14px; color: var(--muted); }
-  footer a { color: var(--accent); text-decoration: none; }
-
-  @media (min-width: 700px) {
-    h1 { font-size: 28px; }
-  }
-  @media print {
-    .bar { display: none; }
-    .m { break-inside: avoid; }
-  }
+:root { --text:#172033; --muted:#526174; --line:#dce2e9; --soft:#f5f7fa; --accent:#1d4ed8; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { margin:0; color:var(--text); background:#fff; font:16px/1.55 system-ui,sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+button,input,select { font:inherit; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.wrap { width:100%; max-width:920px; margin-inline:auto; padding-inline:12px; }
+.skip { position:absolute; top:-100px; left:12px; background:#fff; padding:10px; z-index:20; }
+.skip:focus { top:8px; }
+header { padding-block:12px; }
+.nav { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; font-size:14px; }
+.nav a { display:inline-flex; min-height:44px; align-items:center; }
+h1 { margin:4px 0; font-size:24px; line-height:1.25; letter-spacing:-.5px; }
+.sub { margin:6px 0 10px; color:var(--muted); }
+details { border-block:1px solid var(--line); font-size:14px; }
+summary { padding-block:10px; min-height:44px; cursor:pointer; font-weight:600; }
+.terms { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px 10px; margin:0 0 10px; }
+.terms div { display:flex; gap:8px; }
+dt { font-family:var(--mono); font-weight:600; min-width:24px; }
+dd { margin:0; }
+.notation { margin:8px 0 12px; color:var(--muted); }
+.bar { position:sticky; top:0; z-index:10; background:#fff; border-bottom:1px solid var(--line); padding-block:10px; }
+.filters { display:grid; grid-template-columns:minmax(0,1fr) minmax(160px,.4fr); gap:8px; }
+.field { display:grid; gap:4px; min-width:0; }
+label { font-size:12px; font-weight:600; color:var(--muted); }
+input,select { width:100%; min-width:0; min-height:44px; border:1px solid #9aa6b6; border-radius:6px; padding:8px 10px; color:var(--text); background:#fff; font-size:16px; }
+.results { margin:8px 0 0; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
+main { padding-bottom:24px; }
+section { margin-top:24px; }
+h2 { margin:0; padding-bottom:8px; border-bottom:2px solid var(--line); font-size:13px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+.metric { display:grid; grid-template-columns:190px minmax(0,1fr); gap:10px; padding-block:16px; border-bottom:1px solid var(--line); break-inside:avoid; }
+h3 { font-size:16px; line-height:1.4; margin:0; }
+.alias,.direction { display:block; font-size:12px; color:var(--muted); margin-top:4px; }
+.meaning { margin:0; }
+.formula { display:block; padding:8px 10px; margin-block:8px; background:var(--soft); border-radius:4px; font:13px/1.6 var(--mono); font-variant-numeric:tabular-nums; white-space:normal; overflow-wrap:anywhere; }
+.caveat { margin:0; color:var(--muted); font-size:14px; }
+.caveat strong { color:var(--text); font-weight:600; }
+.meaning,.caveat { position:relative; padding-left:22px; }
+.marker { position:absolute; left:0; top:0; font-size:14px; font-weight:700; }
+.marker.good { color:#047857; }
+.marker.bad { color:#b91c1c; }
+.empty { padding-block:24px; }
+.empty p { margin-top:0; }
+button { min-height:44px; padding:8px 12px; border:1px solid var(--line); border-radius:6px; color:var(--accent); background:#fff; cursor:pointer; }
+.source { font-size:12px; color:var(--muted); margin-block:16px 0; }
+@media (max-width:600px) {
+  .metric { grid-template-columns:minmax(0,1fr); gap:8px; }
+  .alias,.direction { display:inline; margin-left:8px; }
+  .terms { grid-template-columns:minmax(0,1fr); }
+  .filters { grid-template-columns:minmax(0,1fr) 140px; }
+}
+@media (max-width:360px) { .filters { grid-template-columns:minmax(0,1fr); } }
+@media (max-height:500px) { .bar { position:static; } }
+@media print {
+  .bar,.nav,.skip { display:none; }
+  .wrap { max-width:none; }
+  section { margin-top:16px; }
+  .metric { padding-block:10px; }
+}
 </style>
 </head>
 <body>
-
-<div class="wrap">
-  <header>
-    <a class="back" href="index.html">← CMatrixLab</a>
-    <h1>Metrics Cheatsheet</h1>
-    <p class="sub">32 metrics · formula · ✓ use it when · ✗ it fails when</p>
-    <p class="legend"><b>TP</b> hit · <b>TN</b> correct reject · <b>FP</b> false alarm · <b>FN</b> miss · <b>N</b> total · <b>P</b> precision · <b>R</b> recall</p>
-  </header>
-</div>
-
-<div class="bar">
-  <div class="wrap">
-    <input id="q" class="search" type="search" placeholder="Search… (recall, imbalance, F1)" aria-label="Search metrics" autocomplete="off">
-    <div class="chips" id="chips">
-      <button class="chip on" data-c="all">All</button>
-      <button class="chip" data-c="core">Core</button>
-      <button class="chip" data-c="imb">Imbalance</button>
-      <button class="chip" data-c="err">Errors</button>
-      <button class="chip" data-c="rank">Ranking</button>
-      <button class="chip" data-c="ops">Real-world</button>
-    </div>
+<a class="skip" href="#list">Skip to metrics</a>
+<header class="wrap">
+  <nav class="nav" aria-label="Page navigation"><a href="index.html">← CMatrixLab</a><a href="reference.html">Full reference →</a></nav>
+  <h1>Metrics cheatsheet</h1>
+  <p class="sub">What each metric measures, how to calculate it, and what to watch for.</p>
+  <details>
+    <summary>Formula key &amp; reading tips</summary>
+    <dl class="terms">
+      <div><dt>TP</dt><dd>True positive: a positive case correctly flagged.</dd></div>
+      <div><dt>TN</dt><dd>True negative: a negative case correctly cleared.</dd></div>
+      <div><dt>FP</dt><dd>False positive: a false alarm.</dd></div>
+      <div><dt>FN</dt><dd>False negative: a missed positive case.</dd></div>
+      <div><dt>N</dt><dd>Total cases: TP + TN + FP + FN.</dd></div>
+      <div><dt>P, R</dt><dd>Precision and recall.</dd></div>
+      <div><dt>p</dt><dd>Predicted probability of the positive class.</dd></div>
+      <div><dt>y</dt><dd>Actual label: 1 for positive, 0 for negative.</dd></div>
+    </dl>
+    <p class="notation">Positive means the class you want to find, such as fraud. Prevalence means the share of actual positives. Formulas here use binary classification; a rate with a zero denominator is undefined. Counts alone cannot give ranking, probability, or timing metrics.</p>
+  </details>
+</header>
+<div class="bar"><div class="wrap">
+  <div class="filters" role="search" aria-label="Filter metrics">
+    <div class="field"><label for="q">Search metrics</label><input id="q" type="search" placeholder="e.g. recall, F1" autocomplete="off" aria-controls="list"></div>
+    <div class="field"><label for="category">Category</label><select id="category" aria-controls="list">
+      <option value="all">All metrics</option><option value="core">Core</option><option value="imb">Imbalance</option><option value="err">Error rates</option><option value="rank">Ranking</option><option value="ops">In practice</option>
+    </select></div>
   </div>
-</div>
-
-<main class="wrap" id="list"></main>
-
-<div class="wrap">
-  <footer>
-    Want more detail? <a href="reference.html">Full reference guide →</a>
-  </footer>
-</div>
-
+  <p class="results" id="results" role="status" aria-live="polite" aria-atomic="true"></p>
+</div></div>
+<main class="wrap" id="list" tabindex="-1"></main>
+<noscript><p class="wrap">Enable JavaScript to browse the metrics, or open the <a href="reference.html">full reference</a>.</p></noscript>
 <script>
-const SECTIONS = {
-  core: 'Core',
-  imb:  'Imbalance-aware',
-  err:  'Errors & negative class',
-  rank: 'Ranking & probability',
-  ops:  'Real-world / safety'
-};
-
-// [category, name, alias, formula, good, bad]
+const SECTIONS = { core:'Core metrics', imb:'Class imbalance & agreement', err:'Error rates & related scores', rank:'Ranking & probability', ops:'In practice' };
+// [category, name, alias, formula, meaning, caveat, direction]
 const M = [
-  ['core','Accuracy','','(TP + TN) / N','Classes are balanced and both errors cost the same.','Rare positives: "always no" scores 99% and catches nothing.'],
-  ['core','Precision','PPV','TP / (TP + FP)','False alarms are expensive.','Flag one easy case → 100%, while missing the rest.'],
-  ['core','Recall','TPR, sensitivity','TP / (TP + FN)','Missing a positive is dangerous.','Flag everything → 100%, with tons of false alarms.'],
-  ['core','Specificity','TNR','TN / (TN + FP)','You need to clear negatives reliably.','Looks great when negatives dominate, even with many alarms.'],
-  ['core','F1','','2TP / (2TP + FP + FN)','One number balancing P and R.','Ignores TN; assumes misses and alarms cost the same.'],
-  ['core','Fβ','','(1+β²)·P·R / (β²·P + R)','You know whether P or R matters more.','β is a judgement call; still ignores TN.'],
-  ['core','F2','β = 2','5·P·R / (4·P + R)','Recall matters more (screening).','Rewards models that spam false alarms.'],
-  ['core','F0.5','β = 0.5','1.25·P·R / (0.25·P + R)','Precision matters more (auto-actions).','Rewards timid models that miss positives.'],
-
-  ['imb','Balanced accuracy','','(TPR + TNR) / 2','Imbalanced data; 0.5 = random.','Weights both classes equally, whatever the real costs.'],
-  ['imb','G-mean','','√(TPR · TNR)','Both classes must work.','Drops to 0 if one rate is 0.'],
-  ['imb','Youden’s J','informedness','TPR + TNR − 1','Picking a threshold on the ROC curve.','Treats sensitivity and specificity as equal.'],
-  ['imb','MCC','Matthews','(TP·TN − FP·FN) / √((TP+FP)(TP+FN)(TN+FP)(TN+FN))','Best single score; uses all four cells.','Undefined if a row/column is empty; hard to explain.'],
-  ['imb','Cohen’s κ','kappa','(pₒ − pₑ) / (1 − pₑ)','Agreement beyond chance.','Shifts with prevalence; hard to compare across datasets.'],
-  ['imb','Jaccard / IoU','','TP / (TP + FP + FN)','Overlap, segmentation, detection.','Ignores TN; hides whether errors are misses or alarms.'],
-  ['imb','Markedness','','PPV + NPV − 1','How informative the predictions are.','Prevalence-sensitive; undefined if a class is never predicted.'],
-
-  ['err','FPR','false alarm rate','FP / (FP + TN)','Share of negatives wrongly flagged.','Tiny rate × millions of negatives = thousands of alarms.'],
-  ['err','FNR','miss rate','FN / (FN + TP)','Share of positives missed.','Ignores false alarms completely.'],
-  ['err','FDR','1 − precision','FP / (TP + FP)','How often an alert is wrong.','Changes with prevalence, not just model quality.'],
-  ['err','FOR','1 − NPV','FN / (TN + FN)','Misses hiding among the negatives.','Looks tiny on rare events even with poor recall.'],
-  ['err','NPV','','TN / (TN + FN)','Trust in a negative result.','High just because positives are rare.'],
-  ['err','Error rate','1 − accuracy','(FP + FN) / N','Overall share of mistakes.','Mixes misses and alarms together.'],
-  ['err','Fowlkes–Mallows','','√(P · R)','Geometric mix of P and R.','Ignores TN; no error costs.'],
-  ['err','Diagnostic odds ratio','DOR','(TP · TN) / (FP · FN)','Class separation, prevalence-free.','Infinite when an error count is 0.'],
-
-  ['rank','ROC-AUC','','∫ TPR d(FPR)','Ranking quality across thresholds.','Looks great on imbalanced data while precision is poor.'],
-  ['rank','PR-AUC','','∫ P d(R)','Rare positives where precision matters.','Depends on prevalence; interpolation varies.'],
-  ['rank','Average precision','AP / mAP','Σ (Rₖ − Rₖ₋₁) · Pₖ','Object detection, retrieval.','Different matching rules → different numbers.'],
-  ['rank','Log loss','cross-entropy','−mean(y·ln p + (1−y)·ln(1−p))','Judging probability quality.','One confident wrong answer explodes the score.'],
-  ['rank','Brier score','','mean((p − y)²)','Calibration; 0 = perfect.','Looks good on rare events by predicting the base rate.'],
-
-  ['ops','False alarms per hour / km','FP/h, FP/km','FP / exposure time or distance','Continuous systems (cars, video).','Needs real driving/runtime logs, not just a test set.'],
-  ['ops','Detection latency','','t(detected) − t(first visible)','Braking, tracking, reaction budgets.','Frame-level tests can’t measure it.'],
-  ['ops','Recall lower bound','95% one-sided','Lower confidence bound on TPR','Safety sign-off (SOTIF, medical).','Needs large samples; one miss hurts a lot.'],
-  ['ops','Recall per scenario','ODD slices','TP / (TP + FN) per scenario','Finds blind spots (night, rain, glare).','Small slices → noisy numbers.']
+  ['core','Accuracy','','(TP + TN) / N','The share of all predictions that are correct. Useful when classes are balanced and both error types matter similarly.','If only 1% of cases are positive, predicting negative every time gives 99% accuracy and finds none of them.','Higher is better'],
+  ['core','Precision','PPV · positive predictive value','TP / (TP + FP)','Of the cases flagged positive, how many really are positive? Use it when false alarms are costly.','High precision can come from flagging only a few easy cases. Check recall to see how many positives you miss.','Higher is better'],
+  ['core','Recall','TPR · sensitivity','TP / (TP + FN)','Of all actual positive cases, how many did you find? Use it when missing a positive is costly.','Flagging every case gives 100% recall. Check precision or the false positive rate alongside it.','Higher is better'],
+  ['core','Specificity','TNR · true negative rate','TN / (TN + FP)','Of all actual negative cases, how many did you correctly clear? Useful when avoiding false alarms matters.','Does not tell you how many positives you catch. Even high specificity can produce many alarms in a large negative population.','Higher is better'],
+  ['core','F1','F1 score','2TP / (2TP + FP + FN)','A single score combining precision and recall, giving them equal weight. Both must be high for F1 to be high.','Ignores true negatives. Equal weighting of precision and recall does not mean equal real-world costs for the two errors.','Higher is better'],
+  ['core','Fβ','F-beta score','(1 + β²) · P · R / (β² · P + R)','A version of F1 with adjustable emphasis: β > 1 favors recall; 0 < β < 1 favors precision.','Choose β to reflect your priorities. It is not a direct conversion of error costs and still ignores true negatives.','Higher is better'],
+  ['core','F2','β = 2','5 · P · R / (4 · P + R)','Combines precision and recall with more emphasis on recall. Useful for screening where missed positives matter more.','A high F2 can still come with many false alarms. Check precision before choosing a threshold.','Higher is better'],
+  ['core','F0.5','β = 0.5','1.25 · P · R / (0.25 · P + R)','Combines precision and recall with more emphasis on precision. Useful when each positive prediction triggers an expensive action.','A high F0.5 can still leave many positives undetected. Check recall too.','Higher is better'],
+  ['imb','Balanced accuracy','','(TPR + TNR) / 2','The average of recall and specificity. Gives each actual class equal importance, even when one is much rarer.','Chance-level performance is 0.5 in binary classification. Equal class weighting may not match your error costs.','Higher is better'],
+  ['imb','G-mean','Geometric mean of class recalls','√(TPR · TNR)','Combines recall and specificity while penalizing poor performance on either class.','The score is zero if either rate is zero. It does not account for the real-world cost of errors.','Higher is better'],
+  ['imb','Youden’s J','Informedness','TPR + TNR − 1','Measures how far recall and specificity together exceed chance. Maximizing it is one way to select a threshold.','Gives recall and specificity equal importance. The threshold it selects may not minimize your costs.','Higher is better · 0 = chance level'],
+  ['imb','MCC','Matthews correlation coefficient','(TP · TN − FP · FN) / √((TP + FP)(TP + FN)(TN + FP)(TN + FN))','Correlation between predicted and actual binary labels, using all four confusion-matrix counts.','Ranges from −1 (complete disagreement) to 1 (perfect agreement), with 0 meaning no correlation. A zero denominator is undefined; software conventions vary.','Higher is better'],
+  ['imb','Cohen’s κ','Kappa','(pₒ − pₑ) / (1 − pₑ)','Agreement adjusted for chance: pₒ is observed accuracy; pₑ is expected agreement from the actual and predicted class proportions.','Changes with class prevalence and prediction proportions, so scores from different datasets may not be comparable.','Higher is better · 0 = chance agreement'],
+  ['imb','Jaccard / IoU','Intersection over union','TP / (TP + FP + FN)','The overlap between predicted and actual positives. Common for comparing segmentation masks or sets of positive cases.','Ignores true negatives and combines misses with false alarms. Object-detection IoU compares box or mask overlap, rather than these classification counts.','Higher is better'],
+  ['imb','Markedness','','PPV + NPV − 1','Combines the reliability of positive and negative predictions. Useful when both kinds of prediction drive decisions.','Depends on prevalence. The formula is undefined if no positive or no negative predictions are made.','Higher is better'],
+  ['err','FPR','False positive rate · 1 − specificity','FP / (FP + TN)','The share of actual negatives incorrectly flagged positive. Use it to measure how often negatives trigger false alarms.','The denominator is actual negatives, not all alerts. A small rate can still create many false alarms at scale.','Lower is better'],
+  ['err','FNR','False negative rate · 1 − recall','FN / (FN + TP)','The share of actual positives that were missed. Useful when setting a limit on missed cases.','Says nothing about false alarms. Pair it with precision or the false positive rate.','Lower is better'],
+  ['err','FDR','False discovery rate · 1 − precision','FP / (TP + FP)','The share of positive predictions that are false alarms. Useful for estimating wasted alert-review effort.','Depends on prevalence. It can rise when positives become rarer, even if recall and specificity stay the same.','Lower is better'],
+  ['err','FOR','False omission rate · 1 − NPV','FN / (TN + FN)','The share of negative predictions that are actually positive. Useful for understanding the risk in cleared cases.','Can look small when positives are rare, even if the model misses most of them. Check recall too.','Lower is better'],
+  ['err','NPV','Negative predictive value','TN / (TN + FN)','Of the cases predicted negative, how many really are negative? Use it to assess trust in a negative result.','Can be high simply because positives are rare. High NPV alone does not show that the model catches positives well.','Higher is better'],
+  ['err','Error rate','1 − accuracy','(FP + FN) / N','The share of all predictions that are wrong. Useful for a quick view of overall mistakes.','Treats misses and false alarms equally and can hide poor performance on a rare class.','Lower is better'],
+  ['err','Fowlkes–Mallows','Binary positive-class form','√(P · R)','The geometric mean of precision and recall. Both must be high for a high score.','Ignores true negatives and error costs. The clustering version uses pairs of samples rather than individual predictions.','Higher is better'],
+  ['err','Diagnostic odds ratio','DOR','(TP · TN) / (FP · FN)','Summarizes how strongly a binary test separates positives from negatives. A value of 1 means no discrimination.','The ratio is infinite or undefined when FP or FN is zero. Similar values can hide very different recall and specificity.','Higher is better'],
+  ['rank','ROC-AUC','Area under the ROC curve','∫ TPR d(FPR)','Measures how well scores rank positives above negatives across thresholds. A random ranking has an expected AUC of 0.5.','A high AUC does not guarantee useful precision for rare positives or good performance at your chosen threshold.','Higher is better'],
+  ['rank','PR-AUC','Area under the precision–recall curve','∫ P dR','Summarizes the tradeoff between precision and recall across thresholds. Useful when the positive class is rare.','Depends on prevalence and on how the area is calculated. Compare the same dataset and calculation method.','Higher is better'],
+  ['rank','Average precision','AP','Σₖ (Rₖ − Rₖ₋₁) · Pₖ','Averages precision at successive recall gains as the score threshold changes. Common in retrieval and detection evaluation.','AP is not generally the trapezoidal PR-AUC. mAP averages AP values; detection results also depend on matching and overlap rules.','Higher is better'],
+  ['rank','Log loss','Binary cross-entropy','−mean(y · ln(p) + (1 − y) · ln(1 − p))','Scores predicted probabilities against actual outcomes, penalizing confident mistakes especially strongly.','An incorrect prediction with probability 0 or 1 gives infinite theoretical loss. Libraries usually clip probabilities to avoid this.','Lower is better · 0 = perfect'],
+  ['rank','Brier score','Binary probability score','mean((p − y)²)','The average squared difference between predicted probability and actual outcome. Measures overall probability quality.','Reflects both calibration and discrimination. With rare positives, compare against a baseline that always predicts the positive prevalence.','Lower is better · 0 = perfect'],
+  ['ops','False alarms per hour / km','FP/h · FP/km','FP / observed hours or kilometers','Counts false alarms relative to time or distance in operation. Useful for estimating real-world alert burden.','Define what counts as one alarm and use representative exposure. Repeated alerts for one event can change the result.','Lower is better'],
+  ['ops','Detection latency','Time to detection','t(detected) − t(event start)','The delay between a defined event start and its first detection. Useful for systems that need to react quickly.','Define the start consistently, report the delay distribution, and count missed events separately; they have no detection time.','Lower is better'],
+  ['ops','Recall lower bound','One-sided confidence bound','Lower confidence bound for TP / (TP + FN)','A conservative estimate of recall that accounts for sample uncertainty. Useful when comparing evidence against a recall target.','State the confidence level and method. Even zero misses do not prove perfect recall; small or correlated samples weaken the evidence.','Higher is better'],
+  ['ops','Recall per scenario','Scenario slices','TP / (TP + FN), within each scenario','Recall measured separately for conditions such as night, rain, or glare. Helps find failures hidden by an overall average.','Report positive-case counts and uncertainty for each slice. Small or unrepresentative slices can give misleading results.','Higher is better']
 ];
-
 const list = document.getElementById('list');
 const q = document.getElementById('q');
-let cat = 'all';
-
-const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-
+const category = document.getElementById('category');
+const normalize = s => s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[’'−–-]/g,'');
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function render() {
-  const term = q.value.trim().toLowerCase();
+  const terms = normalize(q.value).trim().split(/\s+/).filter(Boolean);
   let html = '', shown = 0;
-  for (const key of Object.keys(SECTIONS)) {
-    if (cat !== 'all' && cat !== key) continue;
-    const rows = M.filter(m => m[0] === key && (!term || m.slice(1).join(' ').toLowerCase().includes(term)));
+  for (const [key,title] of Object.entries(SECTIONS)) {
+    if (category.value !== 'all' && category.value !== key) continue;
+    const rows = M.filter(m => m[0] === key && terms.every(term => normalize(m.slice(1).join(' ') + ' ' + title).includes(term)));
     if (!rows.length) continue;
     shown += rows.length;
-    html += `<h2>${SECTIONS[key]}</h2>` + rows.map(([, n, a, f, g, b]) => `
-      <div class="m">
-        <div class="name">${esc(n)}${a ? `<span class="alias">${esc(a)}</span>` : ''}</div>
-        <code class="f">${esc(f)}</code>
-        <p class="g">${esc(g)}</p>
-        <p class="b">${esc(b)}</p>
-      </div>`).join('');
+    html += `<section aria-labelledby="section-${key}"><h2 id="section-${key}">${title}</h2>`;
+    html += rows.map(([,name,alias,formula,meaning,caveat,direction]) => `
+      <article class="metric">
+        <div><h3>${esc(name)}</h3>${alias ? `<span class="alias">${esc(alias)}</span>` : ''}<span class="direction">${esc(direction)}</span></div>
+        <div><p class="meaning"><span class="marker good" aria-hidden="true">✓</span>${esc(meaning)}</p><code class="formula">${esc(formula)}</code><p class="caveat"><span class="marker bad" aria-hidden="true">✗</span><strong>Watch for:</strong> ${esc(caveat)}</p></div>
+      </article>`).join('');
+    html += '</section>';
   }
-  list.innerHTML = shown ? html : '<p class="empty">No metric matches.</p>';
+  list.innerHTML = shown ? html : '<div class="empty"><p>No metrics match these filters. Try another keyword or show all metrics.</p><button type="button" id="reset">Clear filters</button></div>';
+  document.getElementById('results').textContent = `${shown} of ${M.length} metrics`;
+  if (shown && category.value === 'all' && !terms.length) list.insertAdjacentHTML('beforeend','<p class="source">Further reading: <a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn metric definitions</a>.</p>');
 }
-
-q.addEventListener('input', render);
-document.getElementById('chips').addEventListener('click', e => {
-  const btn = e.target.closest('.chip');
-  if (!btn) return;
-  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === btn));
-  cat = btn.dataset.c;
+q.addEventListener('input',render);
+category.addEventListener('change',render);
+list.addEventListener('click',e => {
+  if (e.target.id !== 'reset') return;
+  q.value = '';
+  category.value = 'all';
   render();
+  q.focus();
 });
 render();
 </script>
