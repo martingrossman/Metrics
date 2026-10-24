@@ -1381,6 +1381,25 @@
   }
   .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; }
   .learn-toggle[aria-expanded="true"] { background: #f2edff; }
+  .ref-top-btn { display: inline-flex; align-items: center; gap: 5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; font-weight: 600; text-decoration: none; white-space: nowrap; font-size: 12px; padding: 5px 10px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: background 0.15s, border-color 0.15s; }
+  .ref-top-btn:hover { background: #dbeafe; border-color: #93c5fd; }
+  .ref-top-btn .ref-long { display: inline; }
+  .ref-top-btn .ref-short { display: none; }
+  .learn-tab-ref { margin-left: auto; text-decoration: none; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; transition: background 0.15s; }
+  .learn-tab-ref:hover { background: #dbeafe; }
+  @media (max-width: 1200px) {
+    .brand-credit { display: none !important; }
+  }
+  @media (max-width: 900px) {
+    .ref-top-btn .ref-long { display: none; }
+    .ref-top-btn .ref-short { display: inline; }
+    .ref-top-btn { font-size: 11px; padding: 4px 7px; }
+  }
+  @media (max-width: 600px) {
+    .ref-top-btn { display: none !important; }
+  }
+  .learn-ref-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #2563eb; text-decoration: none; background: #eff6ff; border: 1px solid #bfdbfe; padding: 5px 10px; border-radius: 6px; white-space: nowrap; }
+  .learn-ref-link:hover { background: #dbeafe; }
   .metric-formula { display: none; font-size: var(--font-caption); color: #526886; font-weight: 500; margin-top: 5px; letter-spacing: 0; }
   .learning .metric { flex-wrap: wrap; }
   .learning .metric-formula { display: block; flex-basis: 100%; }
@@ -1664,6 +1683,7 @@
    </select>
    <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
    <button class="reset learn-toggle" id="learnToggle" type="button" aria-expanded="false" aria-controls="learnPanel">Learn more</button>
+   <a href="reference.html" class="reset ref-top-btn" id="refTopBtn" title="Comprehensive 32 Classification Metrics Reference & Checklist">📋 <span class="ref-long">32 Metrics Reference</span><span class="ref-short">Reference</span></a>
    <button class="reset" id="reset">
     Reset ↺
    </button>

@@ -12,7 +12,7 @@ test('Wi-Fi server serves the demo and excludes other repository files', async (
   await once(server, 'listening');
   const base = `http://127.0.0.1:${server.address().port}`;
   try {
-    for (const route of ['/', '/index.html', '/?demo=1']) {
+    for (const route of ['/', '/index.html', '/?demo=1', '/reference.html', '/checklist.html']) {
       const response = await fetch(base + route);
       assert.equal(response.status, 200);
       assert.match(response.headers.get('content-type'), /text\/html; charset=utf-8/);

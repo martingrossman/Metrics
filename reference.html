@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprehensive Classification Metrics Reference & Checklist | CMatrixLab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-subtle: #edf2f7;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --tp: #0a8754;
+      --tp-light: #e6f7ef;
+      --fp: #e03131;
+      --fp-light: #fdf0f0;
+      --fn: #e8890c;
+      --fn-light: #fef7ed;
+      --tn: #495057;
+      --tn-light: #f1f3f5;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    /* Top Sticky Header */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .top-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .back-btn:hover {
+      background: #dbeafe;
+    }
+    .brand-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-title .badge {
+      background: #e0e7ff;
+      color: #3730a3;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* Hero / Header Section */
+    .hero {
+      max-width: 1280px;
+      margin: 24px auto 16px;
+      padding: 0 20px;
+    }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 860px;
+      line-height: 1.6;
+    }
+
+    /* Notation Box */
+    .notation-bar {
+      margin-top: 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      box-shadow: var(--shadow-sm);
+    }
+    .notation-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pill-term {
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+    .pill-tp { background: var(--tp-light); color: var(--tp); }
+    .pill-tn { background: var(--tn-light); color: var(--tn); }
+    .pill-fp { background: var(--fp-light); color: var(--fp); }
+    .pill-fn { background: var(--fn-light); color: var(--fn); }
+    .pill-n  { background: #f1f5f9; color: #334155; }
+
+    /* Controls: Search & Category Pills */
+    .filter-container {
+      max-width: 1280px;
+      margin: 16px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      font-size: 14px;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+      font-size: 16px;
+    }
+    .category-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .cat-btn {
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #475569;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .cat-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .cat-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 1px 3px rgba(37,99,235,0.3);
+    }
+    .cat-count {
+      font-size: 11px;
+      opacity: 0.8;
+      background: rgba(0,0,0,0.06);
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+    .cat-btn.active .cat-count {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Main Container */
+    .main-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* Section Styles */
+    .metric-section {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--border-subtle);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+    .badge-core { background: #e0f2fe; color: #0369a1; }
+    .badge-imbalance { background: #f3e8ff; color: #7e22ce; }
+    .badge-error { background: #fee2e2; color: #b91c1c; }
+    .badge-ranking { background: #ccfbf1; color: #0f766e; }
+    .badge-operational { background: #dcfce7; color: #15803d; }
+
+    /* Tables */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table.metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+    table.metric-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table.metric-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: top;
+    }
+    table.metric-table tr:hover td {
+      background: #f8fafc;
+    }
+    .metric-name-cell {
+      font-weight: 700;
+      color: #0f172a;
+      min-width: 170px;
+      white-space: nowrap;
+    }
+    .metric-name-cell small {
+      display: block;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      margin-top: 2px;
+    }
+    .formula-cell {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #1e293b;
+      min-width: 160px;
+      white-space: nowrap;
+    }
+    .use-cell {
+      color: #334155;
+      min-width: 220px;
+    }
+    .failure-cell {
+      color: #991b1b;
+      background: #fef2f2;
+      border-radius: 6px;
+      padding: 6px 10px !important;
+      font-size: 12.5px;
+      line-height: 1.4;
+      min-width: 260px;
+    }
+    .failure-cell strong {
+      color: #7f1d1d;
+    }
+
+    /* Math fraction inline formatting */
+    .math-frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      padding: 0 3px;
+      line-height: 1.1;
+    }
+    .math-num {
+      border-bottom: 1.5px solid currentColor;
+      padding-bottom: 1px;
+    }
+    .math-den {
+      padding-top: 1px;
+    }
+    .math-sqrt {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Section 6: Interactive Confusion Matrix Calculator */
+    .calc-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 28px;
+      margin-top: 16px;
+    }
+    @media (max-width: 860px) {
+      .calc-layout { grid-template-columns: 1fr; }
+    }
+    .matrix-input-grid {
+      display: grid;
+      grid-template-columns: 100px 100px 100px;
+      gap: 6px;
+      align-items: center;
+    }
+    .matrix-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      text-align: center;
+    }
+    .matrix-input-box {
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+    .matrix-input-box.tp { background: var(--tp-light); border: 1.5px solid var(--tp); }
+    .matrix-input-box.fp { background: var(--fp-light); border: 1.5px solid var(--fp); }
+    .matrix-input-box.fn { background: var(--fn-light); border: 1.5px solid var(--fn); }
+    .matrix-input-box.tn { background: var(--tn-light); border: 1.5px solid var(--tn); }
+    .matrix-input-box label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .matrix-input-box.tp label { color: var(--tp); }
+    .matrix-input-box.fp label { color: var(--fp); }
+    .matrix-input-box.fn label { color: var(--fn); }
+    .matrix-input-box.tn label { color: var(--tn); }
+    .matrix-input-box input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 5px;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      background: #ffffff;
+      outline: none;
+    }
+    .matrix-input-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+    }
+    .live-metrics-chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .metric-chip {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .metric-chip:hover {
+      background: #ffffff;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-chip.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .chip-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      display: block;
+    }
+    .chip-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      display: block;
+      margin-top: 2px;
+    }
+    .calc-breakdown {
+      margin-top: 14px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #1e293b;
+    }
+    .calc-breakdown b {
+      color: var(--primary);
+    }
+
+    /* Section 7: Recommendation Checklist & Scenarios */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .scenario-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .scenario-card:hover {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .scenario-card.active {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+    .scenario-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .rec-tag {
+      font-size: 11.5px;
+      margin-top: 6px;
+      color: #334155;
+    }
+    .rec-tag span {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .callout-box {
+      margin-top: 16px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #166534;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    .callout-box strong {
+      color: #14532d;
+    }
+
+    /* Footer */
+    footer {
+      max-width: 1280px;
+      margin: 40px auto 0;
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* Print styles */
+    @media print {
+      .top-bar, .filter-container, .back-btn { display: none; }
+      body { background: #fff; padding: 0; }
+      .metric-section { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header class="top-bar">
+    <div class="top-inner">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <a href="index.html" class="back-btn" title="Return to interactive CMatrixLab simulation">
+          ← Interactive Simulator
+        </a>
+        <div class="brand-title">
+          <span>Classification Metrics Reference</span>
+          <span class="badge">32 Metrics</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" class="back-btn" style="background:#f1f5f9; color:#334155; border-color:#cbd5e1;" onclick="window.print()">
+          🖨️ Print / PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Comprehensive Classification Metrics Reference</h1>
+    <p>
+      An expanded reference guide covering <strong>32 commonly used binary classification metrics</strong>, including core rates, class-imbalance statistics, error diagnostics, ranking curves, and operational automotive safety criteria.
+    </p>
+
+    <!-- Notation Bar -->
+    <div class="notation-bar">
+      <span style="font-weight: 700; color:#334155;">Notation:</span>
+      <span class="notation-item"><span class="pill-term pill-tp">TP</span> True Positives</span>
+      <span class="notation-item"><span class="pill-term pill-tn">TN</span> True Negatives</span>
+      <span class="notation-item"><span class="pill-term pill-fp">FP</span> False Positives (Type I)</span>
+      <span class="notation-item"><span class="pill-term pill-fn">FN</span> False Negatives (Type II)</span>
+      <span class="notation-item"><span class="pill-term pill-n">N</span> Total = TP + TN + FP + FN</span>
+    </div>
+  </section>
+
+  <!-- Filter Bar & Search -->
+  <div class="filter-container">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="metricSearch" placeholder="Filter by metric name, symbol, formula, or use case (e.g. recall, trap, automotive, f1, cost)..." aria-label="Filter metrics">
+    </div>
+
+    <div class="category-pills">
+      <button type="button" class="cat-btn active" data-category="all">All Metrics <span class="cat-count">32</span></button>
+      <button type="button" class="cat-btn" data-category="core">1. Core Metrics <span class="cat-count">8</span></button>
+      <button type="button" class="cat-btn" data-category="imbalance">2. Imbalance-Aware <span class="cat-count">7</span></button>
+      <button type="button" class="cat-btn" data-category="error">3. Negative & Errors <span class="cat-count">8</span></button>
+      <button type="button" class="cat-btn" data-category="ranking">4. Ranking & Probability <span class="cat-count">5</span></button>
+      <button type="button" class="cat-btn" data-category="operational">5. Operational & Safety <span class="cat-count">7</span></button>
+      <button type="button" class="cat-btn" data-category="calculator">6. Interactive Calculator</button>
+      <button type="button" class="cat-btn" data-category="guide">7. Which Should You Use?</button>
+    </div>
+  </div>
+
+  <!-- Content Container -->
+  <main class="main-wrap">
+
+    <!-- 1. Core Classification Metrics -->
+    <section class="metric-section" id="sec-core" data-category="core">
+      <div class="section-header">
+        <h2>1. Core Classification Metrics</h2>
+        <span class="section-badge badge-core">8 Metrics</span>
+      </div>
+      <div class="table-responsive">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Formula</th>
+              <th>Best Used For...</th>
+              <th>Failure Mode / Trap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-search="accuracy tp tn n balanced trap">
+              <td class="metric-name-cell">
+                Accuracy
+                <small>Overall correctness</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TP + TN</span><span class="math-den">N</span></span>
+              </td>
+              <td class="use-cell">Balanced datasets with comparable FP and FN costs.</td>
+              <td class="failure-cell"><strong>Accuracy Trap:</strong> A 1% positive dataset yields 99% accuracy while detecting zero positives.</td>
+            </tr>
+            <tr data-search="precision ppv positive predictive value false alarms">
+              <td class="metric-name-cell">
+                Precision
+                <small>PPV (Positive Predictive Value)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TP</span><span class="math-den">TP + FP</span></span>
+              </td>
+              <td class="use-cell">When false alarms are expensive, such as automated interventions, spam filtering, or high-cost transactions.</td>
+              <td class="failure-cell">Can achieve 100% by detecting only one easy positive, missing nearly everything else.</td>
+            </tr>
+            <tr data-search="recall tpr sensitivity probability of detection pd safety miss">
+              <td class="metric-name-cell">
+                Recall
+                <small>TPR · Sensitivity · Prob of Detection (PD)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TP</span><span class="math-den">TP + FN</span></span>
+              </td>
+              <td class="use-cell">Safety-critical detection where missed objects or hazards are dangerous (e.g. tumor detection, pedestrian AEB).</td>
+              <td class="failure-cell">Can achieve 100% by predicting everything positive, generating enormous false alarm counts.</td>
+            </tr>
+            <tr data-search="specificity tnr true negative rate rejection">
+              <td class="metric-name-cell">
+                Specificity
+                <small>TNR (True Negative Rate) · Selectivity</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TN</span><span class="math-den">TN + FP</span></span>
+              </td>
+              <td class="use-cell">Measuring correct rejection of negative cases in screening workflows.</td>
+              <td class="failure-cell">Can appear excellent (99.9%) when negatives dominate, despite hundreds of nuisance alarms per hour.</td>
+            </tr>
+            <tr data-search="f1 score f1-score harmonic mean balance">
+              <td class="metric-name-cell">
+                F1-Score
+                <small>Harmonic mean of P &amp; R</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">2 · TP</span><span class="math-den">2 · TP + FP + FN</span></span>
+              </td>
+              <td class="use-cell">Balancing precision and recall with equal relative emphasis.</td>
+              <td class="failure-cell">Completely ignores TN and does not explicitly reflect application-specific dollar or safety FP/FN costs.</td>
+            </tr>
+            <tr data-search="fbeta f-beta score weighting beta">
+              <td class="metric-name-cell">
+                F<sub>β</sub>-Score
+                <small>Weighted harmonic mean</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">(1 + β²) · P · R</span><span class="math-den">β² · P + R</span></span>
+              </td>
+              <td class="use-cell">Choosing whether precision or recall matters more by tuning parameter β.</td>
+              <td class="failure-cell">Choice of β is subjective and empirical; true negatives (TN) remain ignored.</td>
+            </tr>
+            <tr data-search="f2 score recall heavy safety">
+              <td class="metric-name-cell">
+                F2-Score
+                <small>Recall weighted 2× vs Precision</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">5 · P · R</span><span class="math-den">4 · P + R</span></span>
+              </td>
+              <td class="use-cell">Detection workflows where recall deserves twice the emphasis of precision (e.g. disease screening, fraud triage).</td>
+              <td class="failure-cell">Can heavily reward systems that flood operators with false positive alerts.</td>
+            </tr>
+            <tr data-search="f0.5 score precision heavy spam">
+              <td class="metric-name-cell">
+                F0.5-Score
+                <small>Precision weighted 2× vs Recall</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">1.25 · P · R</span><span class="math-den">0.25 · P + R</span></span>
+              </td>
+              <td class="use-cell">Applications emphasizing precision over recall (e.g. customer-facing spam filters, automated account freezing).</td>
+              <td class="failure-cell">Favors overly conservative models that miss critical borderline positive cases.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. Imbalance-Aware Metrics -->
+    <section class="metric-section" id="sec-imbalance" data-category="imbalance">
+      <div class="section-header">
+        <h2>2. Imbalance-Aware Metrics</h2>
+        <span class="section-badge badge-imbalance">7 Metrics</span>
+      </div>
+      <div class="table-responsive">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Formula</th>
+              <th>Best Used For...</th>
+              <th>Failure Mode / Trap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-search="balanced accuracy macro average tpr tnr">
+              <td class="metric-name-cell">
+                Balanced Accuracy
+                <small>Unweighted class mean</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TPR + TNR</span><span class="math-den">2</span></span>
+              </td>
+              <td class="use-cell">Comparing models on imbalanced datasets without majority prevalence dominating the score.</td>
+              <td class="failure-cell">Equal 50/50 weighting of classes may not match actual asymmetric operational deployment costs.</td>
+            </tr>
+            <tr data-search="g-mean geometric mean balance both classes">
+              <td class="metric-name-cell">
+                G-Mean
+                <small>Geometric mean of TPR &amp; TNR</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-sqrt">√(TPR · TNR)</span>
+              </td>
+              <td class="use-cell">Requiring reasonable simultaneous performance on both positive and negative classes.</td>
+              <td class="failure-cell">Strongly penalizes a near-zero rate on either class, even if that asymmetric trade-off is operationally necessary.</td>
+            </tr>
+            <tr data-search="youden j informedness roc cutoff optimal threshold">
+              <td class="metric-name-cell">
+                Youden's J
+                <small>Informedness · Youden's Index</small>
+              </td>
+              <td class="formula-cell">
+                TPR + TNR − 1
+              </td>
+              <td class="use-cell">Selecting an optimal classification threshold from an ROC curve (maximizes distance to chance line).</td>
+              <td class="failure-cell">Implicitly assumes equal importance of sensitivity and specificity, ignoring deployment prevalence.</td>
+            </tr>
+            <tr data-search="mcc matthews correlation coefficient contingency robust">
+              <td class="metric-name-cell">
+                MCC
+                <small>Matthews Correlation Coefficient</small>
+              </td>
+              <td class="formula-cell" style="font-size:11.5px;">
+                <span class="math-frac"><span class="math-num">TP·TN − FP·FN</span><span class="math-den">√[(TP+FP)(TP+FN)(TN+FP)(TN+FN)]</span></span>
+              </td>
+              <td class="use-cell">Gold standard single-number assessment across all four confusion-matrix cells (-1 to +1 scale).</td>
+              <td class="failure-cell">Undefined if an entire row or column is zero; harder to explain operationally to non-technical stakeholders.</td>
+            </tr>
+            <tr data-search="cohen kappa inter-rater agreement chance correction">
+              <td class="metric-name-cell">
+                Cohen's Kappa
+                <small>Chance-corrected agreement</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">p<sub>o</sub> − p<sub>e</sub></span><span class="math-den">1 − p<sub>e</sub></span></span>
+              </td>
+              <td class="use-cell">Measuring model agreement corrected for expected chance agreement between raters.</td>
+              <td class="failure-cell"><strong>Kappa Paradox:</strong> Sensitive to class prevalence and marginal prediction frequencies.</td>
+            </tr>
+            <tr data-search="jaccard iou intersection over union segmentation overlap">
+              <td class="metric-name-cell">
+                Jaccard / IoU
+                <small>Intersection over Union</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TP</span><span class="math-den">TP + FP + FN</span></span>
+              </td>
+              <td class="use-cell">Semantic segmentation, object bounding box overlap, and positive-class detection.</td>
+              <td class="failure-cell">Ignores TN; obscures the relative operational severity of missed detections versus false alarms.</td>
+            </tr>
+            <tr data-search="markedness delta p trustworthiness prediction">
+              <td class="metric-name-cell">
+                Markedness
+                <small>Δp (Informedness of predictions)</small>
+              </td>
+              <td class="formula-cell">
+                PPV + NPV − 1
+              </td>
+              <td class="use-cell">Evaluating how informative positive and negative predictions are to the end user.</td>
+              <td class="failure-cell">Heavily sensitive to prevalence; undefined when a predicted class is absent.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. Negative-Class and Error Metrics -->
+    <section class="metric-section" id="sec-error" data-category="error">
+      <div class="section-header">
+        <h2>3. Negative-Class and Error Metrics</h2>
+        <span class="section-badge badge-error">8 Metrics</span>
+      </div>
+      <div class="table-responsive">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Formula</th>
+              <th>Best Used For...</th>
+              <th>Failure Mode / Trap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-search="fpr false positive rate fallout false alarm">
+              <td class="metric-name-cell">
+                FPR
+                <small>False Positive Rate · Fall-out (1 − TNR)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FP</span><span class="math-den">FP + TN</span></span>
+              </td>
+              <td class="use-cell">Measuring the proportion of actual negative opportunities mistakenly flagged.</td>
+              <td class="failure-cell">A tiny FPR (0.1%) generates thousands of alarms when there are millions of negative opportunities.</td>
+            </tr>
+            <tr data-search="fnr miss rate false negative rate safety">
+              <td class="metric-name-cell">
+                FNR
+                <small>Miss Rate · False Negative Rate (1 − TPR)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FN</span><span class="math-den">FN + TP</span></span>
+              </td>
+              <td class="use-cell">Directly quantifying missed detections in safety-critical automated systems.</td>
+              <td class="failure-cell">Completely ignores false alarms and nuisance alerts.</td>
+            </tr>
+            <tr data-search="fdr false discovery rate false alarms in positive">
+              <td class="metric-name-cell">
+                FDR
+                <small>False Discovery Rate (1 − PPV)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FP</span><span class="math-den">TP + FP</span></span>
+              </td>
+              <td class="use-cell">Genomics, fraud detection, and multiple-hypothesis testing where discoveries must be valid.</td>
+              <td class="failure-cell">Surges dramatically when positive-class prevalence drops (base-rate fallacy).</td>
+            </tr>
+            <tr data-search="for false omission rate missed in negative">
+              <td class="metric-name-cell">
+                FOR
+                <small>False Omission Rate (1 − NPV)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FN</span><span class="math-den">TN + FN</span></span>
+              </td>
+              <td class="use-cell">Quantifying missed danger among cases cleared as negative.</td>
+              <td class="failure-cell">Looks deceptively low in rare-event settings even when recall is near zero.</td>
+            </tr>
+            <tr data-search="npv negative predictive value confidence in negative">
+              <td class="metric-name-cell">
+                NPV
+                <small>Negative Predictive Value</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TN</span><span class="math-den">TN + FN</span></span>
+              </td>
+              <td class="use-cell">Assessing confidence when giving a patient or system a "clean bill of health".</td>
+              <td class="failure-cell">Extremely high (>99.9%) simply because positives are rare, regardless of test quality.</td>
+            </tr>
+            <tr data-search="error rate misclassification overall errors">
+              <td class="metric-name-cell">
+                Error Rate
+                <small>Misclassification Rate (1 − Accuracy)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FP + FN</span><span class="math-den">N</span></span>
+              </td>
+              <td class="use-cell">Overall proportion of incorrect classifications across all samples.</td>
+              <td class="failure-cell">Hides whether errors are nuisance false alarms or catastrophic missed detections.</td>
+            </tr>
+            <tr data-search="fowlkes-mallows fm index clustering precision recall geometric">
+              <td class="metric-name-cell">
+                Fowlkes–Mallows
+                <small>FM Index (Geometric mean of PPV &amp; TPR)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-sqrt">√(PPV · TPR)</span>
+              </td>
+              <td class="use-cell">Clustering evaluation and combining precision &amp; recall without relying on arithmetic harmonic means.</td>
+              <td class="failure-cell">Ignores TN and does not explicitly encode operational error costs.</td>
+            </tr>
+            <tr data-search="diagnostic odds ratio dor odds ratio medical meta-analysis">
+              <td class="metric-name-cell">
+                Diagnostic Odds Ratio
+                <small>DOR (Odds ratio of test positivity)</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">TP · TN</span><span class="math-den">FP · FN</span></span>
+              </td>
+              <td class="use-cell">Summarizing diagnostic separation in medical meta-analyses independent of study prevalence.</td>
+              <td class="failure-cell">Infinite if errors are zero; does not directly reflect operational operating-point utility.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. Ranking and Probability Metrics -->
+    <section class="metric-section" id="sec-ranking" data-category="ranking">
+      <div class="section-header">
+        <h2>4. Ranking and Probability Metrics</h2>
+        <span class="section-badge badge-ranking">5 Metrics</span>
+      </div>
+      <div class="table-responsive">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Formula</th>
+              <th>Best Used For...</th>
+              <th>Failure Mode / Trap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-search="roc-auc roc auc area under curve ranking discrimination">
+              <td class="metric-name-cell">
+                ROC-AUC
+                <small>Area Under ROC Curve</small>
+              </td>
+              <td class="formula-cell">
+                ∫<sub>0</sub><sup>1</sup> TPR(FPR) dFPR
+              </td>
+              <td class="use-cell">Threshold-independent evaluation of raw ranking discrimination between classes.</td>
+              <td class="failure-cell">Can appear excellent (&gt;0.95) on imbalanced data while precision at operational thresholds is abysmal.</td>
+            </tr>
+            <tr data-search="pr-auc pr auc precision-recall area rare imbalance">
+              <td class="metric-name-cell">
+                PR-AUC
+                <small>Area Under Precision-Recall Curve</small>
+              </td>
+              <td class="formula-cell">
+                ∫ Precision dRecall
+              </td>
+              <td class="use-cell">Evaluating rare-positive detectors where precision matters and negatives dominate.</td>
+              <td class="failure-cell">Baseline varies with class prevalence; interpolation methods (trapezoid vs step) affect benchmark comparisons.</td>
+            </tr>
+            <tr data-search="average precision ap object detection information retrieval">
+              <td class="metric-name-cell">
+                Average Precision
+                <small>AP (Standard in object detection)</small>
+              </td>
+              <td class="formula-cell">
+                Σ<sub>k</sub> (R<sub>k</sub> − R<sub>k-1</sub>) · P<sub>k</sub>
+              </td>
+              <td class="use-cell">Object detection (PASCAL VOC / COCO) and search ranking evaluation.</td>
+              <td class="failure-cell">Different IoU matching thresholds and interpolation rules produce non-comparable AP scores.</td>
+            </tr>
+            <tr data-search="log loss cross-entropy cross entropy probability confident mistake">
+              <td class="metric-name-cell">
+                Log Loss
+                <small>Cross-Entropy Loss</small>
+              </td>
+              <td class="formula-cell" style="font-size:11.5px;">
+                −<span class="math-frac"><span class="math-num">1</span><span class="math-den">N</span></span> Σ [y<sub>i</sub> ln p<sub>i</sub> + (1−y<sub>i</sub>) ln(1−p<sub>i</sub>)]
+              </td>
+              <td class="use-cell">Evaluating predicted probabilities; strongly penalizes confident mistakes.</td>
+              <td class="failure-cell">Extremely sensitive to extreme outliers (predicting 0.0001 for true label 1 explodes loss); does not match fixed threshold costs.</td>
+            </tr>
+            <tr data-search="brier score mean squared error probability calibration">
+              <td class="metric-name-cell">
+                Brier Score
+                <small>Mean squared probability error</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">1</span><span class="math-den">N</span></span> Σ (p<sub>i</sub> − y<sub>i</sub>)²
+              </td>
+              <td class="use-cell">Evaluating probability calibration and accuracy (0.0 = perfect, 0.25 = uninformative coin toss).</td>
+              <td class="failure-cell">Can be dominated by the majority class in severe class imbalance.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. Operational and Safety-Critical Detection Metrics -->
+    <section class="metric-section" id="sec-operational" data-category="operational">
+      <div class="section-header">
+        <h2>5. Operational and Safety-Critical Detection Metrics</h2>
+        <span class="section-badge badge-operational">7 Metrics</span>
+      </div>
+      <div class="table-responsive">
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Formula</th>
+              <th>Best Used For...</th>
+              <th>Failure Mode / Trap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-search="fp per hour false alarms nuisance driving automotive">
+              <td class="metric-name-cell">
+                FP / hour
+                <small>Nuisance alarms per operating hour</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FP</span><span class="math-den">Operating Hours</span></span>
+              </td>
+              <td class="use-cell">Measuring driver nuisance alarms and alert fatigue in continuous deployment.</td>
+              <td class="failure-cell">Varies dramatically with traffic density, lighting conditions, and alert deduplication rules.</td>
+            </tr>
+            <tr data-search="fp per km distance fleet benchmark automotive">
+              <td class="metric-name-cell">
+                FP / km
+                <small>False alarms per driven kilometer</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FP</span><span class="math-den">Distance (km)</span></span>
+              </td>
+              <td class="use-cell">Standard automotive fleet KPI for benchmarking autonomous driving perception.</td>
+              <td class="failure-cell">Urban stop-and-go driving produces vastly more opportunities for FP than highway cruising at identical distance.</td>
+            </tr>
+            <tr data-search="fp per frame perception raw camera lidar">
+              <td class="metric-name-cell">
+                FP / frame
+                <small>Frame-level perception evaluation</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FP</span><span class="math-den">Processed Frames</span></span>
+              </td>
+              <td class="use-cell">Raw per-frame detector performance before temporal tracking and multi-sensor fusion.</td>
+              <td class="failure-cell">High camera frame rates (60 Hz) multiply single-object misdetections into high false counts without temporal clustering.</td>
+            </tr>
+            <tr data-search="misses per hour critical missed events safety exposure">
+              <td class="metric-name-cell">
+                Misses / hour
+                <small>Missed events per operating hour</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">FN</span><span class="math-den">Operating Hours</span></span>
+              </td>
+              <td class="use-cell">Quantifying missed hazard occurrences relative to real-world deployment exposure.</td>
+              <td class="failure-cell">Heavily depends on hazard event frequency; zero misses can reflect lack of events rather than high detector recall.</td>
+            </tr>
+            <tr data-search="detection latency reaction time lag timing">
+              <td class="metric-name-cell">
+                Detection Latency
+                <small>Time from event start to detection</small>
+              </td>
+              <td class="formula-cell">
+                t<sub>detected</sub> − t<sub>event start</sub>
+              </td>
+              <td class="use-cell">Measuring reaction speed for obstacle braking (AEB) or robot collision avoidance.</td>
+              <td class="failure-cell">Average latency hides dangerous long-tail outliers; undetected events require explicit timeout handling.</td>
+            </tr>
+            <tr data-search="ttd time to detection first valid detection">
+              <td class="metric-name-cell">
+                Time-to-Detection (TTD)
+                <small>First valid detection timestamp</small>
+              </td>
+              <td class="formula-cell">
+                min{t<sub>i</sub> : valid} − t<sub>0</sub>
+              </td>
+              <td class="use-cell">First confirmed perception trigger once a hazard becomes physically detectable.</td>
+              <td class="failure-cell">Can artificially reward brief, flickering phantom detections unless temporal persistence is enforced.</td>
+            </tr>
+            <tr data-search="track recall object tracking ground truth persistence">
+              <td class="metric-name-cell">
+                Track Recall
+                <small>Object-level track recovery</small>
+              </td>
+              <td class="formula-cell">
+                <span class="math-frac"><span class="math-num">Detected GT Tracks</span><span class="math-den">Total GT Tracks</span></span>
+              </td>
+              <td class="use-cell">Multi-object tracking (MOT) stability over time rather than isolated single-frame snapshots.</td>
+              <td class="failure-cell">Results depend heavily on the threshold definition of a "successfully tracked" trajectory (e.g. 80% vs 50% lifetime).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. Interactive Confusion Matrix Calculator -->
+    <section class="calc-card" id="sec-calculator" data-category="calculator">
+      <div class="section-header">
+        <h2>6. Interactive Confusion Matrix Calculator</h2>
+        <span class="section-badge badge-core">Live Playground</span>
+      </div>
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">
+        Adjust the counts below (or test your own model values) to see how Accuracy, Precision, Recall, Specificity, F1, and MCC calculate step-by-step.
+      </p>
+
+      <div class="calc-layout">
+        <!-- Input Matrix Grid -->
+        <div>
+          <div class="matrix-input-grid">
+            <span class="matrix-label"></span>
+            <span class="matrix-label" style="color:var(--fp)">Pred +</span>
+            <span class="matrix-label" style="color:var(--primary)">Pred −</span>
+
+            <span class="matrix-label" style="text-align:right; padding-right:8px; color:var(--tp)">Actual +</span>
+            <div class="matrix-input-box tp">
+              <label for="inTP">TP (True +)</label>
+              <input type="number" id="inTP" value="32" min="0" step="1">
+            </div>
+            <div class="matrix-input-box fn">
+              <label for="inFN">FN (Missed)</label>
+              <input type="number" id="inFN" value="12" min="0" step="1">
+            </div>
+
+            <span class="matrix-label" style="text-align:right; padding-right:8px; color:var(--tn)">Actual −</span>
+            <div class="matrix-input-box fp">
+              <label for="inFP">FP (False +)</label>
+              <input type="number" id="inFP" value="8" min="0" step="1">
+            </div>
+            <div class="matrix-input-box tn">
+              <label for="inTN">TN (True −)</label>
+              <input type="number" id="inTN" value="48" min="0" step="1">
+            </div>
+          </div>
+
+          <div style="margin-top:14px; font-size:12px; color:var(--text-muted); text-align:center;">
+            Total Samples (N): <strong id="lblTotal" style="color:#0f172a;">100</strong>
+          </div>
+        </div>
+
+        <!-- Calculated Metric Chips -->
+        <div>
+          <div class="live-metrics-chips">
+            <div class="metric-chip" data-metric="accuracy">
+              <span class="chip-name">Accuracy</span>
+              <span class="chip-value" id="calcAcc">80.0%</span>
+            </div>
+            <div class="metric-chip active" data-metric="f1">
+              <span class="chip-name">F1 Score</span>
+              <span class="chip-value" id="calcF1">76.2%</span>
+            </div>
+            <div class="metric-chip" data-metric="precision">
+              <span class="chip-name">Precision (PPV)</span>
+              <span class="chip-value" id="calcPrec">80.0%</span>
+            </div>
+            <div class="metric-chip" data-metric="recall">
+              <span class="chip-name">Recall (TPR)</span>
+              <span class="chip-value" id="calcRec">72.7%</span>
+            </div>
+            <div class="metric-chip" data-metric="specificity">
+              <span class="chip-name">Specificity (TNR)</span>
+              <span class="chip-value" id="calcSpec">85.7%</span>
+            </div>
+            <div class="metric-chip" data-metric="balancedAcc">
+              <span class="chip-name">Balanced Accuracy</span>
+              <span class="chip-value" id="calcBalAcc">79.2%</span>
+            </div>
+            <div class="metric-chip" data-metric="mcc">
+              <span class="chip-name">MCC (Correlation)</span>
+              <span class="chip-value" id="calcMCC">+0.592</span>
+            </div>
+            <div class="metric-chip" data-metric="fpr">
+              <span class="chip-name">FPR (Fall-out)</span>
+              <span class="chip-value" id="calcFPR">14.3%</span>
+            </div>
+          </div>
+
+          <!-- Formula Step Breakdown -->
+          <div class="calc-breakdown" id="calcFormulaBreakdown">
+            <b>F1 Score:</b> (2 · TP) ÷ (2 · TP + FP + FN) = (2 · 32) ÷ (64 + 8 + 12) = 64 ÷ 84 = <b>76.2%</b>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Which Metrics Should You Actually Use? -->
+    <section class="metric-section" id="sec-guide" data-category="guide">
+      <div class="section-header">
+        <h2>7. Which Metrics Should You Actually Use?</h2>
+        <span class="section-badge badge-operational">Decision Framework</span>
+      </div>
+
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:14px;">
+        Click any real-world application below to inspect recommended primary and secondary evaluation criteria:
+      </p>
+
+      <div class="scenario-grid">
+        <div class="scenario-card active" data-app="balanced">
+          <div class="scenario-title">⚖️ Balanced Binary Classification</div>
+          <div class="rec-tag">Primary: <span>Accuracy, MCC</span></div>
+          <div class="rec-tag">Secondary: Precision, Recall</div>
+        </div>
+        <div class="scenario-card" data-app="imbalanced">
+          <div class="scenario-title">📉 Highly Imbalanced Datasets</div>
+          <div class="rec-tag">Primary: <span>PR-AUC, MCC</span></div>
+          <div class="rec-tag">Secondary: F1, Balanced Accuracy</div>
+        </div>
+        <div class="scenario-card" data-app="medical">
+          <div class="scenario-title">🩺 Medical Screening</div>
+          <div class="rec-tag">Primary: <span>Recall (TPR), FNR</span></div>
+          <div class="rec-tag">Secondary: Specificity, NPV</div>
+        </div>
+        <div class="scenario-card" data-app="fraud">
+          <div class="scenario-title">💳 Fraud Detection</div>
+          <div class="rec-tag">Primary: <span>Precision, Recall</span></div>
+          <div class="rec-tag">Secondary: PR-AUC, F<sub>β</sub></div>
+        </div>
+        <div class="scenario-card" data-app="object">
+          <div class="scenario-title">📷 Object Detection</div>
+          <div class="rec-tag">Primary: <span>Recall, AP</span></div>
+          <div class="rec-tag">Secondary: Precision, FP/frame</div>
+        </div>
+        <div class="scenario-card" data-app="automotive">
+          <div class="scenario-title">🚗 Automotive Hazard Detection (AEB)</div>
+          <div class="rec-tag">Primary: <span>TPR, FP/hour, FP/km</span></div>
+          <div class="rec-tag">Secondary: Detection Latency, FNR</div>
+        </div>
+        <div class="scenario-card" data-app="safety">
+          <div class="scenario-title">🛡️ Safety-Critical Perception Validation</div>
+          <div class="rec-tag">Primary: <span>TPR 1-sided bound, FP rate</span></div>
+          <div class="rec-tag">Secondary: Scenario recall, Latency</div>
+        </div>
+        <div class="scenario-card" data-app="prob">
+          <div class="scenario-title">🎲 Probability Prediction</div>
+          <div class="rec-tag">Primary: <span>Log Loss, Brier Score</span></div>
+          <div class="rec-tag">Secondary: Calibration plots, ROC-AUC</div>
+        </div>
+      </div>
+
+      <div class="callout-box">
+        <strong>⚠️ Crucial Automotive &amp; Safety Recommendation:</strong>
+        <p style="margin-top:6px;">
+          For automotive perception in particular, do <strong>not</strong> rely on Accuracy, F1, or even MCC alone. A detector with 99.7% TPR and a detector with 99.0% TPR have drastically different road safety consequences, even when aggregate F1 numbers appear identical.
+        </p>
+        <p style="margin-top:6px;">
+          For a rigorous algorithm KPI framework, use <strong>TPR with a one-sided confidence bound</strong>, <strong>FP/km or FP/hour</strong>, and <strong>Detection Latency</strong> broken down by explicit driving scenarios (e.g. night, glare, cut-in).
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    CMatrixLab — Comprehensive Classification Metrics Reference &amp; Checklist &bull; <a href="index.html" style="color:var(--primary); text-decoration:none; font-weight:600;">Return to Interactive Tool</a>
+  </footer>
+
+  <!-- Script for Search, Filters, and Interactive Calculator -->
+  <script>
+    // 1. Search & Filter
+    const searchInput = document.getElementById('metricSearch');
+    const catButtons = document.querySelectorAll('.cat-btn');
+    const sections = document.querySelectorAll('.metric-section, .calc-card');
+    const rows = document.querySelectorAll('.metric-table tbody tr');
+
+    let currentCategory = 'all';
+
+    function filterMetrics() {
+      const query = (searchInput.value || '').trim().toLowerCase();
+
+      rows.forEach(row => {
+        const rowCategory = row.closest('[data-category]')?.dataset.category || '';
+        const searchTarget = (row.dataset.search || '' + ' ' + row.textContent).toLowerCase();
+        const matchesQuery = !query || searchTarget.includes(query);
+        const matchesCategory = currentCategory === 'all' || rowCategory === currentCategory;
+
+        row.style.display = (matchesQuery && matchesCategory) ? '' : 'none';
+      });
+
+      // Filter sections visibility
+      sections.forEach(sec => {
+        const secCat = sec.dataset.category;
+        if (currentCategory === 'all') {
+          sec.style.display = '';
+        } else if (secCat === currentCategory) {
+          sec.style.display = '';
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterMetrics);
+
+    catButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        filterMetrics();
+      });
+    });
+
+    // 2. Interactive Calculator
+    const inTP = document.getElementById('inTP');
+    const inFP = document.getElementById('inFP');
+    const inFN = document.getElementById('inFN');
+    const inTN = document.getElementById('inTN');
+    const lblTotal = document.getElementById('lblTotal');
+
+    const calcAcc = document.getElementById('calcAcc');
+    const calcF1 = document.getElementById('calcF1');
+    const calcPrec = document.getElementById('calcPrec');
+    const calcRec = document.getElementById('calcRec');
+    const calcSpec = document.getElementById('calcSpec');
+    const calcBalAcc = document.getElementById('calcBalAcc');
+    const calcMCC = document.getElementById('calcMCC');
+    const calcFPR = document.getElementById('calcFPR');
+    const calcBreakdown = document.getElementById('calcFormulaBreakdown');
+
+    let activeMetricDetail = 'f1';
+
+    function updateCalculator() {
+      const tp = Math.max(0, parseFloat(inTP.value) || 0);
+      const fp = Math.max(0, parseFloat(inFP.value) || 0);
+      const fn = Math.max(0, parseFloat(inFN.value) || 0);
+      const tn = Math.max(0, parseFloat(inTN.value) || 0);
+      const n = tp + fp + fn + tn;
+
+      lblTotal.textContent = n.toLocaleString();
+
+      const acc = n > 0 ? (tp + tn) / n : 0;
+      const prec = (tp + fp) > 0 ? tp / (tp + fp) : 0;
+      const rec = (tp + fn) > 0 ? tp / (tp + fn) : 0;
+      const spec = (tn + fp) > 0 ? tn / (tn + fp) : 0;
+      const f1 = (2 * tp + fp + fn) > 0 ? (2 * tp) / (2 * tp + fp + fn) : 0;
+      const balAcc = (rec + spec) / 2;
+      const fpr = (fp + tn) > 0 ? fp / (fp + tn) : 0;
+
+      const mccDenom = Math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
+      const mcc = mccDenom > 0 ? (tp * tn - fp * fn) / mccDenom : 0;
+
+      calcAcc.textContent = (acc * 100).toFixed(1) + '%';
+      calcF1.textContent = (f1 * 100).toFixed(1) + '%';
+      calcPrec.textContent = (prec * 100).toFixed(1) + '%';
+      calcRec.textContent = (rec * 100).toFixed(1) + '%';
+      calcSpec.textContent = (spec * 100).toFixed(1) + '%';
+      calcBalAcc.textContent = (balAcc * 100).toFixed(1) + '%';
+      calcFPR.textContent = (fpr * 100).toFixed(1) + '%';
+      calcMCC.textContent = (mcc >= 0 ? '+' : '') + mcc.toFixed(3);
+
+      renderFormulaBreakdown(tp, fp, fn, tn, n, acc, f1, prec, rec, spec, balAcc, mcc);
+    }
+
+    function renderFormulaBreakdown(tp, fp, fn, tn, n, acc, f1, prec, rec, spec, balAcc, mcc) {
+      const details = {
+        f1: `<b>F1 Score:</b> (2 · TP) ÷ (2 · TP + FP + FN) = (2 · ${tp}) ÷ (${2*tp} + ${fp} + ${fn}) = ${2*tp} ÷ ${2*tp + fp + fn} = <b>${(f1*100).toFixed(1)}%</b>`,
+        accuracy: `<b>Accuracy:</b> (TP + TN) ÷ N = (${tp} + ${tn}) ÷ ${n} = ${tp + tn} ÷ ${n} = <b>${(acc*100).toFixed(1)}%</b>`,
+        precision: `<b>Precision (PPV):</b> TP ÷ (TP + FP) = ${tp} ÷ (${tp} + ${fp}) = ${tp} ÷ ${tp + fp} = <b>${(prec*100).toFixed(1)}%</b>`,
+        recall: `<b>Recall (TPR):</b> TP ÷ (TP + FN) = ${tp} ÷ (${tp} + ${fn}) = ${tp} ÷ ${tp + fn} = <b>${(rec*100).toFixed(1)}%</b>`,
+        specificity: `<b>Specificity (TNR):</b> TN ÷ (TN + FP) = ${tn} ÷ (${tn} + ${fp}) = ${tn} ÷ ${tn + fp} = <b>${(spec*100).toFixed(1)}%</b>`,
+        balancedAcc: `<b>Balanced Accuracy:</b> (TPR + TNR) ÷ 2 = (${(rec*100).toFixed(1)}% + ${(spec*100).toFixed(1)}%) ÷ 2 = <b>${(balAcc*100).toFixed(1)}%</b>`,
+        mcc: `<b>MCC:</b> (TP·TN − FP·FN) ÷ √[(TP+FP)(TP+FN)(TN+FP)(TN+FN)] = (${tp*tn} − ${fp*fn}) ÷ √[${(tp+fp)*(tp+fn)*(tn+fp)*(tn+fn)}] = <b>${(mcc>=0?'+':'') + mcc.toFixed(3)}</b>`,
+        fpr: `<b>FPR (Fall-out):</b> FP ÷ (FP + TN) = ${fp} ÷ (${fp} + ${tn}) = <b>${((fp/(fp+tn||1))*100).toFixed(1)}%</b>`
+      };
+
+      calcBreakdown.innerHTML = details[activeMetricDetail] || details.f1;
+    }
+
+    document.querySelectorAll('.metric-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.metric-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeMetricDetail = chip.dataset.metric;
+        updateCalculator();
+      });
+    });
+
+    [inTP, inFP, inFN, inTN].forEach(inp => {
+      inp.addEventListener('input', updateCalculator);
+    });
+
+    // 3. Scenario Cards Click
+    document.querySelectorAll('.scenario-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    updateCalculator();
+  </script>
+</body>
+</html>

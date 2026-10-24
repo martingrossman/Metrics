@@ -5,10 +5,14 @@ const os = require('node:os');
 const { parseArgs } = require('node:util');
 
 function createServer(root = path.join(__dirname, '..')) {
-  // Only the demo is shared; read it for each request so edits show on refresh.
+  // Only the demo and reference pages are shared; read them for each request so edits show on refresh.
   const pages = new Map([
     ['/', 'index.html'],
-    ['/index.html', 'index.html']
+    ['/index.html', 'index.html'],
+    ['/reference.html', 'reference.html'],
+    ['/reference', 'reference.html'],
+    ['/checklist.html', 'reference.html'],
+    ['/checklist', 'reference.html']
   ]);
 
   return http.createServer((request, response) => {

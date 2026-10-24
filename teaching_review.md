@@ -27,7 +27,7 @@ Reviewed: [index.html](file:///c:/Users/martin/Documents/GitHub/Metrics/index.ht
 |---|---|---|---|---|
 | **P0: Fix First (Pedagogical Errors / Confusion)** | #1, #2, #3, #4 | **4** | 0 | **100% Complete** ✅ |
 | **P1: Missing Core Concepts** | #5, #6, #7, #8, #9, #10 | **6** | 0 | **100% Complete** ✅ (+ Enhanced) |
-| **P2: Active Learning & Domain Examples** | #11, #12, #13, #14 | **1** (#12) | 3 (#11, #13, #14) | **25% Complete** (Preset stories ready) |
+| **P2: Active Learning & Domain Examples** | #11, #12, #13, #14 | **2** (#12, #13) | 2 (#11, #14) | **50% Complete** (Presets & Reference ready) |
 | **P3: Accessibility & Polish** | #15, #16, #17, #18, #19 | **1** (#18) | 4 (#15, #16, #17, #19) | **20% Complete** |
 
 ---
@@ -64,7 +64,7 @@ Reviewed: [index.html](file:///c:/Users/martin/Documents/GitHub/Metrics/index.ht
 |---|---|---|---|
 | **11** | **Predict → Observe → Explain Challenges** | ⏳ *Backlog* | Guided micro-challenges (e.g. "Find threshold with zero missed cases") with progress checkmarks. |
 | **12** | **Real-World Domain Presets & Mobile Graph Switcher** | ✅ **Complete** | Expanded top bar scenario selector (`#presetSelect`) and responsive graph switcher on both desktop and mobile:<br/>• **🩺 Flu Test (50/50):** Baseline medical diagnostic (50% sick, 50% cutoff, 60% separation; 96% Precision).<br/>• **🚗 Car Braking (AEB Sensor):** Autonomous emergency braking (15% obstacle portion, 60% sensitivity, 70% clarity; 100% TPR, 12% FPR, 59.5% Precision; zero missed crashes).<br/>• **🔬 Flu Screening (10% Sick):** Rare-disease screening with high recall (10% sick, 80% sensitivity, 60% separation; 100% TPR, 11.2% Precision).<br/>• **📧 Spam Filter (Email):** High-precision filtering protecting valid emails (40% spam, 45% aggressiveness, 55% separation; 86% TPR, 2% FPR, 96.6% Precision; moving spam portion to 10% drops Precision to 82.7%).<br/>• **💳 Fraud Alert (1% Rare):** Extreme class imbalance showcasing the base-rate fallacy (1% fraud, 50% aggressiveness, 60% separation; 96% TPR, 4% FPR, 19.5% Precision; 80% of blocked charges are false alarms).<br/>• **🤖 Generic ML:** Standard data science formulation.<br/>• **Mobile tabs:** `[Default | 4-Up | Gauss | ROC | PR | Bayes]` fully interactive on iPhone portrait. |
-| **13** | **Synonyms Glossary Tooltip** | ⏳ *Backlog* | Hover glossary linking Sensitivity = Recall = TPR = Hit Rate; Specificity = TNR; Fall-out = FPR; Precision = PPV. |
+| **13** | **Comprehensive 32-Metric Quick Reference & Checklist Page** | ✅ **Complete** | Added standalone reference page ([reference.html](file:///c:/Users/martin/Documents/GitHub/Metrics/reference.html)) with real-time search, category filters (Core, Imbalance-Aware, Negative & Errors, Ranking, Operational / Automotive), interactive 2×2 calculation playground, and domain decision guide. Linked from Learn Mode and the simulator footer. |
 | **14** | **3-Step First-Visit Coach Marks** | ⏳ *Backlog* | Lightweight step-by-step onboarding walkthrough for first-time visitors. |
 
 ---
