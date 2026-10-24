@@ -150,7 +150,7 @@ console.log(`Model: ${combinations} combinations passed.`);
       assert.equal(await page.locator('#tpr').textContent(), fixedTpr);
       assert.equal(await page.locator('#fpr').textContent(), fixedFpr);
     }
-    // Switching terminology preserves the effective cutoff and all model results.
+    // The dropdown loads scenario settings; equivalent cutoffs give the same model results.
     const numericState = () => page.evaluate(() => ({
       otherSliders: ['prevalence', 'separation'].map(id => document.getElementById(id).value),
       cutoff: document.querySelector('#plot line[stroke-dasharray]').getAttribute('x1'),
@@ -159,17 +159,23 @@ console.log(`Model: ${combinations} combinations passed.`);
       points: [...document.querySelectorAll('#plot circle')]
         .map(e => ['cx', 'cy', 'r', 'fill'].map(attribute => e.getAttribute(attribute)))
     }));
-    const beforeModeChange = await numericState();
-    await page.locator('#modeToggle').click();
-    assert.deepEqual(await numericState(), beforeModeChange);
-    assert.equal(await page.locator('#threshold').inputValue(), '37');
+    assert.equal(await page.locator('#modeToggle').count(), 0);
+    await page.locator('#presetSelect').selectOption('generic');
+    assert.equal(await page.locator('#presetSelect').inputValue(), 'generic');
+    assert.equal(await page.locator('#threshold').inputValue(), '50');
+    assert.equal(await page.locator('#prevalence').inputValue(), '50');
+    assert.equal(await page.locator('#separation').inputValue(), '60');
     assert.equal(await page.locator('#shareLabel').textContent(), 'Positive portion');
     assert.ok((await page.locator('#plot').textContent()).includes('Actual +'));
     assert.ok(!(await page.locator('#intro').textContent()).includes('flu'));
     assert.ok(!(await page.locator('.tile').first().getAttribute('title')).includes('flu'));
-    await page.locator('#modeToggle').click();
-    assert.deepEqual(await numericState(), beforeModeChange);
-    assert.equal(await page.locator('#threshold').inputValue(), '63');
+    await setSlider('threshold', 37);
+    const genericState = await numericState();
+    assert.equal(await page.locator('#presetSelect option:checked').textContent(), 'Custom: Generic ML');
+    await page.locator('#presetSelect').selectOption('balanced');
+    assert.equal(await page.locator('#presetSelect').inputValue(), 'balanced');
+    await setSlider('threshold', 63);
+    assert.deepEqual(await numericState(), genericState);
     assert.equal(await page.locator('#shareLabel').textContent(), 'Sick portion');
     assert.ok((await page.locator('#intro').textContent()).includes('also depends'));
     await setSlider('prevalence', 27);

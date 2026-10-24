@@ -113,8 +113,6 @@
     gap: 8px;
   }
 
-  .mode-short { display: none; }
-  .mode-toggle { color: #6d43bc; border-color: #ddd3f5; }
 
   .card {
     background: rgb(255, 255, 255);
@@ -937,8 +935,6 @@
 
   /* Phone: compact controls, charts, and sticky metrics. */
   @media (max-width: 650px) {
-    .mode-long { display: none; }
-    .mode-short { display: inline; }
     .control:has(#prevalence), .control:has(#threshold) {
       grid-template-columns: minmax(205px, 55%) minmax(0px, 1fr);
     }
@@ -1340,10 +1336,7 @@
     .brand-credit { display: none; }
     .preset-select { display: inline-block; max-width: 110px; font-size: 10.5px; padding: 2px; }
   }
-  @media (max-width: 355px) {
-    .preset-select { display: none !important; }
-  }
-  .graph-toggle-group { display: inline-flex; align-items: center; gap: 2px; background: #edf2f7; border-radius: 6px; padding: 2px; }
+.graph-toggle-group { display: inline-flex; align-items: center; gap: 2px; background: #edf2f7; border-radius: 6px; padding: 2px; }
   .graph-tab { font-family: Inter, system-ui, sans-serif; font-size: 11px; font-weight: 600; padding: 2px 7px; border: none; background: transparent; color: #526886; border-radius: 4px; cursor: pointer; line-height: 1.2; white-space: nowrap; }
   .graph-tab:hover { color: #1e293b; }
   .graph-tab.active { background: #ffffff; color: #1a56db; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
@@ -1692,7 +1685,7 @@
    <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
   </div>
   <div class="top-right">
-   <select class="preset-select" id="presetSelect" aria-label="Scenario Presets" title="Scenario Presets">
+   <select class="preset-select" id="presetSelect" aria-label="Choose a scenario" title="Choose a scenario">
     <option value="balanced">🩺 Flu Test (50/50)</option>
     <option value="car">🚗 Car Braking (AEB Sensor)</option>
     <option value="screening">🔬 Flu Screening (10% Sick)</option>
@@ -1701,7 +1694,6 @@
     <option value="generic">🤖 Generic ML</option>
     <option value="custom" disabled hidden>Preset: Custom</option>
    </select>
-   <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
    <a href="cheatsheet.html" class="reset ref-top-btn" id="refTopBtn" title="32 metrics cheatsheet: formula, when good, when it fails" aria-label="Metrics cheatsheet">📋<span class="ref-long"> Cheatsheet</span><span class="ref-short"></span></a>
    <button class="reset" id="reset" aria-label="Reset" title="Reset">
     <span class="reset-word">Reset </span>↺
@@ -2041,7 +2033,6 @@
     prevalenceOut: getElement('prevalenceOut'),
     balance10: getElement('balance10'),
     balance50: getElement('balance50'),
-    modeToggle: getElement('modeToggle'),
     thresholdOut: getElement('thresholdOut'),
     separationOut: getElement('separationOut'),
     positiveCount: getElement('pCount'),
@@ -2208,12 +2199,6 @@
       : (activeDomain === 'flu'
         ? 'Precision = chance a person has flu after a positive test in this group.'
         : `Precision = chance of ${copy.actualPositive.toLowerCase()} after a positive decision.`);
-    const domainShort = activeDomain === 'car' ? 'Car' : (activeDomain === 'spam' ? 'Spam' : (activeDomain === 'fraud' ? 'Fraud' : 'Flu'));
-    const domainLong = activeDomain === 'car' ? 'Car AEB' : (activeDomain === 'spam' ? 'Spam Filter' : (activeDomain === 'fraud' ? 'Fraud Alert' : 'Flu example'));
-    elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? domainLong : 'Generic ML';
-    elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? domainShort : 'ML';
-    elements.modeToggle.title = genericMode ? `Switch to ${domainLong}` : 'Switch to generic ML terminology';
-    elements.modeToggle.setAttribute('aria-label', elements.modeToggle.title);
   }
 
   function readSettings() {
@@ -3700,6 +3685,8 @@
       } else {
         presetSelect.value = 'custom';
       }
+      const customOption = presetSelect.querySelector('option[value="custom"]');
+      if (customOption) customOption.textContent = 'Custom: ' + (genericMode ? 'Generic ML' : {flu:'Flu',car:'Car AEB',spam:'Spam',fraud:'Fraud'}[activeDomain]);
     }
   }
 
@@ -3867,7 +3854,7 @@
     renderMetricHighlight();
   });
   document.addEventListener('pointerdown', event => {
-    if (event.target.closest('.metric, #controls, .views, #modeToggle')) return;
+    if (event.target.closest('.metric, #controls, .views, #presetSelect')) return;
     formulaPreview = formulaPinned = null;
     hoveredMetric = focusedMetric = pinnedMetric = null;
     renderMetricHighlight();
@@ -3902,12 +3889,6 @@
     if (next === undefined) return;
     event.preventDefault();
     setPlotThreshold(next);
-  });
-  elements.modeToggle.addEventListener('click', () => {
-    // Preserve the effective cutoff and every prediction when changing terminology.
-    elements.threshold.value = 100 - Number(elements.threshold.value);
-    genericMode = !genericMode;
-    update();
   });
   for (const share of [10, 50]) {
     elements[`balance${share}`].addEventListener('click', () => {

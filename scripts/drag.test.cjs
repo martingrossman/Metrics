@@ -98,17 +98,17 @@ for (const device of [
       await input(device.touch ? 'touchCancel' : 'touchEnd');
       assert.equal(await page.locator('#plot').evaluate(e => e.classList.contains('dragging')), false);
 
-      await page.locator('#modeToggle').click();
-      await check(65, true);
+      await page.locator('#presetSelect').selectOption('generic');
+      await check(50, true);
       await input('touchStart', await point(null));
       await input('touchMove', await point(0.4));
       await input('touchEnd');
       await check(40, true);
-      await page.locator('#modeToggle').click();
-      await check(40);
+      await page.locator('#presetSelect').selectOption('balanced');
+      await check(50);
 
       await page.locator('#plot').focus();
-      for (const [key, cutoff] of [['ArrowRight', 41], ['ArrowLeft', 40], ['Home', 0], ['End', 100]]) {
+      for (const [key, cutoff] of [['ArrowRight', 51], ['ArrowLeft', 50], ['Home', 0], ['End', 100]]) {
         await page.keyboard.press(key);
         await check(cutoff);
         assert.equal(await page.locator('#plot').evaluate(e => e === document.activeElement), true);

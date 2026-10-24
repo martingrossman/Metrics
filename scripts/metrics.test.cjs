@@ -105,8 +105,7 @@ for (const device of [
       else await page.locator('#precisionCard').click();
       await page.locator('#threshold').evaluate(e => { e.value = '70'; e.dispatchEvent(new Event('input')); });
       await verify('precision');
-      if (device.mobile) await page.locator('#modeToggle').tap();
-      else await page.locator('#modeToggle').click();
+      await page.locator('#presetSelect').selectOption('generic');
       await verify('precision');
       await page.locator('#prevalence').evaluate(e => { e.value = '0'; e.dispatchEvent(new Event('input')); });
       await verify('precision');

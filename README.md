@@ -11,6 +11,10 @@ GitHub Pages.
 Drag the blue threshold line in the first graph with a mouse or finger, or use
 the matching slider. You can also focus the graph and use the arrow keys.
 
+Use the scenario dropdown to load Flu, AEB, Spam, Fraud, or Generic ML wording
+and settings. Editing a slider marks the selection as Custom while keeping the
+current scenario context. Reset returns to the balanced Flu preset.
+
 Hover over a metric or tap it on your phone to see its calculation in both
 graphs. A solid outline marks the numerator; a dashed outline marks the total
 it is divided by. Tap the same metric again to clear it. Keyboard users can
