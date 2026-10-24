@@ -156,7 +156,7 @@ for (const device of [
             const target=separation===100?110:separation===0?-10:separation;
             const change=(target-60)/100;
             const distance=Math.sign(change)*Math.pow(Math.abs(change),1/dragSettings.responseExponent)
-              *Math.max(dragSettings.minDistancePixels,width*start.scale*dragSettings.horizontalWidthScale);
+              *Math.max(dragSettings.horizontalMinDistancePixels,width*start.scale*dragSettings.horizontalWidthScale);
             await input('touchMove',{x:start.x+distance,y:start.y});
             // Native pointer coordinates can round by a screen pixel in WebKit.
             await page.waitForFunction(value=>Math.abs(Number(document.getElementById('separation').value)-value)<=2,separation);

@@ -2051,10 +2051,11 @@
   const GROUP_DRAG = Object.freeze({
     activationPixels: 6,       // Movement before choosing the initial horizontal or vertical axis.
     axisSwitchRatio: 1.8,      // Switch axes when movement in the other direction is clearly stronger.
-    minDistancePixels: 280,    // Higher = less sensitive, especially on small screens.
+    horizontalMinDistancePixels: 200, // Higher = slower separation changes, especially on small screens.
+    verticalMinDistancePixels: 100,   // Higher = slower proportion changes, especially on small screens.
     horizontalWidthScale: 0.8, // Higher = slower separation changes on wide graphs.
     verticalHeightScale: 1.5,  // Higher = slower proportion changes on tall graphs.
-    responseExponent: 1.7     // 1 = linear; higher = gentler start, faster long drags.
+    responseExponent: 2     // 1 = linear; higher = gentler start, faster long drags.
   });
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -3641,7 +3642,8 @@
     // Both axes ease in for fine control and accelerate on longer drags.
     const scale=vertical?separationDrag.height*GROUP_DRAG.verticalHeightScale
       :separationDrag.width*GROUP_DRAG.horizontalWidthScale;
-    const distance=(vertical?-dy:dx)/Math.max(GROUP_DRAG.minDistancePixels,scale);
+    const minimum=vertical?GROUP_DRAG.verticalMinDistancePixels:GROUP_DRAG.horizontalMinDistancePixels;
+    const distance=(vertical?-dy:dx)/Math.max(minimum,scale);
     const delta=Math.sign(distance)*Math.pow(Math.abs(distance),GROUP_DRAG.responseExponent);
     const control=vertical?elements.prevalence:elements.separation;
     const initial=vertical?separationDrag.startPrevalence:separationDrag.startValue;
