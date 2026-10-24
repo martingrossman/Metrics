@@ -307,6 +307,8 @@
     user-select: none;
     -webkit-user-select: none;
   }
+  .plot [data-separation-direction] { cursor: ew-resize; touch-action: none; }
+  .plot circle.point[data-separation-direction] { cursor: move; }
 
   .plot.dragging {
     cursor: ew-resize;
@@ -2500,6 +2502,14 @@
       x: left + width, y: headerY, 'text-anchor': 'end',
       fill: '#c54757', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
     }, copy.predictedPositive);
+    if(isPrimary) draw('text', {
+      x:left-14, y:headerY, 'text-anchor':'end',
+      'font-size':splitMode?14:compact?16:18, fill:'#526886', 'pointer-events':'none'
+    }, '↔ separation');
+    if(isPrimary) draw('text', {
+      x:left-14, y:headerY+18, 'text-anchor':'end',
+      'font-size':splitMode?14:compact?16:18, fill:'#526886', 'pointer-events':'none'
+    }, '↕ proportion');
 
     draw('line', {
       x1: left, y1: midY, x2: left + width, y2: midY,
@@ -2556,6 +2566,14 @@
     }
     drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'fn', 'tp', positiveCount);
     drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'tn', 'fp', CONFIG.totalExamples - positiveCount);
+    if(isPrimary) {
+      for(const [direction, centerY, count] of [[1,positiveRow,positiveCount],[-1,negativeRow,CONFIG.totalExamples-positiveCount]]) {
+        if(!count) continue;
+        draw('rect', {x:left, y:Math.max(top,centerY-envelopeHalfHeight), width,
+          height:Math.min(bottom,centerY+envelopeHalfHeight)-Math.max(top,centerY-envelopeHalfHeight),
+          fill:'transparent', 'data-separation-direction':direction, 'aria-hidden':'true'});
+      }
+    }
 
     // Distribute dots vertically only when neighboring scores overlap.
     // Their HORIZONTAL position always corresponds to the actual score.
@@ -2596,6 +2614,7 @@
           stroke: '#fff', 'stroke-width': 1, class: 'point'
         });
         if (isPrimary) {
+          dot.setAttribute('data-separation-direction', example.isPositive ? 1 : -1);
           addHoverLink(dot, example);
         }
         dot.appendChild(createSvgElement('title', {},
@@ -3584,6 +3603,36 @@
   // ============================================================
 
   let thresholdDrag = null;
+  let separationDrag = null;
+
+  function moveSeparation(event) {
+    if(!separationDrag || event.pointerId!==separationDrag.pointerId) return;
+    event.preventDefault();
+    const dx=event.clientX-separationDrag.clientX, dy=event.clientY-separationDrag.clientY;
+    if(!separationDrag.axis) {
+      if(Math.hypot(dx,dy)<6) return;
+      separationDrag.axis=Math.abs(dx)>=Math.abs(dy)?'x':'y';
+    }
+    const vertical=separationDrag.axis==='y';
+    // Ease into proportion changes: short drags provide fine control, longer drags accelerate.
+    const verticalDistance=-dy/Math.max(280,separationDrag.height*1.5);
+    const delta=vertical ? Math.sign(verticalDistance)*Math.pow(Math.abs(verticalDistance),1.7)
+      : (plotPointerX(event)-separationDrag.startX)/plotRegions.width/0.30;
+    const control=vertical?elements.prevalence:elements.separation;
+    const initial=vertical?separationDrag.startPrevalence:separationDrag.startValue;
+    const direction=vertical?1:separationDrag.direction;
+    const next=String(Math.round(clamp(initial+direction*delta*100,0,100)));
+    if(control.value===next) return;
+    control.value=next;
+    update();
+  }
+
+  function endSeparationDrag(event) {
+    if(!separationDrag || event.pointerId!==separationDrag.pointerId) return;
+    separationDrag=null;
+    elements.scorePlot.classList.remove('dragging');
+    if(elements.scorePlot.hasPointerCapture(event.pointerId)) elements.scorePlot.releasePointerCapture(event.pointerId);
+  }
 
   function plotPointerX(event) {
     const point = elements.scorePlot.createSVGPoint();
@@ -3873,7 +3922,7 @@
     renderMetricHighlight();
   });
   elements.scorePlot.addEventListener('pointerdown', event => {
-    if (!event.isPrimary || event.button !== 0 || thresholdDrag ||
+    if (!event.isPrimary || event.button !== 0 || thresholdDrag || separationDrag ||
         !event.target.closest('.threshold-drag')) return;
     event.preventDefault();
     thresholdDrag = {
@@ -3885,6 +3934,25 @@
     elements.scorePlot.classList.add('dragging');
     highlightExample(null);
   });
+  elements.scorePlot.addEventListener('pointerdown',event=>{
+    const target=event.target.closest('[data-separation-direction]');
+    if(!target || !event.isPrimary || event.button!==0 || thresholdDrag || separationDrag) return;
+    event.preventDefault();
+    separationDrag={pointerId:event.pointerId,direction:Number(target.dataset.separationDirection),
+      startX:plotPointerX(event),startValue:Number(elements.separation.value),
+      clientX:event.clientX,clientY:event.clientY,startPrevalence:Number(elements.prevalence.value),
+      height:(plotRegions.bottom-plotRegions.top)*elements.scorePlot.getScreenCTM().d,axis:null};
+    elements.scorePlot.setPointerCapture(event.pointerId);
+    elements.scorePlot.classList.add('dragging');
+    highlightExample(null);
+  });
+  elements.scorePlot.addEventListener('pointermove',moveSeparation);
+  elements.scorePlot.addEventListener('touchstart',event=>{
+    if(separationDrag) event.preventDefault();
+  },{passive:false});
+  elements.scorePlot.addEventListener('pointerup',event=>{moveSeparation(event);endSeparationDrag(event);});
+  elements.scorePlot.addEventListener('pointercancel',endSeparationDrag);
+  elements.scorePlot.addEventListener('lostpointercapture',endSeparationDrag);
   elements.scorePlot.addEventListener('pointermove', moveThreshold);
   elements.scorePlot.addEventListener('pointerup', event => {
     moveThreshold(event);

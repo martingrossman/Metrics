@@ -120,6 +120,67 @@ for (const device of [
         await check(cutoff);
         assert.equal(await page.locator('#plot').evaluate(e => e === document.activeElement), true);
       }
+      // Drag either group in both score layouts; use real touch gestures on Chromium phones.
+      for(const view of ['scores','split']) {
+        await page.locator(`[data-graph-view="${view}"]`).click();
+        for(const direction of [1,-1]) {
+          await page.locator('#separation').evaluate(e=>{e.value='60';e.dispatchEvent(new Event('input'));});
+          const groupPoint=()=>page.locator(`#plot circle.point[data-separation-direction="${direction}"]`).evaluateAll((nodes,direction)=>{
+            // Grab a real dot near the group center, away from the cutoff hit target.
+            const split=nodes[0].ownerSVGElement.viewBox.baseVal.height===270;
+            const mean=(split?155:190)+(split?475:410)*(0.5+direction*0.18);
+            const e=nodes.reduce((best,node)=>Math.abs(Number(node.getAttribute('cx'))-mean)<Math.abs(Number(best.getAttribute('cx'))-mean)?node:best);
+            const svg=e.ownerSVGElement, p=svg.createSVGPoint();
+            p.x=Number(e.getAttribute('cx'));
+            p.y=Number(e.getAttribute('cy'));
+            const screen=p.matrixTransform(svg.getScreenCTM());
+            return {x:screen.x,y:screen.y,scale:svg.getScreenCTM().a};
+          }, direction);
+          const start=await groupPoint();
+          const width=view==='split'?475:410;
+          const threshold=await page.locator('#threshold').inputValue();
+          await input('touchStart',{x:start.x,y:start.y});
+          assert.equal(await page.locator('#separation').inputValue(),'60','No jump on grab');
+          for(const separation of [80,20,100,0,60]) {
+            const target=separation===100?110:separation===0?-10:separation;
+            await input('touchMove',{x:start.x+direction*(target-60)/100*0.30*width*start.scale,y:start.y});
+            // Native pointer coordinates can round by a screen pixel in WebKit.
+            await page.waitForFunction(value=>Math.abs(Number(document.getElementById('separation').value)-value)<=2,separation);
+            const actual=Number(await page.locator('#separation').inputValue());
+            if(separation===0 || separation===100) assert.equal(actual,separation);
+            assert.equal(await page.locator('#separationOut').textContent(),`${actual}%`);
+            assert.equal(await page.locator('#threshold').inputValue(),threshold);
+            assert.equal(await page.locator('#prevalence').inputValue(),'10');
+          }
+          await input('touchEnd');
+          assert.equal(await page.locator('#plot').evaluate(e=>e.classList.contains('dragging')),false);
+          await page.locator('#prevalence').evaluate(e=>{e.value='50';e.dispatchEvent(new Event('input'));});
+          const verticalStart=await groupPoint();
+          const separationBefore=await page.locator('#separation').inputValue();
+          await input('touchStart',{x:verticalStart.x,y:verticalStart.y});
+          await input('touchMove',{x:verticalStart.x,y:verticalStart.y-30});
+          await page.waitForFunction(()=>Number(document.getElementById('prevalence').value)>50);
+          const share=await page.locator('#prevalence').inputValue();
+          assert.ok(Math.abs(Number(share)-50)<=5,'A short vertical drag changes the share gently');
+          assert.equal(await page.locator('#separation').inputValue(),separationBefore);
+          // Once a vertical gesture starts, sideways movement must not alter separation.
+          await input('touchMove',{x:verticalStart.x+30,y:verticalStart.y-30});
+          assert.equal(await page.locator('#prevalence').inputValue(),share);
+          assert.equal(await page.locator('#separation').inputValue(),separationBefore);
+          await input('touchMove',{x:verticalStart.x,y:verticalStart.y-90});
+          await page.waitForFunction(share=>Number(document.getElementById('prevalence').value)>Number(share),share,{timeout:3000}).catch(async error=>{
+            throw new Error(`${view}, group ${direction}, initial change ${share}, current ${await page.locator('#prevalence').inputValue()}, dragging ${await page.locator('#plot').getAttribute('class')}: ${error.message}`);
+          });
+          const largerChange=Math.abs(Number(await page.locator('#prevalence').inputValue())-50);
+          assert.ok(largerChange>Math.abs(Number(share)-50)*3,'Longer vertical drags accelerate');
+          await input('touchMove',{x:verticalStart.x,y:verticalStart.y+30});
+          await page.waitForFunction(()=>Number(document.getElementById('prevalence').value)<50);
+          assert.equal(await page.locator('#separation').inputValue(),separationBefore);
+          await input('touchEnd');
+          await page.locator('#prevalence').evaluate(e=>{e.value='10';e.dispatchEvent(new Event('input'));});
+        }
+      }
+      await page.locator('#reset').click();
       assert.deepEqual(await page.locator('.panel').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height)), geometry);
       assert.equal(await page.evaluate(() => scrollY), 0);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
