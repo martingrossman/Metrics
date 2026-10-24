@@ -307,12 +307,13 @@
     user-select: none;
     -webkit-user-select: none;
   }
-  .plot [data-separation-direction] { cursor: ew-resize; touch-action: none; }
+  .plot [data-separation-direction] { cursor: move; touch-action: none; }
   .plot circle.point[data-separation-direction] { cursor: move; }
 
   .plot.dragging {
     cursor: ew-resize;
   }
+  .plot.dragging-groups, .plot.dragging-groups * { cursor: move; }
 
   .threshold-drag:hover .threshold-grip,
   .plot.dragging .threshold-grip,
@@ -2048,7 +2049,8 @@
 
   // Group dragging: edit these settings to tune both mouse and touch gestures.
   const GROUP_DRAG = Object.freeze({
-    activationPixels: 6,       // Movement before locking to the horizontal or vertical axis.
+    activationPixels: 6,       // Movement before choosing the initial horizontal or vertical axis.
+    axisSwitchRatio: 1.8,      // Switch axes when movement in the other direction is clearly stronger.
     minDistancePixels: 280,    // Higher = less sensitive, especially on small screens.
     horizontalWidthScale: 0.8, // Higher = slower separation changes on wide graphs.
     verticalHeightScale: 1.5,  // Higher = slower proportion changes on tall graphs.
@@ -3618,9 +3620,22 @@
     if(!separationDrag || event.pointerId!==separationDrag.pointerId) return;
     event.preventDefault();
     const dx=event.clientX-separationDrag.clientX, dy=event.clientY-separationDrag.clientY;
+    let axisChanged=false;
     if(!separationDrag.axis) {
       if(Math.hypot(dx,dy)<GROUP_DRAG.activationPixels) return;
       separationDrag.axis=Math.abs(dx)>=Math.abs(dy)?'x':'y';
+    } else {
+      const switchToVertical=separationDrag.axis==='x' && Math.abs(dy)>=GROUP_DRAG.activationPixels
+        && Math.abs(dy)>Math.abs(dx)*GROUP_DRAG.axisSwitchRatio;
+      const switchToHorizontal=separationDrag.axis==='y' && Math.abs(dx)>=GROUP_DRAG.activationPixels
+        && Math.abs(dx)>Math.abs(dy)*GROUP_DRAG.axisSwitchRatio;
+      if(switchToVertical || switchToHorizontal) {
+        // Undo movement on the previous axis so a corrected gesture changes only one control.
+        const previous=separationDrag.axis==='y'?elements.prevalence:elements.separation;
+        previous.value=String(separationDrag.axis==='y'?separationDrag.startPrevalence:separationDrag.startValue);
+        separationDrag.axis=switchToVertical?'y':'x';
+        axisChanged=true;
+      }
     }
     const vertical=separationDrag.axis==='y';
     // Both axes ease in for fine control and accelerate on longer drags.
@@ -3631,7 +3646,7 @@
     const control=vertical?elements.prevalence:elements.separation;
     const initial=vertical?separationDrag.startPrevalence:separationDrag.startValue;
     const next=String(Math.round(clamp(initial+delta*100,0,100)));
-    if(control.value===next) return;
+    if(control.value===next && !axisChanged) return;
     control.value=next;
     update();
   }
@@ -3639,7 +3654,7 @@
   function endSeparationDrag(event) {
     if(!separationDrag || event.pointerId!==separationDrag.pointerId) return;
     separationDrag=null;
-    elements.scorePlot.classList.remove('dragging');
+    elements.scorePlot.classList.remove('dragging','dragging-groups');
     if(elements.scorePlot.hasPointerCapture(event.pointerId)) elements.scorePlot.releasePointerCapture(event.pointerId);
   }
 
@@ -3953,7 +3968,7 @@
       height:(plotRegions.bottom-plotRegions.top)*elements.scorePlot.getScreenCTM().d,
       width:plotRegions.width*elements.scorePlot.getScreenCTM().a,axis:null};
     elements.scorePlot.setPointerCapture(event.pointerId);
-    elements.scorePlot.classList.add('dragging');
+    elements.scorePlot.classList.add('dragging','dragging-groups');
     highlightExample(null);
   });
   elements.scorePlot.addEventListener('pointermove',moveSeparation);

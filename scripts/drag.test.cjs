@@ -172,8 +172,10 @@ for (const device of [
           const verticalStart=await groupPoint();
           const separationBefore=await page.locator('#separation').inputValue();
           await input('touchStart',{x:verticalStart.x,y:verticalStart.y});
+          // A small sideways lead-in must not permanently block a deliberate vertical mouse drag.
+          if(!device.touch && !device.mobile) await input('touchMove',{x:verticalStart.x+8,y:verticalStart.y});
           await input('touchMove',{x:verticalStart.x,y:verticalStart.y-30});
-          await page.waitForFunction(()=>Number(document.getElementById('prevalence').value)>50);
+          await page.waitForFunction(()=>Number(document.getElementById('prevalence').value)>50,null,{timeout:3000});
           const share=await page.locator('#prevalence').inputValue();
           assert.ok(Math.abs(Number(share)-50)<=5,'A short vertical drag changes the share gently');
           assert.equal(await page.locator('#separation').inputValue(),separationBefore);
