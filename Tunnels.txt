@@ -1,0 +1,7 @@
+#tunnel 2
+winget install --id Ngrok.Ngrok -e
+ngrok http --domain=deadly-darling-bengal.ngrok-free.app 8080
+
+# Tunnel
+ winget install --id Cloudflare.cloudflared -e
+cloudflared tunnel --url http://192.168.0.140:8080
