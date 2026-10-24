@@ -21,7 +21,8 @@ for (const device of [
       await noOverflow();
       assert.equal(await page.locator('.metric-detail').count(), 35);
       assert.equal(await page.locator('.metric-detail[open]').count(), 0);
-      await page.locator('#fold-groups').click();
+      assert.deepEqual(await page.locator('details[open]').evaluateAll(nodes=>nodes.map(node=>node.id)), ['sec-guide']);
+      assert.equal(await page.locator('#fold-groups').textContent(), 'Expand categories');
       assert.equal(await page.locator('.metric-detail:visible').count(), 0);
       await page.locator('[data-group="core"]').focus();
       await page.keyboard.press('Enter');
@@ -62,6 +63,8 @@ for (const device of [
       await page.locator('#sec-guide summary').click();
       await noOverflow();
       await page.locator('#sec-guide summary').click();
+      await page.locator('#sec-guide a[href="#sec-calculator"]').click();
+      assert.equal(await page.locator('#sec-calculator').getAttribute('open'), '');
       assert.equal(await page.locator('#calc-f1').textContent(), '76.2%');
       await page.locator('[data-metric="precision"]').click();
       assert.match(await page.locator('#calcFormulaBreakdown').textContent(), /32 \/ \(32 \+ 8\) = 80.0%/);
@@ -102,14 +105,44 @@ for (const device of [
       assert.match(await page.locator('#scenario-medical .scenario-body').textContent(), /593 positive results/);
       await page.reload();
       assert.equal(await page.locator('#scenario-aeb').getAttribute('open'), '');
+      await page.locator('#sec-calculator > summary').click();
       await noOverflow();
       await page.locator('#scenario-factory > summary').click();
+      const recallToggle=page.locator('#scenario-factory .scenario-metric-toggle').first();
+      const beforeExpand=page.url();
+      await recallToggle.focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await recallToggle.getAttribute('aria-expanded'), 'true');
+      assert.equal(page.url(), beforeExpand, 'Inline explanation keeps the reader in the scenario');
+      const recallNote=page.locator('#'+await recallToggle.getAttribute('aria-controls'));
+      assert.match(await recallNote.textContent(), /950 ÷ 1,000 = 95%/);
+      await noOverflow();
+      await page.keyboard.press('Space');
+      assert.equal(await recallNote.isVisible(), false);
+      await recallToggle.click();
       await page.locator('#scenario-factory .metric-choice [data-scenario-metric="2"]').first().click();
       assert.match(page.url(), /#metric-2$/);
       assert.equal(await page.locator('#metric-2').getAttribute('open'), '');
       await page.locator('#metric-2 .return-scenario a').click();
       assert.match(page.url(), /#scenario-factory$/);
       assert.equal(await page.locator('#scenario-factory').getAttribute('open'), '');
+      // Every recommended metric has a working, initially folded explanation.
+      for (const key of ['factory','medical','fraud','blocking','aeb','vision','safety','probability']) {
+        await page.locator('#scenario-'+key).evaluate(node=>node.open=true);
+        const toggles=page.locator('#scenario-'+key+' .scenario-metric-toggle');
+        for(let i=0;i<await toggles.count();i++) {
+          const toggle=toggles.nth(i);
+          const note=page.locator('#'+await toggle.getAttribute('aria-controls'));
+          if(await toggle.getAttribute('aria-expanded')==='true') await toggle.click();
+          assert.equal(await note.isVisible(), false);
+          await toggle.click();
+          assert.equal(await note.isVisible(), true);
+          assert.ok((await note.textContent()).length>100);
+          assert.equal(await note.locator('[data-scenario-metric]').count(), 1);
+          await noOverflow();
+          await toggle.click();
+        }
+      }
       await page.locator('#preset').selectOption('screening');
       assert.match(await page.locator('#scenario-context').textContent(), /Medical screening/);
       await page.locator('#inTP').fill('10');

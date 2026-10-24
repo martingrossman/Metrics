@@ -51,6 +51,14 @@ h3 { font-size:16px; margin:0; }
 .metric-choice li { margin-bottom:8px; padding-left:2px; }
 .metric-choice .choice-caution { margin-bottom:0; color:var(--muted); }
 .return-scenario a { display:inline-block; padding-block:8px; }
+.scenario-metric-toggle { font:inherit; color:var(--accent); background:none; border:0; border-bottom:1px dotted currentColor; padding:5px 2px; cursor:pointer; text-align:left; }
+.scenario-metric-toggle::after { content:' +'; }
+.scenario-metric-toggle[aria-expanded="true"]::after { content:' −'; }
+.scenario-metric-toggle:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.scenario-metric-note { display:block; margin:6px 0 10px; padding:10px; background:white; border:1px solid var(--line); border-radius:6px; font-weight:400; }
+.scenario-metric-note[hidden] { display:none; }
+.scenario-metric-note > span { display:block; margin-bottom:6px; }
+.scenario-metric-note a { display:inline-block; padding-block:6px; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 .scenario-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; font-variant-numeric:tabular-nums; }
 .scenario-table th,.scenario-table td { text-align:left; vertical-align:top; padding:8px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
@@ -169,7 +177,7 @@ h2 { margin:0; font-size:13px; font-weight:800; letter-spacing:.06em; text-trans
  <nav aria-label="Page navigation"><a href="index.html">← CMatrixLab</a><div class="nav-actions"><a href="cheatsheet.html">Quick cheatsheet →</a><button id="print" type="button" class="text-button">Print / PDF</button></div></nav>
  <h1>Metrics reference</h1>
  <p class="intro">What does each score tell you? Explore simple explanations and examples from medicine, driving, fraud detection, and more.</p>
- <details class="helper" id="sec-guide"><summary>Help me choose a metric</summary>
+ <details class="helper" id="sec-guide" open><summary>Help me choose a metric</summary>
   <p class="muted">Choose by the decision you need to make: finding problems, reducing false alarms, keeping a review queue manageable, or trusting a predicted chance.</p>
   <div class="guide-grid">
    <div class="guide-item"><h3>You do not want to miss a problem</h3><p>Use <strong>recall</strong> to see how many real problems you catch. <strong>FNR</strong> tells you how many you miss.</p><p><strong>Examples:</strong> finding an illness in a medical test, or spotting a pedestrian in front of a car. Check false alarms too, and test situations such as night or rain separately. <a href="#scenario-medical" data-scenario="medical">Medical example</a> · <a href="#scenario-aeb" data-scenario="aeb">AEB example</a></p></div>
@@ -206,8 +214,8 @@ h2 { margin:0; font-size:13px; font-weight:800; letter-spacing:.06em; text-trans
 <main class="wrap">
  <div id="metrics" tabindex="-1"></div>
  <noscript><p>Enable JavaScript to browse the interactive reference and calculator.</p></noscript>
- <section id="sec-calculator" aria-labelledby="calc-title">
-  <h2 id="calc-title">Confusion matrix calculator</h2>
+ <details class="helper" id="sec-calculator">
+  <summary id="calc-title">Confusion matrix calculator</summary>
   <p class="calculator-intro">Enter your counts, then select a metric to see its calculation. Presets are illustrative examples, not industry targets.</p>
   <div class="field preset-field"><label for="preset">Example scenario</label><select id="preset"><option value="balanced">Factory inspection</option><option value="rare">Fraud detection</option><option value="screening">Medical screening</option><option value="precise">Automatic fraud blocking</option><option value="automotive">Pedestrian detection</option><option value="empty">No cases</option><option value="custom" disabled>Custom counts</option></select></div>
   <div id="scenario-context" class="scenario-context" aria-live="polite"></div>
@@ -219,7 +227,7 @@ h2 { margin:0; font-size:13px; font-weight:800; letter-spacing:.06em; text-trans
    </div><p class="total">Total cases: <strong id="lblTotal">100</strong></p><p id="input-error" class="calculator-intro" role="status"></p></div>
    <div><div class="calc-metrics" id="calc-metrics" role="group" aria-label="Select a metric to inspect"></div><div class="breakdown" id="calcFormulaBreakdown" aria-live="polite" aria-atomic="true"></div></div>
   </div>
- </section>
+ </details>
  <div class="source"><p>Examples use made-up numbers to explain the metrics. They are not performance targets, and they do not change when you edit the calculator.</p><p>Definitions: <a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn evaluation guide</a> · <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html">Average precision conventions</a>. For driving and tracking metrics, define what counts as an event or a successful detection before comparing results.</p></div>
 </main>
 <script>
@@ -808,7 +816,7 @@ const category = document.getElementById('category');
 const metrics = document.getElementById('metrics');
 const groupControl = document.getElementById('fold-groups');
 const detailControl = document.getElementById('fold-details');
-const closedGroups = new Set();
+const closedGroups = new Set(Object.keys(GROUPS));
 const openMetrics = new Set();
 const filtered = () => Boolean(search.value.trim()) || category.value !== 'all';
 function updateControls() {
@@ -1451,12 +1459,72 @@ function openScenario(key) {
  detail.scrollIntoView({block:'start'});
  history.replaceState(null,'','#scenario-'+key);
 }
-function scenarioMetricLinks(indices, key, label) {
- return indices.map(index=>`<a href="#metric-${index}" data-scenario-metric="${index}" data-from-scenario="${key}">${esc(label || METRICS[index].name)}</a>`).join(' + ');
+const SCENARIO_METRIC_NOTES = {
+ factory: {
+  2:['How many faulty parts do we catch?','Recall = 950 ÷ 1,000 = 95%. We catch 950 defects and miss 50. Use this when faulty parts slipping through is the main concern.'],
+  15:['How many good parts do we wrongly reject?','FPR = 99 ÷ 99,000 = 0.1%. That means 99 good parts need rechecking or are thrown away. Compare this cost alongside recall.'],
+  1:['How much of the rechecking finds a real defect?','Precision = 950 ÷ 1,049 = 90.6%. Of the rejected parts, 950 are faulty and 99 are good. This helps estimate how useful the rechecking work is.']
+ },
+ medical: {
+  2:['How many people with the condition are found?','Sensitivity (recall) = 98 ÷ 100 = 98%. The test finds 98 people and misses 2. Read this alongside specificity to understand the false alarms.'],
+  3:['How many people without the condition avoid a false alarm?','Specificity = 9,405 ÷ 9,900 = 95%. The other 495 people without the condition test positive and may need follow-up.'],
+  1:['How many positive results are true positives?','Precision (PPV) = 98 ÷ 593 = 16.5%. About 1 in 6 positive results is a person with the condition. All 593 positive results may still need follow-up.']
+ },
+ fraud: {
+  1:['How much review work finds fraud?','Precision = 85 ÷ 585 = 14.5%. Only 85 of the 585 alerts are fraud. If the team can review just 200, recalculate using the actual top 200 payments.'],
+  2:['How much fraud reaches the review queue?','Recall = 85 ÷ 100 = 85%. Fifteen fraud cases are not flagged. This is for all 585 alerts; recall for the top 200 needs their actual outcomes.'],
+  25:['Are fraud cases near the top of the queue?','AP summarizes precision as more fraud cases are found along the ranked list. The 585-alert table is one cutoff, so it cannot give AP. Keep the payment scores and outcomes, then also check the top 200.'],
+  24:['How does review quality change as the queue grows?','PR-AUC summarizes the precision–recall curve across cutoffs. The table gives only one point: 14.5% precision and 85% recall. You need ranked scores to calculate the curve.']
+ },
+ blocking: {
+  15:['How often do we block a genuine payment?','FPR = 50 ÷ 99,900 ≈ 0.05%. Fifty genuine payments are blocked. Set an acceptable limit for these mistakes, then compare recall at that limit.'],
+  2:['How much fraud do we stop?','Recall = 90 ÷ 100 = 90%. Ten fraud cases get through. Raising recall may also block more genuine payments, so check FPR beside it.'],
+  1:['How many blocks are justified?','Precision = 90 ÷ 140 = 64.3%. Of 140 blocked payments, 90 are fraud and 50 are genuine. This shows how often a block is justified.']
+ },
+ aeb: {
+  28:['How often does unwanted braking happen over time?','3 ÷ 10,000 = 0.0003 events per hour, or 0.3 per 1,000 hours. Count complete unwanted braking events, rather than every frame that contains a false detection.'],
+  29:['How often does unwanted braking happen over distance?','3 ÷ 500,000 = 0.000006 events per kilometer, or 0.6 per 100,000 km. This uses the same 3 events as the hourly rate.'],
+  2:['How many real hazards does the car detect?','Recall needs detected hazards divided by all real hazards. The driving log gives unwanted braking events and exposure, but no hazard count. Use separate hazard trials to calculate recall.'],
+  32:['Does detection happen early enough to act?','Measure the time from the defined hazard start to detection. This road log has no detection timestamps, so latency cannot be calculated here. Check timely detection and the resulting braking action.'],
+  30:['How many false detections appear in camera frames?','FPPI = false detections ÷ frames checked. The 3 unwanted braking events do not give the number of false camera detections, so this log cannot give FPPI. Count the detector’s false boxes separately; several frames may show the same false object.']
+ },
+ vision: {
+  25:['How good is the detector across score cutoffs?','AP uses the ranked detection scores and a fixed box-matching rule. This table only gives one cutoff: 90% recall and 94.7% precision. It cannot give AP. For mAP, also state which classes and overlap thresholds are averaged.'],
+  2:['How many real objects are found?','Recall = 1,800 ÷ 2,000 = 90%. The detector misses 200 objects. Check which objects are missed, such as small or partly hidden ones.'],
+  1:['How many detection boxes are correct?','Precision = 1,800 ÷ 1,900 = 94.7%. There are 100 false detections. Across 1,000 images, that is also 0.1 false detections per image on average.']
+ },
+ safety: {
+  2:['What does finding every tested hazard tell us?','Recall = 300 ÷ 300 = 100% in this test. For independent, representative trials, the one-sided exact 95% lower bound is about 99.0%. No misses in 300 trials does not prove there will never be a miss.'],
+  32:['Were those detections soon enough?','Finding all 300 hazards does not say when they were found. Record hazard-start and detection times, then report delays and late detections against the response time the application needs.'],
+  28:['How often are there false alarms in normal use?','Divide false-alarm events by normal-operation hours. These 300 hazard trials provide neither count, so they cannot establish a false-alarm rate per hour.'],
+  29:['How often are there false alarms over distance?','Divide false-alarm events by the distance driven in normal operation. A set of 300 hazard trials does not provide that distance or the normal-operation false alarms.']
+ },
+ probability: {
+  27:['How close are the predicted chances to the outcomes?','If every prediction is exactly 20%, Brier score is 0.16 for outcome A (100 of 500 have the condition) and 0.28 for outcome B (200 of 500). Lower is better. These are illustrations; predictions only near 20% need their individual values.'],
+  26:['How strongly should wrong confident predictions count?','If every prediction is exactly 20%, average log loss is about 0.500 for outcome A and 0.778 for outcome B, using natural logs. Lower is better. Use each patient’s actual probability for the real calculation.'],
+  2:['How many people with the condition get a follow-up?','First choose a cutoff for sending people to follow-up. Recall then divides those found by everyone with the condition. A group’s 20% risk alone does not define the follow-up decisions.'],
+  1:['How many people sent for follow-up have the condition?','Choose the follow-up cutoff first. Precision is the share of referred patients who have the condition. If all 500 in this group are referred, that share is 20% in A or 40% in B; that says nothing about patients outside this group.'],
+  23:['Are patients with the condition given higher scores?','ROC-AUC compares the score ordering for people with and without the condition. The two group totals do not show individual scores, so they cannot give ROC-AUC. Good ordering alone does not make a 20% prediction accurate.']
+ }
+};
+let scenarioNoteId=0;
+function arrangeScenarioNotes(root) {
+ root.querySelectorAll('.scenario-metric-note').forEach(note=>{
+  const sentence=note.closest('li, p');
+  if(sentence) sentence.append(note);
+ });
+}
+function scenarioMetricLinks(indices, key, label, inline=true) {
+ return indices.map(index=>{
+  const link=`<a href="#metric-${index}" data-scenario-metric="${index}" data-from-scenario="${key}">Full ${esc(METRICS[index].name)} explanation →</a>`;
+  if(!inline) return `<a href="#metric-${index}" data-scenario-metric="${index}" data-from-scenario="${key}">${esc(label || METRICS[index].name)}</a>`;
+  const id='scenario-note-'+(++scenarioNoteId), note=SCENARIO_METRIC_NOTES[key][index];
+  return `<span class="scenario-metric"><button type="button" class="scenario-metric-toggle" aria-expanded="false" aria-controls="${id}">${esc(label || METRICS[index].name)}</button><span class="scenario-metric-note" id="${id}" hidden><span><strong>${esc(note[0])}</strong></span><span>${esc(note[1])}</span>${link}</span></span>`;
+ }).join(' + ');
 }
 function renderMetricChoice(s,key) {
  const c=s.choice;
- return `<div class="metric-choice"><h4>Which metric should I use?</h4><p><strong>Start with ${c.primary.length?scenarioMetricLinks(c.primary,key):esc(c.primaryLabel)}.</strong> ${esc(c.why)}</p><ul>${c.options.map(o=>`<li><strong>${esc(o.when)}:</strong> ${scenarioMetricLinks(o.metrics,key,o.label)} — ${esc(o.text)}</li>`).join('')}</ul><p class="choice-caution">${esc(c.avoid)}</p></div>`;
+ return `<div class="metric-choice"><h4>Which metric should I use?</h4><p class="muted">Tap a metric name to see what it means in this example.</p><p><strong>Start with ${c.primary.length?scenarioMetricLinks(c.primary,key):esc(c.primaryLabel)}.</strong> ${esc(c.why)}</p><ul>${c.options.map(o=>`<li><strong>${esc(o.when)}:</strong> ${scenarioMetricLinks(o.metrics,key,o.label)} — ${esc(o.text)}</li>`).join('')}</ul><p class="choice-caution">${esc(c.avoid)}</p></div>`;
 }
 document.getElementById('scenario-list').innerHTML=Object.entries(SCENARIOS).map(([key,s])=>`<details class="scenario-detail" id="scenario-${key}"><summary>${esc(s.title)}</summary><div class="scenario-body">
  <p>${esc(s.intro)}</p>${renderMetricChoice(s,key)}<p>${esc(s.setup)}</p>
@@ -1466,14 +1534,25 @@ document.getElementById('scenario-list').innerHTML=Object.entries(SCENARIOS).map
  ${s.extra?`<details class="scenario-extra"><summary>${esc(s.extraTitle)}</summary>${s.extra.map(p=>`<p>${esc(p)}</p>`).join('')}</details>`:''}
  <p class="scenario-background">${esc(s.background)}</p>
  ${s.sources.length?`<p class="scenario-sources">Sources: ${s.sources.map(([title,url])=>`<a href="${url}">${esc(title)}</a>`).join(' · ')}</p>`:''}</div></details>`).join('');
+arrangeScenarioNotes(document.getElementById('scenario-list'));
 document.addEventListener('click',event=>{
+ const toggle=event.target.closest('.scenario-metric-toggle');
+ if(toggle) {
+  const open=toggle.getAttribute('aria-expanded')!=='true';
+  toggle.setAttribute('aria-expanded',String(open));
+  document.getElementById(toggle.getAttribute('aria-controls')).hidden=!open;
+  return;
+ }
  const metricLink=event.target.closest('[data-scenario-metric]');
  if(metricLink) {
   event.preventDefault();
   const index=Number(metricLink.dataset.scenarioMetric), key=metricLink.dataset.fromScenario;
   openRelated(index);
   const body=document.querySelector('#metric-'+index+' .metric-body');
-  if(body && SCENARIOS[key]) body.insertAdjacentHTML('afterbegin',`<p class="return-scenario"><a href="#scenario-${key}" data-scenario="${key}">← Back to ${esc(SCENARIOS[key].title)}</a></p>`);
+  if(body && SCENARIOS[key]) {
+   body.querySelectorAll('.return-scenario').forEach(node=>node.remove());
+   body.insertAdjacentHTML('afterbegin',`<p class="return-scenario"><a href="#scenario-${key}" data-scenario="${key}">← Back to ${esc(SCENARIOS[key].title)}</a></p>`);
+  }
   return;
  }
  const link=event.target.closest('[data-scenario]');
@@ -1485,6 +1564,7 @@ function renderScenarioContext() {
  if(!key){box.innerHTML='';box.hidden=true;return;}
  const s=SCENARIOS[key];box.hidden=false;
  box.innerHTML=`<h3>${esc(s.title)}: what to keep in mind</h3><p>${esc(s.intro)}</p><p><strong>Start with ${s.choice.primary.length?scenarioMetricLinks(s.choice.primary,key):esc(s.choice.primaryLabel)}.</strong> ${esc(s.choice.why)}</p><a href="#scenario-${key}" data-scenario="${key}">See which metric to choose, with a worked example →</a>`;
+ arrangeScenarioNotes(box);
 }
 const PRESETS = {balanced:[32,8,12,48],rare:[8,20,2,970],screening:[98,90,2,810],precise:[50,1,50,899],automotive:[98,10,2,890],empty:[0,0,0,0]};
 const inputs=['TP','FP','FN','TN'].map(key=>document.getElementById('in'+key));
@@ -1539,6 +1619,10 @@ window.addEventListener('afterprint',()=>{
  updateControls();
 });
 document.getElementById('print').addEventListener('click',()=>window.print());
+document.querySelector('a[href="#sec-calculator"]').addEventListener('click',()=>{
+ document.getElementById('sec-calculator').open=true;
+});
+if(location.hash==='#sec-calculator') document.getElementById('sec-calculator').open=true;
 renderMetrics();
 const linkedMetric=location.hash.match(/^#metric-(\d+)$/);
 if(linkedMetric) openRelated(Number(linkedMetric[1]));
