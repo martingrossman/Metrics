@@ -1,0 +1,23 @@
+Read `tests/FULL_QA_PROMPT.md` and execute the complete QA test plan using Playwright MCP.
+
+Create the directory `test-results/` if it doesn't exist.
+
+Save the complete test results in:
+
+`test-results/CMATRIX_QA_REPORT.md`
+
+The report must include:
+- Executive summary and overall quality assessment
+- All tests performed, with PASS / FAIL / BLOCKED status
+- Mathematical correctness verification
+- Browser and responsive layout testing
+- Identified bugs, ranked P0–P3
+- Steps to reproduce each bug
+- Screenshots and supporting evidence
+- Recommended fixes
+
+Actually execute the tests. Do not generate a report based only on code inspection.
+
+Do not modify application source code, commit, or push changes.
+
+When finished, give me a short summary of the results and the location of the report.
