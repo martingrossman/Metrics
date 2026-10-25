@@ -4,3 +4,4 @@
 /.venv
 /artifacts
 /debug.log
+/.playwright-mcp/
