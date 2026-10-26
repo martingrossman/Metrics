@@ -1,0 +1,4003 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fc">
+  <title>CMatrixLab — Simple</title>
+
+  <!-- Edit the CSS variables below to change the color palette. -->
+  <style>
+  :root {
+    --bg: #f6f8fc;
+    --ink: #15243d;
+    --muted: #64748b;
+    --line: #e3e9f2;
+    --blue: #246cf0;
+    --tp: #0ea976;
+    --fp: #e64b60;
+    --fn: #f2a527;
+    --tn: #a4afc0;
+    --font-caption: 12px;
+    --font-body: 14px;
+    --font-heading: 22px;
+    --font-count: 32px;
+    --font-metric: 40px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0px;
+    background: var(--bg);
+    font: 14px / 1.35 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+  }
+
+  button, input {
+    font: inherit;
+  }
+
+  .container {
+    max-width: 1420px;
+    margin: auto;
+    padding: 12px 22px 10px;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 8px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: var(--font-heading);
+    font-weight: 800;
+    letter-spacing: -0.7px;
+  }
+
+  .brand-credit {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #526886;
+    font-size: var(--font-caption);
+    font-weight: 500;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .brand-credit a, .author-credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .logo {
+    display: grid;
+    grid-template-columns: repeat(3, 7px);
+    gap: 3px;
+  }
+
+  .logo i {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: rgb(44, 121, 250);
+  }
+
+  .logo i:nth-child(3n) {
+    background: rgb(164, 200, 252);
+  }
+
+  .reset {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px 13px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .top-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .scenario-picker { display: flex; align-items: center; gap: 6px; }
+  .scenario-picker label { color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1.1; white-space: nowrap; }
+
+
+  .card {
+    background: rgb(255, 255, 255);
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    box-shadow: rgba(25, 50, 81, 0.02) 0px 2px 12px;
+  }
+
+  .story {
+    margin: 0 0 8px;
+    color: #435572;
+    font-size: var(--font-body);
+    line-height: 1.4;
+  }
+
+  .story strong {
+    display: inline;
+    color: var(--ink);
+    font-size: var(--font-body);
+    line-height: 1.25;
+    margin-bottom: 2px;
+  }
+
+  .story span {
+    color: var(--muted);
+  }
+
+  .controls {
+    padding: 10px 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+    gap: 36px;
+    margin-bottom: 8px;
+  }
+
+  .control {
+    min-width: 0px;
+  }
+
+  .control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: 700;
+    font-size: var(--font-body);
+  }
+
+  .val {
+    background: rgb(237, 243, 255);
+    color: var(--blue);
+    padding: 4px 8px;
+    border-radius: 7px;
+    font-size: var(--font-body);
+    min-width: 49px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .control:has(#prevalence) .val, .control:has(#bayesPrevalence) .val, .control:has(#tradeoffPrevalence) .val {
+    background: #f1edff;
+    color: rgb(119, 81, 206);
+  }
+
+  .balance-values {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .balance-preset {
+    border: 1px solid #ddd3f5;
+    border-radius: 7px;
+    background: #fcfaff;
+    color: #6d43bc;
+    padding: 4px 6px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .balance-preset[aria-pressed="true"] {
+    background: #f7f4ff;
+    border-color: #b6a0df;
+    color: #6d43bc;
+  }
+
+  input[type="range"] {
+    display: block;
+    width: 100%;
+    margin: 10px 0px 3px;
+    accent-color: var(--blue);
+    cursor: pointer;
+  }
+
+  .control input#prevalence, .control input#bayesPrevalence, .control input#tradeoffPrevalence {
+    accent-color: rgb(128, 90, 213);
+    color: rgb(128, 90, 213);
+  }
+
+  .endpoints {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: var(--font-caption);
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 6px 0px 7px;
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    color: rgb(79, 96, 121);
+  }
+
+  .dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 3px;
+  }
+
+  .tp {
+    background: var(--tp);
+  }
+
+  .fp {
+    background: var(--fp);
+  }
+
+  .fn {
+    background: var(--fn);
+  }
+
+  .tn {
+    background: var(--tn);
+  }
+
+  .key {
+    margin: 0 0 5px;
+    text-align: center;
+    color: var(--muted);
+    font-size: var(--font-caption);
+  }
+
+  .views {
+    display: grid;
+    grid-template-columns: 0.96fr 1.04fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .panel {
+    padding: 14px 16px 16px;
+    min-width: 0px;
+  }
+
+  .plot {
+    width: 100%;
+    display: block;
+    touch-action: none;
+    background: rgb(251, 252, 255);
+    border: 1px solid rgb(237, 241, 246);
+    border-radius: 10px;
+  }
+
+  .plot text {
+    font-family: Inter, system-ui, sans-serif;
+  }
+
+  .plot:focus-visible {
+    outline: 2px solid #246cf0;
+    outline-offset: 2px;
+  }
+
+  .threshold-drag {
+    cursor: ew-resize;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .plot [data-separation-direction] { cursor: ew-resize; touch-action: none; }
+  .plot circle.point[data-separation-direction] { cursor: move; }
+
+  .plot.dragging {
+    cursor: ew-resize;
+  }
+
+  .threshold-drag:hover .threshold-grip,
+  .plot.dragging .threshold-grip,
+  .plot:focus-visible .threshold-grip {
+    fill: #e2ecff;
+  }
+
+  .plot .point {
+    transition: opacity 0.1s;
+  }
+
+  .plot .point.muted {
+    opacity: 0.17;
+  }
+
+  .plot .point.focus {
+    stroke: rgb(17, 31, 56);
+    stroke-width: 2.3;
+  }
+
+  .population-header {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .population-header > div {
+    grid-row: 1;
+  }
+
+  .population-header div:not(:first-child) {
+    text-align: center;
+    font-size: var(--font-heading);
+    font-weight: 700;
+    border-radius: 9px;
+    padding: 12px 4px;
+  }
+
+  .population-header div:nth-child(2) {
+    background: rgb(255, 240, 242);
+    color: rgb(201, 72, 89);
+  }
+
+  .population-header div:nth-child(3) {
+    background: rgb(239, 244, 255);
+    color: rgb(44, 103, 194);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .matrix-layout-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+  }
+  .matrix-layout-btn {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 8px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  .matrix-layout-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+  .matrix-layout-btn:active {
+    background: #edf2f7;
+    transform: scale(0.98);
+  }
+  .matrix-layout-btn:focus-visible {
+    outline: 2px solid #246cf0;
+    outline-offset: 1px;
+  }
+  .matrix-layout-btn .layout-btn-icon {
+    font-size: 12px;
+    color: #475569;
+    line-height: 1;
+  }
+  .matrix-layout-btn .layout-label-long { display: inline; }
+  .matrix-layout-btn .layout-label-short { display: none; }
+  @media (max-width: 650px) {
+    .scenario-picker { display: grid; gap: 1px; }
+    .matrix-layout-cell {
+      padding: 1px 2px;
+    }
+    .matrix-layout-btn {
+      font-size: 9.5px;
+      padding: 4px 4px;
+      border-radius: 6px;
+      gap: 3px;
+    }
+    .matrix-layout-btn .layout-btn-icon {
+      font-size: 10px;
+    }
+    .matrix-layout-btn .layout-label-long { display: none; }
+    .matrix-layout-btn .layout-label-short { display: inline; }
+  }
+
+  /* Matrix Layout: Standard (Default) */
+  .population-header.layout-standard .col-pos,
+  .population-header:not(.layout-graph):not(.layout-scikit) .col-pos { grid-row: 1; grid-column: 2; }
+  .population-header.layout-standard .col-neg,
+  .population-header:not(.layout-graph):not(.layout-scikit) .col-neg { grid-row: 1; grid-column: 3; }
+
+  .population.layout-standard .row-pos,
+  .population:not(.layout-graph):not(.layout-scikit) .row-pos { grid-row: 1; grid-column: 1; }
+  .population.layout-standard .group.tp,
+  .population:not(.layout-graph):not(.layout-scikit) .group.tp { grid-row: 1; grid-column: 2; }
+  .population.layout-standard .group.fn,
+  .population:not(.layout-graph):not(.layout-scikit) .group.fn { grid-row: 1; grid-column: 3; }
+
+  .population.layout-standard .row-neg,
+  .population:not(.layout-graph):not(.layout-scikit) .row-neg { grid-row: 2; grid-column: 1; }
+  .population.layout-standard .group.fp,
+  .population:not(.layout-graph):not(.layout-scikit) .group.fp { grid-row: 2; grid-column: 2; }
+  .population.layout-standard .group.tn,
+  .population:not(.layout-graph):not(.layout-scikit) .group.tn { grid-row: 2; grid-column: 3; }
+
+  /* Matrix Layout: Matches Graph (Score Order: Negative on Left, Positive on Right) */
+  .population-header.layout-graph .col-neg { grid-row: 1; grid-column: 2; }
+  .population-header.layout-graph .col-pos { grid-row: 1; grid-column: 3; }
+
+  .population.layout-graph .row-pos { grid-row: 1; grid-column: 1; }
+  .population.layout-graph .group.fn { grid-row: 1; grid-column: 2; }
+  .population.layout-graph .group.tp { grid-row: 1; grid-column: 3; }
+
+  .population.layout-graph .row-neg { grid-row: 2; grid-column: 1; }
+  .population.layout-graph .group.tn { grid-row: 2; grid-column: 2; }
+  .population.layout-graph .group.fp { grid-row: 2; grid-column: 3; }
+
+  /* Matrix Layout: scikit-learn (Negative class 0 first in rows and columns) */
+  .population-header.layout-scikit .col-neg { grid-row: 1; grid-column: 2; }
+  .population-header.layout-scikit .col-pos { grid-row: 1; grid-column: 3; }
+
+  .population.layout-scikit .row-neg { grid-row: 1; grid-column: 1; }
+  .population.layout-scikit .group.tn { grid-row: 1; grid-column: 2; }
+  .population.layout-scikit .group.fp { grid-row: 1; grid-column: 3; }
+
+  .population.layout-scikit .row-pos { grid-row: 2; grid-column: 1; }
+  .population.layout-scikit .group.fn { grid-row: 2; grid-column: 2; }
+  .population.layout-scikit .group.tp { grid-row: 2; grid-column: 3; }
+
+  .population {
+    position: relative;
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, var(--matrix-row-height, 155px));
+    gap: 8px;
+  }
+
+  .row-label {
+    align-self: center;
+    text-align: right;
+    font-weight: 700;
+    font-size: var(--font-heading);
+    line-height: 1.25;
+    padding-right: 6px;
+  }
+
+  .row-label small {
+    display: block;
+    margin-top: 6px;
+    color: #526886;
+    font-size: var(--font-body);
+    font-weight: 500;
+  }
+
+  .group {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .group.fn {
+    background: rgb(255, 250, 240);
+    border-color: rgb(250, 236, 209);
+  }
+
+  .group.tp {
+    background: rgb(241, 252, 247);
+    border-color: rgb(214, 243, 228);
+  }
+
+  .group.tn {
+    background: rgb(247, 249, 252);
+  }
+
+  .group.fp {
+    background: rgb(255, 245, 246);
+    border-color: rgb(247, 219, 224);
+  }
+
+  .group-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: var(--font-body);
+    font-weight: 700;
+  }
+
+  .group-top strong {
+    font-size: var(--font-count);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .group.tp .group-top {
+    color: rgb(11, 144, 102);
+  }
+
+  .group.fp .group-top {
+    color: rgb(203, 63, 83);
+  }
+
+  .group.fn .group-top {
+    color: rgb(182, 124, 29);
+  }
+
+  .group.tn .group-top {
+    color: rgb(113, 128, 152);
+  }
+
+  .tiles {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 3px;
+    flex: none;
+    overflow: hidden;
+  }
+
+  .tile {
+    flex: 0 0 auto;
+    border-radius: 2.5px;
+    cursor: default;
+    --tile-size: 14px;
+    width: calc(var(--tile-size) * var(--weight-scale,1));
+    height: calc(var(--tile-size) * var(--weight-scale,1));
+    transition: width 0.12s, height 0.12s;
+  }
+
+  .tile.muted {
+    opacity: 0.18;
+  }
+
+  .tile.focus {
+    outline: rgb(24, 44, 71) solid 2px;
+    outline-offset: 2px;
+    transform: scale(1.25);
+  }
+
+  @media (min-width: 651px) {
+    .group { padding: 8px; gap: 8px; }
+    .tiles { gap: 2px; }
+    .tile { --tile-size: 12px; }
+  }
+
+  .metrics {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    position: sticky;
+    top: 0px;
+    z-index: 20;
+    padding: 4px 0px;
+    background: var(--bg);
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+  }
+
+  .metric {
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    padding: 10px 18px 6px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .metric:hover {
+    border-color: #c4b2ee;
+  }
+
+  .metric.active, .metric:focus-visible {
+    border-color: #8056d9;
+    box-shadow: inset 0 0 0 1px #8056d9;
+    outline: none;
+  }
+
+  #precisionCard .metric-label small {
+    color: #6d43bc;
+    font-weight: 600;
+  }
+
+  .metric-label { display: block; }
+
+  .metric-outline {
+    display: none;
+    position: absolute;
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: 2;
+  }
+
+  .metric-denominator {
+    inset: -3px;
+    border: 2px dashed #8056d9;
+  }
+
+  .metric-numerator {
+    inset: 3px;
+    border: 2px solid var(--tp);
+    border-radius: 9px;
+  }
+
+  .group.metric-excluded { opacity: 0.25; }
+  .plot .point.metric-excluded { opacity: 0.15; }
+  .key .formula-numerator { border-bottom: 2px solid var(--tp); }
+  .key .formula-denominator { border-bottom: 2px dashed #8056d9; }
+
+  .metric-label {
+    min-width: 0;
+    max-width: 100%;
+    font-weight: 700;
+    font-size: var(--font-body);
+  }
+
+  .metric-label small {
+    display: block;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: var(--font-caption);
+    margin-top: 3px;
+  }
+
+  .metric strong {
+    font-size: var(--font-metric);
+    font-weight: 800;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .metric:nth-child(1) strong {
+    color: var(--tp);
+  }
+
+  .metric:nth-child(2) strong {
+    color: var(--fp);
+  }
+
+  .metric:nth-child(3) strong {
+    color: var(--blue);
+  }
+
+  .insight {
+    margin-top: 8px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+  }
+
+  .insight-text {
+    font-size: var(--font-body);
+  }
+
+  .insight-text strong {
+    font-weight: 700;
+  }
+
+  .insight-text em {
+    font-style: normal;
+    color: var(--blue);
+    font-weight: 800;
+  }
+
+  .group-top > span {
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .group-sub {
+    font-weight: 500;
+    opacity: 0.78;
+    font-size: var(--font-caption);
+  }
+
+  .summary-tp {
+    color: #087f59;
+    background: #e8f8f2;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .summary-fp {
+    color: #bf3148;
+    background: #fdecef;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .prec-right {
+    display: flex;
+    flex-direction: column;
+    min-width: 240px;
+    max-width: 330px;
+    flex: 1 1 0%;
+    gap: 5px;
+  }
+
+  .precbar {
+    height: 15px;
+    background: rgb(233, 238, 245);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .precbar > span {
+    height: 100%;
+    display: block;
+  }
+
+  .precbar .tp {
+    background: var(--tp);
+  }
+
+  .precbar .fp {
+    background: var(--fp);
+  }
+
+  .prec-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-caption);
+    color: rgb(100, 116, 139);
+  }
+
+  .prec-labels b {
+    color: var(--ink);
+  }
+
+  .foot {
+    margin: 5px 2px 0px;
+    color: rgb(138, 153, 170);
+    font-size: var(--font-caption);
+  }
+
+  .author-credit {
+    display: none;
+    margin: 8px 2px 0;
+    color: #526886;
+    font-size: var(--font-caption);
+    text-align: center;
+  }
+
+  button:focus-visible, input:focus-visible {
+    outline: rgb(145, 183, 255) solid 3px;
+    outline-offset: 3px;
+  }
+
+  html {
+    text-size-adjust: 100%;
+  }
+
+  .control input[type="range"] {
+    appearance: none;
+    background: transparent;
+    border: 0px;
+    padding: 0px;
+    border-radius: 0px;
+    color: var(--blue);
+  }
+
+  .control input[type="range"]::-webkit-slider-runnable-track {
+    height: 5px;
+    background: rgb(212, 225, 245);
+    border-radius: 10px;
+  }
+
+  .control input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -8.5px;
+    border: 3px solid white;
+    border-radius: 50%;
+    background: currentcolor;
+    box-shadow: rgba(21, 36, 61, 0.25) 0px 1px 5px;
+  }
+
+  .control input[type="range"]::-moz-range-track {
+    height: 5px;
+    background: #d4e1f5;
+    border-radius: 10px;
+  }
+
+  .control input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 3px solid white;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 1px 5px #15243d40;
+  }
+
+  /* Reserve the largest matrix row at each width, so slider changes cannot resize either chart. */
+  @media (min-width: 1400px) {
+    .views { grid-template-columns: 0.84fr 1.16fr; }
+    .population { --matrix-row-height: 145px; }
+  }
+
+  @media (min-width: 1280px) and (max-width: 1399px) {
+    .views { grid-template-columns: 0.92fr 1.08fr; }
+    .population { --matrix-row-height: 160px; }
+  }
+
+  @media (min-width: 1280px) {
+    .insight { margin-top: 4px; }
+  }
+
+  @media (max-width: 1279px) {
+    .population { --matrix-row-height: 170px; }
+  }
+
+  @media (max-width: 1250px) {
+    .population { --matrix-row-height: 185px; }
+  }
+
+  @media (max-width: 1199px) {
+    .population { --matrix-row-height: 195px; }
+  }
+
+  @media (min-width: 1280px) and (max-height: 820px) {
+    .container { padding-bottom: 4px; }
+    .story { margin-bottom: 0; font-size: 13.5px; }
+    .views { grid-template-columns: 0.84fr 1.16fr; }
+    .population { --matrix-row-height: 145px; }
+    .insight { padding-top: 8px; padding-bottom: 8px; }
+    .foot { display: none; }
+  }
+
+  /* Tablet: stack the synchronized charts. */
+  @media (max-width: 1050px) {
+    .brand-credit { display: none; }
+    .preset-select { display: inline-block; font-size: 12px; padding: 3px 6px; }
+    :root { --font-metric: 32px; }
+    .population { --matrix-row-height: 140px; }
+    .controls {
+      gap: 16px;
+    }
+
+    .views {
+      grid-template-columns: 1fr;
+    }
+
+    .panel {
+      padding: 13px;
+    }
+
+    .plot {
+      max-height: 300px;
+    }
+
+  }
+
+  @media (max-width: 767px) {
+    :root { --font-metric: 28px; }
+    .population { --matrix-row-height: 155px; }
+    .brand-credit {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.2;
+    }
+    .top-right { gap: 4px; }
+    .reset { padding: 4px 8px; font-size: 11px; }
+    .preset-select { display: inline-block; max-width: 125px; font-size: 11px; padding: 2px 4px; }
+    .graph-toggle-group { display: inline-flex; flex-wrap: nowrap; gap: 2px; padding: 2px; }
+    .graph-tab { padding: 2px 6px; font-size: 11px; }
+  }
+
+  @media (max-width: 685px) {
+    .population { --matrix-row-height: 160px; }
+  }
+
+  /* Phone: compact controls, charts, and sticky metrics. */
+  @media (max-width: 650px) {
+    .control:has(#prevalence), .control:has(#threshold) {
+      grid-template-columns: minmax(205px, 55%) minmax(0px, 1fr);
+    }
+    :root {
+      --font-caption: 11px;
+      --font-body: 12px;
+      --font-heading: 14px;
+      --font-count: 22px;
+      --font-metric: 22px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0px;
+      padding: 6px 8px 8px;
+      gap: 0px;
+    }
+
+    .top {
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .brand {
+      gap: 7px;
+      white-space: nowrap;
+      font-size: 16px;
+    }
+
+    .brand-credit {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.2;
+    }
+    .brand-credit a { letter-spacing: -0.2px; }
+
+    .controls {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .legend {
+      gap: 10px;
+    }
+
+    .legend span {
+      gap: 5px;
+    }
+
+    .legend-detail {
+      display: none;
+    }
+
+    .panel {
+      padding: 6px 8px;
+      border-radius: 10px;
+    }
+
+    .population {
+      --matrix-row-height: 112px;
+      grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
+      gap: 5px;
+    }
+
+    .population-header {
+      margin-bottom: 5px;
+      gap: 5px;
+      grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .group {
+      padding: 8px 6px;
+      gap: 8px;
+      border-radius: 9px;
+    }
+
+    .tile {
+      border-radius: 1.5px;
+      --tile-size: 7px;
+    }
+
+    .tiles {
+      gap: 2px;
+    }
+
+    .group-top {
+      font-size: var(--font-heading);
+      line-height: 1;
+    }
+
+    .row-label {
+      padding-right: 2px;
+    }
+
+    .row-label small {
+      font-size: var(--font-caption);
+      margin-top: 4px;
+    }
+
+    .metrics {
+      gap: 6px;
+      align-items: stretch;
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+      font-size: var(--font-caption);
+      line-height: 1.1;
+      min-width: 0px;
+      padding: 5px 8px 3px;
+      border-radius: 9px;
+    }
+
+    .metric-label {
+      display: contents;
+      font-size: var(--font-caption);
+      line-height: 1.1;
+    }
+
+    .metric-label small {
+      order: 3;
+      font-size: 10px;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    .metric strong {
+      order: 2;
+      display: block;
+      letter-spacing: -0.5px;
+      font-size: var(--font-metric);
+      line-height: 1.1;
+      margin-top: 2px;
+    }
+
+    .insight {
+      align-items: stretch;
+      flex-direction: column;
+      margin-top: 5px;
+      padding: 7px 9px;
+      gap: 5px;
+      border-radius: 10px;
+    }
+
+    .prec-right {
+      max-width: none;
+      gap: 3px;
+      width: 100%;
+      min-width: 0px;
+    }
+
+    .foot {
+      line-height: 1.45;
+      display: none;
+    }
+
+    .container > * {
+      order: 5;
+    }
+
+    .container > .top {
+      order: 0;
+      margin: 0px 0px 2px;
+      min-height: 28px;
+    }
+
+    .container > .story {
+      order: 1;
+      margin: 0 2px 4px;
+    }
+
+    .container > .metrics {
+      order: 1;
+      position: sticky;
+      top: 0px;
+      z-index: 20;
+      flex-shrink: 0;
+      background: var(--bg);
+      box-shadow: rgba(21, 36, 61, 0.043) 0px 5px 8px;
+      margin: 0;
+      padding: 3px 0px;
+      gap: 5px;
+    }
+
+    .container > .controls {
+      order: 2;
+      gap: 0px;
+      padding: 1px 8px;
+      margin: 0px;
+      border-radius: 10px;
+    }
+
+    .control {
+      display: grid;
+      align-items: center;
+      min-height: 36px;
+      grid-template-columns: minmax(135px, 43%) minmax(0px, 1fr);
+      gap: 10px;
+    }
+
+    .control + .control {
+      border-top: 1px solid var(--line);
+    }
+
+    .control-header {
+      gap: 6px;
+      line-height: 1.25;
+      font-size: var(--font-caption);
+    }
+
+    .val {
+      font-size: var(--font-caption);
+      min-width: 39px;
+      padding: 2px 4px;
+    }
+
+    .control input[type="range"] {
+      margin: 0px;
+      min-width: 0px;
+      touch-action: pan-y;
+      width: 100%;
+      height: 36px;
+    }
+
+    .control .endpoints {
+      display: none;
+    }
+
+    .container > .legend {
+      order: 3;
+      margin: 4px 0px;
+      gap: 18px;
+      min-height: 15px;
+    }
+
+    .container > .key {
+      order: 3;
+      margin: 2px 0 4px;
+      line-height: 1.25;
+    }
+
+    .container > .views {
+      order: 4;
+      gap: 5px;
+    }
+
+    .reset {
+      min-height: 28px;
+      padding: 3px 8px;
+      font-size: var(--font-caption);
+    }
+
+    .container > *, .views > *, .control-header > span {
+      min-width: 0px;
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .control-header .val {
+      flex-shrink: 0;
+    }
+
+    .plot {
+      max-height: none;
+      aspect-ratio: auto;
+      height: auto;
+    }
+
+    .logo {
+      grid-template-columns: repeat(3, 5px);
+      gap: 2px;
+    }
+
+    .logo i {
+      width: 5px;
+      height: 5px;
+    }
+
+    .legend .dot {
+      width: 9px;
+      height: 9px;
+    }
+
+    .population-header div:not(:first-child) {
+      padding: 8px 2px;
+      font-size: var(--font-heading);
+    }
+
+    .insight-text {
+      font-size: var(--font-caption);
+      line-height: 1.3;
+    }
+
+    .insight-text strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .precbar {
+      height: 12px;
+      border-radius: 4px;
+    }
+
+    .prec-labels {
+      font-size: 10px;
+    }
+  }
+
+  /* Fit the complete dashboard below the browser toolbars on portrait phones. */
+  @media (max-width: 650px) and (orientation: portrait) {
+    .container { padding-top: 4px; padding-bottom: 4px; }
+    .container > .story { margin: 0 2px 4px; font-size: var(--font-body); line-height: 1.25; }
+    .container > .legend { display: none; }
+    .container > .controls { margin-bottom: 5px; }
+    .control, .control input[type="range"] { min-height: 28px; height: 28px; }
+    .container > .metrics { padding: 2px 0; }
+    .metric {
+      padding: 2px 6px 1px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+    .metric-label small {
+      display: block;
+      font-size: 10px;
+      line-height: 1.3;
+      min-height: 1.3em;
+      white-space: normal;
+      margin-top: 1px;
+    }
+    .metric strong {
+      font-size: 19px;
+      line-height: 1;
+      margin-top: 1px;
+    }
+    .panel { padding-top: 4px; padding-bottom: 4px; }
+    .population { --matrix-row-height: 53px; gap: 4px; }
+    .population-header { margin-bottom: 4px; gap: 4px; }
+    .population-header div:not(:first-child) { padding: 5px 2px; }
+    .group { padding: 3px 6px; gap: 2px; }
+    .group-top strong { font-size: 20px; }
+    .tile { --tile-size: 5.5px; }
+    .tiles { gap: 1px; }
+    .insight { padding: 5px 9px; gap: 2px; }
+    .insight-text strong { display: none; }
+  }
+
+  @media (max-width: 650px) and (max-height: 759px) and (orientation: portrait) {
+    .views > .panel:first-child { padding-top: 0; padding-bottom: 0; }
+    .insight { padding-top: 3px; padding-bottom: 3px; }
+  }
+
+  @media (max-width: 599px) and (orientation: portrait) {
+    .population { --matrix-row-height: 56px; }
+  }
+
+  @media (max-width: 499px) and (orientation: portrait) {
+    .population { --matrix-row-height: 63px; }
+  }
+
+  @media (max-width: 399px) and (orientation: portrait) {
+    .population { --matrix-row-height: 69px; }
+  }
+
+  @media (max-width: 359px) and (orientation: portrait) {
+    .population { --matrix-row-height: 76px; }
+  }
+
+  @media (max-width: 339px) and (orientation: portrait) {
+    .population { --matrix-row-height: 82px; }
+  }
+
+  @media (max-width: 390px) {
+    .brand-credit { display: none; }
+    .author-credit { display: block; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile {
+      transition: none;
+    }
+  }
+  /* Optional learning layer; the default dashboard stays compact. */
+  [hidden] { display: none !important; }
+  .preset-select { font-family: Inter, system-ui, sans-serif; font-size: var(--font-body); font-weight: 600; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--text); }
+  .preset-select:focus-visible { outline: 2px solid #246cf0; }
+  .learning-entry { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 0; }
+  .learning-entry .key { margin: 0; white-space: nowrap; }
+  @media (min-width: 768px) and (max-width: 960px) {
+    .learning-entry .key { display: none; }
+  }
+  .tab-long { display: inline; }
+  .tab-short { display: none; }
+  @media (max-width: 650px) {
+    .tab-long { display: none; }
+    .tab-short { display: inline; }
+    .brand-credit { display: none; }
+    .preset-select { display: inline-block; max-width: 110px; font-size: 10.5px; padding: 2px; }
+  }
+.graph-toggle-group { display: inline-flex; align-items: center; gap: 2px; background: #edf2f7; border-radius: 6px; padding: 2px; }
+  .graph-tab { font-family: Inter, system-ui, sans-serif; font-size: 11px; font-weight: 600; padding: 2px 7px; border: none; background: transparent; color: #526886; border-radius: 4px; cursor: pointer; line-height: 1.2; white-space: nowrap; }
+  .graph-tab:hover { color: #1e293b; }
+  .graph-tab.active { background: #ffffff; color: #1a56db; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .views.single-4up { grid-template-columns: 1fr !important; }
+  body.four-up-active .story,
+  body.four-up-active .legend,
+  body.four-up-active .foot { display: none !important; }
+  body.four-up-active .container { padding-top: 5px; padding-bottom: 5px; }
+  body.four-up-active .top { margin-bottom: 3px; }
+  body.four-up-active .metrics { margin-bottom: 4px; gap: 8px; }
+  body.four-up-active .metric { padding: 4px 14px; }
+  body.four-up-active .metric strong { font-size: 25px; }
+  body.four-up-active .controls { padding: 6px 14px; margin-bottom: 4px; gap: 14px; }
+  body.four-up-active .control { gap: 2px; }
+  body.four-up-active .learning-entry { margin-bottom: 3px; }
+  body.four-up-active #scorePanel { padding: 8px 10px; }
+  body.four-up-active .insight { margin-top: 4px; padding: 5px 14px; }
+  .views.single-4up #plotsWrapper {
+    height: clamp(440px, calc(100vh - 282px), 780px) !important;
+  }
+  .views.single-4up #plotsWrapper .plot {
+    max-height: none !important;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    touch-action: pan-y pinch-zoom;
+  }
+  /* Let vertical swipes scroll even when they start on the cutoff line. */
+  .views.single-4up .threshold-drag { touch-action: pan-y pinch-zoom; }
+  .four-up-container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; margin: 10px 0; background: #fff; border: 1px solid #e4e8f0; border-radius: 16px; padding: 14px; }
+  .four-up-container .curve-svg { max-width: 100%; width: 100%; max-height: 220px; }
+  .four-up-container .auc-badge, .four-up-container .signal-badge, .four-up-container .pr-badge { margin-bottom: 6px; padding: 4px 10px; }
+  .four-up-container .curve-legend { margin-top: 4px; }
+  @media (max-width: 767px) {
+    .four-up-container { grid-template-columns: 1fr; }
+  }
+  .ref-top-btn { display: inline-flex; align-items: center; gap: 5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; font-weight: 600; text-decoration: none; white-space: nowrap; font-size: 12px; padding: 5px 10px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: background 0.15s, border-color 0.15s; }
+  .ref-top-btn:hover { background: #dbeafe; border-color: #93c5fd; }
+  .ref-top-btn .ref-long { display: inline; }
+  .ref-top-btn .ref-short { display: none; }
+  .learn-tab-ref { margin-left: auto; text-decoration: none; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; transition: background 0.15s; }
+  .learn-tab-ref:hover { background: #dbeafe; }
+  @media (max-width: 1200px) {
+    .brand-credit { display: none !important; }
+  }
+  @media (max-width: 900px) {
+    .ref-top-btn .ref-long { display: none; }
+    .ref-top-btn .ref-short { display: inline; }
+    .ref-top-btn { font-size: 11px; padding: 4px 7px; }
+  }
+  @media (max-width: 600px) {
+    .ref-top-btn { padding: 3px 6px !important; font-size: 12px !important; } .ref-top-btn .ref-long, .ref-top-btn .ref-short { display: none !important; } #reset .reset-word { display: none; } } @media (max-width: 400px) { .top-right .preset-select { max-width: 92px !important; }
+  }
+  .learn-ref-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #2563eb; text-decoration: none; background: #eff6ff; border: 1px solid #bfdbfe; padding: 5px 10px; border-radius: 6px; white-space: nowrap; }
+  .learn-ref-link:hover { background: #dbeafe; }
+  .metric-formula { display: none; font-size: var(--font-caption); color: #526886; font-weight: 500; margin-top: 5px; letter-spacing: 0; }
+  .learning .metric { flex-wrap: wrap; }
+  .learning .metric-formula { display: block; flex-basis: 100%; }
+  .learn-panel { margin-top: 18px; padding: 28px; font-size: 14px; line-height: 1.55; scroll-margin-top: 20px; border-color: #dedff0; background: linear-gradient(155deg, #faf9ff 0, #fff 320px); }
+  .learn-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+  .learn-bottom-ref { margin-top: 24px; margin-bottom: 6px; background: #f8fafc; border: 1px solid #cbd5e1; }
+  .learn-tab-reference-card { margin-top: 18px; padding: 14px 18px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(37,99,235,0.05); }
+  .learn-tab-reference-card.formulas-card { background: #f0fdf4; border-color: #bbf7d0; box-shadow: 0 1px 3px rgba(22,163,74,0.05); }
+  .learn-tab-ref-text { flex: 1; min-width: 200px; }
+  .learn-tab-ref-badge { font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
+  .learn-tab-ref-badge.blue { color: #1d4ed8; }
+  .learn-tab-ref-badge.green { color: #15803d; }
+  .learn-tab-ref-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .learn-tab-ref-desc { font-size: 12px; color: #475569; line-height: 1.45; }
+  .learn-quick-ref-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 0 16px; padding: 12px 16px; background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 9px; box-shadow: 0 1px 3px rgba(37,99,235,0.06); }
+  .banner-text { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #1e3a8a; flex-wrap: wrap; }
+  .banner-badge { background: #2563eb; color: #ffffff; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px; }
+  .banner-desc { color: #475569; font-size: 12.5px; }
+  .banner-action-btn { display: inline-flex; align-items: center; gap: 5px; background: #2563eb; color: #ffffff; text-decoration: none; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 7px; white-space: nowrap; box-shadow: 0 1px 2px rgba(37,99,235,0.2); transition: background 0.15s; }
+  .banner-action-btn:hover { background: #1d4ed8; }
+  .banner-action-btn.cheat-btn { background: #0f766e; margin-left: auto; }
+  .banner-action-btn.cheat-btn:hover { background: #115e59; }
+  @media (max-width: 650px) {
+    .learn-quick-ref-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 12px; }
+    .banner-desc { display: none; }
+    .banner-action-btn { width: 100%; justify-content: center; }
+  }
+  .learn-panel h2 { margin: 0; font-size: 28px; line-height: 1.15; letter-spacing: -0.8px; max-width: 620px; }
+  .learn-panel h3 { margin: 0 0 8px; font-size: 16px; }
+  .learn-panel p { margin: 8px 0 16px; }
+  .learn-panel .eyebrow { color: #8056d9; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin: 0 0 8px; }
+  .learn-heading > .reset { white-space: nowrap; flex-shrink: 0; }
+  .learn-tabs { display: flex; gap: 6px; border-bottom: 1px solid #e4e8f0; padding-bottom: 12px; margin: 24px 0; }
+  .learn-tabs button { border: 1px solid transparent; border-radius: 10px; padding: 9px 16px; color: #526886; background: transparent; font: inherit; cursor: pointer; }
+  .learn-tabs button::before { content: attr(data-step); color: #8490a4; margin-right: 8px; font-size: 12px; }
+  .learn-tabs button[aria-selected="true"] { color: #6337b8; background: #f0eaff; border-color: #e1d5ff; font-weight: 700; }
+  .learn-panel button:focus-visible, .learn-toggle:focus-visible { outline: 2px solid #8056d9; outline-offset: 3px; }
+  .learn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .learn-card { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; min-width: 0; }
+  .learn-card p:last-child { margin-bottom: 0; }
+  .learn-note { color: #526886; font-size: 12px; }
+  .equation { display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; margin: 16px 0; font-size: 16px; }
+  .fraction { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; max-width: 100%; }
+  .fraction > :first-child { border-bottom: 1px solid #8795aa; padding: 4px 8px; }
+  .fraction > :last-child { padding: 4px 8px; }
+  .formula-term { appearance: none; border: 0; border-radius: 7px; background: #eefaf5; color: #087f59; font: inherit; padding: 7px 10px; cursor: pointer; border-bottom: 2px solid #0ea976; }
+  .formula-term[data-part="denominator"] { border-bottom: 2px dashed #8056d9; color: #6337b8; background: #f4f0fc; }
+  .formula-term[data-explain="fpr"][data-part="numerator"] { color: #bf3148; border-color: #e64b60; }
+  .formula-term:hover, .formula-term[aria-pressed="true"] { background: #eee8fb; }
+  .live-calculation { color: #263f65; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .learn-panel .live-calculation { background: #f2f5fa; border-radius: 9px; padding: 10px 12px; font-size: 12px; }
+  .learn-intro { max-width: 700px; margin-bottom: 20px; }
+  .learn-intro h3 { font-size: 22px; line-height: 1.3; letter-spacing: -0.4px; }
+  .learn-intro p { color: #526886; }
+  .basics-hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; margin-bottom: 24px; }
+  .basics-hero h3 { font-size: 28px; line-height: 1.2; letter-spacing: -0.7px; max-width: 430px; }
+  .learn-link { display: inline-block; color: #6337b8; background: transparent; border: 0; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; padding: 0; }
+  .odds-preview { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; background: #f1edfb; border: 1px solid #e1d8f7; padding: 22px; border-radius: 18px; text-align: center; }
+  .odds-preview strong { display: block; color: #663bb6; font-size: 36px; line-height: 1.2; letter-spacing: -1px; }
+  .odds-preview span { font-size: 12px; color: #526886; }
+  .odds-preview .odds-arrow { font-size: 22px; color: #9f80d5; }
+  .metric-detail { border-top: 3px solid var(--metric-color); }
+  .metric-detail .metric-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .metric-detail .metric-heading strong { font-size: 36px; line-height: 1.2; color: var(--metric-color); letter-spacing: -1px; }
+  .metric-detail h3 { color: var(--metric-color); }
+  .metric-detail .question { min-height: 44px; }
+  .rate-track { height: 6px; border-radius: 10px; background: #e9eef4; overflow: hidden; margin-top: 16px; }
+  .rate-track span { display: block; height: 100%; background: var(--metric-color, #0ea976); border-radius: inherit; }
+  .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 24px 0 12px; }
+  .outcome-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .outcome-card { border-radius: 12px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--outcome-color) 22%, white); background: color-mix(in srgb, var(--outcome-color) 6%, white); }
+  .outcome-card strong { display: block; color: var(--outcome-color); font-size: 22px; }
+  .outcome-card span { font-size: 12px; }
+  .balance-message { padding: 16px 20px; border-left: 3px solid #8056d9; background: #f7f4fd; border-radius: 0 12px 12px 0; margin: 20px 0; }
+  .balance-message p { margin: 4px 0; }
+  .learn-panel details { border-top: 1px solid #e4e8f0; padding: 14px 0; }
+  .learn-panel summary { cursor: pointer; font-weight: 700; color: #526886; }
+  .formula-card .equation { padding: 12px 0; margin: 12px 0; }
+  .formula-card .learn-note { min-height: 20px; }
+  .formula-feedback { display: none; margin: 8px 0 0; font-size: 12px; color: #6337b8; }
+  .formula-card:has(.formula-term[aria-pressed="true"]) .formula-feedback { display: block; }
+  .bayes-flow { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 20px; margin: 20px 0; }
+  .flow-step { position: relative; min-width: 0; padding: 18px; border: 1px solid #e4e8f0; border-radius: 16px; background: #fff; }
+  .flow-step + .flow-step::before { content: '→'; position: absolute; top: 50%; left: -19px; color: #a28bc8; font-size: 18px; }
+  .flow-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; }
+  .step-index { display: inline-grid; place-items: center; width: 24px; height: 24px; background: #f0eaff; border-radius: 7px; color: #7852b9; font-size: 12px; }
+  .count-row { padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #eef1f6; }
+  .count-row:last-of-type { border-bottom: 0; }
+  .count-row strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+  .count-row span { display: block; }
+  .count-row small { color: #526886; font-size: 12px; }
+  .count-row.true-result strong { color: #07845c; }
+  .count-row.false-result strong { color: #ce3c52; }
+  .evidence-bar { display: flex; height: 12px; border-radius: 8px; overflow: hidden; background: #e5eaf1; margin: 12px 0; }
+  .evidence-bar .correct { background: #0ea976; }
+  .evidence-bar .false-alarm { background: #e64b60; }
+  .result-step { border-color: #d8eae3; background: linear-gradient(135deg, #f1fbf6, #fff); }
+  .result-content { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+  .probability-ring { --probability: 0%; width: 136px; height: 136px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: conic-gradient(#0ea976 0 var(--probability), #e64b60 var(--probability) 100%); }
+  .probability-ring[data-value="na"] { background: #e1e6ed; }
+  .ring-center { width: 112px; height: 112px; background: white; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; }
+  .ring-center strong { color: #174f40; font-size: 28px; letter-spacing: -1px; line-height: 1.1; }
+  .ring-center span { font-size: 12px; color: #526886; margin-top: 5px; }
+  .result-caption { max-width: 220px; font-size: 12px; }
+  .bayes-math { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 20px; background: #f7f5fc; border: 1px solid #e6dff3; padding: 18px 22px; border-radius: 14px; margin: 20px 0; }
+  .bayes-math p { margin: 6px 0; }
+  .bayes-math .equation { margin: 0; }
+  .comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .comparison-card { text-align: left; background: white; border: 1px solid #dce3ee; border-radius: 14px; padding: 16px 18px; cursor: pointer; font: inherit; color: inherit; }
+  .comparison-card[aria-pressed="true"] { border-color: #8056d9; box-shadow: inset 0 0 0 1px #8056d9; background: #fbf9ff; }
+  .comparison-card:hover { border-color: #8056d9; }
+  .comparison-card .comparison-share { display: block; color: #6337b8; font-weight: 700; }
+  .comparison-card strong { display: block; font-size: 28px; letter-spacing: -0.5px; margin-top: 8px; }
+  .comparison-card small { display: block; color: #526886; font-size: 12px; }
+  .notation-list { display: grid; gap: 8px; margin: 16px 0; }
+  .notation-row { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 14px; padding: 10px 12px; background: #f7f9fc; border-radius: 9px; }
+  .notation-row p { margin: 0; }
+  .mini-matrix { width: 34px; height: 28px; display: inline-grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; border-radius: 6px; background: #f1f5f9; border: 1px solid #dce3ee; flex-shrink: 0; }
+  .mini-cell { border-radius: 2px; background: #e2e8f0; }
+  .mini-cell.denom { background: #ede6fc; box-shadow: inset 0 0 0 1px #9b78df; }
+  .mini-cell.num { background: var(--metric-color, var(--outcome-color, #0ea976)); box-shadow: none; }
+  .outcome-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .slice-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: #526886; font-weight: 600; background: #f7f9fc; padding: 3px 7px; border-radius: 7px; border: 1px solid #e6ecf5; }
+  .prior-bar { height: 5px; border-radius: 4px; background: #edf1f7; overflow: hidden; margin-top: 5px; }
+  .prior-bar span { display: block; height: 100%; border-radius: inherit; background: #8056d9; }
+  .prior-bar.neg span { background: #94a3b8; }
+  .math-pill { display: inline-block; padding: 1px 6px; border-radius: 5px; font-weight: 700; font-size: 0.92em; }
+  .math-pill.tpr { background: #e8f8f2; color: #087f59; }
+  .math-pill.fpr { background: #fdecef; color: #bf3148; }
+  .math-pill.prior { background: #f2edff; color: #6337b8; }
+  .odds-badge { grid-column: 1 / -1; background: #fff; border: 1px solid #dfd5f7; border-radius: 10px; padding: 7px 12px; font-size: 12px; color: #435572; margin-top: 2px; }
+  .odds-badge b { color: #6337b8; }
+  .outcome-pos { display: inline-block; font-size: 11px; font-weight: 700; color: #526886; background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(100, 116, 139, 0.2); border-radius: 6px; padding: 1px 6px; margin-bottom: 4px; }
+  .word-eq { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 12px; color: #526886; background: #f8fafd; border: 1px dashed #dce3ee; border-radius: 9px; padding: 6px 10px; margin: 0 0 12px; text-align: center; }
+  .word-eq .fraction > :first-child { border-bottom-color: #cbd5e1; padding: 2px 6px; font-weight: 600; color: #15243d; }
+  .word-eq .fraction > :last-child { padding: 2px 6px; }
+  .derivation-box { display: grid; gap: 10px; }
+  .derivation-step { background: #fff; border: 1px solid #e4dcf5; border-radius: 11px; padding: 10px 14px; }
+  .derivation-step small { display: block; font-size: 11px; font-weight: 700; color: #6337b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+  .bayes-controls, .tradeoff-controls { margin: 16px 0 20px; border-color: #dfd5f7; background: #fcfbff; }
+  .layout-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .layout-card { border: 1px solid #e4e8f0; border-radius: 12px; padding: 10px 12px; background: #fff; min-width: 0; }
+  .layout-card:first-child { border-color: #cdbdf0; background: #fbf9ff; }
+  .layout-card b { display: block; font-size: 12px; margin-bottom: 6px; }
+  .layout-card small { display: block; font-size: 11px; color: #526886; margin-top: 6px; line-height: 1.3; }
+  .layout-matrix { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 3px; align-items: center; }
+  .layout-head { font-size: 10px; color: #526886; text-align: center; white-space: nowrap; }
+  .layout-head.row { text-align: right; padding-right: 3px; }
+  .layout-cell { text-align: center; font-size: 12px; font-weight: 800; padding: 6px 0; border-radius: 5px; background: color-mix(in srgb, var(--c) 20%, white); border: 1px solid color-mix(in srgb, var(--c) 45%, white); color: color-mix(in srgb, var(--c) 70%, black); }
+  .learning .metrics { position: static; }
+  .accuracy-card { background: #fbfcfe; border: 1px solid #dce3ee; border-radius: 16px; padding: 20px; margin: 20px 0; }
+  .accuracy-header { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .accuracy-metric { text-align: right; }
+  .accuracy-metric strong { display: block; font-size: 30px; color: #1a6fbf; line-height: 1.1; }
+  .accuracy-metric span { font-size: 11px; color: #526886; }
+  .paradox-callout { background: #fff8eb; border-left: 3px solid #f2a527; border-radius: 0 10px 10px 0; padding: 12px 16px; margin-top: 12px; font-size: 13px; line-height: 1.5; }
+  .paradox-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn-demo { border: 1px solid #8056d9; background: #f0eaff; color: #6337b8; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+  .btn-demo:hover { background: #e3d7fa; }
+  .btn-demo.secondary { border-color: #cbd5e1; background: #fff; color: #526886; font-weight: 500; }
+  .btn-demo.secondary:hover { background: #f8fafc; color: #1e293b; }
+  .f1-card { background: #f6faff; border: 1px solid #cfe0f5; border-radius: 16px; padding: 20px; margin: 24px 0; }
+  .f1-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .f1-score { font-size: 32px; color: #155bb5; line-height: 1.1; }
+  .f1-equation { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 16px 0; font-size: 15px; }
+  .curve-container { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: center; margin: 20px 0; background: #fff; border: 1px solid #e4e8f0; border-radius: 16px; padding: 20px; }
+  @media (max-width: 767px) {
+    .curve-container { grid-template-columns: 1fr; }
+  }
+  .curve-svg { width: 100%; max-width: 320px; display: block; border-radius: 10px; background: #fbfcfe; border: 1px solid #e8edf5; margin: 0 auto; }
+  .curve-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: #526886; margin-top: 8px; justify-content: center; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+  .auc-badge, .signal-badge, .pr-badge { display: inline-flex; align-items: baseline; gap: 8px; background: #eef7ff; border: 1px solid #c2e0fc; border-radius: 10px; padding: 6px 14px; font-size: 13px; color: #105ba3; font-weight: 700; margin-bottom: 12px; }
+  .auc-badge strong, .signal-badge strong, .pr-badge strong { font-size: 22px; }
+  .cost-scenario-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+  @media (max-width: 767px) {
+    .cost-scenario-grid { grid-template-columns: 1fr; }
+  }
+  .cost-card { text-align: left; background: #fff; border: 1px solid #dce3ee; border-radius: 12px; padding: 14px; font: inherit; cursor: pointer; transition: border-color 0.15s, background 0.15s; color: inherit; }
+  .cost-card:hover { border-color: #8056d9; background: #faf8ff; }
+  .cost-card.active { border-color: #8056d9; background: #fbf9ff; box-shadow: inset 0 0 0 1px #8056d9; }
+  .cost-card b { display: block; font-size: 13px; color: #1e293b; margin-bottom: 4px; }
+  .cost-card small { display: block; font-size: 11.5px; color: #526886; line-height: 1.35; }
+  @media (max-width: 1169px) {
+    .group-sub { display: none; }
+  }
+  @media (max-width: 767px) {
+    .summary-tp, .summary-fp { padding: 0 3px; }
+    .learn-grid, .basics-hero, .bayes-flow, .bayes-math { grid-template-columns: 1fr; }
+    .learn-panel { padding: 16px; }
+    .learn-panel h2 { font-size: 22px; }
+    .basics-hero h3 { font-size: 22px; }
+    .learn-heading { gap: 8px; }
+    .learn-heading > .reset { font-size: 11px; padding: 5px 8px; }
+    .learn-tabs { width: 100%; }
+    .learn-tabs button { flex: 1; padding: 8px; }
+    .learn-tabs button::before { display: none; }
+    .learn-card { padding: 16px; }
+    .metric-detail .question { min-height: 0; }
+    .metric-detail .metric-heading strong { font-size: 28px; }
+    .outcome-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .layout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .outcome-card { padding: 12px; }
+    .flow-step + .flow-step::before { content: '↓'; top: -23px; left: calc(50% - 6px); }
+    .flow-heading { margin-bottom: 8px; }
+    .result-content { flex-direction: row; text-align: left; }
+    .ring-center { text-align: center; }
+    .result-caption { min-width: 0; }
+    .comparison-card { padding: 12px; }
+    .comparison-card strong { font-size: 22px; }
+    .notation-row { grid-template-columns: 1fr; gap: 4px; }
+    .odds-preview { padding: 18px 14px; }
+    .odds-preview strong { font-size: 28px; }
+    .equation { font-size: 14px; }
+    .formula-term { min-height: 44px; }
+  }
+  @media (max-width: 650px) and (orientation: portrait) {
+    .container > .learning-entry { order: 3; gap: 4px; justify-content: center; margin-bottom: 0; }
+    .learning-entry .key { display: none; }
+    .graph-toggle-group { display: inline-flex; flex-wrap: nowrap; gap: 2px; padding: 1px 2px; }
+    .graph-tab { padding: 2px 5px; font-size: 10px; }
+    .brand-credit { display: none; }
+    .container > .controls { margin-bottom: 0; }
+    .container > .learn-panel { order: 6; }
+    .learning .metric-formula { font-size: 10px; }
+    body.four-up-active #scorePanel {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+    .views.single-4up #plotsWrapper {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      gap: 12px !important;
+    }
+    .views.single-4up #plotsWrapper .plot {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 650 / 270;
+      padding: 6px !important;
+      background: #ffffff !important;
+      border: 1px solid #dce3ee !important;
+      border-radius: 14px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    }
+    body.four-up-active, body.four-up-active .container {
+      overflow-y: auto !important;
+      height: auto !important;
+    }
+  }
+  @media (max-width: 480px) {
+    .scenario-picker { gap: 1px; }
+    .scenario-picker label { font-size: 10px; }
+    .top { gap: 4px; }
+    .brand { gap: 4px; font-size: 14px; }
+    .brand-credit { display: none; }
+    .top-right { gap: 3px; }
+    .top-right .reset { padding: 3px 5px; font-size: 10px; }
+    .top-right .preset-select { max-width: 102px; font-size: 10px; padding: 2px 3px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .learn-panel:not([hidden]) { animation: learn-in 180ms ease-out; }
+    @keyframes learn-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  }
+  </style>
+</head>
+<body>
+<main class="container">
+ <header class="top">
+  <div class="brand">
+   <span aria-hidden="true" class="logo">
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+   </span>
+   <span>CMatrixLab</span>
+   <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
+  </div>
+  <div class="top-right">
+   <div class="scenario-picker">
+   <label for="presetSelect">Try an example</label>
+   <select class="preset-select" id="presetSelect" title="Choose an example or use standard ML terms">
+    <option value="balanced">Medical test</option>
+    <option value="car">Car braking</option>
+    <option value="spam">Spam filter</option>
+    <option value="fraud">Fraud detection</option>
+    <option value="generic">Generic ML</option>
+    <option value="custom" disabled hidden>Preset: Custom</option>
+   </select>
+   </div>
+   <a href="cheatsheet.html" class="reset ref-top-btn" id="refTopBtn" title="32 metrics cheatsheet: formula, when good, when it fails" aria-label="Metrics cheatsheet">📋<span class="ref-long"> Cheatsheet</span><span class="ref-short"></span></a>
+   <button class="reset" id="reset" aria-label="Reset" title="Reset">
+    <span class="reset-word">Reset </span>↺
+   </button>
+  </div>
+ </header>
+ <p class="story" id="intro"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.</p>
+ <section aria-live="polite" class="metrics">
+  <button class="card metric" id="tprCard" type="button" data-metric="tpr" aria-pressed="false" aria-description="Highlight TP out of all actual positives: TP divided by TP plus FN. Tap again to clear." title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
+   <span class="metric-label">
+    TPR
+    <small>
+     <span data-term="tprCaption">Sick detected</span>
+    </small>
+   </span>
+   <strong id="tpr">
+    —
+   </strong>
+  </button>
+  <button class="card metric" id="fprCard" type="button" data-metric="fpr" aria-pressed="false" aria-description="Highlight FP out of all actual negatives: FP divided by FP plus TN. Tap again to clear." title="FPR = FP / all actual negatives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
+   <span class="metric-label">
+    FPR
+    <small>
+     <span data-term="fprCaption">Healthy test +</span>
+    </small>
+   </span>
+   <strong id="fpr">
+    —
+   </strong>
+  </button>
+  <button class="card metric" id="precisionCard" type="button" data-metric="precision" aria-pressed="false" aria-description="Highlight TP out of all predicted positives: TP divided by TP plus FP. Tap again to clear." title="Precision = TP / (TP + FP). Changing balance changes the mix of correct detections and false alarms among positive predictions.">
+   <span class="metric-label">
+    Precision
+    <small>
+     <span data-term="precisionCaption">Sick in test +</span>
+    </small>
+   </span>
+   <strong id="precision">
+    —
+   </strong>
+  </button>
+ </section>
+ <section aria-label="Flu test controls" class="card controls" id="controls">
+
+  <label class="control">
+   <span class="control-header">
+    <span>
+     <span data-term="thresholdLabel">How easily the test says +</span>
+    </span>
+    <output class="val" id="thresholdOut">
+     50%
+    </output>
+   </span>
+   <input id="threshold" max="100" min="0" step="1" type="range" value="50"/>
+   <span class="endpoints">
+    <span>
+     <span data-term="thresholdLow">0% · Never says +</span>
+    </span>
+    <span>
+     <span data-term="thresholdHigh">100% · Always says +</span>
+    </span>
+   </span>
+  </label>
+  <label class="control">
+   <span class="control-header">
+    <span>
+     <span data-term="separationLabel">How different the two groups are</span>
+    </span>
+    <output class="val" id="separationOut">
+     60%
+    </output>
+   </span>
+   <input id="separation" max="100" min="0" step="1" type="range" value="60"/>
+   <span class="endpoints">
+    <span>
+     <span data-term="separationLow">Hard to tell apart</span>
+    </span>
+    <span>
+     <span data-term="separationHigh">Easy to tell apart</span>
+    </span>
+   </span>
+  </label>
+
+ <div class="control">
+   <span class="control-header">
+    <label for="prevalence" id="shareLabel" title="Percentage of people who actually have flu">
+     Sick portion
+    </label>
+    <span class="balance-values">
+    <button class="balance-preset" id="balance10" type="button" aria-pressed="true" aria-label="Set sick portion to 10%">10%</button>
+    <button class="balance-preset" id="balance50" type="button" aria-pressed="false" aria-label="Set sick portion to 50%">50%</button>
+    <output class="val" id="prevalenceOut">
+     10%
+    </output>
+    </span>
+   </span>
+   <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="10"/>
+   <span class="endpoints">
+    <span>
+     <span data-term="minimum">0% · no one has flu</span>
+    </span>
+    <span>
+     <span data-term="maximum">100% · everyone has flu</span>
+    </span>
+   </span>
+  </div>
+ </section>
+ <div aria-label="Classification outcome colors" class="legend">
+  <span>
+   <i class="dot tp">
+   </i>
+   TP<span class="legend-detail" data-term="tpLegend"> · Correct detection</span>
+  </span>
+  <span>
+   <i class="dot fp">
+   </i>
+   FP<span class="legend-detail" data-term="fpLegend"> · False alarm</span>
+  </span>
+  <span>
+   <i class="dot fn">
+   </i>
+   FN<span class="legend-detail" data-term="fnLegend"> · Missed</span>
+  </span>
+  <span>
+   <i class="dot tn">
+   </i>
+   TN<span class="legend-detail" data-term="tnLegend"> · Correctly ignored</span>
+  </span>
+ </div>
+ <div class="learning-entry">
+  <div class="graph-toggle-group" role="tablist" aria-label="View mode selector">
+   <button type="button" class="graph-tab active" id="tabGraphScores" role="tab" aria-selected="true" data-graph-view="scores" title="Default view: Score Plot on left, 2x2 Confusion Matrix on right"><span class="tab-long">Default (Scores + Matrix)</span><span class="tab-short">Default</span></button>
+   <button type="button" class="graph-tab" id="tabGraphSplit" role="tab" aria-selected="false" data-graph-view="split" title="Advanced view: One big 4-Up graph (Score Plot, Gaussians, ROC Curve, and PR Curve)"><span class="tab-long">4-Up Graph</span><span class="tab-short">4-Up</span></button>
+   <button type="button" class="graph-tab" id="tabGraphGauss" role="tab" aria-selected="false" data-graph-view="gauss" title="Prior-weighted Gaussian distributions scaling with sick portion"><span class="tab-long">Gaussians</span><span class="tab-short">Gauss</span></button>
+   <button type="button" class="graph-tab" id="tabGraphRoc" role="tab" aria-selected="false" data-graph-view="roc" title="ROC curve with live operating point">ROC</button>
+   <button type="button" class="graph-tab" id="tabGraphPr" role="tab" aria-selected="false" data-graph-view="pr" title="Precision-Recall curve shifting with sick portion">PR</button>
+   <button type="button" class="graph-tab" id="tabGraphBayes" role="tab" aria-selected="false" data-graph-view="bayes" title="Precision vs. prevalence curve">Bayes</button>
+  </div>
+  <p class="key" id="markerKey">Full marker = 10 people; smaller = partial.</p>
+ </div>
+ <section class="views">
+  <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
+   <div id="plotsWrapper" style="display:flex; gap:8px; width:100%; height:100%;">
+    <svg aria-label="Flu test score threshold" aria-description="Drag the blue line left or right, or use the arrow keys." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="horizontal" tabindex="0" class="plot" id="plot" role="slider" viewBox="0 0 650 440">
+    </svg>
+    <svg aria-label="Prior-weighted Gaussian score distributions" class="plot gauss-plot" id="gaussPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+    <svg aria-label="ROC curve: TPR versus FPR" class="plot roc-plot" id="rocPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+    <svg aria-label="Precision-Recall curve" class="plot pr-plot" id="prPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+    <svg aria-label="Precision versus prevalence curve" class="plot bayes-plot" id="bayesPlot" viewBox="0 0 650 440" style="display:none;">
+    </svg>
+   </div>
+  </div>
+  <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
+   <div class="population-header layout-graph" id="matrixPopHeader">
+    <div class="matrix-layout-cell">
+     <button type="button" class="matrix-layout-btn" id="matrixLayoutBtn" aria-label="Confusion matrix layout: Matches graph. Click to cycle layout." title="Current layout: Matches graph (Score order). Click to switch to scikit-learn." data-layout="graph">
+      <span class="layout-label-long">Matches graph</span>
+      <span class="layout-label-short">Graph</span>
+      <span class="layout-btn-icon" aria-hidden="true">⇄</span>
+     </button>
+    </div>
+    <div class="col-head col-pos">
+     <span data-term="predictedPositive">Test +</span>
+    </div>
+    <div class="col-head col-neg">
+     <span data-term="predictedNegative">Test −</span>
+    </div>
+   </div>
+   <div class="population layout-graph" id="matrixPopulation">
+    <div class="metric-outline metric-denominator" id="matrixDenominator" aria-hidden="true"></div>
+    <div class="metric-outline metric-numerator" id="matrixNumerator" aria-hidden="true"></div>
+    <div class="row-label row-pos" id="posRowLabel">
+     <span data-term="actualPositive">Actual flu</span>
+     <br/>
+     <small id="pCount">
+       500 cases
+     </small>
+    </div>
+    <div class="group tp" id="groupTp">
+     <div class="group-top">
+      <span>
+       TP<small class="group-sub" data-term="tpLegend"> · Flu detected</small>
+      </span>
+      <strong id="tpNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tpTiles">
+     </div>
+    </div>
+    <div class="group fn" id="groupFn">
+     <div class="group-top">
+      <span>
+       FN<small class="group-sub" data-term="fnLegend"> · Flu missed</small>
+      </span>
+      <strong id="fnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fnTiles">
+     </div>
+    </div>
+    <div class="row-label row-neg" id="negRowLabel">
+     <span data-term="actualNegative">Actual no&nbsp;flu</span>
+     <br/>
+     <small id="nCount">
+       500 cases
+     </small>
+    </div>
+    <div class="group fp">
+     <div class="group-top">
+      <span>
+       FP<small class="group-sub" data-term="fpLegend"> · False alarm</small>
+      </span>
+      <strong id="fpNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fpTiles">
+     </div>
+    </div>
+    <div class="group tn">
+     <div class="group-top">
+      <span>
+       TN<small class="group-sub" data-term="tnLegend"> · No flu, test −</small>
+      </span>
+      <strong id="tnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tnTiles">
+     </div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="card insight" title="Each full dot or square represents 10 people; smaller markers represent partial counts. Sick portion changes counts; TPR and FPR stay fixed.">
+  <div class="insight-text">
+   <strong>
+    <span data-term="amongPositive">Among positive tests:</span>
+   </strong>
+   <span id="summary">
+    —
+   </span>
+  </div>
+  <div class="prec-right">
+   <div aria-label="People with flu versus false alarms among positive tests" class="precbar" id="precbar" role="img">
+    <span class="tp" id="tpFill">
+    </span>
+    <span class="fp" id="fpFill">
+    </span>
+   </div>
+   <div class="prec-labels">
+    <span>
+     Green:
+     <b id="tpLabel">
+      0
+     </b>
+     <span data-term="correctLabel">have flu</span>
+    </span>
+    <span>
+     Red:
+     <b id="fpLabel">
+      0
+     </b>
+     <span data-term="falseLabel">false alarms</span>
+    </span>
+   </div>
+  </div>
+ </section>
+<p class="foot" id="footNote">
+  1,000 people (averages). Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and separation. · <a href="cheatsheet.html" style="color:#0f766e;font-weight:600;text-decoration:underline;">📋 Cheatsheet ↗</a> · <a href="reference.html" target="_blank" rel="noopener" style="color:#2563eb;font-weight:600;text-decoration:underline;">📖 Metrics Reference ↗</a>
+ </p>
+ <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
+</main>
+
+
+  <script>
+/**
+ * CMatrixLab — Simple view
+ * ------------------------
+ * Single-file, dependency-free educational classifier demo.
+ *
+ * Read the code in this order:
+ *   1. CONFIG / state
+ *   2. MODEL: generate fixed, weighted class-score distributions
+ *   3. CLASSIFICATION: assign TP, FP, FN, TN and compute metrics
+ *   4. RENDERING: the 1D score plot and population grid
+ *   5. CONTROLS: update the UI when sliders move
+ *
+ * Fixed class distributions are weighted to a population of 1,000.
+ * Both charts use the same full/partial markers and expected counts.
+ * Representative markers are regrouped when outcomes change; underlying
+ * sample scores depend only on separation, never on balance or threshold.
+ */
+(() => {
+  'use strict';
+
+  // ============================================================
+  // 1. CONFIGURATION AND STATE
+  // ============================================================
+
+  const CONFIG = Object.freeze({
+    totalExamples: 1000,
+    caseUnit: 10,            // Cases per full dot/square
+    samplesPerClass: 50,
+    defaultPrevalence: 10,   // Percent of actual positives
+    defaultThreshold: 0.50,  // Score >= threshold -> predicted positive
+    defaultSeparation: 60,   // 0 = overlapping; 100 = perfectly separable
+    colors: {
+      tp: '#0ea976',
+      fp: '#e64b60',
+      fn: '#f2a527',
+      tn: '#a4afc0'
+    },
+    plot: {
+      left: 190,
+      width: 410,
+      top: 55,
+      bottom: 360,
+      positiveRow: 130,
+      negativeRow: 285
+    }
+  });
+
+  // Group dragging: edit these settings to tune both mouse and touch gestures.
+  const GROUP_DRAG = Object.freeze({
+    activationPixels: 6,       // Movement before locking to the horizontal or vertical axis.
+    minDistancePixels: 280,    // Higher = less sensitive, especially on small screens.
+    horizontalWidthScale: 0.8, // Higher = slower separation changes on wide graphs.
+    verticalHeightScale: 1.5,  // Higher = slower proportion changes on tall graphs.
+    responseExponent: 1.7     // 1 = linear; higher = gentler start, faster long drags.
+  });
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const getElement = id => document.getElementById(id);
+
+  const elements = {
+    prevalence: getElement('prevalence'),
+    threshold: getElement('threshold'),
+    separation: getElement('separation'),
+    prevalenceOut: getElement('prevalenceOut'),
+    balance10: getElement('balance10'),
+    balance50: getElement('balance50'),
+    thresholdOut: getElement('thresholdOut'),
+    separationOut: getElement('separationOut'),
+    positiveCount: getElement('pCount'),
+    negativeCount: getElement('nCount'),
+    scorePlot: getElement('plot'),
+    tpr: getElement('tpr'),
+    fpr: getElement('fpr'),
+    precision: getElement('precision'),
+    truePositiveLabel: getElement('tpLabel'),
+    falsePositiveLabel: getElement('fpLabel'),
+    truePositiveFill: getElement('tpFill'),
+    falsePositiveFill: getElement('fpFill'),
+    precisionBar: getElement('precbar'),
+    summary: getElement('summary'),
+    reset: getElement('reset')
+  };
+
+  // Terminology is presentation state only; the model and slider state are shared.
+  let genericMode = false;
+  let activeDomain = 'flu';
+  let activeMatrixLayout = 'graph';
+  let formulaPreview = null;
+  let formulaPinned = null;
+  const metricGroups = {
+    tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
+    fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
+    precision: { label: 'Precision', numerator: 'tp', denominator: ['tp', 'fp'], area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' }
+  };
+  const allMetricDefinitions = {
+    ...metricGroups,
+    tnr: { label: 'Specificity', numerator: 'tn', denominator: ['tn', 'fp'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+    npv: { label: 'NPV', numerator: 'tn', denominator: ['tn', 'fn'], area: '1 / 3 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+    fnr: { label: 'Miss Rate', numerator: 'fn', denominator: ['fn', 'tp'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' }
+  };
+  let hoveredMetric = null;
+  let focusedMetric = null;
+  let pinnedMetric = null;
+  let plotRegions = null;
+  const activeMetric = () => (formulaPreview || formulaPinned)?.metric || hoveredMetric || focusedMetric || pinnedMetric;
+  const terminology = {
+    flu: {
+      introduction: getElement('intro').innerHTML,
+      share: 'Sick portion', shareTitle: 'Percentage of people who actually have flu',
+      thresholdLabel: 'How easily the test says +', thresholdLow: '0% · Never says +', thresholdHigh: '100% · Always says +',
+      separationLabel: 'How different the two groups are', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
+      actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
+      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
+      minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
+      tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
+      fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
+      amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
+      subject: 'people', cutoff: 'test cutoff',
+      separation: 'score separation', tprCaption: 'Sick detected', fprCaption: 'Healthy test +', precisionCaption: 'Sick in test +', fixedCaption: 'Fixed with sick portion',
+      noPositives: 'No positive tests at this setting.',
+      scorePanel: 'Flu test score graph', plot: 'Flu test score threshold',
+      matrixPanel: 'Flu test results', controls: 'Flu test controls',
+      bar: 'People with flu versus false alarms among positive tests'
+    },
+    car: {
+      introduction: '<strong>Your car’s sensor slams the emergency brakes! Is there really an obstacle ahead?</strong> In autonomous emergency braking (AEB), safety demands high sensitivity (TPR), but phantom braking (FP) risks rear-end crashes.<br>Compare how obstacle frequency and sensor confidence trade off crash avoidance against phantom stops.',
+      share: 'Obstacle portion', shareTitle: 'Percentage of driving situations with an actual obstacle',
+      thresholdLabel: 'Braking sensitivity', thresholdLow: '0% · Never brakes', thresholdHigh: '100% · Emergency brake easily',
+      separationLabel: 'Sensor obstacle separation', separationLow: 'Rain / fog noise', separationHigh: 'Clear lidar / camera radar',
+      actualPositive: 'Obstacle', actualNegative: 'Clear road',
+      predictedNegative: 'Drive on (−)', predictedPositive: 'Brake! (+)', scoreLabel: 'Collision risk score →',
+      minimum: '0% · clear highway', maximum: '100% · constant obstacles',
+      tpLegend: ' · Crash avoided', fpLegend: ' · Phantom braking',
+      fnLegend: ' · Missed obstacle!', tnLegend: ' · Smooth driving',
+      amongPositive: 'Among emergency braking events:', correctLabel: 'real obstacles', falseLabel: 'phantom stops',
+      subject: 'road events', cutoff: 'braking trigger',
+      separation: 'sensor clarity', tprCaption: 'Hazards caught', fprCaption: 'False braking', precisionCaption: 'Brakes justified', fixedCaption: 'Fixed with obstacle rate',
+      noPositives: 'Car never brakes at this threshold.',
+      scorePanel: 'Collision risk score graph', plot: 'Collision risk threshold',
+      matrixPanel: 'Braking decision matrix', controls: 'Sensor and braking controls',
+      bar: 'Real obstacles avoided versus phantom stops'
+    },
+    spam: {
+      introduction: '<strong>An email was sent to your Spam folder. Is it really junk—or an important email?</strong> That’s precision. In spam filtering, a false alarm (good email discarded) is far worse than junk reaching your Inbox.<br>Notice how spam rate in incoming email shifts precision, even with a fixed classification model.',
+      share: 'Spam portion', shareTitle: 'Percentage of incoming emails that are junk/spam',
+      thresholdLabel: 'Filter aggressiveness', thresholdLow: '0% · Let everything in', thresholdHigh: '100% · Aggressive spam filter',
+      separationLabel: 'Spam filter accuracy', separationLow: 'Subtle phishing', separationHigh: 'Blatant spam markers',
+      actualPositive: 'Spam email', actualNegative: 'Good email',
+      predictedNegative: 'Inbox (−)', predictedPositive: 'Spam (+)', scoreLabel: 'Spam confidence score →',
+      minimum: '0% · pristine inbox', maximum: '100% · flood of spam',
+      tpLegend: ' · Spam blocked', fpLegend: ' · Good email lost!',
+      fnLegend: ' · Spam in Inbox', tnLegend: ' · Kept in Inbox',
+      amongPositive: 'Among emails sent to Spam:', correctLabel: 'actual spam', falseLabel: 'good mail lost',
+      subject: 'emails', cutoff: 'filter cutoff',
+      separation: 'filter separation', tprCaption: 'Spam caught', fprCaption: 'Good mail blocked', precisionCaption: 'Spam in folder', fixedCaption: 'Fixed with spam volume',
+      noPositives: 'No emails classified as spam.',
+      scorePanel: 'Spam score graph', plot: 'Spam filter threshold',
+      matrixPanel: 'Spam filter matrix', controls: 'Email filter controls',
+      bar: 'Spam caught versus good emails sent to spam'
+    },
+    fraud: {
+      introduction: '<strong>Your card was declined for suspicious activity. Is it a real thief or a false alarm?</strong> Credit card fraud is rare (~1–2%), so even an accurate detector produces false alarms due to the base-rate fallacy.<br>See why high sensitivity causes frequent card blocks when fraud is rare.',
+      share: 'Fraud portion', shareTitle: 'Percentage of transactions that are actual fraud',
+      thresholdLabel: 'Security aggressiveness', thresholdLow: '0% · Approve all charges', thresholdHigh: '100% · Block easily',
+      separationLabel: 'Fraud pattern detection', separationLow: 'Sophisticated fraud', separationHigh: 'Obvious anomalies',
+      actualPositive: 'Fraud charge', actualNegative: 'Legit charge',
+      predictedNegative: 'Approve (−)', predictedPositive: 'Block! (+)', scoreLabel: 'Fraud risk score →',
+      minimum: '0% · zero fraud', maximum: '100% · all fraud',
+      tpLegend: ' · Fraud caught', fpLegend: ' · Card declined',
+      fnLegend: ' · Fraud missed', tnLegend: ' · Normal sale',
+      amongPositive: 'Among blocked charges:', correctLabel: 'real fraud', falseLabel: 'false alarms',
+      subject: 'charges', cutoff: 'security cutoff',
+      separation: 'pattern separation', tprCaption: 'Fraud caught', fprCaption: 'Genuine blocked', precisionCaption: 'Blocks justified', fixedCaption: 'Fixed with fraud rate',
+      noPositives: 'No charges blocked at this security level.',
+      scorePanel: 'Fraud score graph', plot: 'Fraud detection threshold',
+      matrixPanel: 'Fraud detection matrix', controls: 'Security rule controls',
+      bar: 'Fraud caught versus legitimate shoppers blocked'
+    },
+    generic: {
+      introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive portion).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
+      share: 'Positive portion', shareTitle: 'Class prevalence: percentage of actual positive cases',
+      thresholdLabel: 'Decision threshold', thresholdLow: '0% · More predicted +', thresholdHigh: '100% · Fewer predicted +',
+      separationLabel: 'Class separation', separationLow: 'Overlapping', separationHigh: 'Fully separated',
+      actualPositive: 'Actual +', actualNegative: 'Actual −',
+      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: 'Positive class score →',
+      minimum: '0% · all negative', maximum: '100% · all positive',
+      tpLegend: ' · True positive', fpLegend: ' · False positive',
+      fnLegend: ' · False negative', tnLegend: ' · True negative',
+      amongPositive: 'Among predicted positives:', correctLabel: 'correct', falseLabel: 'false alarms',
+      subject: 'cases', cutoff: 'decision threshold',
+      separation: 'class separation', tprCaption: 'Positives found', fprCaption: 'Negatives flagged', precisionCaption: 'Correct in +', fixedCaption: 'Fixed with balance',
+      noPositives: 'No positive predictions at this threshold.',
+      scorePanel: 'Positive class score graph', plot: 'Decision threshold on the positive class score graph',
+      matrixPanel: 'Confusion matrix', controls: 'Model controls',
+      bar: 'Correct detections versus false alarms among positive predictions'
+    }
+  };
+
+  function renderTerminology() {
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+    // Both introductions are trusted local copy, never user-supplied HTML.
+    getElement('intro').innerHTML = copy.introduction;
+    document.querySelectorAll('[data-term]').forEach(element => {
+      element.textContent = copy[element.dataset.term];
+    });
+    getElement('shareLabel').textContent = copy.share;
+    getElement('shareLabel').title = copy.shareTitle;
+    for (const [id, label] of [
+      ['controls', copy.controls], ['scorePanel', copy.scorePanel],
+      ['matrixPanel', copy.matrixPanel], ['plot', copy.plot], ['precbar', copy.bar]
+    ]) getElement(id).setAttribute('aria-label', label);
+    for (const share of [10, 50]) {
+      elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
+    }
+    getElement('footNote').textContent = `Numbers are averages for a group of 1,000 ${copy.subject}. ${copy.share} changes the counts and Precision; TPR and FPR stay fixed at the same ${copy.cutoff} and ${copy.separation}.`;
+    getElement('markerKey').textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
+    document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
+    document.querySelectorAll('.metric')[0].title = genericMode
+      ? 'TPR = TP / all actual positives. Fixed when class balance changes at the same threshold and separation.'
+      : (activeDomain === 'flu'
+        ? 'TPR = portion of people with flu who test positive. Fixed when sick portion changes with the same test settings.'
+        : `TPR = portion of ${copy.actualPositive.toLowerCase()} correctly detected.`);
+    document.querySelectorAll('.metric')[1].title = genericMode
+      ? 'FPR = FP / all actual negatives. Fixed when class balance changes at the same threshold and separation.'
+      : (activeDomain === 'flu'
+        ? 'FPR = portion of people without flu who get a positive test. Fixed when sick portion changes with the same test settings.'
+        : `FPR = portion of ${copy.actualNegative.toLowerCase()} getting a false alarm.`);
+    document.querySelectorAll('.metric')[2].title = genericMode
+      ? 'Precision = TP / (TP + FP). Changes as the actual positive portion changes.'
+      : (activeDomain === 'flu'
+        ? 'Precision = chance a person has flu after a positive test in this group.'
+        : `Precision = chance of ${copy.actualPositive.toLowerCase()} after a positive decision.`);
+  }
+
+  function readSettings() {
+    const prevalencePct = Number(elements.prevalence.value);
+    return {
+      prevalencePct,
+      positiveCount: Math.round(prevalencePct * CONFIG.totalExamples / 100),
+      // Flu "how easily the test says +" increases to the right; the equivalent ML cutoff decreases.
+      threshold: (genericMode ? Number(elements.threshold.value) : 100 - Number(elements.threshold.value)) / 100,
+      separation: Number(elements.separation.value) / 100
+    };
+  }
+
+  // ============================================================
+  // 2. MODEL: DETERMINISTIC SCORE DISTRIBUTIONS
+  // ============================================================
+
+  /** Approximate standard-normal cumulative distribution function Φ(z). */
+  function normalCdf(z) {
+    const absZ = Math.abs(z);
+    const t = 1 / (1 + 0.2316419 * absZ);
+    const polynomial = t * (
+      0.319381530 + t * (
+        -0.356563782 + t * (
+          1.781477937 + t * (-1.821255978 + t * 1.330274429)
+        )
+      )
+    );
+    const positiveCdf = 1 - 0.3989422804 * Math.exp(-absZ * absZ / 2) * polynomial;
+    return z >= 0 ? positiveCdf : 1 - positiveCdf;
+  }
+
+  /** Inverse of Φ, evaluated by binary search (no external libraries). */
+  function inverseNormalCdf(probability) {
+    let lower = -5;
+    let upper = 5;
+
+    for (let step = 0; step < 32; step++) {
+      const midpoint = (lower + upper) / 2;
+      if (normalCdf(midpoint) < probability) {
+        lower = midpoint;
+      } else {
+        upper = midpoint;
+      }
+    }
+    return (lower + upper) / 2;
+  }
+
+  /**
+   * Create a representative, evenly spaced set of scores from one class.
+   * Quantile sampling (rather than Math.random) means every slider position
+   * is reproducible: no jumping dots when you interact with the page.
+   */
+  function createClassExamples(count, mean, standardDeviation, isPositive, firstId) {
+    return Array.from({ length: count }, (_, index) => {
+      const quantile = (index + 0.5) / count;
+      const unboundedScore = mean + standardDeviation * inverseNormalCdf(quantile);
+      return {
+        id: firstId + index,
+        isPositive,
+        score: clamp(unboundedScore, 0.015, 0.985)
+      };
+    });
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  /**
+   * The class separation slider alters both mean distance and spread.
+   * At 100% the class score ranges don't overlap and threshold 0.50
+   * perfectly classifies the weighted population.
+   */
+  function generateExamples(positiveCount, separation) {
+    const meanOffset = 0.30 * separation;
+    const standardDeviation = 0.16 - 0.09 * separation;
+    const negativeCount = CONFIG.totalExamples - positiveCount;
+
+    // Balance changes sample weights, not the class score distributions.
+    const positiveExamples = createClassExamples(
+      CONFIG.samplesPerClass, 0.5 + meanOffset, standardDeviation, true, 0
+    );
+    const negativeExamples = createClassExamples(
+      CONFIG.samplesPerClass, 0.5 - meanOffset, standardDeviation, false, CONFIG.samplesPerClass
+    );
+
+    return [...positiveExamples, ...negativeExamples].map(example => ({
+      ...example,
+      weight: (example.isPositive ? positiveCount : negativeCount) / CONFIG.samplesPerClass
+    }));
+  }
+
+  // ============================================================
+  // 3. CLASSIFICATION AND METRICS
+  // ============================================================
+
+  function classifyExamples(examples, threshold) {
+    const groups = { tp: [], fp: [], fn: [], tn: [] };
+
+    for (const example of examples) {
+      const predictedPositive = example.score + 1e-9 >= threshold;
+      example.outcome = example.isPositive
+        ? (predictedPositive ? 'tp' : 'fn')
+        : (predictedPositive ? 'fp' : 'tn');
+      groups[example.outcome].push(example);
+    }
+    return groups;
+  }
+
+  function weightedCount(examples) {
+    return Math.round(examples.reduce((sum, example) => sum + example.weight, 0) * 1e8) / 1e8;
+  }
+
+  function formatCount(value) {
+    return Number(value.toFixed(2)).toString();
+  }
+
+  // Expected counts retain fractional cases so display rounding cannot alter
+  // the class-conditional rates when only the balance changes.
+  function calculateMetrics(groups) {
+    const tp = weightedCount(groups.tp);
+    const fp = weightedCount(groups.fp);
+    const fn = weightedCount(groups.fn);
+    const tn = weightedCount(groups.tn);
+    const predictedPositiveCount = tp + fp;
+    const predictedNegativeCount = tn + fn;
+    const tpr = tp + fn > 0 ? groups.tp.length / (groups.tp.length + groups.fn.length) : NaN;
+    const fpr = fp + tn > 0 ? groups.fp.length / (groups.fp.length + groups.tn.length) : NaN;
+    const precision = predictedPositiveCount ? tp / predictedPositiveCount : NaN;
+    const tnr = fp + tn > 0 ? groups.tn.length / (groups.fp.length + groups.tn.length) : NaN;
+    const npv = predictedNegativeCount ? tn / predictedNegativeCount : NaN;
+    const fnr = tp + fn > 0 ? groups.fn.length / (groups.tp.length + groups.fn.length) : NaN;
+    const accuracy = (tp + tn) / (tp + fn + fp + tn);
+    const f1 = Number.isFinite(precision) && Number.isFinite(tpr) && precision + tpr > 0
+      ? (2 * precision * tpr) / (precision + tpr)
+      : NaN;
+
+    return {
+      tp, fp, fn, tn,
+      predictedPositiveCount,
+      predictedNegativeCount,
+      tpr, fpr, precision,
+      tnr, npv, fnr,
+      accuracy, f1
+    };
+  }
+
+  // Full markers represent caseUnit cases; the final marker holds the remainder.
+  // Anchoring full markers from the outer tails of each class keeps their scores
+  // stationary when the decision threshold moves.
+  function createCountGroups(groups) {
+    const result = { tp: [], fp: [], fn: [], tn: [] };
+    let nextId = 0;
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      const source = groups[outcome];
+      const count = weightedCount(source);
+      const whole = Math.floor(count / CONFIG.caseUnit + 1e-8);
+      const remainder = Math.round((count - whole * CONFIG.caseUnit) * 1e8) / 1e8;
+      const markerCount = whole + (remainder > 1e-8 ? 1 : 0);
+      const isUpperTail = outcome === 'tp' || outcome === 'fp';
+
+      for (let i = 0; i < markerCount; i++) {
+        const weight = i < whole ? CONFIG.caseUnit : remainder;
+        const midpointWeight = isUpperTail
+          ? (i < whole ? count - (i + 0.5) * CONFIG.caseUnit : remainder / 2)
+          : (i < whole ? (i + 0.5) * CONFIG.caseUnit : whole * CONFIG.caseUnit + remainder / 2);
+        const exactIndex = clamp(
+          (midpointWeight / count) * source.length - 0.5,
+          0,
+          source.length - 1
+        );
+        const lowIndex = Math.floor(exactIndex);
+        const highIndex = Math.ceil(exactIndex);
+        const fraction = exactIndex - lowIndex;
+        const score = source[lowIndex].score +
+          fraction * (source[highIndex].score - source[lowIndex].score);
+
+        result[outcome].push({
+          ...source[lowIndex],
+          id: nextId++,
+          score,
+          weight
+        });
+      }
+    }
+    return result;
+  }
+
+  function formatPercent(value) {
+    if (!Number.isFinite(value)) return 'N/A';
+    return (100 * value).toFixed(1).replace(/\.0$/, '') + '%';
+  }
+
+  // ============================================================
+  // 4. RENDERING HELPERS
+  // ============================================================
+
+  function createSvgElement(tagName, attributes = {}, text) {
+    const element = document.createElementNS(SVG_NS, tagName);
+    for (const [name, value] of Object.entries(attributes)) {
+      element.setAttribute(name, value);
+    }
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  function highlightExample(id) {
+    if (activeMetric()) id = null;
+    document.querySelectorAll('[data-id]').forEach(element => {
+      const matches = id !== null && Number(element.dataset.id) === id;
+      element.classList.toggle('focus', matches);
+      element.classList.toggle('muted', id !== null && !matches);
+    });
+  }
+
+  function addHoverLink(element, example) {
+    element.dataset.id = example.id;
+    element.dataset.outcome = example.outcome;
+    element.addEventListener('pointerenter', () => highlightExample(example.id));
+    element.addEventListener('pointerleave', () => highlightExample(null));
+  }
+
+  // ----- Plot: each score appears at the same x coordinate in its row. -----
+
+  function renderScorePlot(examples, threshold, positiveCount, targetSvg = elements.scorePlot) {
+    const svg = targetSvg;
+    if (!svg) return;
+    const isPrimary = svg === elements.scorePlot;
+    svg.replaceChildren();
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    const left = splitMode ? 155 : CONFIG.plot.left;
+    const width = splitMode ? 475 : CONFIG.plot.width;
+    const top = splitMode ? 36 : compact ? 42 : CONFIG.plot.top;
+    const bottom = splitMode ? 206 : shortPhone ? 212 : compact ? 270 : CONFIG.plot.bottom;
+    const midY = splitMode ? 121 : shortPhone ? 128 : compact ? 154 : 205;
+    const positiveRow = splitMode ? 78 : shortPhone ? 86 : compact ? 98 : CONFIG.plot.positiveRow;
+    const negativeRow = splitMode ? 164 : shortPhone ? 170 : compact ? 214 : CONFIG.plot.negativeRow;
+    const headerY = splitMode ? 27 : compact ? 36 : 38;
+    const tickY = splitMode ? 232 : shortPhone ? 240 : compact ? 298 : 387;
+    const axisLabelY = splitMode ? 260 : shortPhone ? 270 : compact ? 328 : 430;
+    const dotRadius = splitMode ? 6.8 : compact ? 6.5 : 8;
+    const rowStep = splitMode ? 9.5 : shortPhone ? 9 : compact ? 12 : 16;
+    const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
+    const scoreToX = score => left + width * score;
+    const cutoff = scoreToX(threshold);
+    if (isPrimary) {
+      plotRegions = { left, width, top, bottom, midY, cutoff };
+    }
+
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    // Background: predicted-negative left, predicted-positive right.
+    draw('rect', {
+      x: left, y: top, width: cutoff - left, height: bottom - top,
+      fill: '#eef4ff'
+    });
+    draw('rect', {
+      x: cutoff, y: top,
+      width: left + width - cutoff, height: bottom - top,
+      fill: '#fff1f3'
+    });
+
+    draw('text', {
+      x: left, y: headerY,
+      fill: '#3465b7', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
+    }, copy.predictedNegative);
+    draw('text', {
+      x: left + width, y: headerY, 'text-anchor': 'end',
+      fill: '#c54757', 'font-size': splitMode ? 22 : 32, 'font-weight': 700
+    }, copy.predictedPositive);
+    if(isPrimary) draw('text', {
+      x:left-14, y:headerY, 'text-anchor':'end',
+      'font-size':splitMode?14:compact?16:18, fill:'#526886', 'pointer-events':'none'
+    }, '↔ separation');
+    if(isPrimary) draw('text', {
+      x:left-14, y:headerY+18, 'text-anchor':'end',
+      'font-size':splitMode?14:compact?16:18, fill:'#526886', 'pointer-events':'none'
+    }, '↕ proportion');
+
+    draw('line', {
+      x1: left, y1: midY, x2: left + width, y2: midY,
+      stroke: '#dbe4ef', 'stroke-width': 1
+    });
+
+    function drawPopulationLabel(count, label, rowY) {
+      const labelY = rowY + (splitMode || compact ? 6 : 8);
+      const attributes = {
+        x: left - 14, 'text-anchor': 'end',
+        'font-size': splitMode ? 21 : 28, 'font-weight': 700, fill: '#1f3556'
+      };
+      draw('text', { ...attributes, y: labelY - (splitMode ? 10 : 12) }, label);
+      draw('text', {
+        ...attributes, y: labelY + (splitMode ? 13 : 16),
+        'font-size': splitMode ? 15 : 20, 'font-weight': 500, fill: '#526886'
+      }, `${count} ${copy.subject}`);
+    }
+
+    drawPopulationLabel(positiveCount, copy.actualPositive, positiveRow);
+    drawPopulationLabel(CONFIG.totalExamples - positiveCount, copy.actualNegative, negativeRow);
+
+    // Draw smooth Gaussian density envelopes split at the threshold behind each dot row.
+    const { separation } = readSettings();
+    const meanOffset = 0.30 * separation;
+    const sigma = 0.16 - 0.09 * separation;
+    const envelopeHalfHeight = splitMode ? 32 : shortPhone ? 28 : compact ? 36 : 52;
+    const maxRowWeight = Math.max(positiveCount, CONFIG.totalExamples - positiveCount, 1);
+    function drawDensityEnvelope(mean, centerY, leftOutcome, rightOutcome, rowWeight) {
+      if (rowWeight <= 0) return;
+      const scale = envelopeHalfHeight * (0.14 + 0.86 * (rowWeight / maxRowWeight));
+      const buildSide = (startS, endS, color) => {
+        if (endS - startS < 1e-4) return;
+        const steps = 28;
+        const upper = [];
+        const lower = [];
+        for (let i = 0; i <= steps; i++) {
+          const s = startS + (endS - startS) * (i / steps);
+          const x = scoreToX(s);
+          const density = Math.exp(-0.5 * ((s - mean) / sigma) ** 2);
+          const dy = scale * density;
+          upper.push(`${x.toFixed(1)} ${(centerY - dy).toFixed(1)}`);
+          lower.unshift(`${x.toFixed(1)} ${(centerY + dy).toFixed(1)}`);
+        }
+        draw('path', {
+          d: `M ${upper.join(' L ')} L ${lower.join(' L ')} Z`,
+          fill: color, 'fill-opacity': 0.20,
+          stroke: color, 'stroke-opacity': 0.55, 'stroke-width': 1.5,
+          'pointer-events': 'none', 'aria-hidden': 'true'
+        });
+      };
+      buildSide(0, threshold, CONFIG.colors[leftOutcome]);
+      buildSide(threshold, 1, CONFIG.colors[rightOutcome]);
+    }
+    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'fn', 'tp', positiveCount);
+    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'tn', 'fp', CONFIG.totalExamples - positiveCount);
+    if(isPrimary) {
+      for(const [direction, centerY, count] of [[1,positiveRow,positiveCount],[-1,negativeRow,CONFIG.totalExamples-positiveCount]]) {
+        if(!count) continue;
+        draw('rect', {x:left, y:Math.max(top,centerY-envelopeHalfHeight), width,
+          height:Math.min(bottom,centerY+envelopeHalfHeight)-Math.max(top,centerY-envelopeHalfHeight),
+          fill:'transparent', 'data-separation-direction':direction, 'aria-hidden':'true'});
+      }
+    }
+
+    // Distribute dots vertically only when neighboring scores overlap.
+    // Their HORIZONTAL position always corresponds to the actual score.
+    function renderScoreRow(rowExamples, centerY) {
+      const occupiedPositions = [];
+      const verticalOffsets = [
+        0,
+        -rowStep, rowStep,
+        -2 * rowStep, 2 * rowStep,
+        -3 * rowStep, 3 * rowStep,
+        -4 * rowStep, 4 * rowStep
+      ];
+
+      for (const example of rowExamples) {
+        const x = scoreToX(example.score);
+        let y = centerY;
+        let bestDistance = -1;
+
+        for (const offset of verticalOffsets) {
+          const proposedY = centerY + offset;
+          const closestDistanceSquared = occupiedPositions.reduce(
+            (closest, occupied) => Math.min(
+              closest,
+              (occupied.x - x) ** 2 + (occupied.y - proposedY) ** 2
+            ), Infinity
+          );
+          if (closestDistanceSquared > bestDistance) {
+            bestDistance = closestDistanceSquared;
+            y = proposedY;
+          }
+          if (closestDistanceSquared >= minSpacingSquared) break;
+        }
+
+        occupiedPositions.push({ x, y });
+        const dot = draw('circle', {
+          cx: x, cy: y, r: dotRadius * Math.sqrt(example.weight / CONFIG.caseUnit),
+          fill: CONFIG.colors[example.outcome],
+          stroke: '#fff', 'stroke-width': 1, class: 'point'
+        });
+        if (isPrimary) {
+          dot.setAttribute('data-separation-direction', example.isPositive ? 1 : -1);
+          addHoverLink(dot, example);
+        }
+        dot.appendChild(createSvgElement('title', {},
+          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(/^[←\s]+|[→\s]+$/g, '').toLowerCase()} ${example.score.toFixed(3)}`));
+      }
+    }
+
+    renderScoreRow(examples.filter(example => example.isPositive), positiveRow);
+    renderScoreRow(examples.filter(example => !example.isPositive), negativeRow);
+
+    draw('line', {
+      x1: scoreToX(threshold), x2: scoreToX(threshold),
+      y1: top, y2: bottom, stroke: '#246cf0',
+      'stroke-width': 2, 'stroke-dasharray': '6 5',
+      'pointer-events': 'none'
+    });
+    if (isPrimary) {
+      // A wide invisible target makes the line easy to grab with a finger.
+      // Pointer capture belongs to the persistent SVG, since its children redraw.
+      const dragTarget = draw('g', { class: 'threshold-drag', 'aria-hidden': 'true' });
+      dragTarget.appendChild(createSvgElement('title', {}, 'Drag left or right to change the threshold'));
+      dragTarget.appendChild(createSvgElement('line', {
+        x1: scoreToX(threshold), x2: scoreToX(threshold), y1: top, y2: bottom,
+        stroke: 'transparent', 'stroke-width': 44,
+        'vector-effect': 'non-scaling-stroke', 'pointer-events': 'stroke'
+      }));
+      dragTarget.appendChild(createSvgElement('rect', {
+        x: scoreToX(threshold) - 20, y: midY - 12, width: 40, height: 24,
+        rx: 7, fill: '#fff', stroke: '#246cf0', 'stroke-width': 2,
+        class: 'threshold-grip'
+      }));
+      dragTarget.appendChild(createSvgElement('path', {
+        d: `M ${scoreToX(threshold) - 6} ${midY - 5} l -5 5 l 5 5 M ${scoreToX(threshold) + 6} ${midY - 5} l 5 5 l -5 5`,
+        fill: 'none', stroke: '#246cf0', 'stroke-width': 2,
+        'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pointer-events': 'none'
+      }));
+      svg.setAttribute('aria-valuenow', Math.round(threshold * 100));
+      svg.setAttribute('aria-valuetext', `${threshold.toFixed(2)} score threshold`);
+    }
+    draw('line', {
+      x1: left, x2: left + width, y1: bottom, y2: bottom,
+      stroke: '#8c9bb0'
+    });
+
+    // Subtle quadrant corner badges linking Score Plot regions to Confusion Matrix
+    const badgeW = splitMode ? 32 : 38;
+    const badgeH = splitMode ? 17 : 20;
+    const badgeFontSize = splitMode ? 11 : 12;
+    const drawBadge = (bx, by, text, bg, border) => {
+      draw('rect', {
+        x: bx, y: by, width: badgeW, height: badgeH, rx: 4,
+        fill: bg, stroke: border, 'stroke-width': 1, 'pointer-events': 'none', 'aria-hidden': 'true'
+      });
+      draw('text', {
+        x: bx + badgeW / 2, y: by + badgeH - (splitMode ? 4 : 5), 'text-anchor': 'middle',
+        fill: border, 'font-size': badgeFontSize, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif',
+        'pointer-events': 'none', 'aria-hidden': 'true'
+      }, text);
+    };
+    // Top-Left: FN (Actual +, Predicted -)
+    drawBadge(left + 6, top + 6, 'FN', '#fffbeb', '#d97706');
+    // Top-Right: TP (Actual +, Predicted +)
+    drawBadge(left + width - badgeW - 6, top + 6, 'TP', '#ecfdf5', '#059669');
+    // Bottom-Left: TN (Actual -, Predicted -)
+    drawBadge(left + 6, bottom - badgeH - 6, 'TN', '#f1f5f9', '#475569');
+    // Bottom-Right: FP (Actual -, Predicted +)
+    drawBadge(left + width - badgeW - 6, bottom - badgeH - 6, 'FP', '#fef2f2', '#dc2626');
+
+    for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
+      draw('text', {
+        x: scoreToX(tick), y: tickY, 'text-anchor': 'middle',
+        'font-size': splitMode ? 20 : 28, fill: '#526886'
+      }, tick.toFixed(2));
+    }
+    draw('text', {
+      x: left + width / 2, y: axisLabelY, 'text-anchor': 'middle',
+      'font-size': splitMode ? 22 : 32, 'font-weight': 700, fill: '#526886'
+    }, copy.scoreLabel);
+  }
+
+  // ----- Dashboard Operating Curves & Independent Left/Right Panel Switching -----
+
+  let activeGraphView = 'scores';
+
+  function setGraphView(view) {
+    activeGraphView = view;
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.classList.toggle('four-up-active', view === 'split');
+    }
+    if (typeof document.querySelectorAll === 'function') {
+      document.querySelectorAll('[data-graph-view]').forEach(btn => {
+        const isActive = btn.dataset.graphView === view;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
+      });
+    }
+
+    const viewsSection = typeof document.querySelector === 'function' ? document.querySelector('.views') : null;
+    const matrixPanel = getElement('matrixPanel');
+    const wrapper = getElement('plotsWrapper');
+    const allPlots = [
+      ['scores', elements.scorePlot],
+      ['gauss', getElement('gaussPlot')],
+      ['roc', getElement('rocPlot')],
+      ['pr', getElement('prPlot')],
+      ['bayes', getElement('bayesPlot')]
+    ];
+
+    if (view === 'split') {
+      if (viewsSection) viewsSection.classList.add('single-4up');
+      if (matrixPanel) matrixPanel.style.display = 'none';
+      if (wrapper) {
+        wrapper.style.display = 'grid';
+        wrapper.style.gridTemplateColumns = '1fr 1fr';
+        wrapper.style.gridTemplateRows = '1fr 1fr';
+        wrapper.style.gap = '10px';
+      }
+      for (const [key, el] of allPlots) {
+        if (!el) continue;
+        const show = key === 'scores' || key === 'gauss' || key === 'roc' || key === 'pr';
+        el.style.display = show ? 'block' : 'none';
+        el.style.width = '100%';
+        el.style.height = '100%';
+        el.style.flex = '';
+        el.style.minWidth = '0';
+      }
+    } else {
+      if (viewsSection) viewsSection.classList.remove('single-4up');
+      if (matrixPanel) matrixPanel.style.display = '';
+      if (wrapper) {
+        wrapper.style.display = 'flex';
+        wrapper.style.gridTemplateColumns = '';
+        wrapper.style.gridTemplateRows = '';
+        wrapper.style.gap = '8px';
+      }
+      for (const [key, el] of allPlots) {
+        if (!el) continue;
+        const show = key === view;
+        el.style.display = show ? 'block' : 'none';
+        el.style.width = '100%';
+        el.style.height = '';
+        el.style.flex = '';
+        el.style.minWidth = '';
+      }
+    }
+    update();
+  }
+
+  function renderDashboardGaussPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('gaussPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const p = Number(elements.prevalence.value) / 100;
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+
+    const padL = compact ? 55 : 62;
+    const padT = splitMode ? 34 : compact ? 42 : 55;
+    const pw = (compact || splitMode) ? 565 : 350;
+    const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    const scoreToX = s => padL + s * pw;
+    const cutoffX = clamp(scoreToX(threshold), padL, padR);
+
+    // Subtle background regions for Predicted - (left) vs Predicted + (right)
+    draw('rect', {
+      x: padL, y: padT, width: Math.max(0, cutoffX - padL), height: ph,
+      fill: '#eef4ff', 'fill-opacity': 0.55
+    });
+    draw('rect', {
+      x: cutoffX, y: padT, width: Math.max(0, padR - cutoffX), height: ph,
+      fill: '#fff1f3', 'fill-opacity': 0.55
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = scoreToX(val);
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+      draw('text', {
+        x: x, y: padB + (splitMode || compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (splitMode ? 36 : compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, copy.scoreLabel);
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': splitMode || compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, genericMode ? 'Prior-Weighted Density' : 'Population Density');
+
+    draw('text', {
+      x: padL, y: splitMode ? 23 : compact ? 28 : 34, fill: '#1e293b',
+      'font-size': splitMode ? 16 : compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'Prior-Weighted Gaussians' : 'Gaussian Distributions by Sick Portion');
+
+    // Scale Gaussian peak heights by prior proportions p and (1 - p)
+    const maxPrior = Math.max(p, 1 - p, 0.01);
+    const maxPeakH = ph * 0.82;
+    const posScale = (p / maxPrior) * maxPeakH;
+    const negScale = ((1 - p) / maxPrior) * maxPeakH;
+
+    const buildAreaPath = (sStart, sEnd, mu, scale) => {
+      if (sEnd - sStart <= 1e-4 || scale <= 0.1) return '';
+      const steps = 40;
+      let d = `M ${scoreToX(sStart).toFixed(1)} ${padB.toFixed(1)}`;
+      for (let i = 0; i <= steps; i++) {
+        const s = sStart + (sEnd - sStart) * (i / steps);
+        const x = scoreToX(s);
+        const dens = Math.exp(-0.5 * ((s - mu) / sd) ** 2);
+        const y = padB - dens * scale;
+        d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+      }
+      d += ` L ${scoreToX(sEnd).toFixed(1)} ${padB.toFixed(1)} Z`;
+      return d;
+    };
+
+    // Shaded outcome areas under the two prior-weighted Gaussians
+    const tnArea = buildAreaPath(0, threshold, muNeg, negScale);
+    const fpArea = buildAreaPath(threshold, 1, muNeg, negScale);
+    const fnArea = buildAreaPath(0, threshold, muPos, posScale);
+    const tpArea = buildAreaPath(threshold, 1, muPos, posScale);
+
+    if (tnArea) draw('path', { d: tnArea, fill: CONFIG.colors.tn, 'fill-opacity': 0.24 });
+    if (fpArea) draw('path', { d: fpArea, fill: CONFIG.colors.fp, 'fill-opacity': 0.34 });
+    if (fnArea) draw('path', { d: fnArea, fill: CONFIG.colors.fn, 'fill-opacity': 0.32 });
+    if (tpArea) draw('path', { d: tpArea, fill: CONFIG.colors.tp, 'fill-opacity': 0.32 });
+
+    // Full Gaussian outline curves
+    let posCurve = '';
+    let negCurve = '';
+    for (let i = 0; i <= 60; i++) {
+      const s = i / 60;
+      const x = scoreToX(s);
+      const yPos = padB - Math.exp(-0.5 * ((s - muPos) / sd) ** 2) * posScale;
+      const yNeg = padB - Math.exp(-0.5 * ((s - muNeg) / sd) ** 2) * negScale;
+      posCurve += (i === 0 ? `M ${x.toFixed(1)} ${yPos.toFixed(1)}` : ` L ${x.toFixed(1)} ${yPos.toFixed(1)}`);
+      negCurve += (i === 0 ? `M ${x.toFixed(1)} ${yNeg.toFixed(1)}` : ` L ${x.toFixed(1)} ${yNeg.toFixed(1)}`);
+    }
+    draw('path', { d: negCurve, fill: 'none', stroke: '#64748b', 'stroke-width': 2.8, 'stroke-linecap': 'round' });
+    draw('path', { d: posCurve, fill: 'none', stroke: '#0ea976', 'stroke-width': 3.2, 'stroke-linecap': 'round' });
+
+    // Peak labels showing current percentages
+    const posPeakX = clamp(scoreToX(muPos), padL + 45, padR - 45);
+    const posPeakY = Math.max(padT + 18, padB - posScale - 8);
+    draw('text', {
+      x: posPeakX, y: posPeakY, 'text-anchor': 'middle',
+      fill: '#0ea976', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `${copy.actualPositive} (${Math.round(p * 100)}%)`);
+
+    const negPeakX = clamp(scoreToX(muNeg), padL + 45, padR - 45);
+    const negPeakY = Math.max(padT + 18, padB - negScale - 8);
+    draw('text', {
+      x: negPeakX, y: negPeakY, 'text-anchor': 'middle',
+      fill: '#475569', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `${copy.actualNegative} (${Math.round((1 - p) * 100)}%)`);
+
+    // Threshold line
+    draw('line', {
+      x1: cutoffX, y1: padT, x2: cutoffX, y2: padB,
+      stroke: '#246cf0', 'stroke-width': 2.5, 'stroke-dasharray': '5 4'
+    });
+    draw('text', {
+      x: clamp(cutoffX, padL + 36, padR - 36), y: padT + 14, 'text-anchor': 'middle',
+      fill: '#1d4ed8', 'font-size': 11, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `Cutoff ${threshold.toFixed(2)}`);
+
+    if (!compact && !splitMode) {
+      draw('rect', {
+        x: 440, y: padT, width: 198, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('rect', {
+        x: 450, y: padT + 10, width: 178, height: splitMode ? 44 : 52,
+        fill: '#f0fdf4', stroke: '#bbf7d0', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 25 : 29), fill: '#15803d', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+      }, 'PRIOR PROPORTIONS');
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 44 : 48), fill: '#166534', 'font-size': 14, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${Math.round(p * 100)}% vs ${Math.round((1 - p) * 100)}%`);
+
+      draw('text', { x: 450, y: padT + (splitMode ? 72 : 84), fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'SHADED AREAS (N = 1,000)');
+      draw('text', { x: 450, y: padT + (splitMode ? 92 : 104), fill: '#0ea976', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `TP Area: ${Math.round(metrics.tp)} (${copy.predictedPositive})`);
+      draw('text', { x: 450, y: padT + (splitMode ? 112 : 122), fill: '#e64b60', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `FP Area: ${Math.round(metrics.fp)} (False alarm)`);
+      draw('text', { x: 450, y: padT + (splitMode ? 132 : 140), fill: '#d97706', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `FN Area: ${Math.round(metrics.fn)} (Missed)`);
+      draw('text', { x: 450, y: padT + (splitMode ? 152 : 158), fill: '#64748b', 'font-size': 12.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `TN Area: ${Math.round(metrics.tn)} (${copy.predictedNegative})`);
+
+      if (splitMode) {
+        draw('text', { x: 450, y: padT + 174, fill: '#1d4ed8', 'font-size': 12.5, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif' }, `Precision: ${formatPercent(metrics.precision)}`);
+      } else {
+        draw('rect', {
+          x: 450, y: padT + 174, width: 178, height: 118,
+          fill: '#fffbeb', stroke: '#fde68a', 'stroke-width': 1, rx: 6
+        });
+        draw('text', { x: 458, y: padT + 192, fill: '#b45309', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'WHY PRECISION DROPS');
+        draw('text', { x: 458, y: padT + 208, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Drag "Sick portion" slider:');
+        draw('text', { x: 458, y: padT + 224, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'When p is small (e.g. 10%), the');
+        draw('text', { x: 458, y: padT + 240, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'green curve shrinks while the');
+        draw('text', { x: 458, y: padT + 256, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'red FP tail stays huge—swamping');
+        draw('text', { x: 458, y: padT + 272, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'true positives left of cutoff!');
+      }
+    }
+  }
+
+  function renderDashboardPrPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('prPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const { tpr, precision } = metrics;
+    const p = Number(elements.prevalence.value) / 100;
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+
+    const padL = compact ? 55 : 66;
+    const padT = splitMode ? 34 : compact ? 42 : 55;
+    const pw = (compact || splitMode) ? 565 : 340;
+    const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = padL + val * pw;
+      const y = padB - val * ph;
+
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        draw('line', { x1: padL, y1: y, x2: padR, y2: y, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+
+      draw('text', {
+        x: x, y: padB + (splitMode || compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+
+      draw('text', {
+        x: padL - 8, y: y + 4, 'text-anchor': 'end',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (splitMode ? 36 : compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'Recall (True Positive Rate / TPR)' : 'Recall / Sensitivity (Sick Caught · TPR)');
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': splitMode || compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, 'Precision (PPV)');
+
+    draw('text', {
+      x: padL, y: splitMode ? 23 : compact ? 28 : 34, fill: '#1e293b',
+      'font-size': splitMode ? 16 : compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, 'Precision–Recall (PR) Curve');
+
+    // Horizontal No-Skill Baseline at y = p
+    const baseY = padB - clamp(p, 0, 1) * ph;
+    draw('line', {
+      x1: padL, y1: baseY, x2: padR, y2: baseY,
+      stroke: '#94a3b8', 'stroke-width': 1.5, 'stroke-dasharray': '5 5'
+    });
+    draw('text', {
+      x: padR - 6, y: Math.max(padT + 12, baseY - 5), 'text-anchor': 'end',
+      fill: '#64748b', 'font-size': 10, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, `Baseline p = ${Math.round(p * 100)}%`);
+
+    let prPath = '';
+    let prAuc = 0;
+    const pts = [];
+    for (let step = 0; step <= 60; step++) {
+      const z = -3.8 + (step / 60) * 7.6;
+      const t = muPos - z * sd;
+      const rec = clamp(1 - normalCdf((t - muPos) / sd), 0, 1);
+      const fprPt = clamp(1 - normalCdf((t - muNeg) / sd), 0, 1);
+      const prec = p <= 0 ? 0 : p >= 1 ? 1 : (rec === 0 && fprPt === 0) ? 1 : (p * rec) / (p * rec + (1 - p) * fprPt);
+      pts.push({ r: rec, p: clamp(prec, 0, 1) });
+    }
+    pts.unshift({ r: 0, p: p <= 0 ? 0 : (muPos > muNeg ? 1 : p) });
+    pts.push({ r: 1, p: clamp(p, 0, 1) });
+
+    for (let i = 0; i < pts.length; i++) {
+      const x = padL + pts[i].r * pw;
+      const y = padB - pts[i].p * ph;
+      prPath += (i === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      if (i > 0) {
+        prAuc += 0.5 * (pts[i].p + pts[i - 1].p) * Math.max(0, pts[i].r - pts[i - 1].r);
+      }
+    }
+
+    const prFill = `${prPath} L ${padR} ${padB} L ${padL} ${padB} Z`;
+    draw('path', { d: prFill, fill: 'rgba(128, 86, 217, 0.09)' });
+    draw('path', { d: prPath, fill: 'none', stroke: '#7c3aed', 'stroke-width': 3.5, 'stroke-linecap': 'round' });
+
+    if (Number.isFinite(tpr) && Number.isFinite(precision)) {
+      const dotX = padL + clamp(tpr, 0, 1) * pw;
+      const dotY = padB - clamp(precision, 0, 1) * ph;
+
+      draw('line', { x1: dotX, y1: padB, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('line', { x1: padL, y1: dotY, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('circle', { cx: dotX, cy: dotY, r: 12, fill: 'rgba(225, 29, 72, 0.15)' });
+      draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#e11d48', stroke: '#ffffff', 'stroke-width': 2.5 });
+    }
+
+    if (compact || splitMode) {
+      draw('rect', {
+        x: padR - 165, y: padT + 8, width: 157, height: 26,
+        fill: '#f5f3ff', stroke: '#ddd6fe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: padR - 86, y: padT + 25, 'text-anchor': 'middle',
+        fill: '#5b21b6', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `PR-AUC = ${prAuc.toFixed(3)}`);
+    } else {
+      draw('rect', {
+        x: 440, y: padT, width: 198, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('rect', {
+        x: 450, y: padT + 10, width: 178, height: splitMode ? 44 : 48,
+        fill: '#f5f3ff', stroke: '#ddd6fe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 26 : 30), fill: '#5b21b6', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+      }, 'PR-AUC (AVG PRECISION)');
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 46 : 50), fill: '#6d28d9', 'font-size': splitMode ? 16 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${prAuc.toFixed(3)} (Base ${p.toFixed(2)})`);
+
+      draw('text', { x: 450, y: padT + (splitMode ? 72 : 84), fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'OPERATING POINT');
+      draw('text', { x: 450, y: padT + (splitMode ? 94 : 104), fill: '#246cf0', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `Precision: ${formatPercent(precision)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 114 : 124), fill: '#0ea976', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `Recall (TPR): ${formatPercent(tpr)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 134 : 144), fill: '#334155', 'font-size': 12, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif' }, `Cutoff: ${elements.threshold.value}%`);
+
+      if (splitMode) {
+        draw('rect', {
+          x: 450, y: padT + 144, width: 178, height: 34,
+          fill: '#faf5ff', stroke: '#e9d5ff', 'stroke-width': 1, rx: 5
+        });
+        draw('text', { x: 458, y: padT + 159, fill: '#6b21a8', 'font-size': 10.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'SHIFTS WITH SICK PORTION');
+        draw('text', { x: 458, y: padT + 172, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, `Chance baseline y = ${Math.round(p * 100)}%`);
+      } else {
+        draw('rect', {
+          x: 450, y: padT + 162, width: 178, height: 130,
+          fill: '#faf5ff', stroke: '#e9d5ff', 'stroke-width': 1, rx: 6
+        });
+        draw('text', { x: 458, y: padT + 180, fill: '#6b21a8', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'SENSITIVE TO IMBALANCE');
+        draw('text', { x: 458, y: padT + 196, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Unlike the ROC curve, moving');
+        draw('text', { x: 458, y: padT + 212, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, '"Sick portion" (p) bends this');
+        draw('text', { x: 458, y: padT + 228, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'entire curve and shifts the');
+        draw('text', { x: 458, y: padT + 244, fill: '#581c87', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'dashed chance baseline (y = p).');
+        draw('text', { x: 458, y: padT + 264, fill: '#581c87', 'font-size': 10, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'Use 4-Up Graph to compare');
+        draw('text', { x: 458, y: padT + 278, fill: '#581c87', 'font-size': 10, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'ROC vs PR side-by-side!');
+      }
+    }
+  }
+
+  function renderDashboardRocPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('rocPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const { tpr, fpr } = metrics;
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const splitMode = activeGraphView === 'split';
+    svg.setAttribute('viewBox', `0 0 650 ${splitMode ? 270 : shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const meanOffset = 0.30 * separation;
+    const sd = 0.16 - 0.09 * separation;
+    const muPos = 0.5 + meanOffset;
+    const muNeg = 0.5 - meanOffset;
+    const dPrime = (2 * meanOffset) / sd;
+    const auc = normalCdf(dPrime / Math.SQRT2);
+
+    const padL = compact ? 55 : 66;
+    const padT = splitMode ? 34 : compact ? 42 : 55;
+    const pw = (compact || splitMode) ? 565 : 340;
+    const ph = splitMode ? 186 : shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = padL + val * pw;
+      const y = padB - val * ph;
+
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        draw('line', { x1: padL, y1: y, x2: padR, y2: y, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+
+      draw('text', {
+        x: x, y: padB + (splitMode || compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+
+      draw('text', {
+        x: padL - 8, y: y + 4, 'text-anchor': 'end',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, val.toFixed(2));
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (splitMode ? 36 : compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'False Positive Rate (FPR)' : 'False Alarm Rate (Healthy with positive test)');
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': splitMode || compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, genericMode ? 'True Positive Rate (TPR)' : 'Detection Rate (Sensitivity)');
+
+    draw('text', {
+      x: padL, y: splitMode ? 23 : compact ? 28 : 34, fill: '#1e293b',
+      'font-size': splitMode ? 16 : compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, 'ROC Operating Curve');
+
+    draw('line', {
+      x1: padL, y1: padB, x2: padR, y2: padT,
+      stroke: '#94a3b8', 'stroke-width': 1.5, 'stroke-dasharray': '5 5'
+    });
+
+    let rocPath = `M ${padL} ${padB}`;
+    for (let step = 0; step <= 60; step++) {
+      const t = 1 - step / 60;
+      const ptFpr = 1 - normalCdf((t - muNeg) / sd);
+      const ptTpr = 1 - normalCdf((t - muPos) / sd);
+      const x = padL + clamp(ptFpr, 0, 1) * pw;
+      const y = padB - clamp(ptTpr, 0, 1) * ph;
+      rocPath += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+    }
+    const aucFill = `${rocPath} L ${padR} ${padB} Z`;
+
+    draw('path', { d: aucFill, fill: 'rgba(36, 108, 240, 0.08)' });
+    draw('path', { d: rocPath, fill: 'none', stroke: '#246cf0', 'stroke-width': 3.5, 'stroke-linecap': 'round' });
+
+    if (Number.isFinite(fpr) && Number.isFinite(tpr)) {
+      const dotX = padL + clamp(fpr, 0, 1) * pw;
+      const dotY = padB - clamp(tpr, 0, 1) * ph;
+
+      draw('line', { x1: dotX, y1: padB, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('line', { x1: padL, y1: dotY, x2: dotX, y2: dotY, stroke: '#e11d48', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('circle', { cx: dotX, cy: dotY, r: 12, fill: 'rgba(225, 29, 72, 0.15)' });
+      draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#e11d48', stroke: '#ffffff', 'stroke-width': 2.5 });
+    }
+
+    if (compact || splitMode) {
+      draw('rect', {
+        x: padR - 155, y: padT + 8, width: 147, height: 26,
+        fill: '#eff6ff', stroke: '#bfdbfe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: padR - 81, y: padT + 25, 'text-anchor': 'middle',
+        fill: '#1d4ed8', 'font-size': 12, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `AUC = ${auc.toFixed(3)} ★`);
+    } else {
+      draw('rect', {
+        x: 440, y: padT, width: 198, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('rect', {
+        x: 450, y: padT + 10, width: 178, height: splitMode ? 44 : 48,
+        fill: '#eff6ff', stroke: '#bfdbfe', 'stroke-width': 1, rx: 6
+      });
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 26 : 30), fill: '#1e40af', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+      }, 'AREA UNDER CURVE (AUC)');
+      draw('text', {
+        x: 460, y: padT + (splitMode ? 46 : 50), fill: '#1d4ed8', 'font-size': splitMode ? 16 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${auc.toFixed(3)} ${auc >= 0.95 ? '★ Excellent' : auc >= 0.8 ? 'Good' : 'Fair'}`);
+
+      draw('text', { x: 450, y: padT + (splitMode ? 72 : 84), fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'OPERATING POINT');
+      draw('text', { x: 450, y: padT + (splitMode ? 94 : 104), fill: '#0ea976', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `TPR: ${formatPercent(tpr)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 114 : 124), fill: '#e64b60', 'font-size': 13, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, `FPR: ${formatPercent(fpr)}`);
+      draw('text', { x: 450, y: padT + (splitMode ? 134 : 144), fill: '#334155', 'font-size': 12, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif' }, `Cutoff: ${elements.threshold.value}%`);
+
+      if (splitMode) {
+        draw('rect', {
+          x: 450, y: padT + 144, width: 178, height: 34,
+          fill: '#f0fdf4', stroke: '#bbf7d0', 'stroke-width': 1, rx: 5
+        });
+        draw('text', { x: 458, y: padT + 159, fill: '#15803d', 'font-size': 10.5, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'INVARIANT TO SICK PORTION');
+        draw('text', { x: 458, y: padT + 172, fill: '#166534', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Red dot stays fixed when p moves!');
+      } else {
+        draw('rect', {
+          x: 447, y: padT + 160, width: 176, height: 60,
+          fill: '#f0fdf4', stroke: '#bbf7d0', 'stroke-width': 1, rx: 6
+        });
+        draw('text', { x: 455, y: padT + 176, fill: '#15803d', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'ROW NORMALIZATION');
+        draw('text', { x: 455, y: padT + 192, fill: '#166534', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Moving prevalence (portion p)');
+        draw('text', { x: 455, y: padT + 206, fill: '#166534', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'does NOT move this red dot!');
+
+        draw('text', { x: 447, y: padT + 240, fill: '#64748b', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'DECISION TRADE-OFFS');
+        const drawScenarioPill = (y, label, targetCutoff) => {
+          const g = draw('g', { style: 'cursor: pointer;', 'data-cost-scenario': targetCutoff });
+          const isActive = Math.abs((genericMode ? threshold : 1 - threshold) * 100 - targetCutoff) <= 6;
+          const rect = createSvgElement('rect', {
+            x: 447, y: y, width: 176, height: 26, rx: 4,
+            fill: isActive ? '#8056d9' : '#f8fafc',
+            stroke: isActive ? '#6d28d9' : '#cbd5e1',
+            'stroke-width': 1
+          });
+          g.appendChild(rect);
+          const txt = createSvgElement('text', {
+            x: 455, y: y + 17, fill: isActive ? '#ffffff' : '#1e293b',
+            'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+          }, `${label} (${targetCutoff}%)`);
+          g.appendChild(txt);
+          g.addEventListener('click', () => {
+            elements.threshold.value = genericMode ? (100 - targetCutoff) : targetCutoff;
+            update();
+          });
+        };
+        drawScenarioPill(padT + 250, '🚨 Screening', 80);
+        drawScenarioPill(padT + 280, '⚖️ Balanced', 50);
+      }
+    }
+  }
+
+  function renderDashboardBayesPlot(metrics, separation, threshold, genericMode, targetSvg = getElement('bayesPlot')) {
+    const svg = targetSvg;
+    if (!svg) return;
+    svg.replaceChildren();
+
+    const { tpr, fpr, precision } = metrics;
+    const p = Number(elements.prevalence.value) / 100;
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
+
+    const padL = compact ? 55 : 75;
+    const padT = compact ? 42 : 55;
+    const pw = compact ? 565 : 340;
+    const ph = shortPhone ? 190 : compact ? 230 : 310;
+    const padB = padT + ph;
+    const padR = padL + pw;
+
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    draw('rect', {
+      x: padL, y: padT, width: pw, height: ph,
+      fill: '#fbfcfe', stroke: '#e2e8f0', 'stroke-width': 1, rx: 6
+    });
+
+    for (let step = 0; step <= 4; step++) {
+      const val = step / 4;
+      const x = padL + val * pw;
+      const y = padB - val * ph;
+
+      if (step > 0 && step < 4) {
+        draw('line', { x1: x, y1: padT, x2: x, y2: padB, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        draw('line', { x1: padL, y1: y, x2: padR, y2: y, stroke: '#edf2f7', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+      }
+
+      draw('text', {
+        x: x, y: padB + (compact ? 16 : 20), 'text-anchor': 'middle',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${(val * 100).toFixed(0)}%`);
+
+      draw('text', {
+        x: padL - 8, y: y + 4, 'text-anchor': 'end',
+        fill: '#64748b', 'font-size': compact ? 11 : 13, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif'
+      }, `${(val * 100).toFixed(0)}%`);
+    }
+
+    draw('text', {
+      x: padL + pw / 2, y: padB + (compact ? 34 : 46), 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif'
+    }, genericMode ? 'Prior Prevalence (p)' : 'Sick Portion in Population (p)');
+
+    draw('text', {
+      x: -(padT + ph / 2), y: 18, 'text-anchor': 'middle',
+      fill: '#1e293b', 'font-size': compact ? 12 : 14, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif',
+      transform: 'rotate(-90)'
+    }, 'Posterior Precision (PPV)');
+
+    draw('text', {
+      x: padL, y: compact ? 28 : 34, fill: '#1e293b',
+      'font-size': compact ? 15 : 18, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif'
+    }, 'Bayes Base-Rate Curve');
+
+    let bayesPath = '';
+    const valid = Number.isFinite(tpr) && Number.isFinite(fpr) && (tpr > 0 || fpr > 0);
+    if (valid) {
+      for (let step = 0; step <= 60; step++) {
+        const ptP = Math.max(0.001, Math.min(0.999, step / 60));
+        const prec = (tpr * ptP) / (tpr * ptP + fpr * (1 - ptP));
+        const x = padL + ptP * pw;
+        const y = padB - prec * ph;
+        bayesPath += (step === 0 ? `M ${x.toFixed(1)} ${y.toFixed(1)}` : ` L ${x.toFixed(1)} ${y.toFixed(1)}`);
+      }
+    }
+    if (bayesPath) {
+      draw('path', { d: `${bayesPath} L ${padR} ${padB} L ${padL} ${padB} Z`, fill: 'rgba(36, 108, 240, 0.08)' });
+      draw('path', { d: bayesPath, fill: 'none', stroke: '#246cf0', 'stroke-width': 3.5, 'stroke-linecap': 'round' });
+    }
+
+    if (Number.isFinite(precision)) {
+      const dotX = padL + clamp(p, 0, 1) * pw;
+      const dotY = padB - clamp(precision, 0, 1) * ph;
+      draw('line', { x1: dotX, y1: padB, x2: dotX, y2: dotY, stroke: '#246cf0', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('line', { x1: padL, y1: dotY, x2: dotX, y2: dotY, stroke: '#246cf0', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' });
+      draw('circle', { cx: dotX, cy: dotY, r: 12, fill: 'rgba(36, 108, 240, 0.15)' });
+      draw('circle', { cx: dotX, cy: dotY, r: 7.5, fill: '#246cf0', stroke: '#ffffff', 'stroke-width': 2.5 });
+    }
+
+    if (!compact) {
+      draw('rect', {
+        x: 435, y: padT, width: 200, height: ph,
+        fill: '#ffffff', stroke: '#cbd5e1', 'stroke-width': 1, rx: 8
+      });
+
+      draw('text', { x: 447, y: padT + 24, fill: '#1e40af', 'font-size': 13, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif' }, 'LIVE BAYESIAN INFERENCE');
+      draw('text', { x: 447, y: padT + 50, fill: '#334155', 'font-size': 12, 'font-weight': 600, 'font-family': 'Inter, system-ui, sans-serif' }, `Prior p: ${formatPercent(p)}`);
+      draw('text', { x: 447, y: padT + 72, fill: '#246cf0', 'font-size': 15, 'font-weight': 800, 'font-family': 'Inter, system-ui, sans-serif' }, `Precision: ${formatPercent(precision)}`);
+
+      draw('rect', {
+        x: 447, y: padT + 92, width: 176, height: 95,
+        fill: '#fffbeb', stroke: '#fef3c7', 'stroke-width': 1, rx: 6
+      });
+      draw('text', { x: 455, y: padT + 110, fill: '#b45309', 'font-size': 11, 'font-weight': 700, 'font-family': 'Inter, system-ui, sans-serif' }, 'BASE-RATE FALLACY');
+      draw('text', { x: 455, y: padT + 128, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Notice the steep drop on left!');
+      draw('text', { x: 455, y: padT + 144, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'When p < 10%, false alarms from');
+      draw('text', { x: 455, y: padT + 160, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'negative class swamp catches.');
+      draw('text', { x: 455, y: padT + 176, fill: '#92400e', 'font-size': 10, 'font-family': 'Inter, system-ui, sans-serif' }, 'Drag "Sick portion" slider to move!');
+    }
+  }
+
+  // ----- Population view: 2×2 outcome groups from the SAME examples. -----
+
+  function renderMetricHighlight() {
+    const selected = activeMetric();
+    const definition = allMetricDefinitions[selected];
+    const part = (formulaPreview || formulaPinned)?.part;
+    const included = part === 'numerator' && definition ? [definition.numerator] : definition?.denominator;
+    document.querySelectorAll('[data-explain]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.explain === formulaPinned?.metric && button.dataset.part === formulaPinned?.part));
+    });
+    for (const name of Object.keys(metricGroups)) {
+      const card = getElement(`${name}Card`);
+      if (card) {
+        card.classList.toggle('active', name === selected);
+        card.setAttribute('aria-pressed', String(name === pinnedMetric));
+      }
+    }
+    elements.scorePlot.querySelector('.metric-regions')?.remove();
+    elements.scorePlot.querySelectorAll('.point').forEach(dot => {
+      dot.classList.toggle('metric-excluded', Boolean(definition && !included.includes(dot.dataset.outcome)));
+    });
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      getElement(`${outcome}Tiles`).closest('.group').classList.toggle('metric-excluded',
+        Boolean(definition && !included.includes(outcome)));
+    }
+    const outer = getElement('matrixDenominator');
+    const inner = getElement('matrixNumerator');
+    outer.style.display = inner.style.display = definition ? 'block' : 'none';
+    if (part === 'numerator') outer.style.display = 'none';
+    if (part === 'denominator') inner.style.display = 'none';
+    const key = getElement('markerKey');
+    if (!definition) {
+      const copy = terminology[genericMode ? 'generic' : activeDomain];
+      key.textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
+      return;
+    }
+    highlightExample(null);
+    const color = CONFIG.colors[definition.numerator];
+    const layoutAreas = {
+      standard: {
+        tpr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
+        fpr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
+        precision: { area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' },
+        tnr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        npv: { area: '1 / 3 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        fnr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' }
+      },
+      graph: {
+        tpr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+        fpr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        precision: { area: '1 / 3 / 3 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+        tnr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' },
+        npv: { area: '1 / 2 / 3 / 3', numeratorArea: '2 / 2 / 3 / 3' },
+        fnr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' }
+      },
+      scikit: {
+        tpr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        fpr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+        precision: { area: '1 / 3 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+        tnr: { area: '1 / 2 / 2 / 4', numeratorArea: '1 / 2 / 2 / 3' },
+        npv: { area: '1 / 2 / 3 / 3', numeratorArea: '1 / 2 / 2 / 3' },
+        fnr: { area: '2 / 2 / 3 / 4', numeratorArea: '2 / 2 / 3 / 3' }
+      }
+    };
+    const currentAreas = layoutAreas[activeMatrixLayout] || layoutAreas.standard;
+    outer.style.gridArea = currentAreas[selected]?.area || definition.area;
+    inner.style.gridArea = currentAreas[selected]?.numeratorArea || definition.numeratorArea;
+    inner.style.borderColor = color;
+    const numerator = document.createElement('span');
+    numerator.className = 'formula-numerator';
+    numerator.style.borderColor = color;
+    numerator.textContent = definition.numerator.toUpperCase();
+    const denominator = document.createElement('span');
+    denominator.className = 'formula-denominator';
+    denominator.textContent = `(${definition.denominator.join(' + ').toUpperCase()})`;
+    key.replaceChildren(`${definition.label} = `, numerator, ' ÷ ', denominator);
+
+    const { left, width, top, bottom, midY, cutoff } = plotRegions;
+    const region = createSvgElement('g', { class: 'metric-regions', 'pointer-events': 'none', 'aria-hidden': 'true' });
+    const outline = (bounds, stroke, dashed) => region.appendChild(createSvgElement('rect', {
+      ...bounds, fill: 'none', stroke, 'stroke-width': 2,
+      'vector-effect': 'non-scaling-stroke', rx: 5,
+      ...(dashed ? { 'stroke-dasharray': '6 4', class: 'denominator-region' } : { class: 'numerator-region' })
+    }));
+
+    let denomBounds;
+    if (selected === 'precision') {
+      denomBounds = { x: cutoff - 3, y: top - 3, width: Math.max(0, left + width - cutoff + 6), height: bottom - top + 6 };
+    } else if (selected === 'npv') {
+      denomBounds = { x: left - 3, y: top - 3, width: Math.max(0, cutoff - left + 6), height: bottom - top + 6 };
+    } else if (selected === 'tpr' || selected === 'fnr') {
+      denomBounds = { x: left - 3, y: top - 3, width: width + 6, height: midY - top + 6 };
+    } else {
+      denomBounds = { x: left - 3, y: midY - 3, width: width + 6, height: bottom - midY + 6 };
+    }
+
+    let numBounds;
+    if (definition.numerator === 'tp') {
+      numBounds = { x: cutoff + 3, y: top + 3, width: Math.max(0, left + width - cutoff - 6), height: midY - top - 6 };
+    } else if (definition.numerator === 'fp') {
+      numBounds = { x: cutoff + 3, y: midY + 3, width: Math.max(0, left + width - cutoff - 6), height: bottom - midY - 6 };
+    } else if (definition.numerator === 'fn') {
+      numBounds = { x: left + 3, y: top + 3, width: Math.max(0, cutoff - left - 6), height: midY - top - 6 };
+    } else {
+      numBounds = { x: left + 3, y: midY + 3, width: Math.max(0, cutoff - left - 6), height: bottom - midY - 6 };
+    }
+
+    if (part !== 'numerator') outline(denomBounds, '#8056d9', true);
+    if (part !== 'denominator') outline(numBounds, color, false);
+    elements.scorePlot.insertBefore(region, elements.scorePlot.querySelector('.threshold-drag'));
+  }
+
+  function renderPopulationGrid(groups, metrics) {
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+    for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
+      const count = getElement(`${outcome}Num`);
+      const formattedCount = formatCount(metrics[outcome]);
+      const displayedCount = Math.round(metrics[outcome]);
+      count.textContent = displayedCount;
+      count.title = `Expected count: ${formattedCount} ${copy.subject}`;
+      count.setAttribute('aria-label', `${displayedCount} ${copy.subject}`);
+      const fragment = document.createDocumentFragment();
+
+      for (const example of groups[outcome]) {
+        const tile = document.createElement('span');
+        tile.className = 'tile';
+        tile.style.backgroundColor = CONFIG.colors[outcome];
+        tile.style.setProperty('--weight-scale', Math.sqrt(example.weight / CONFIG.caseUnit));
+        tile.title = `${example.isPositive ? copy.actualPositive : copy.actualNegative} · ` +
+          `${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(' →', '').toLowerCase()} ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
+        addHoverLink(tile, example);
+        fragment.appendChild(tile);
+      }
+      getElement(`${outcome}Tiles`).replaceChildren(fragment);
+    }
+  }
+
+  function renderMetrics(metrics) {
+    const { tp, fp, tpr, fpr, precision, predictedPositiveCount } = metrics;
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+
+    elements.tpr.textContent = formatPercent(tpr);
+    elements.fpr.textContent = formatPercent(fpr);
+    elements.precision.textContent = formatPercent(precision);
+    elements.truePositiveLabel.textContent = formatCount(tp);
+    elements.falsePositiveLabel.textContent = formatCount(fp);
+
+    elements.truePositiveFill.style.width = predictedPositiveCount
+      ? `${100 * tp / predictedPositiveCount}%` : '0%';
+    elements.falsePositiveFill.style.width = predictedPositiveCount
+      ? `${100 * fp / predictedPositiveCount}%` : '0%';
+    elements.precisionBar.setAttribute('aria-label',
+      `${formatCount(tp)} ${genericMode ? 'correct detections' : 'people with flu'} and ${formatCount(fp)} false alarms`);
+
+    // Construct summary without injecting HTML strings.
+    if (predictedPositiveCount === 0) {
+      elements.summary.textContent = copy.noPositives;
+    } else {
+      const makePill = (cls, text) => {
+        const span = document.createElement('span');
+        span.className = cls;
+        span.textContent = text;
+        return span;
+      };
+      const emphasizedValue = document.createElement('em');
+      emphasizedValue.textContent = `${formatPercent(precision)} Precision`;
+      elements.summary.replaceChildren(
+        makePill('summary-tp', `${formatCount(tp)} TP`),
+        document.createTextNode(' ÷ ('),
+        makePill('summary-tp', `${formatCount(tp)} TP`),
+        document.createTextNode(' + '),
+        makePill('summary-fp', `${formatCount(fp)} FP`),
+        document.createTextNode(') = '),
+        emphasizedValue,
+        document.createTextNode('.')
+      );
+    }
+  }
+
+  // ============================================================
+  // 5. UI CONTROLS — SINGLE SOURCE OF TRUTH
+  // ============================================================
+
+  let thresholdDrag = null;
+  let separationDrag = null;
+
+  function moveSeparation(event) {
+    if(!separationDrag || event.pointerId!==separationDrag.pointerId) return;
+    event.preventDefault();
+    const dx=event.clientX-separationDrag.clientX, dy=event.clientY-separationDrag.clientY;
+    if(!separationDrag.axis) {
+      if(Math.hypot(dx,dy)<GROUP_DRAG.activationPixels) return;
+      separationDrag.axis=Math.abs(dx)>=Math.abs(dy)?'x':'y';
+    }
+    const vertical=separationDrag.axis==='y';
+    // Both axes ease in for fine control and accelerate on longer drags.
+    const scale=vertical?separationDrag.height*GROUP_DRAG.verticalHeightScale
+      :separationDrag.width*GROUP_DRAG.horizontalWidthScale;
+    const distance=(vertical?-dy:dx)/Math.max(GROUP_DRAG.minDistancePixels,scale);
+    const delta=Math.sign(distance)*Math.pow(Math.abs(distance),GROUP_DRAG.responseExponent);
+    const control=vertical?elements.prevalence:elements.separation;
+    const initial=vertical?separationDrag.startPrevalence:separationDrag.startValue;
+    const next=String(Math.round(clamp(initial+delta*100,0,100)));
+    if(control.value===next) return;
+    control.value=next;
+    update();
+  }
+
+  function endSeparationDrag(event) {
+    if(!separationDrag || event.pointerId!==separationDrag.pointerId) return;
+    separationDrag=null;
+    elements.scorePlot.classList.remove('dragging');
+    if(elements.scorePlot.hasPointerCapture(event.pointerId)) elements.scorePlot.releasePointerCapture(event.pointerId);
+  }
+
+  function plotPointerX(event) {
+    const point = elements.scorePlot.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    return point.matrixTransform(elements.scorePlot.getScreenCTM().inverse()).x;
+  }
+
+  function setPlotThreshold(percent) {
+    const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+    const value = String(genericMode ? clamped : 100 - clamped);
+    if (elements.threshold.value === value) return;
+    elements.threshold.value = value;
+    update();
+  }
+
+  function moveThreshold(event) {
+    if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
+    event.preventDefault();
+    const targetCutoff = plotPointerX(event) - thresholdDrag.offset;
+    const fraction = (targetCutoff - plotRegions.left) / plotRegions.width;
+    setPlotThreshold(fraction * 100);
+  }
+
+  function endThresholdDrag(event) {
+    if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
+    thresholdDrag = null;
+    elements.scorePlot.classList.remove('dragging');
+    if (elements.scorePlot.hasPointerCapture(event.pointerId)) {
+      elements.scorePlot.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  function update() {
+    renderTerminology();
+    const { prevalencePct, positiveCount, threshold, separation } = readSettings();
+
+    elements.prevalenceOut.value = `${prevalencePct}%`;
+    elements.balance10.setAttribute('aria-pressed', String(prevalencePct === 10));
+    elements.balance50.setAttribute('aria-pressed', String(prevalencePct === 50));
+    elements.thresholdOut.value = `${elements.threshold.value}%`;
+    elements.threshold.setAttribute('aria-valuetext', genericMode
+      ? `${threshold.toFixed(2)} decision threshold`
+      : `${elements.threshold.value}% — how easily the test says positive; score cutoff ${threshold.toFixed(2)}`);
+    elements.threshold.title = genericMode
+      ? 'Scores at or above this threshold are predicted positive.'
+      : (activeDomain === 'car'
+        ? 'Move right to brake more sensitively: avoids more crashes, but risks more phantom stops.'
+        : (activeDomain === 'spam'
+          ? 'Move right to filter more aggressively: catches more spam, but risks losing good emails.'
+          : (activeDomain === 'fraud'
+            ? 'Move right to flag more aggressively: catches more fraud, but declines more valid cards.'
+            : 'Move right to detect weaker flu signals: more flu detections and more false alarms.')));
+    elements.separationOut.value = `${Math.round(separation * 100)}%`;
+    const copy = terminology[genericMode ? 'generic' : activeDomain];
+    elements.positiveCount.textContent = `${positiveCount} ${copy.subject}`;
+    elements.negativeCount.textContent =
+      `${CONFIG.totalExamples - positiveCount} ${copy.subject}`;
+
+    const examples = generateExamples(positiveCount, separation);
+    const groups = classifyExamples(examples, threshold);
+    const metrics = calculateMetrics(groups);
+    const countGroups = createCountGroups(groups);
+
+    const flatExamples = Object.values(countGroups).flat();
+    renderScorePlot(flatExamples, threshold, positiveCount, elements.scorePlot);
+    renderDashboardGaussPlot(metrics, separation, threshold, genericMode, getElement('gaussPlot'));
+    renderDashboardRocPlot(metrics, separation, threshold, genericMode, getElement('rocPlot'));
+    renderDashboardPrPlot(metrics, separation, threshold, genericMode, getElement('prPlot'));
+    renderDashboardBayesPlot(metrics, separation, threshold, genericMode, getElement('bayesPlot'));
+    renderPopulationGrid(countGroups, metrics);
+    renderMetrics(metrics);
+    highlightExample(null);
+    renderMetricHighlight();
+
+    for (const prefix of ['bayes', 'tradeoff']) {
+      const tThresh = getElement(`${prefix}Threshold`);
+      if (tThresh) {
+        if (document.activeElement !== tThresh) {
+          tThresh.value = elements.threshold.value;
+        }
+        const out = getElement(`${prefix}ThresholdOut`);
+        if (out) out.value = `${elements.threshold.value}%`;
+      }
+      const tSep = getElement(`${prefix}Separation`);
+      if (tSep) {
+        if (document.activeElement !== tSep) {
+          tSep.value = elements.separation.value;
+        }
+        const out = getElement(`${prefix}SeparationOut`);
+        if (out) out.value = `${Math.round(separation * 100)}%`;
+      }
+      const tPrev = getElement(`${prefix}Prevalence`);
+      if (tPrev) {
+        if (document.activeElement !== tPrev) {
+          tPrev.value = elements.prevalence.value;
+        }
+        const out = getElement(`${prefix}PrevalenceOut`);
+        if (out) out.value = `${elements.prevalence.value}%`;
+      }
+    }
+
+    const presetSelect = getElement('presetSelect');
+    if (presetSelect) {
+      const p = Number(elements.prevalence.value);
+      const t = Number(elements.threshold.value);
+      const s = Number(elements.separation.value);
+      if (genericMode) {
+        presetSelect.value = (p === 50 && t === 50 && s === 60) ? 'generic' : 'custom';
+      } else if (activeDomain === 'car' && p === 15 && t === 60 && s === 70) {
+        presetSelect.value = 'car';
+      } else if (activeDomain === 'flu' && p === 10 && t === 50 && s === 60) {
+        presetSelect.value = 'balanced';
+      } else if (activeDomain === 'spam' && p === 40 && t === 45 && s === 55) {
+        presetSelect.value = 'spam';
+      } else if (activeDomain === 'fraud' && p === 1 && t === 50 && s === 60) {
+        presetSelect.value = 'fraud';
+      } else {
+        presetSelect.value = 'custom';
+      }
+      const customOption = presetSelect.querySelector('option[value="custom"]');
+      if (customOption) customOption.textContent = 'Custom: ' + (genericMode ? 'Generic ML' : {flu:'Medical test',car:'Car braking',spam:'Spam filter',fraud:'Fraud detection'}[activeDomain]);
+    }
+  }
+
+  function reset() {
+    formulaPreview = formulaPinned = null;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    activeDomain = 'flu';
+    genericMode = false;
+    elements.prevalence.value = CONFIG.defaultPrevalence;
+    elements.threshold.value = 100 - CONFIG.defaultThreshold * 100;
+    elements.separation.value = CONFIG.defaultSeparation;
+    const presetSelect = getElement('presetSelect');
+    if (presetSelect) presetSelect.value = 'balanced';
+    setGraphView('scores');
+    setMatrixLayout('graph');
+    renderTerminology();
+    update();
+  }
+
+  const MATRIX_LAYOUTS = ['standard', 'graph', 'scikit'];
+  const MATRIX_LAYOUT_CONFIG = {
+    standard: {
+      long: 'Standard',
+      short: 'Standard',
+      title: 'Current layout: Standard (Wikipedia). Click to switch to Matches graph.'
+    },
+    graph: {
+      long: 'Matches graph',
+      short: 'Graph',
+      title: 'Current layout: Matches graph (Score order). Click to switch to scikit-learn.'
+    },
+    scikit: {
+      long: 'scikit-learn',
+      short: 'scikit',
+      title: 'Current layout: scikit-learn (Python). Click to switch to Standard.'
+    }
+  };
+
+  function cycleMatrixLayout() {
+    const idx = MATRIX_LAYOUTS.indexOf(activeMatrixLayout);
+    const next = MATRIX_LAYOUTS[(idx + 1) % MATRIX_LAYOUTS.length];
+    setMatrixLayout(next);
+  }
+
+  function setMatrixLayout(layout) {
+    activeMatrixLayout = layout;
+    const popHeader = getElement('matrixPopHeader');
+    const pop = getElement('matrixPopulation');
+    const btn = getElement('matrixLayoutBtn');
+    if (btn) {
+      btn.dataset.layout = layout;
+      const conf = MATRIX_LAYOUT_CONFIG[layout] || MATRIX_LAYOUT_CONFIG.standard;
+      const longSpan = btn.querySelector('.layout-label-long');
+      const shortSpan = btn.querySelector('.layout-label-short');
+      if (longSpan) longSpan.textContent = conf.long;
+      if (shortSpan) shortSpan.textContent = conf.short;
+      btn.title = conf.title;
+      btn.setAttribute('aria-label', `Confusion matrix layout: ${conf.long}. Click to switch.`);
+    }
+    if (popHeader) {
+      popHeader.classList.remove('layout-standard', 'layout-graph', 'layout-scikit');
+      popHeader.classList.add(`layout-${layout}`);
+    }
+    if (pop) {
+      pop.classList.remove('layout-standard', 'layout-graph', 'layout-scikit');
+      pop.classList.add(`layout-${layout}`);
+    }
+    renderMetricHighlight();
+  }
+
+  for (const slider of [
+    elements.prevalence, elements.threshold, elements.separation
+  ]) {
+    slider.addEventListener('input', update);
+  }
+  elements.reset.addEventListener('click', reset);
+  if (typeof document.querySelectorAll === 'function') {
+    document.querySelectorAll('[data-graph-view]').forEach(tab => {
+      tab.addEventListener('click', () => setGraphView(tab.dataset.graphView));
+    });
+  }
+  const presetSelect = getElement('presetSelect');
+  const matrixLayoutBtn = getElement('matrixLayoutBtn');
+  if (matrixLayoutBtn) {
+    matrixLayoutBtn.addEventListener('click', () => {
+      cycleMatrixLayout();
+    });
+  }
+
+  if (presetSelect) {
+    presetSelect.addEventListener('change', event => {
+      const choice = event.target.value;
+      if (choice === 'car') {
+        activeDomain = 'car';
+        genericMode = false;
+        elements.prevalence.value = 15;
+        elements.threshold.value = 60;
+        elements.separation.value = 70;
+      } else if (choice === 'balanced') {
+        activeDomain = 'flu';
+        genericMode = false;
+        elements.prevalence.value = 10;
+        elements.threshold.value = 50;
+        elements.separation.value = 60;
+      } else if (choice === 'spam') {
+        activeDomain = 'spam';
+        genericMode = false;
+        elements.prevalence.value = 40;
+        elements.threshold.value = 45;
+        elements.separation.value = 55;
+      } else if (choice === 'fraud') {
+        activeDomain = 'fraud';
+        genericMode = false;
+        elements.prevalence.value = 1;
+        elements.threshold.value = 50;
+        elements.separation.value = 60;
+      } else if (choice === 'generic') {
+        genericMode = true;
+        elements.prevalence.value = 50;
+        elements.threshold.value = 50;
+        elements.separation.value = 60;
+      }
+      renderTerminology();
+      update();
+    });
+  }
+  for (const name of Object.keys(metricGroups)) {
+    const card = getElement(`${name}Card`);
+    card.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'touch') return;
+      formulaPreview = formulaPinned = null;
+      hoveredMetric = name;
+      renderMetricHighlight();
+    });
+    card.addEventListener('pointerleave', () => {
+      hoveredMetric = null;
+      renderMetricHighlight();
+    });
+    card.addEventListener('focus', () => {
+      if (!card.matches(':focus-visible')) return;
+      focusedMetric = name;
+      renderMetricHighlight();
+    });
+    card.addEventListener('blur', () => {
+      focusedMetric = null;
+      renderMetricHighlight();
+    });
+    card.addEventListener('click', () => {
+      formulaPreview = formulaPinned = null;
+      pinnedMetric = pinnedMetric === name ? null : name;
+      hoveredMetric = focusedMetric = null;
+      renderMetricHighlight();
+    });
+  }
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    formulaPreview = formulaPinned = null;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    renderMetricHighlight();
+  });
+  document.addEventListener('pointerdown', event => {
+    if (event.target.closest('.metric, #controls, .views, #presetSelect')) return;
+    formulaPreview = formulaPinned = null;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    renderMetricHighlight();
+  });
+  elements.scorePlot.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0 || thresholdDrag || separationDrag ||
+        !event.target.closest('.threshold-drag')) return;
+    event.preventDefault();
+    thresholdDrag = {
+      pointerId: event.pointerId,
+      offset: plotPointerX(event) - plotRegions.cutoff
+    };
+    elements.scorePlot.setPointerCapture(event.pointerId);
+    elements.scorePlot.focus({ preventScroll: true });
+    elements.scorePlot.classList.add('dragging');
+    highlightExample(null);
+  });
+  elements.scorePlot.addEventListener('pointerdown',event=>{
+    const target=event.target.closest('[data-separation-direction]');
+    if(!target || !event.isPrimary || event.button!==0 || thresholdDrag || separationDrag) return;
+    event.preventDefault();
+    separationDrag={pointerId:event.pointerId,
+      startValue:Number(elements.separation.value),
+      clientX:event.clientX,clientY:event.clientY,startPrevalence:Number(elements.prevalence.value),
+      height:(plotRegions.bottom-plotRegions.top)*elements.scorePlot.getScreenCTM().d,
+      width:plotRegions.width*elements.scorePlot.getScreenCTM().a,axis:null};
+    elements.scorePlot.setPointerCapture(event.pointerId);
+    elements.scorePlot.classList.add('dragging');
+    highlightExample(null);
+  });
+  elements.scorePlot.addEventListener('pointermove',moveSeparation);
+  elements.scorePlot.addEventListener('touchstart',event=>{
+    if(separationDrag) event.preventDefault();
+  },{passive:false});
+  elements.scorePlot.addEventListener('pointerup',event=>{moveSeparation(event);endSeparationDrag(event);});
+  elements.scorePlot.addEventListener('pointercancel',endSeparationDrag);
+  elements.scorePlot.addEventListener('lostpointercapture',endSeparationDrag);
+  elements.scorePlot.addEventListener('pointermove', moveThreshold);
+  elements.scorePlot.addEventListener('pointerup', event => {
+    moveThreshold(event);
+    endThresholdDrag(event);
+  });
+  elements.scorePlot.addEventListener('pointercancel', endThresholdDrag);
+  elements.scorePlot.addEventListener('lostpointercapture', endThresholdDrag);
+  elements.scorePlot.addEventListener('keydown', event => {
+    const current = readSettings().threshold * 100;
+    const next = {
+      ArrowLeft: current - 1, ArrowDown: current - 1,
+      ArrowRight: current + 1, ArrowUp: current + 1,
+      PageDown: current - 10, PageUp: current + 10, Home: 0, End: 100
+    }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    setPlotThreshold(next);
+  });
+  for (const share of [10, 50]) {
+    elements[`balance${share}`].addEventListener('click', () => {
+      elements.prevalence.value = share;
+      update();
+    });
+  }
+  window.matchMedia('(max-width: 650px) and (orientation: portrait)')
+    .addEventListener('change', update);
+  window.matchMedia('(max-height: 759px)').addEventListener('change', update);
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('pageshow', event => {
+      if (event.persisted) window.location.reload();
+    });
+  }
+
+  update();
+})();
+  </script>
+</body>
+</html>

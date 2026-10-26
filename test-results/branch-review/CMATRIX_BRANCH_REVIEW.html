@@ -1,0 +1,1196 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CMatrixLab branch review</title><style>body{margin:0;background:#eef3f7;color:#183249;font:16px/1.55 'Segoe UI',Arial,sans-serif}header{background:#123b5a;color:white;padding:24px max(24px,calc((100vw - 1320px)/2))}header p{margin:4px 0 0;color:#c3d9e8}main{max-width:1370px;margin:20px auto;padding:24px;background:white;border:1px solid #d2dee8;border-radius:12px}h1{font-size:32px}h2{color:#123b5a;border-bottom:2px solid #cfdee9;padding-bottom:8px;margin-top:40px}h3{color:#196478;margin-top:44px;scroll-margin-top:15px;overflow-wrap:anywhere}a{color:#08689a}code{background:#edf3f7;font-size:.88em;padding:2px 4px;overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;font-size:13px;margin:18px 0;display:block;overflow:auto}th{background:#173f5e;color:white;text-align:left}th,td{padding:9px;border:1px solid #d1dde6;vertical-align:top;min-width:75px;overflow-wrap:anywhere}tr:nth-child(even){background:#f2f7fa}p{margin:12px 0}img{max-width:100%;height:auto;border:1px solid #cfdae4;border-radius:5px}.image-pair{display:grid;grid-template-columns:minmax(0,1fr) 300px;align-items:start;gap:16px;background:#f1f5f8;padding:14px;border-radius:8px}.image-pair p{margin:0}.image-pair img{width:100%;display:block}li{margin:6px 0}.jump{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}@media(max-width:800px){main{margin:0;padding:16px;border:0}.image-pair{grid-template-columns:1fr}.image-pair p:last-child{max-width:390px;margin:auto}body{font-size:14px}}@media print{header{display:none}main{border:0;padding:0}.image-pair{break-inside:avoid}h2,h3{break-after:avoid}table{display:table;font-size:8px}td,th{min-width:0;padding:4px}}</style></head><body><header><strong>CMATRIXLAB / BRANCH REVIEW</strong><p>23 branch names · 22 distinct versions · 50 pages opened · 167 screenshots</p><nav class="jump"><a href="CMATRIX_BRANCH_REVIEW.md" style="color:white">Markdown report</a><a href="comparison-data.json" style="color:white">Raw evidence</a><a href="screenshots/" style="color:white">Screenshot folder</a></nav></header><main><h1>CMatrixLab - All-Branch Website Review</h1>
+<p>Reviewed: 25 October 2026 (Europe/Bratislava). Browser: Playwright MCP Chromium 156.0.8078.47. Desktop: 1440×900; mobile: 390×844.</p>
+<h2>What the branches represent</h2>
+<p>There are <strong>23 distinct branch names, 32 local/remote refs and 22 distinct tip commits</strong>. I fetched current remote refs and confirmed the 20 remote branch names with a read-only remote query. Three names exist only locally: Branch_1e973a51, custom_data and feature_mosaic_improvments. simple and feature_simple_hover_metrics point to the same commit.</p>
+<p>I opened <strong>all 22 distinct main websites plus 28 additional HTML entry points (50 total)</strong> in a real browser, captured desktop/mobile views, and ran <strong>111 additional feature-action groups</strong>, plus the initial range/scenario/learning checks and targeted comparisons. <strong>167 screenshots</strong> are saved, with eight overview contact sheets. All root sites loaded and rendered their charts without captured uncaught JavaScript errors or failed requests. The main branch’s nested /dev/ page is a broken/incomplete exception documented below.</p>
+<p>This is a feature and visual comparison, not a repeat of the full mathematical QA plan on every historical branch. The current compact branch’s existing <a href="../CMATRIX_QA_REPORT.md">complete QA report</a> remains relevant. “Opened” or “action passed” does not certify full release quality.</p>
+<h3>Which branch to use for which goal</h3>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Best source to study</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clear teaching of precision, recall and base rates</td>
+<td>featursimple_bayes_story_overall_visual_GemFixes</td>
+<td>Five scenarios, six graph views, linked highlights, matrix layouts and a separate educational/reference set. Most complete compact line; prior QA issues remain.</td>
+</tr>
+<tr>
+<td>Advanced score modeling and real data on a phone</td>
+<td>mobile_view_rework</td>
+<td>Real CSV/JSON scores plus four usable mobile panels, fixed top controls and an Advanced drawer.</td>
+</tr>
+<tr>
+<td>Broad advanced desktop/data baseline</td>
+<td>master</td>
+<td>Default remote branch; manual/Gaussian modes, importer, mosaic, equations/theory, ROC/distributions.</td>
+</tr>
+<tr>
+<td>Movable dashboard tiles and persistent widths</td>
+<td>main or old_dev (root)</td>
+<td>Actual reorder, per-panel width changes and refresh persistence verified.</td>
+</tr>
+<tr>
+<td>Isolated mathematical functions and test architecture</td>
+<td>refactor_big</td>
+<td>metrics_core.js is actually loaded; unit/visual test files present.</td>
+</tr>
+<tr>
+<td>Inline Bayes lesson with synchronized sliders</td>
+<td>feature_simple_bayes_story_overall_visual</td>
+<td>Bayes has three extra local controls and a clearer natural-frequency flow.</td>
+</tr>
+<tr>
+<td>Minimal linked-highlight demo</td>
+<td>simple / feature_simple_hover_metrics</td>
+<td>A smaller two-domain, two-view teaching tool with interactive metric emphasis.</td>
+</tr>
+<tr>
+<td>Step-by-step Gaussian workflow</td>
+<td>old_from_scratch</td>
+<td>Three clear stages: distributions → threshold/rates → dataset/prevalence.</td>
+</tr>
+</tbody>
+</table>
+<p>My assessment: continue the teaching product on the latest compact branch, reuse the mobile panel idea from mobile_view_rework, and reuse movable-panel behavior from main/old_dev only if it serves a clear product requirement. These are different state/data models and should not be blindly merged.</p>
+<h2>The three application families</h2>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Branches / versions</th>
+<th>What it optimizes</th>
+<th>Main trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compact teaching simulator</td>
+<td>8 names / 7 versions</td>
+<td>One explanation, deterministic weighted score samples, three headline rates, linked dots/matrix, later Bayes lessons and more views.</td>
+<td>Fixed 1,000-person teaching cohort; no real-data importer or movable dashboard widgets.</td>
+</tr>
+<tr>
+<td>Advanced ROC / data dashboard</td>
+<td>9 names / 9 versions</td>
+<td>Manual conditional rates or Gaussian-score linkage; mosaics, many metrics, theory, ROC/distributions; later empirical imports.</td>
+<td>More controls and cognitive load. Most older phone layouts are long; mobile_view_rework addresses this.</td>
+</tr>
+<tr>
+<td>Legacy movable dark dashboard</td>
+<td>6 names / 6 versions</td>
+<td>Manual N/prevalence/TPR/FPR exploration, equations, charts and persistently rearrangeable panels.</td>
+<td>Dense dark UI and internal scrolling; width changes use discrete span buttons, not corner handles.</td>
+</tr>
+</tbody>
+</table>
+<p>The compact branch ancestry was checked with git merge-base --is-ancestor:</p>
+<p><code>simple_cld → feature_simple_dragging_thr → simple / feature_simple_hover_metrics → feature_simple_bayes_story → feature_simple_bayes_story_overall_visual → Branch_1e973a51 → featursimple_bayes_story_overall_visual_GemFixes</code></p>
+<p>Each arrow is a verified ancestor relationship, not necessarily an immediate parent commit. The three families are a product grouping, not a claim that their histories are unrelated.</p>
+<h2>Complete branch inventory</h2>
+<p>Every local and remote branch name is represented below. Local and origin refs for the same name/commit are combined. “Open” means the homepage rendered; caution details are in its review card.</p>
+<table>
+<thead>
+<tr>
+<th>Branch name</th>
+<th>Tip SHA</th>
+<th>Family / purpose</th>
+<th>Availability</th>
+<th>Website</th>
+<th>Screenshots</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Branch_1e973a51</td>
+<td>1e973a5</td>
+<td>Earlier checkpoint of current app</td>
+<td>Local only</td>
+<td><a href="http://localhost:8201/">Open preview</a></td>
+<td><a href="screenshots/1e973a5-desktop.png">Desktop</a> · <a href="screenshots/1e973a5-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>custom_data</td>
+<td>6282606</td>
+<td>Initial real-data import milestone</td>
+<td>Local only</td>
+<td><a href="http://localhost:8202/">Open preview</a></td>
+<td><a href="screenshots/6282606-desktop.png">Desktop</a> · <a href="screenshots/6282606-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>custom_data_2000</td>
+<td>8facffd</td>
+<td>2,000-row import capacity</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8212/">Open preview</a></td>
+<td><a href="screenshots/8facffd-desktop.png">Desktop</a> · <a href="screenshots/8facffd-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>feature_mosaic_improvments</td>
+<td>40918b1</td>
+<td>Mosaic readability milestone</td>
+<td>Local only</td>
+<td><a href="http://localhost:8203/">Open preview</a></td>
+<td><a href="screenshots/40918b1-desktop.png">Desktop</a> · <a href="screenshots/40918b1-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>feature_simple_bayes_story</td>
+<td>7db2c1b</td>
+<td>First integrated learning/story version</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8204/">Open preview</a></td>
+<td><a href="screenshots/7db2c1b-desktop.png">Desktop</a> · <a href="screenshots/7db2c1b-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>feature_simple_bayes_story_overall_visual</td>
+<td>b37face</td>
+<td>Expanded Bayes lesson and visual refinement</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8205/">Open preview</a></td>
+<td><a href="screenshots/b37face-desktop.png">Desktop</a> · <a href="screenshots/b37face-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>feature_simple_dragging_thr</td>
+<td>a9c5545</td>
+<td>Threshold-drag milestone</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8213/">Open preview</a></td>
+<td><a href="screenshots/a9c5545-desktop.png">Desktop</a> · <a href="screenshots/a9c5545-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>feature_simple_hover_metrics</td>
+<td>a0af2f9</td>
+<td>Minimal linked-highlight demo</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8206/">Open preview</a></td>
+<td><a href="screenshots/a0af2f9-desktop.png">Desktop</a> · <a href="screenshots/a0af2f9-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>featursimple_bayes_story_overall_visual_GemFixes</td>
+<td>4ad5b18</td>
+<td>Best current teaching base</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8207/">Open preview</a></td>
+<td><a href="screenshots/4ad5b18-desktop.png">Desktop</a> · <a href="screenshots/4ad5b18-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>main</td>
+<td>3c2e276</td>
+<td>Movable panels with widths on every tile</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8214/">Open preview</a></td>
+<td><a href="screenshots/3c2e276-desktop.png">Desktop</a> · <a href="screenshots/3c2e276-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>master</td>
+<td>4d301a2</td>
+<td>Default remote branch; broad data feature set</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8208/">Open preview</a></td>
+<td><a href="screenshots/4d301a2-desktop.png">Desktop</a> · <a href="screenshots/4d301a2-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>mobile_view_rework</td>
+<td>1f35d26</td>
+<td>Best advanced mobile interaction model</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8209/">Open preview</a></td>
+<td><a href="screenshots/1f35d26-desktop.png">Desktop</a> · <a href="screenshots/1f35d26-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>mosaic_bounds</td>
+<td>e54de22</td>
+<td>Similar UI with reduced import cap</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8215/">Open preview</a></td>
+<td><a href="screenshots/e54de22-desktop.png">Desktop</a> · <a href="screenshots/e54de22-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_claude_improvments</td>
+<td>04bef33</td>
+<td>Early direct / Gaussian dashboard</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8218/">Open preview</a></td>
+<td><a href="screenshots/04bef33-desktop.png">Desktop</a> · <a href="screenshots/04bef33-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_claude_theme</td>
+<td>5176eb1</td>
+<td>Rough earliest dark-theme prototype</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8219/">Open preview</a></td>
+<td><a href="screenshots/5176eb1-desktop.png">Desktop</a> · <a href="screenshots/5176eb1-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_dev</td>
+<td>7d53851</td>
+<td>Same root as main; working nested development app</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8220/">Open preview</a></td>
+<td><a href="screenshots/7d53851-desktop.png">Desktop</a> · <a href="screenshots/7d53851-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_from_scratch</td>
+<td>ffb6fc5</td>
+<td>Guided Gaussian-model prototype</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8221/">Open preview</a></td>
+<td><a href="screenshots/ffb6fc5-desktop.png">Desktop</a> · <a href="screenshots/ffb6fc5-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_movable</td>
+<td>9a7762a</td>
+<td>Original movable-layout snapshot</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8222/">Open preview</a></td>
+<td><a href="screenshots/9a7762a-desktop.png">Desktop</a> · <a href="screenshots/9a7762a-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_Release</td>
+<td>9503516</td>
+<td>Older movable release snapshot</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8216/">Open preview</a></td>
+<td><a href="screenshots/9503516-desktop.png">Desktop</a> · <a href="screenshots/9503516-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>old_Release_Dark_Claude</td>
+<td>ce97d3a</td>
+<td>Identical old release homepage</td>
+<td>Remote only</td>
+<td><a href="http://localhost:8217/">Open preview</a></td>
+<td><a href="screenshots/ce97d3a-desktop.png">Desktop</a> · <a href="screenshots/ce97d3a-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>refactor_big</td>
+<td>fea3eda</td>
+<td>Math-core refactor and test foundation</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8210/">Open preview</a></td>
+<td><a href="screenshots/fea3eda-desktop.png">Desktop</a> · <a href="screenshots/fea3eda-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>simple</td>
+<td>a0af2f9</td>
+<td>Minimal linked-highlight demo</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8206/">Open preview</a></td>
+<td><a href="screenshots/a0af2f9-desktop.png">Desktop</a> · <a href="screenshots/a0af2f9-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>simple_cld</td>
+<td>c640622</td>
+<td>Earliest simple entry point</td>
+<td>Local + remote</td>
+<td><a href="http://localhost:8211/">Open preview</a></td>
+<td><a href="screenshots/c640622-desktop.png">Desktop</a> · <a href="screenshots/c640622-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<p>Preview URLs use isolated local servers on ports 8201–8222. They are not deployed sites. Start/restart them with <code>node test-results/branch-review/export-and-serve.cjs</code> from the repository; Ctrl+C in that server process stops them. No branch checkout is required. The source snapshots live under <code>versions/&lt;short-SHA&gt;/</code>; they contain web assets only and are not Git worktrees.</p>
+<h2>Important differences verified by interaction</h2>
+<h3>Movable panels really exist in older branches</h3>
+<p>In main, old_dev, old_Release, old_Release_Dark_Claude and old_movable, dragging the Parameters grip over the matrix changed order from <code>params,equations,mosaic,…</code> to <code>equations,mosaic,params,…</code>. The order survived refresh. Width/span buttons also changed the panel class and persisted layout metadata. main/old_dev expose widths for multiple tiles; the three old release/movable homepages expose the equations Width control.</p>
+<p><img src="screenshots/3c2e276-layout-edited.png" alt="Edited legacy layout"></p>
+<p>This differs from the current compact dashboard, whose data-group dragging edits model parameters and whose panel boxes are fixed. Discrete 1x/2x/3x/4x widths are not arbitrary drag-to-resize corners.</p>
+<h3>Uploaded-row limits differ</h3>
+<p>The same deterministic CSV contained 1,500 alternating labels with positive scores 0.9 and negative scores 0.1. The importer’s own status and resulting model state were captured. A three-record JSON fixture was then uploaded too.</p>
+<table>
+<thead>
+<tr>
+<th>Branch</th>
+<th>CSV observed result</th>
+<th>JSON result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>custom_data</td>
+<td>Loaded 1000 rows from review-1500.csv. Move Threshold (below) to walk the ROC.</td>
+<td>Loaded 3 rows from review-small.json. Move Threshold (below) to walk the ROC.</td>
+</tr>
+<tr>
+<td>master</td>
+<td>Loaded 1500 rows from review-1500.csv. Move Threshold (below) to walk the ROC.</td>
+<td>Loaded 3 rows from review-small.json. Move Threshold (below) to walk the ROC.</td>
+</tr>
+<tr>
+<td>mobile_view_rework</td>
+<td>Loaded 1500 rows from review-1500.csv. Move Threshold (below) to walk the ROC.</td>
+<td>Loaded 3 rows from review-small.json. Move Threshold (below) to walk the ROC.</td>
+</tr>
+<tr>
+<td>refactor_big</td>
+<td>Loaded 1000 rows from review-1500.csv. Move Threshold (below) to walk the ROC.</td>
+<td>Loaded 3 rows from review-small.json. Move Threshold (below) to walk the ROC.</td>
+</tr>
+<tr>
+<td>custom_data_2000</td>
+<td>Loaded 1500 rows from review-1500.csv. Move Threshold (below) to walk the ROC.</td>
+<td>Loaded 3 rows from review-small.json. Move Threshold (below) to walk the ROC.</td>
+</tr>
+<tr>
+<td>mosaic_bounds</td>
+<td>Loaded 1000 rows from review-1500.csv. Move Threshold (below) to walk the ROC.</td>
+<td>Loaded 3 rows from review-small.json. Move Threshold (below) to walk the ROC.</td>
+</tr>
+</tbody>
+</table>
+<p>The source/UI caps are 2,000 for custom_data_2000/master/mobile_view_rework and 1,000 for custom_data/mosaic_bounds/refactor_big. The browser directly tested 1,500 records, not the complete 2,000/2,001 boundary. Truncation to 1,000 is an observed capacity difference, not automatically a defect when the limit is advertised.</p>
+<h3>Latest drag behavior differs from the local checkpoint</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Before (separation / prevalence)</th>
+<th>After horizontal start</th>
+<th>After correcting gesture vertically</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1e973a5</td>
+<td>60 / 10</td>
+<td>63 / 10</td>
+<td>63 / 10</td>
+</tr>
+<tr>
+<td>4ad5b18</td>
+<td>60 / 10</td>
+<td>62 / 10</td>
+<td>60 / 18</td>
+</tr>
+</tbody>
+</table>
+<p>The later implementation resets the previous axis’s adjustment when switching axes. This was executed with a single held mouse gesture, not inferred only from a source diff.</p>
+<h3>Bayes lesson controls were added in the visual branch</h3>
+<p>feature_simple_bayes_story shows the lesson with only the three main simulator inputs visible. feature_simple_bayes_story_overall_visual adds bayesThreshold, bayesSeparation and bayesPrevalence inside the Bayes tab. Both display live prior/evidence/posterior numbers and four learning sections. The newer lesson explains why the 1,000-person cohort cancels out of the Bayes rate formula.</p>
+<h3>Mobile rework is a different navigation model</h3>
+<p>Matrix, Metrics, Curves and ROC tabs in mobile_view_rework each displayed the intended panel at 390×844. Advanced reveals import/model controls without returning to the long stacked layout.</p>
+<table>
+<thead>
+<tr>
+<th>Panel</th>
+<th>Observed</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmPanel</td>
+<td>Visible after tap/click</td>
+<td><a href="screenshots/1f35d26-mobile-cmPanel.png">Screenshot</a></td>
+</tr>
+<tr>
+<td>metricsPanel</td>
+<td>Visible after tap/click</td>
+<td><a href="screenshots/1f35d26-mobile-metricsPanel.png">Screenshot</a></td>
+</tr>
+<tr>
+<td>distPanel</td>
+<td>Visible after tap/click</td>
+<td><a href="screenshots/1f35d26-mobile-distPanel.png">Screenshot</a></td>
+</tr>
+<tr>
+<td>rocPanel</td>
+<td>Visible after tap/click</td>
+<td><a href="screenshots/1f35d26-mobile-rocPanel.png">Screenshot</a></td>
+</tr>
+</tbody>
+</table>
+<h3>Names can be misleading</h3>
+<ul>
+<li>simple and feature_simple_hover_metrics share the <strong>entire same tip commit</strong> (a0af2f9).</li>
+<li>old_Release, old_Release_Dark_Claude and old_movable have <strong>byte-identical root HTML</strong>, although their other files differ. I still opened each version.</li>
+<li>main and old_dev have <strong>byte-identical root HTML</strong>, but their nested /dev/ pages differ substantially.</li>
+<li>mosaic_bounds differs from custom_data_2000 by five 2,000→1,000 limit/label changes in index.html. The visible difference is the import/dot cap, not a new bounds-setting control.</li>
+<li>master is the remote default; main is an older dark-tile application. Neither name identifies the current teaching-focused line.</li>
+</ul>
+<h2>Detailed review and screenshots</h2>
+<h3>featursimple_bayes_story_overall_visual_GemFixes</h3>
+<p><strong>Best current teaching base.</strong> Family: Compact teaching simulator. Commit: <code>4ad5b18ff465358ac25b538f50dc2e068f7cb644</code>. Commit date: 2026-10-25T08:30:12+01:00.</p>
+<p><strong>What it does:</strong> Most complete compact CMatrixLab: five domains (Medical, Car braking, Spam, Fraud, Generic ML), Default/4-Up/Gaussians/ROC/PR/Bayes views, three matrix arrangements, linked score dots and matrix markers, group dragging, and separate Learn/Reference/Cheatsheet pages.</p>
+<p><strong>What is different:</strong> Latest checkpoint of the compact line. Defaults to medical prevalence 10%. Improves drag sensitivity, axis correction and the hand-shaped drag hint relative to Branch_1e973a51. It does not include real-data import or movable dashboard panels.</p>
+<p><strong>Where it is useful:</strong> Continue the learning-focused product here; address the existing detailed QA report before release.</p>
+<p><strong>Caution:</strong> The previous complete QA report records F1-edge, explanation, accessibility and responsive issues. Opening successfully here is not a clean release certification.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, scenario, ROC view; metric pin and precision/balance teaching interaction (PASS), threshold line drag (PASS), all six graph modes + layout cycle (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8207/">Local preview</a> · <a href="screenshots/4ad5b18-desktop.png">Desktop full-size image</a> · <a href="screenshots/4ad5b18-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/4ad5b18-desktop.png" alt="featursimple_bayes_story_overall_visual_GemFixes - desktop"></p>
+<p><img src="screenshots/4ad5b18-mobile.png" alt="featursimple_bayes_story_overall_visual_GemFixes - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cheatsheet.html</td>
+<td>Metrics Cheatsheet · CMatrixLab</td>
+<td>Rendered</td>
+<td><a href="screenshots/4ad5b18-cheatsheet_html-desktop.png">Desktop</a> · <a href="screenshots/4ad5b18-cheatsheet_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>learn.html</td>
+<td>CMatrixLab · Learn: From a Result to a Probability</td>
+<td>Rendered</td>
+<td><a href="screenshots/4ad5b18-learn_html-desktop.png">Desktop</a> · <a href="screenshots/4ad5b18-learn_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>reference.html</td>
+<td>Metrics Reference · CMatrixLab</td>
+<td>Rendered</td>
+<td><a href="screenshots/4ad5b18-reference_html-desktop.png">Desktop</a> · <a href="screenshots/4ad5b18-reference_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>Branch_1e973a51</h3>
+<p><strong>Earlier checkpoint of current app.</strong> Family: Compact teaching simulator. Commit: <code>1e973a517d24b66e04d895c5f21427ba813c01ce</code>. Commit date: 2026-10-24T18:27:02+02:00.</p>
+<p><strong>What it does:</strong> Same broad five-domain/six-view experience and separate educational/reference pages as the latest compact version. Group dragging adjusts separation horizontally or positive proportion vertically.</p>
+<p><strong>What is different:</strong> Earlier drag implementation locks the initial axis. A gesture that began horizontally remained at separation 63%, prevalence 10%; the same gesture in the latest branch reset separation to 60% and changed prevalence to 18%.</p>
+<p><strong>Where it is useful:</strong> Useful comparison point for the drag behavior; not a separate product direction.</p>
+<p><strong>Caution:</strong> Local-only branch name. Latest compact branch is its verified descendant.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, scenario, ROC view; metric pin and precision/balance teaching interaction (PASS), threshold line drag (PASS), all six graph modes + layout cycle (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8201/">Local preview</a> · <a href="screenshots/1e973a5-desktop.png">Desktop full-size image</a> · <a href="screenshots/1e973a5-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/1e973a5-desktop.png" alt="Branch_1e973a51 - desktop"></p>
+<p><img src="screenshots/1e973a5-mobile.png" alt="Branch_1e973a51 - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cheatsheet.html</td>
+<td>Metrics Cheatsheet · CMatrixLab</td>
+<td>Rendered</td>
+<td><a href="screenshots/1e973a5-cheatsheet_html-desktop.png">Desktop</a> · <a href="screenshots/1e973a5-cheatsheet_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>learn.html</td>
+<td>CMatrixLab · Learn: From a Result to a Probability</td>
+<td>Rendered</td>
+<td><a href="screenshots/1e973a5-learn_html-desktop.png">Desktop</a> · <a href="screenshots/1e973a5-learn_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>reference.html</td>
+<td>Metrics Reference · CMatrixLab</td>
+<td>Rendered</td>
+<td><a href="screenshots/1e973a5-reference_html-desktop.png">Desktop</a> · <a href="screenshots/1e973a5-reference_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>feature_simple_bayes_story_overall_visual</h3>
+<p><strong>Expanded Bayes lesson and visual refinement.</strong> Family: Compact teaching simulator. Commit: <code>b37faceb99796dd73f0858c725a185c80d792fe5</code>. Commit date: 2026-10-21T08:19:02+02:00.</p>
+<p><strong>What it does:</strong> Keeps the compact simulator plus inline four-tab learning layer, with clearer natural-frequency Bayes steps, conditional-probability explanations and live equations.</p>
+<p><strong>What is different:</strong> Compared with feature_simple_bayes_story, the Bayes tab adds its own synchronized threshold, separation and prevalence sliders. Browser inspection found six visible inputs there (three main plus three Bayes) versus three in the earlier branch.</p>
+<p><strong>Where it is useful:</strong> Useful source for inline educational controls and Bayes explanation layout.</p>
+<p><strong>Caution:</strong> Still the two-domain/one-main-graph generation, not the modern five-domain/six-view dashboard.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, mode toggle, Learn more; metric pin and precision/balance teaching interaction (PASS), threshold line drag (PASS), four learning tabs (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8205/">Local preview</a> · <a href="screenshots/b37face-desktop.png">Desktop full-size image</a> · <a href="screenshots/b37face-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/b37face-desktop.png" alt="feature_simple_bayes_story_overall_visual - desktop"></p>
+<p><img src="screenshots/b37face-mobile.png" alt="feature_simple_bayes_story_overall_visual - phone"></p>
+<h3>feature_simple_bayes_story</h3>
+<p><strong>First integrated learning/story version.</strong> Family: Compact teaching simulator. Commit: <code>7db2c1bd58d9aab29831f012ecccd9dfa69e729a</code>. Commit date: 2026-10-20T15:57:01+02:00.</p>
+<p><strong>What it does:</strong> Builds on the simple highlight simulator and adds Learn more with four sections: Basics, Formulas, Bayes and Trade-offs. Learning content and live model remain in the same page.</p>
+<p><strong>What is different:</strong> The Bayes tab displays prior/evidence/posterior counts and 10%/50% comparison cards. It does not yet add duplicate sliders inside the Bayes section.</p>
+<p><strong>Where it is useful:</strong> Reference for the inline learning flow and early explanation copy.</p>
+<p><strong>Caution:</strong> No multi-domain scenario dropdown or dashboard graph-view strip.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, mode toggle, Learn more; metric pin and precision/balance teaching interaction (PASS), threshold line drag (PASS), four learning tabs (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8204/">Local preview</a> · <a href="screenshots/7db2c1b-desktop.png">Desktop full-size image</a> · <a href="screenshots/7db2c1b-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/7db2c1b-desktop.png" alt="feature_simple_bayes_story - desktop"></p>
+<p><img src="screenshots/7db2c1b-mobile.png" alt="feature_simple_bayes_story - phone"></p>
+<h3>feature_simple_hover_metrics / simple</h3>
+<p><strong>Minimal linked-highlight demo.</strong> Family: Compact teaching simulator. Commit: <code>a0af2f9ec6d4b75eb1b59a5904619a4f39f6bdfc</code>. Commit date: 2026-10-20T07:31:42+02:00.</p>
+<p><strong>What it does:</strong> Flu/Generic ML simulator with threshold, separation, positive-share controls, matching dot/square markers and three metric buttons (TPR, FPR, Precision). Hover/click highlighting and pin behavior are present.</p>
+<p><strong>What is different:</strong> Adds interactive metric highlighting to the earlier threshold-dragging version. No scenario dropdown, six-view graph tabs or Learn panel. Medical starts at 50% positives.</p>
+<p><strong>Where it is useful:</strong> Small, focused base-rate and linked-highlight demonstration.</p>
+<p><strong>Caution:</strong> simple and feature_simple_hover_metrics are exactly the same commit, not two distinct implementations.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, mode toggle; metric pin and precision/balance teaching interaction (PASS), threshold line drag (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8206/">Local preview</a> · <a href="screenshots/a0af2f9-desktop.png">Desktop full-size image</a> · <a href="screenshots/a0af2f9-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/a0af2f9-desktop.png" alt="feature_simple_hover_metrics / simple - desktop"></p>
+<p><img src="screenshots/a0af2f9-mobile.png" alt="feature_simple_hover_metrics / simple - phone"></p>
+<h3>feature_simple_dragging_thr</h3>
+<p><strong>Threshold-drag milestone.</strong> Family: Compact teaching simulator. Commit: <code>a9c55450dbcf34e4c2b81b2c2f762ab2f82ed298</code>. Commit date: 2026-10-20T07:18:08+02:00.</p>
+<p><strong>What it does:</strong> Minimal flu/Generic ML simulator with the blue draggable threshold line, two linked displays, three headline rates, 10%/50% share shortcuts and Reset.</p>
+<p><strong>What is different:</strong> Threshold dragging works in the browser. The later metric-card pinning/hover feature is absent.</p>
+<p><strong>Where it is useful:</strong> Reference for the initial graph-handle interaction.</p>
+<p><strong>Caution:</strong> Superseded by the hover/story/current compact line; no real-data upload or movable panels.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, mode toggle; threshold line drag (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8213/">Local preview</a> · <a href="screenshots/a9c5545-desktop.png">Desktop full-size image</a> · <a href="screenshots/a9c5545-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/a9c5545-desktop.png" alt="feature_simple_dragging_thr - desktop"></p>
+<p><img src="screenshots/a9c5545-mobile.png" alt="feature_simple_dragging_thr - phone"></p>
+<h3>simple_cld</h3>
+<p><strong>Earliest simple entry point.</strong> Family: Compact teaching simulator. Commit: <code>c64062256bd4a3d8b62b2c4d9df98814d48d1948</code>. Commit date: 2026-10-19T08:58:09+02:00.</p>
+<p><strong>What it does:</strong> The homepage redirects to cmatrixlab_minimal_readable.html. It presents a basic flu/Generic ML explanation, sliders, score dots, confusion matrix and precision strip.</p>
+<p><strong>What is different:</strong> This is the initial minimal readable version. The inspected page does not expose the later threshold-drag handle or interactive metric-card buttons; use the sliders. Defaults to 50% sick share.</p>
+<p><strong>Where it is useful:</strong> Historical baseline for how the compact teaching experience began.</p>
+<p><strong>Caution:</strong> The real page is the redirect target, not the tiny root index.html.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, mode toggle; baseline controls and page inspection.</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8211/">Local preview</a> · <a href="screenshots/c640622-desktop.png">Desktop full-size image</a> · <a href="screenshots/c640622-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/c640622-desktop.png" alt="simple_cld - desktop"></p>
+<p><img src="screenshots/c640622-mobile.png" alt="simple_cld - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmatrixlab_minimal_readable.html</td>
+<td>CMatrixLab — Simple</td>
+<td>Rendered</td>
+<td><a href="screenshots/c640622-cmatrixlab_minimal_readable_html-desktop.png">Desktop</a> · <a href="screenshots/c640622-cmatrixlab_minimal_readable_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>mobile_view_rework</h3>
+<p><strong>Best advanced mobile interaction model.</strong> Family: Advanced ROC / data dashboard. Commit: <code>1f35d2634c6c1bc4f1c589e508a38aae92c0092c</code>. Commit date: 2026-05-11T08:19:08+02:00.</p>
+<p><strong>What it does:</strong> Keeps the advanced desktop/data dashboard but reworks phones into pinned manual controls and Matrix / Metrics / Curves / ROC tabs. Advanced tools reveal data/model options.</p>
+<p><strong>What is different:</strong> At 390×844 the default document fits the viewport and each of the four mobile tabs activated its intended panel. Advanced reveals the Custom data entry and Manual/Gaussian switch. Both 1,500-row CSV and three-row JSON imports worked.</p>
+<p><strong>Where it is useful:</strong> Preferred advanced branch for phone-oriented data exploration; good source for a tabbed mobile layout.</p>
+<p><strong>Caution:</strong> The manual ROC point can sit off the Gaussian ROC curve by design; the UI explicitly warns about the two modes. Phone targets and all numerical boundaries were not exhaustively audited here.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, file import discovered; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS), CSV import 1500 rows and actual cap (PASS), JSON import three rows (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Fits initial view. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8209/">Local preview</a> · <a href="screenshots/1f35d26-desktop.png">Desktop full-size image</a> · <a href="screenshots/1f35d26-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/1f35d26-desktop.png" alt="mobile_view_rework - desktop"></p>
+<p><img src="screenshots/1f35d26-mobile.png" alt="mobile_view_rework - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>archive/design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/1f35d26-archive_design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/1f35d26-archive_design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>archive/dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/1f35d26-archive_dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/1f35d26-archive_dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>master</h3>
+<p><strong>Default remote branch; broad data feature set.</strong> Family: Advanced ROC / data dashboard. Commit: <code>4d301a2065e1acc89d9d67cbc7d58cd33be78019</code>. Commit date: 2026-04-14T07:21:43+02:00.</p>
+<p><strong>What it does:</strong> The remote default is master. It is the advanced Plotly dashboard with themes, real CSV/JSON input, manual/linked score modes, matrix/mosaic, values/bars/equations/theory and distribution/ROC tools.</p>
+<p><strong>What is different:</strong> Compared with refactor_big, prototypes move under archive/, the index returns to a large standalone implementation and metrics_core.js/test scaffolding disappear. The UI allows 2,000 upload rows; 1,500 were imported in the browser.</p>
+<p><strong>Where it is useful:</strong> Useful broad advanced desktop baseline; it is not the compact simulator currently checked out.</p>
+<p><strong>Caution:</strong> 390px homepage requires long scrolling. Default remote branch status does not mean it is the newest teaching-focused implementation.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, file import discovered; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS), CSV import 1500 rows and actual cap (PASS), JSON import three rows (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×2177; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8208/">Local preview</a> · <a href="screenshots/4d301a2-desktop.png">Desktop full-size image</a> · <a href="screenshots/4d301a2-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/4d301a2-desktop.png" alt="master - desktop"></p>
+<p><img src="screenshots/4d301a2-mobile.png" alt="master - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>archive/design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/4d301a2-archive_design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/4d301a2-archive_design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>archive/dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/4d301a2-archive_dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/4d301a2-archive_dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>refactor_big</h3>
+<p><strong>Math-core refactor and test foundation.</strong> Family: Advanced ROC / data dashboard. Commit: <code>fea3edaa6f0dbdc5d8a8c4d3229ba9d7e8568926</code>. Commit date: 2026-04-12T07:52:56+02:00.</p>
+<p><strong>What it does:</strong> Retains the advanced dashboard and real-data importer, but extracts numerical/import/ROC functions into metrics_core.js and includes unit and visual-test scaffolding.</p>
+<p><strong>What is different:</strong> The browser loaded metrics_core.js successfully; matrix/mosaic, all metric views, model-mode switch and CSV/JSON imports worked. Its CSV cap remains 1,000.</p>
+<p><strong>Where it is useful:</strong> Best branch to study for separating the advanced app’s math from rendering and testing it independently.</p>
+<p><strong>Caution:</strong> Not the newest UI. The full historical test suite was not run during this comparison campaign; presence of tests is not a claim that every test passed.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, file import discovered; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS), CSV import 1500 rows and actual cap (PASS), JSON import three rows (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×2177; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8210/">Local preview</a> · <a href="screenshots/fea3eda-desktop.png">Desktop full-size image</a> · <a href="screenshots/fea3eda-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/fea3eda-desktop.png" alt="refactor_big - desktop"></p>
+<p><img src="screenshots/fea3eda-mobile.png" alt="refactor_big - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/fea3eda-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/fea3eda-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/fea3eda-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/fea3eda-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>custom_data_2000</h3>
+<p><strong>2,000-row import capacity.</strong> Family: Advanced ROC / data dashboard. Commit: <code>8facffd67569ada6dda6123520d8c3484be8818c</code>. Commit date: 2026-04-07T15:39:15+02:00.</p>
+<p><strong>What it does:</strong> Real-data dashboard with the same major manual/Gaussian, matrix/mosaic, metric/theory, ROC and distribution tools as the custom-data line.</p>
+<p><strong>What is different:</strong> Increases CSV/JSON capacity to 2,000 rows in source/UI. The browser test successfully imported all 1,500 supplied rows.</p>
+<p><strong>Where it is useful:</strong> Useful source for the larger import cap and uploaded-score workflow.</p>
+<p><strong>Caution:</strong> Despite the name, the built-in simulator still starts at N=1,000; the changed limit concerns uploaded records. Phone layout remains long.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, file import discovered; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS), CSV import 1500 rows and actual cap (PASS), JSON import three rows (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×2177; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8212/">Local preview</a> · <a href="screenshots/8facffd-desktop.png">Desktop full-size image</a> · <a href="screenshots/8facffd-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/8facffd-desktop.png" alt="custom_data_2000 - desktop"></p>
+<p><img src="screenshots/8facffd-mobile.png" alt="custom_data_2000 - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/8facffd-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/8facffd-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/8facffd-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/8facffd-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>mosaic_bounds</h3>
+<p><strong>Similar UI with reduced import cap.</strong> Family: Advanced ROC / data dashboard. Commit: <code>e54de2254ef26892dc38aa02ea0f9ef6e6768428</code>. Commit date: 2026-04-06T22:11:58+02:00.</p>
+<p><strong>What it does:</strong> Visually close to custom_data_2000, with the same direct-rate/Gaussian switches, matrix/mosaic and educational metric panels.</p>
+<p><strong>What is different:</strong> The actual diff against custom_data_2000 changes five limits/labels from 2,000 to 1,000, including maximum dots; it does not introduce a distinct new homepage bounds control. Browser import loaded 1,000 of 1,500 records.</p>
+<p><strong>Where it is useful:</strong> Keep as a historical comparison for the 1,000-row/dot-limit behavior.</p>
+<p><strong>Caution:</strong> Do not infer the feature from the branch name: the measurable difference is the lower cap.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, file import discovered; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS), CSV import 1500 rows and actual cap (PASS), JSON import three rows (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×2177; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8215/">Local preview</a> · <a href="screenshots/e54de22-desktop.png">Desktop full-size image</a> · <a href="screenshots/e54de22-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/e54de22-desktop.png" alt="mosaic_bounds - desktop"></p>
+<p><img src="screenshots/e54de22-mobile.png" alt="mosaic_bounds - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/e54de22-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/e54de22-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/e54de22-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/e54de22-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>custom_data</h3>
+<p><strong>Initial real-data import milestone.</strong> Family: Advanced ROC / data dashboard. Commit: <code>62826067267d98d3b6b7ebfb95b4ce4f2574f59c</code>. Commit date: 2026-04-06T19:44:59+02:00.</p>
+<p><strong>What it does:</strong> Dense light/colorblind/dark-capable dashboard with direct TPR/FPR/prevalence controls, linked Gaussian-score mode, matrix/mosaic, metric values/bars/equations/theory, distribution curves/top view, and ROC.</p>
+<p><strong>What is different:</strong> Adds CSV/JSON upload over the mosaic-focused predecessor. The 1,500-row CSV test loaded only 1,000 rows; a three-row JSON file loaded successfully.</p>
+<p><strong>Where it is useful:</strong> Reference for the first importer and empirical score/ROC workflow.</p>
+<p><strong>Caution:</strong> At 390px the dashboard becomes a long scrolling document (~2,177px measured), unlike the later mobile tabbed rework.</p>
+<p><strong>Executed checks:</strong> range ArrowRight, file import discovered; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS), CSV import 1500 rows and actual cap (PASS), JSON import three rows (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×2177; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8202/">Local preview</a> · <a href="screenshots/6282606-desktop.png">Desktop full-size image</a> · <a href="screenshots/6282606-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/6282606-desktop.png" alt="custom_data - desktop"></p>
+<p><img src="screenshots/6282606-mobile.png" alt="custom_data - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/6282606-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/6282606-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/6282606-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/6282606-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>feature_mosaic_improvments</h3>
+<p><strong>Mosaic readability milestone.</strong> Family: Advanced ROC / data dashboard. Commit: <code>40918b193385ba1f687265158ed20b4a83d6d6e5</code>. Commit date: 2026-04-06T12:10:02+02:00.</p>
+<p><strong>What it does:</strong> Advanced direct-rate/Gaussian dashboard with matrix/mosaic, linked metric highlights, equations and theory panels, class-distribution views and ROC.</p>
+<p><strong>What is different:</strong> Focuses on mosaic presentation and larger labels. It has no custom-data file input. Its default manual rates are 90% TPR / 10% FPR rather than the later imported-data line’s 85% / 20%.</p>
+<p><strong>Where it is useful:</strong> Reference for mosaic readability and metric-to-outcome highlighting.</p>
+<p><strong>Caution:</strong> Older long mobile layout; later branches carry broader data and model features.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_formulas (PASS), btn_metrics_theory (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×2093; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8203/">Local preview</a> · <a href="screenshots/40918b1-desktop.png">Desktop full-size image</a> · <a href="screenshots/40918b1-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/40918b1-desktop.png" alt="feature_mosaic_improvments - desktop"></p>
+<p><img src="screenshots/40918b1-mobile.png" alt="feature_mosaic_improvments - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/40918b1-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/40918b1-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/40918b1-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/40918b1-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>old_claude_improvments</h3>
+<p><strong>Early direct / Gaussian dashboard.</strong> Family: Advanced ROC / data dashboard. Commit: <code>04bef33d734ca33eda00e7fe8d9f1b9693e7f356</code>. Commit date: 2026-04-05T16:32:01+02:00.</p>
+<p><strong>What it does:</strong> Shows explicit direct-vs-linked mode messaging, Gaussian means/spreads, dataset size and threshold, confusion-matrix/mosaic views, metrics and theory, and ROC/distribution charts.</p>
+<p><strong>What is different:</strong> Earlier generation with 90% TPR / 10% FPR defaults, more controls visible at once and fewer separated metric presentation buttons than later custom-data branches.</p>
+<p><strong>Where it is useful:</strong> Historical comparison for the transition from direct-rate tiles to Gaussian-score modeling.</p>
+<p><strong>Caution:</strong> Both desktop and phone pages scroll; no CSV/JSON importer on this root page.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_eqs (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1425×1222, phone 386×1937; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8218/">Local preview</a> · <a href="screenshots/04bef33-desktop.png">Desktop full-size image</a> · <a href="screenshots/04bef33-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/04bef33-desktop.png" alt="old_claude_improvments - desktop"></p>
+<p><img src="screenshots/04bef33-mobile.png" alt="old_claude_improvments - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/04bef33-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/04bef33-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/04bef33-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/04bef33-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>old_from_scratch</h3>
+<p><strong>Guided Gaussian-model prototype.</strong> Family: Advanced ROC / data dashboard. Commit: <code>ffb6fc519d997170ab7757bb6ba2eba780b288b5</code>. Commit date: 2026-04-05T12:20:51+02:00.</p>
+<p><strong>What it does:</strong> A different advanced workflow: Step 1 shapes the two class distributions; Step 2 chooses the operating point; Step 3 sets N and prevalence. Direct/linked modes connect distributions, threshold and rates.</p>
+<p><strong>What is different:</strong> Includes collapsible instructional sections, weighted Gaussian distributions, ROC, matrix/mosaic and metric views. Phone layout adds a tune/inspect/compare summary and Controls / Outcomes / Metrics / Distributions navigation. Defaults to linked mode.</p>
+<p><strong>Where it is useful:</strong> Good reference for the clearest “shape → threshold → population” interaction sequence.</p>
+<p><strong>Caution:</strong> Long desktop/mobile document (about 1,034 / 2,768px in the initial check). No real-data file input was exposed on the root page.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; light/dark theme (PASS), btn_cm (PASS), btn_mosaic (PASS), btn_metrics_bar (PASS), btn_metrics_eqs (PASS), btn_dist_topview (PASS), btn_dist_curves (PASS), direct/linked score mode (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1425×1034, phone 375×2768; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8221/">Local preview</a> · <a href="screenshots/ffb6fc5-desktop.png">Desktop full-size image</a> · <a href="screenshots/ffb6fc5-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/ffb6fc5-desktop.png" alt="old_from_scratch - desktop"></p>
+<p><img src="screenshots/ffb6fc5-mobile.png" alt="old_from_scratch - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>design_0/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/ffb6fc5-design_0_index_html-desktop.png">Desktop</a> · <a href="screenshots/ffb6fc5-design_0_index_html-mobile.png">Phone</a></td>
+</tr>
+<tr>
+<td>dev_2/index.html</td>
+<td>ROC &amp; Confusion Matrix Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/ffb6fc5-dev_2_index_html-desktop.png">Desktop</a> · <a href="screenshots/ffb6fc5-dev_2_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>main</h3>
+<p><strong>Movable panels with widths on every tile.</strong> Family: Legacy movable dark dashboard. Commit: <code>3c2e2765dcb2f877035f1a57c61090aae04c7bb9</code>. Commit date: 2026-03-29T08:15:01+02:00.</p>
+<p><strong>What it does:</strong> Dark manual-rate playground with N/prevalence/TPR/FPR, live equations, matrix, derived metrics, preset buttons, counts/rates charts, ROC/likelihood-ratio and PR panels.</p>
+<p><strong>What is different:</strong> Panel drag reorder and per-panel width buttons (1x→2x etc.) work, with order/sizes surviving refresh. Its root homepage is byte-identical to old_dev.</p>
+<p><strong>Where it is useful:</strong> Best existing source if the requirement is movable dashboard tiles with per-panel width changes.</p>
+<p><strong>Caution:</strong> The root uses internal scrolling on phones; “no document overflow” does not mean every panel fits. /dev/index.html is only a placeholder with a missing stylesheet (404).</p>
+<p><strong>Executed checks:</strong> range ArrowRight; panel reorder + width change + refresh persistence (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Body/internal scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8214/">Local preview</a> · <a href="screenshots/3c2e276-desktop.png">Desktop full-size image</a> · <a href="screenshots/3c2e276-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/3c2e276-desktop.png" alt="main - desktop"></p>
+<p><img src="screenshots/3c2e276-mobile.png" alt="main - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dev/index.html</td>
+<td>Metrics Dashboard placeholder</td>
+<td>Issue: <a href="http://localhost:8214/dev/css/styles.css:">http://localhost:8214/dev/css/styles.css:</a> net::ERR_ABORTED</td>
+<td><a href="screenshots/3c2e276-dev_index_html-desktop.png">Desktop</a> · <a href="screenshots/3c2e276-dev_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>old_dev</h3>
+<p><strong>Same root as main; working nested development app.</strong> Family: Legacy movable dark dashboard. Commit: <code>7d5385160a4b7dd8b2547c42b000f82199985822</code>. Commit date: 2026-03-31T06:57:59+02:00.</p>
+<p><strong>What it does:</strong> Same dark movable, resizable-by-width-button dashboard at the root as main. Panel reorder, width change and refresh persistence all worked.</p>
+<p><strong>What is different:</strong> Changes are in dev/index.html, dev/index.css, dev/js/app.js and styles/mosaic.css. Unlike main/dev’s heading-only placeholder, /dev/index.html is a complete working dashboard.</p>
+<p><strong>Where it is useful:</strong> Reference for the modular nested development experiment and movable-tile behavior.</p>
+<p><strong>Caution:</strong> Nested development screenshot shows dense panels, scrolling and clipped/overflowing inner text; it needs layout work before reuse.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; panel reorder + width change + refresh persistence (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Body/internal scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8220/">Local preview</a> · <a href="screenshots/7d53851-desktop.png">Desktop full-size image</a> · <a href="screenshots/7d53851-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/7d53851-desktop.png" alt="old_dev - desktop"></p>
+<p><img src="screenshots/7d53851-mobile.png" alt="old_dev - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dev/index.html</td>
+<td>Classifier Metrics Playground</td>
+<td>Rendered</td>
+<td><a href="screenshots/7d53851-dev_index_html-desktop.png">Desktop</a> · <a href="screenshots/7d53851-dev_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>old_Release</h3>
+<p><strong>Older movable release snapshot.</strong> Family: Legacy movable dark dashboard. Commit: <code>95035165f6f9da21961b11df89b31ac2a14c8d41</code>. Commit date: 2026-03-08T16:37:29+01:00.</p>
+<p><strong>What it does:</strong> Dark manual-rate dashboard with panel reordering, live equations, matrix, score cards, presets, counts/rates, ROC and PR.</p>
+<p><strong>What is different:</strong> Root HTML is byte-identical to old_movable and old_Release_Dark_Claude. Width button changes the equations panel (rather than a width control on every panel). Reordering and refresh persistence worked.</p>
+<p><strong>Where it is useful:</strong> Reference for the original simpler reorder/width persistence implementation.</p>
+<p><strong>Caution:</strong> The root HTML is an identical homepage snapshot, but this branch also has a separate /dev/index.html, so the whole branch is not identical to every alias.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; panel reorder + width change + refresh persistence (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Body/internal scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8216/">Local preview</a> · <a href="screenshots/9503516-desktop.png">Desktop full-size image</a> · <a href="screenshots/9503516-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/9503516-desktop.png" alt="old_Release - desktop"></p>
+<p><img src="screenshots/9503516-mobile.png" alt="old_Release - phone"></p>
+<p>Additional pages opened in this branch:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Observed page</th>
+<th>State</th>
+<th>Desktop / phone evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dev/index.html</td>
+<td>Metrics Playground (N, prevalence, TPR, FPR)</td>
+<td>Rendered</td>
+<td><a href="screenshots/9503516-dev_index_html-desktop.png">Desktop</a> · <a href="screenshots/9503516-dev_index_html-mobile.png">Phone</a></td>
+</tr>
+</tbody>
+</table>
+<h3>old_Release_Dark_Claude</h3>
+<p><strong>Identical old release homepage.</strong> Family: Legacy movable dark dashboard. Commit: <code>ce97d3abbc8cf73f2db7ce70b60fcd42db58e289</code>. Commit date: 2026-03-07T22:43:44+01:00.</p>
+<p><strong>What it does:</strong> Same dark manual-rate movable dashboard and equation-width control as old_Release and old_movable.</p>
+<p><strong>What is different:</strong> Identical root index.html hash and rendered controls to those two branches; browser reorder, width change and refresh persistence all passed.</p>
+<p><strong>Where it is useful:</strong> Historical snapshot; no unique homepage capability was found.</p>
+<p><strong>Caution:</strong> The name suggests a separate dark redesign, but the actual root page is identical to the other two listed versions.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; panel reorder + width change + refresh persistence (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Body/internal scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8217/">Local preview</a> · <a href="screenshots/ce97d3a-desktop.png">Desktop full-size image</a> · <a href="screenshots/ce97d3a-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/ce97d3a-desktop.png" alt="old_Release_Dark_Claude - desktop"></p>
+<p><img src="screenshots/ce97d3a-mobile.png" alt="old_Release_Dark_Claude - phone"></p>
+<h3>old_movable</h3>
+<p><strong>Original movable-layout snapshot.</strong> Family: Legacy movable dark dashboard. Commit: <code>9a7762a423b099d988a20164583d5f9a4f1ae9f6</code>. Commit date: 2026-03-07T22:35:37+01:00.</p>
+<p><strong>What it does:</strong> Dark classifier dashboard whose grips reorder tiles and whose Width button cycles the equations tile width.</p>
+<p><strong>What is different:</strong> Root matches both old release variants. Moving Parameters after the matrix changed order, persisted after refresh, and Width changed class tile→tile span2.</p>
+<p><strong>Where it is useful:</strong> Smallest older source to inspect for drag ordering and persisted equation width.</p>
+<p><strong>Caution:</strong> This is button-based width/span resizing, not arbitrary corner-handle resizing.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; panel reorder + width change + refresh persistence (PASS).</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 390×844; Body/internal scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8222/">Local preview</a> · <a href="screenshots/9a7762a-desktop.png">Desktop full-size image</a> · <a href="screenshots/9a7762a-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/9a7762a-desktop.png" alt="old_movable - desktop"></p>
+<p><img src="screenshots/9a7762a-mobile.png" alt="old_movable - phone"></p>
+<h3>old_claude_theme</h3>
+<p><strong>Rough earliest dark-theme prototype.</strong> Family: Legacy movable dark dashboard. Commit: <code>5176eb167434a3ccffa285f6303985df2fbd6e4c</code>. Commit date: 2026-03-07T15:16:10+01:00.</p>
+<p><strong>What it does:</strong> Dark manual-rate classifier playground with parameters, matrix, derived metrics, presets, count/rate charts, ROC/PR and live equations.</p>
+<p><strong>What is different:</strong> No Edit Layout controls were exposed. A literal code-fence marker is visible in body text, and the desktop screenshot has uneven spacing and native-looking controls compared with later dark versions.</p>
+<p><strong>Where it is useful:</strong> Visual/history reference only.</p>
+<p><strong>Caution:</strong> Not a recommended implementation base; newer dark snapshots are more coherent and add real layout controls.</p>
+<p><strong>Executed checks:</strong> range ArrowRight; baseline controls and page inspection.</p>
+<p><strong>Layout:</strong> initial document dimensions desktop 1440×900, phone 386×1138; Page scroll. These dimensions alone do not establish that every inner panel is visible.</p>
+<p><a href="http://localhost:8219/">Local preview</a> · <a href="screenshots/5176eb1-desktop.png">Desktop full-size image</a> · <a href="screenshots/5176eb1-mobile.png">Phone full-size image</a></p>
+<p><img src="screenshots/5176eb1-desktop.png" alt="old_claude_theme - desktop"></p>
+<p><img src="screenshots/5176eb1-mobile.png" alt="old_claude_theme - phone"></p>
+<h2>Visual and runtime findings</h2>
+<ul>
+<li><strong>All root homepages rendered.</strong> Plotly and external fonts loaded in this run; there were no captured root page exceptions, failed requests or HTTP errors. This does not prove offline operation. The advanced/legacy families rely on CDN Plotly; the compact teaching line renders with inline SVG.</li>
+<li><strong>main/dev is not a full application.</strong> It shows only “Metrics Dashboard”. Its linked /dev/css/styles.css returned HTTP404, verified separately. old_dev/dev is a full dashboard. The difference is easy to miss if reviewing only branch names or root screenshots.</li>
+<li><strong>Small viewport behavior varies strongly.</strong> Advanced desktop branches often produce roughly 2,177px phone documents. mobile_view_rework shows one selected panel with pinned controls. Current compact versions show the matrix and score view together at 390×844.</li>
+<li><strong>Legacy body/internal scrolling matters.</strong> main/old_dev initially report a viewport-height document, but the body has roughly 1,768px of content. The older movable/release versions have about 1,267px of body content. Their phone screenshots show only part of the dashboard; this is not equivalent to a fully fitting one-screen app.</li>
+<li><strong>old_claude_theme is rough.</strong> A literal code-fence marker appears in body text. Controls and spacing are visibly less cohesive than later dark versions. Keep it as a historical reference.</li>
+<li><strong>Advanced direct mode intentionally decouples rates from score curves.</strong> The manual ROC point may sit off the Gaussian curve and the app says so. Selecting linked/Gaussian or uploading real scores changes that interpretation. This is a conceptual difference from the compact deterministic-score teaching model, not a failed synchronization test by itself.</li>
+<li><strong>No inference from large blank areas alone.</strong> Some screenshots show extra space, internal panels or clipped content. This review identifies those visually but does not claim a full overlap/accessibility/zoom audit of every historical layout.</li>
+</ul>
+<h3>Measured initial layouts</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Desktop scroll dimensions</th>
+<th>Phone scroll dimensions</th>
+<th>Phone behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Branch_1e973a51</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>custom_data</td>
+<td>1440×900</td>
+<td>386×2177</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>feature_mosaic_improvments</td>
+<td>1440×900</td>
+<td>386×2093</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>feature_simple_bayes_story</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>feature_simple_bayes_story_overall_visual</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>feature_simple_hover_metrics / simple</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>featursimple_bayes_story_overall_visual_GemFixes</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>master</td>
+<td>1440×900</td>
+<td>386×2177</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>mobile_view_rework</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>refactor_big</td>
+<td>1440×900</td>
+<td>386×2177</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>simple_cld</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>custom_data_2000</td>
+<td>1440×900</td>
+<td>386×2177</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>feature_simple_dragging_thr</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Fits initial view</td>
+</tr>
+<tr>
+<td>main</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Body/internal scroll</td>
+</tr>
+<tr>
+<td>mosaic_bounds</td>
+<td>1440×900</td>
+<td>386×2177</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>old_Release</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Body/internal scroll</td>
+</tr>
+<tr>
+<td>old_Release_Dark_Claude</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Body/internal scroll</td>
+</tr>
+<tr>
+<td>old_claude_improvments</td>
+<td>1425×1222</td>
+<td>386×1937</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>old_claude_theme</td>
+<td>1440×900</td>
+<td>386×1138</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>old_dev</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Body/internal scroll</td>
+</tr>
+<tr>
+<td>old_from_scratch</td>
+<td>1425×1034</td>
+<td>375×2768</td>
+<td>Page scroll</td>
+</tr>
+<tr>
+<td>old_movable</td>
+<td>1440×900</td>
+<td>390×844</td>
+<td>Body/internal scroll</td>
+</tr>
+</tbody>
+</table>
+<h2>Suggested development direction</h2>
+<ol>
+<li>Choose the compact teaching app as the user-facing base if the goal remains “help users understand classifier metrics immediately”. Preserve the 10%/50% base-rate comparison and five domain presets.</li>
+<li>Bring over mobile_view_rework’s <strong>navigation principle</strong>, not the whole older state model: pinned controls and a selected lower panel are useful when screen height is limited.</li>
+<li>If configurable panels are needed, study main/old_dev’s grips, span-width controls and localStorage persistence. Those behaviors were executed and work. Decide whether novices should see edit controls at all.</li>
+<li>If real datasets become a core feature, treat it as a separate advanced mode using uploaded labels/scores and an empirical ROC. Preserve its distinction from illustrative Gaussian distributions and manual rates.</li>
+<li>Study refactor_big’s math-core split and tests before extending any advanced model. Tests were discovered here, but this comparison does not rerun every historical suite.</li>
+<li>Keep historical branches as references until desired features are deliberately ported and tested. No branch deletion, merge, reset, commit or push is suggested as an automatic outcome of this review.</li>
+</ol>
+<h2>Evidence, reproducibility and limits</h2>
+<ul>
+<li><a href="manifest.json">manifest.json</a>: every ref, full SHA, commit description/date, exported paths, root hashes, external dependencies and preview port.</li>
+<li>batch-*.json: initial desktop/mobile DOM text, controls, graphs, dimensions, errors, interactions and screenshot names for all 22 tips.</li>
+<li>deep-*.json: 111 executed feature-action groups (111 PASS at their stated check scope; no failed action groups), model/import toggles, learning interactions, drag and persistence results. Passing a click check is not numerical certification of its entire feature.</li>
+<li>secondary-*.json: 28 additional entry points, including development/archive pages and educational/reference documents.</li>
+<li><a href="specific-comparisons.json">specific-comparisons.json</a>: axis-switch gesture, Bayes inputs, four mobile tabs, Advanced controls and confirmed missing stylesheet404.</li>
+<li><a href="screenshots/">screenshots/</a>: 167 screenshots. Main desktop/mobile images were reviewed in contact sheets, with selected full-size pages inspected separately. Secondary pages were opened and captured; not every secondary screenshot received a full manual layout audit.</li>
+<li><a href="contact-sheets/">contact-sheets/</a>: all root desktop/mobile screenshots in eight labeled overview sheets.</li>
+<li>export-and-serve.cjs reproduces committed web assets without checking out branches. build-browser-harness.cjs / review.playwright.js, build-deep-harness.cjs / deep.playwright.js and build-secondary-harness.cjs / secondary.playwright.js reproduce the MCP browser campaign in batches.</li>
+</ul>
+<p>The current branch stayed <code>featursimple_bayes_story_overall_visual_GemFixes</code> at <code>4ad5b18ff465358ac25b538f50dc2e068f7cb644</code>. No tracked application files were edited, and no commits, pushes, merges or branch switches were performed. Existing untracked CA_MATRIX_DEVELOPMENT_PLAN.md and earlier test-results were preserved. git fetch refreshed remote metadata only; git ls-remote confirmed the remote heads.</p>
+<p>Coverage limits: Chromium only in this comparison; two representative viewport sizes; no full mathematical regression suite across 22 histories; no physical devices, screen-reader/contrast audit, exhaustive upload-boundary matrix, security audit or deployment validation. The earlier full QA applies to its recorded current-branch SHA and should not be generalized to other branches.</p>
+</main><script>document.querySelectorAll('h2,h3').forEach(e=>e.id=e.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-'));document.querySelectorAll('p').forEach(p=>{const next=p.nextElementSibling;if(p.children.length===1&&p.firstElementChild?.tagName==='IMG'&&next?.tagName==='P'&&next.children.length===1&&next.firstElementChild?.tagName==='IMG'&&next.firstElementChild.alt.endsWith('- phone')){const wrap=document.createElement('div');wrap.className='image-pair';p.before(wrap);wrap.append(p,next);}});</script></body></html>

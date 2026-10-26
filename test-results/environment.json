@@ -1,0 +1,7 @@
+{
+  "node": "v25.9.0",
+  "playwright": "1.59.1",
+  "platform": "win32",
+  "chromiumPath": "C:\\Users\\martin\\AppData\\Local\\ms-playwright\\chromium-1217\\chrome-win64\\chrome.exe",
+  "webkitPath": "C:\\Users\\martin\\AppData\\Local\\ms-playwright\\webkit-2272\\Playwright.exe"
+}

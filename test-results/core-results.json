@@ -1,0 +1,5432 @@
+{
+  "browser": "156.0.8078.47",
+  "tests": [
+    {
+      "id": "F01",
+      "name": "Five scenario presets and domain terminology",
+      "status": "PASS",
+      "evidence": [
+        {
+          "p": "balanced",
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores",
+          "labels": [
+            "Your flu test is positive. What’s the chance you really have flu? That’s precision—and it also depends on how common flu is among the people tested.Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.",
+            "Sick portion"
+          ]
+        },
+        {
+          "p": "car",
+          "counts": {
+            "tp": 150,
+            "fp": 102,
+            "fn": 0,
+            "tn": 748
+          },
+          "markerCounts": {
+            "tp": 150,
+            "fp": 102,
+            "fn": 0,
+            "tn": 748
+          },
+          "pointCounts": {
+            "tp": 150,
+            "fp": 102,
+            "fn": 0,
+            "tn": 748
+          },
+          "metrics": {
+            "tpr": "100%",
+            "fpr": "12%",
+            "precision": "59.5%"
+          },
+          "values": [
+            60,
+            70,
+            15
+          ],
+          "preset": "car",
+          "summary": "150 TP ÷ (150 TP + 102 FP) = 59.5% Precision.",
+          "layout": "graph",
+          "mode": "scores",
+          "labels": [
+            "Your car’s sensor slams the emergency brakes! Is there really an obstacle ahead? In autonomous emergency braking (AEB), safety demands high sensitivity (TPR), but phantom braking (FP) risks rear-end crashes.Compare how obstacle frequency and sensor confidence trade off crash avoidance against phantom stops.",
+            "Obstacle portion"
+          ]
+        },
+        {
+          "p": "spam",
+          "counts": {
+            "tp": 344,
+            "fp": 12,
+            "fn": 56,
+            "tn": 588
+          },
+          "markerCounts": {
+            "tp": 344,
+            "fp": 12,
+            "fn": 56,
+            "tn": 588
+          },
+          "pointCounts": {
+            "tp": 344,
+            "fp": 12,
+            "fn": 56,
+            "tn": 588
+          },
+          "metrics": {
+            "tpr": "86%",
+            "fpr": "2%",
+            "precision": "96.6%"
+          },
+          "values": [
+            45,
+            55,
+            40
+          ],
+          "preset": "spam",
+          "summary": "344 TP ÷ (344 TP + 12 FP) = 96.6% Precision.",
+          "layout": "graph",
+          "mode": "scores",
+          "labels": [
+            "An email was sent to your Spam folder. Is it really junk—or an important email? That’s precision. In spam filtering, a false alarm (good email discarded) is far worse than junk reaching your Inbox.Notice how spam rate in incoming email shifts precision, even with a fixed classification model.",
+            "Spam portion"
+          ]
+        },
+        {
+          "p": "fraud",
+          "counts": {
+            "tp": 9.6,
+            "fp": 39.6,
+            "fn": 0.4,
+            "tn": 950.4
+          },
+          "markerCounts": {
+            "tp": 9.6,
+            "fp": 39.6,
+            "fn": 0.4,
+            "tn": 950.4
+          },
+          "pointCounts": {
+            "tp": 9.6,
+            "fp": 39.6,
+            "fn": 0.4,
+            "tn": 950.4
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "19.5%"
+          },
+          "values": [
+            50,
+            60,
+            1
+          ],
+          "preset": "fraud",
+          "summary": "9.6 TP ÷ (9.6 TP + 39.6 FP) = 19.5% Precision.",
+          "layout": "graph",
+          "mode": "scores",
+          "labels": [
+            "Your card was declined for suspicious activity. Is it a real thief or a false alarm? Credit card fraud is rare (~1–2%), so even an accurate detector produces false alarms due to the base-rate fallacy.See why high sensitivity causes frequent card blocks when fraud is rare.",
+            "Fraud portion"
+          ]
+        },
+        {
+          "p": "generic",
+          "counts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "markerCounts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "pointCounts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "96%"
+          },
+          "values": [
+            50,
+            60,
+            50
+          ],
+          "preset": "generic",
+          "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+          "layout": "graph",
+          "mode": "scores",
+          "labels": [
+            "The model predicts positive. How likely is the actual class to be positive? That’s precision—and it also depends on class prevalence (the positive portion).Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.",
+            "Positive portion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "Native range keyboard control and Custom state",
+      "status": "PASS",
+      "evidence": {
+        "s": {
+          "counts": {
+            "tp": 150,
+            "fp": 136,
+            "fn": 0,
+            "tn": 714
+          },
+          "markerCounts": {
+            "tp": 150,
+            "fp": 136,
+            "fn": 0,
+            "tn": 714
+          },
+          "pointCounts": {
+            "tp": 150,
+            "fp": 136,
+            "fn": 0,
+            "tn": 714
+          },
+          "metrics": {
+            "tpr": "100%",
+            "fpr": "16%",
+            "precision": "52.4%"
+          },
+          "values": [
+            61,
+            70,
+            15
+          ],
+          "preset": "custom",
+          "summary": "150 TP ÷ (150 TP + 136 FP) = 52.4% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        "custom": "Custom: Car braking"
+      }
+    },
+    {
+      "id": "F03",
+      "name": "10%/50% controls preserve separation and threshold",
+      "status": "PASS",
+      "evidence": {
+        "a": {
+          "counts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "markerCounts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "pointCounts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "96%"
+          },
+          "values": [
+            50,
+            60,
+            50
+          ],
+          "preset": "custom",
+          "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        "b": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      }
+    },
+    {
+      "id": "M01",
+      "name": "Independent weighted counts, rates, marker totals; 135 rendered states",
+      "status": "PASS",
+      "evidence": {
+        "renderedStates": 105,
+        "tolerance": "counts 1e-7; displayed rates 0.051 percentage points"
+      }
+    },
+    {
+      "id": "M02",
+      "name": "Threshold monotonicity with conventional positive-score cutoff",
+      "status": "PASS",
+      "evidence": [
+        {
+          "v": 0,
+          "tpr": 1,
+          "fpr": 1
+        },
+        {
+          "v": 5,
+          "tpr": 1,
+          "fpr": 1
+        },
+        {
+          "v": 10,
+          "tpr": 1,
+          "fpr": 0.98
+        },
+        {
+          "v": 15,
+          "tpr": 1,
+          "fpr": 0.9400000000000001
+        },
+        {
+          "v": 20,
+          "tpr": 1,
+          "fpr": 0.88
+        },
+        {
+          "v": 25,
+          "tpr": 1,
+          "fpr": 0.74
+        },
+        {
+          "v": 30,
+          "tpr": 1,
+          "fpr": 0.58
+        },
+        {
+          "v": 35,
+          "tpr": 1,
+          "fpr": 0.38
+        },
+        {
+          "v": 40,
+          "tpr": 1,
+          "fpr": 0.22
+        },
+        {
+          "v": 45,
+          "tpr": 0.9800000000000001,
+          "fpr": 0.12
+        },
+        {
+          "v": 50,
+          "tpr": 0.96,
+          "fpr": 0.04
+        },
+        {
+          "v": 55,
+          "tpr": 0.8800000000000001,
+          "fpr": 0.02
+        },
+        {
+          "v": 60,
+          "tpr": 0.78,
+          "fpr": 0
+        },
+        {
+          "v": 65,
+          "tpr": 0.62,
+          "fpr": 0
+        },
+        {
+          "v": 70,
+          "tpr": 0.42000000000000004,
+          "fpr": 0
+        },
+        {
+          "v": 75,
+          "tpr": 0.26,
+          "fpr": 0
+        },
+        {
+          "v": 80,
+          "tpr": 0.12,
+          "fpr": 0
+        },
+        {
+          "v": 85,
+          "tpr": 0.06,
+          "fpr": 0
+        },
+        {
+          "v": 90,
+          "tpr": 0.02,
+          "fpr": 0
+        },
+        {
+          "v": 95,
+          "tpr": 0,
+          "fpr": 0
+        },
+        {
+          "v": 100,
+          "tpr": 0,
+          "fpr": 0
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "name": "Rare-event base-rate invariance and precision",
+      "status": "PASS",
+      "evidence": [
+        {
+          "counts": {
+            "tp": 9.6,
+            "fp": 39.6,
+            "fn": 0.4,
+            "tn": 950.4
+          },
+          "markerCounts": {
+            "tp": 9.6,
+            "fp": 39.6,
+            "fn": 0.4,
+            "tn": 950.4
+          },
+          "pointCounts": {
+            "tp": 9.6,
+            "fp": 39.6,
+            "fn": 0.4,
+            "tn": 950.4
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "19.5%"
+          },
+          "values": [
+            50,
+            60,
+            1
+          ],
+          "preset": "custom",
+          "summary": "9.6 TP ÷ (9.6 TP + 39.6 FP) = 19.5% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        {
+          "counts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "markerCounts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "pointCounts": {
+            "tp": 480,
+            "fp": 20,
+            "fn": 20,
+            "tn": 480
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "96%"
+          },
+          "values": [
+            50,
+            60,
+            50
+          ],
+          "preset": "custom",
+          "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        {
+          "counts": {
+            "tp": 950.4,
+            "fp": 0.4,
+            "fn": 39.6,
+            "tn": 9.6
+          },
+          "markerCounts": {
+            "tp": 950.4,
+            "fp": 0.4,
+            "fn": 39.6,
+            "tn": 9.6
+          },
+          "pointCounts": {
+            "tp": 950.4,
+            "fp": 0.4,
+            "fn": 39.6,
+            "tn": 9.6
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "100%"
+          },
+          "values": [
+            50,
+            60,
+            99
+          ],
+          "preset": "custom",
+          "summary": "950.4 TP ÷ (950.4 TP + 0.4 FP) = 100% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "name": "Three matrix layouts preserve model and highlights",
+      "status": "PASS",
+      "evidence": [
+        {
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "scikit",
+            "mode": "scores"
+          },
+          "h": {
+            "included": [
+              "group tp",
+              "group fp"
+            ],
+            "num": "2 / 3 / 3 / 4",
+            "den": "1 / 3 / 3 / 4"
+          }
+        },
+        {
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "standard",
+            "mode": "scores"
+          },
+          "h": {
+            "included": [
+              "group tp",
+              "group fp"
+            ],
+            "num": "1 / 2 / 2 / 3",
+            "den": "1 / 2 / 3 / 3"
+          }
+        },
+        {
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "scores"
+          },
+          "h": {
+            "included": [
+              "group tp",
+              "group fp"
+            ],
+            "num": "1 / 3 / 2 / 4",
+            "den": "1 / 3 / 3 / 4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "Six graph modes preserve model and valid SVG coordinates",
+      "status": "PASS",
+      "evidence": [
+        {
+          "id": "tabGraphScores",
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        },
+        {
+          "id": "tabGraphSplit",
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "split"
+          }
+        },
+        {
+          "id": "tabGraphGauss",
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "gauss"
+          }
+        },
+        {
+          "id": "tabGraphRoc",
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "roc"
+          }
+        },
+        {
+          "id": "tabGraphPr",
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "pr"
+          }
+        },
+        {
+          "id": "tabGraphBayes",
+          "s": {
+            "counts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "markerCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "pointCounts": {
+              "tp": 96,
+              "fp": 36,
+              "fn": 4,
+              "tn": 864
+            },
+            "metrics": {
+              "tpr": "96%",
+              "fpr": "4%",
+              "precision": "72.7%"
+            },
+            "values": [
+              50,
+              60,
+              10
+            ],
+            "preset": "balanced",
+            "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+            "layout": "graph",
+            "mode": "bayes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "Hover/focus/Enter pin/Escape clear for three metrics",
+      "status": "PASS",
+      "evidence": [
+        {
+          "id": "tpr",
+          "included": [
+            "fn",
+            "tp"
+          ]
+        },
+        {
+          "id": "fpr",
+          "included": [
+            "fp",
+            "tn"
+          ]
+        },
+        {
+          "id": "precision",
+          "included": [
+            "fp",
+            "tp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "Matching dot/tile hover links",
+      "status": "PASS",
+      "evidence": {
+        "id": "0",
+        "square": "tile focus",
+        "circle": "point focus"
+      }
+    },
+    {
+      "id": "F08",
+      "name": "Threshold mouse drag, pointer capture and clamp beyond graph",
+      "status": "PASS",
+      "evidence": {
+        "right": {
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "markerCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "pointCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "metrics": {
+            "tpr": "0%",
+            "fpr": "0%",
+            "precision": "N/A"
+          },
+          "values": [
+            0,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "No positive tests at this setting.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        "left": {
+          "counts": {
+            "tp": 100,
+            "fp": 900,
+            "fn": 0,
+            "tn": 0
+          },
+          "markerCounts": {
+            "tp": 100,
+            "fp": 900,
+            "fn": 0,
+            "tn": 0
+          },
+          "pointCounts": {
+            "tp": 100,
+            "fp": 900,
+            "fn": 0,
+            "tn": 0
+          },
+          "metrics": {
+            "tpr": "100%",
+            "fpr": "100%",
+            "precision": "10%"
+          },
+          "values": [
+            100,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      }
+    },
+    {
+      "id": "F09",
+      "name": "Graph slider keyboard Home/End/Arrow/Page keys",
+      "status": "PASS",
+      "evidence": [
+        {
+          "key": "Home",
+          "s": {
+            "counts": {
+              "tp": 100,
+              "fp": 900,
+              "fn": 0,
+              "tn": 0
+            },
+            "markerCounts": {
+              "tp": 100,
+              "fp": 900,
+              "fn": 0,
+              "tn": 0
+            },
+            "pointCounts": {
+              "tp": 100,
+              "fp": 900,
+              "fn": 0,
+              "tn": 0
+            },
+            "metrics": {
+              "tpr": "100%",
+              "fpr": "100%",
+              "precision": "10%"
+            },
+            "values": [
+              100,
+              60,
+              10
+            ],
+            "preset": "custom",
+            "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        },
+        {
+          "key": "End",
+          "s": {
+            "counts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "markerCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "pointCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "metrics": {
+              "tpr": "0%",
+              "fpr": "0%",
+              "precision": "N/A"
+            },
+            "values": [
+              0,
+              60,
+              10
+            ],
+            "preset": "custom",
+            "summary": "No positive tests at this setting.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        },
+        {
+          "key": "ArrowLeft",
+          "s": {
+            "counts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "markerCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "pointCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "metrics": {
+              "tpr": "0%",
+              "fpr": "0%",
+              "precision": "N/A"
+            },
+            "values": [
+              1,
+              60,
+              10
+            ],
+            "preset": "custom",
+            "summary": "No positive tests at this setting.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        },
+        {
+          "key": "ArrowRight",
+          "s": {
+            "counts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "markerCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "pointCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "metrics": {
+              "tpr": "0%",
+              "fpr": "0%",
+              "precision": "N/A"
+            },
+            "values": [
+              0,
+              60,
+              10
+            ],
+            "preset": "custom",
+            "summary": "No positive tests at this setting.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        },
+        {
+          "key": "PageDown",
+          "s": {
+            "counts": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 98,
+              "tn": 900
+            },
+            "markerCounts": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 98,
+              "tn": 900
+            },
+            "pointCounts": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 98,
+              "tn": 900
+            },
+            "metrics": {
+              "tpr": "2%",
+              "fpr": "0%",
+              "precision": "100%"
+            },
+            "values": [
+              10,
+              60,
+              10
+            ],
+            "preset": "custom",
+            "summary": "2 TP ÷ (2 TP + 0 FP) = 100% Precision.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        },
+        {
+          "key": "PageUp",
+          "s": {
+            "counts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "markerCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "pointCounts": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 100,
+              "tn": 900
+            },
+            "metrics": {
+              "tpr": "0%",
+              "fpr": "0%",
+              "precision": "N/A"
+            },
+            "values": [
+              0,
+              60,
+              10
+            ],
+            "preset": "custom",
+            "summary": "No positive tests at this setting.",
+            "layout": "graph",
+            "mode": "scores"
+          }
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "name": "Group drag changes separation and prevalence on long vertical gesture",
+      "status": "PASS",
+      "evidence": {
+        "counts": {
+          "tp": 201.6,
+          "fp": 31.6,
+          "fn": 8.4,
+          "tn": 758.4
+        },
+        "markerCounts": {
+          "tp": 201.6,
+          "fp": 31.6,
+          "fn": 8.4,
+          "tn": 758.4
+        },
+        "pointCounts": {
+          "tp": 201.6,
+          "fp": 31.6,
+          "fn": 8.4,
+          "tn": 758.4
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "86.4%"
+        },
+        "values": [
+          50,
+          60,
+          21
+        ],
+        "preset": "custom",
+        "summary": "201.6 TP ÷ (201.6 TP + 31.6 FP) = 86.4% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      }
+    },
+    {
+      "id": "F11",
+      "name": "Repeated resets clear state and highlighted metric",
+      "status": "PASS",
+      "evidence": [
+        {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      ]
+    },
+    {
+      "id": "F12",
+      "name": "Refresh behavior (observation; persistence not promised)",
+      "status": "PASS",
+      "evidence": {
+        "before": {
+          "counts": {
+            "tp": 100,
+            "fp": 612,
+            "fn": 0,
+            "tn": 288
+          },
+          "markerCounts": {
+            "tp": 100,
+            "fp": 612,
+            "fn": 0,
+            "tn": 288
+          },
+          "pointCounts": {
+            "tp": 100,
+            "fp": 612,
+            "fn": 0,
+            "tn": 288
+          },
+          "metrics": {
+            "tpr": "100%",
+            "fpr": "68%",
+            "precision": "14%"
+          },
+          "values": [
+            73,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "100 TP ÷ (100 TP + 612 FP) = 14% Precision.",
+          "layout": "scikit",
+          "mode": "split"
+        },
+        "after": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        "note": "Returns to defaults; no documented persistence feature."
+      }
+    },
+    {
+      "id": "F13",
+      "name": "Dashboard panel drag/resize feature discovery",
+      "status": "PASS",
+      "evidence": {
+        "status": "NOT IMPLEMENTED",
+        "before": {
+          "x": 616.875,
+          "y": 315.70001220703125,
+          "width": 791.112548828125,
+          "height": 391.29998779296875
+        },
+        "after": {
+          "x": 616.875,
+          "y": 315.70001220703125,
+          "width": 791.112548828125,
+          "height": 391.29998779296875
+        },
+        "note": "Data markers are not draggable dashboard widgets; resizing/reordering absent."
+      }
+    }
+  ],
+  "samples": [
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 0,
+      "counts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "100%",
+        "precision": "0%"
+      },
+      "values": [
+        0,
+        0,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 1000 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 25,
+      "counts": {
+        "tp": 0,
+        "fp": 940,
+        "fn": 0,
+        "tn": 60
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 940,
+        "fn": 0,
+        "tn": 60
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 940,
+        "fn": 0,
+        "tn": 60
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "94%",
+        "precision": "0%"
+      },
+      "values": [
+        25,
+        0,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 940 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 50,
+      "counts": {
+        "tp": 0,
+        "fp": 500,
+        "fn": 0,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 500,
+        "fn": 0,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 500,
+        "fn": 0,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "50%",
+        "precision": "0%"
+      },
+      "values": [
+        50,
+        0,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 500 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 75,
+      "counts": {
+        "tp": 0,
+        "fp": 60,
+        "fn": 0,
+        "tn": 940
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 60,
+        "fn": 0,
+        "tn": 940
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 60,
+        "fn": 0,
+        "tn": 940
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "6%",
+        "precision": "0%"
+      },
+      "values": [
+        75,
+        0,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 60 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        0
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 0,
+      "counts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "1%"
+      },
+      "values": [
+        0,
+        0,
+        1
+      ],
+      "preset": "custom",
+      "summary": "10 TP ÷ (10 TP + 990 FP) = 1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 25,
+      "counts": {
+        "tp": 9.4,
+        "fp": 930.6,
+        "fn": 0.6,
+        "tn": 59.4
+      },
+      "markerCounts": {
+        "tp": 9.4,
+        "fp": 930.6,
+        "fn": 0.6,
+        "tn": 59.4
+      },
+      "pointCounts": {
+        "tp": 9.4,
+        "fp": 930.6,
+        "fn": 0.6,
+        "tn": 59.4
+      },
+      "metrics": {
+        "tpr": "94%",
+        "fpr": "94%",
+        "precision": "1%"
+      },
+      "values": [
+        25,
+        0,
+        1
+      ],
+      "preset": "custom",
+      "summary": "9.4 TP ÷ (9.4 TP + 930.6 FP) = 1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 50,
+      "counts": {
+        "tp": 5,
+        "fp": 495,
+        "fn": 5,
+        "tn": 495
+      },
+      "markerCounts": {
+        "tp": 5,
+        "fp": 495,
+        "fn": 5,
+        "tn": 495
+      },
+      "pointCounts": {
+        "tp": 5,
+        "fp": 495,
+        "fn": 5,
+        "tn": 495
+      },
+      "metrics": {
+        "tpr": "50%",
+        "fpr": "50%",
+        "precision": "1%"
+      },
+      "values": [
+        50,
+        0,
+        1
+      ],
+      "preset": "custom",
+      "summary": "5 TP ÷ (5 TP + 495 FP) = 1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 75,
+      "counts": {
+        "tp": 0.6,
+        "fp": 59.4,
+        "fn": 9.4,
+        "tn": 930.6
+      },
+      "markerCounts": {
+        "tp": 0.6,
+        "fp": 59.4,
+        "fn": 9.4,
+        "tn": 930.6
+      },
+      "pointCounts": {
+        "tp": 0.6,
+        "fp": 59.4,
+        "fn": 9.4,
+        "tn": 930.6
+      },
+      "metrics": {
+        "tpr": "6%",
+        "fpr": "6%",
+        "precision": "1%"
+      },
+      "values": [
+        75,
+        0,
+        1
+      ],
+      "preset": "custom",
+      "summary": "0.6 TP ÷ (0.6 TP + 59.4 FP) = 1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        1
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 0,
+      "counts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "10%"
+      },
+      "values": [
+        0,
+        0,
+        10
+      ],
+      "preset": "custom",
+      "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 25,
+      "counts": {
+        "tp": 94,
+        "fp": 846,
+        "fn": 6,
+        "tn": 54
+      },
+      "markerCounts": {
+        "tp": 94,
+        "fp": 846,
+        "fn": 6,
+        "tn": 54
+      },
+      "pointCounts": {
+        "tp": 94,
+        "fp": 846,
+        "fn": 6,
+        "tn": 54
+      },
+      "metrics": {
+        "tpr": "94%",
+        "fpr": "94%",
+        "precision": "10%"
+      },
+      "values": [
+        25,
+        0,
+        10
+      ],
+      "preset": "custom",
+      "summary": "94 TP ÷ (94 TP + 846 FP) = 10% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 50,
+      "counts": {
+        "tp": 50,
+        "fp": 450,
+        "fn": 50,
+        "tn": 450
+      },
+      "markerCounts": {
+        "tp": 50,
+        "fp": 450,
+        "fn": 50,
+        "tn": 450
+      },
+      "pointCounts": {
+        "tp": 50,
+        "fp": 450,
+        "fn": 50,
+        "tn": 450
+      },
+      "metrics": {
+        "tpr": "50%",
+        "fpr": "50%",
+        "precision": "10%"
+      },
+      "values": [
+        50,
+        0,
+        10
+      ],
+      "preset": "custom",
+      "summary": "50 TP ÷ (50 TP + 450 FP) = 10% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 75,
+      "counts": {
+        "tp": 6,
+        "fp": 54,
+        "fn": 94,
+        "tn": 846
+      },
+      "markerCounts": {
+        "tp": 6,
+        "fp": 54,
+        "fn": 94,
+        "tn": 846
+      },
+      "pointCounts": {
+        "tp": 6,
+        "fp": 54,
+        "fn": 94,
+        "tn": 846
+      },
+      "metrics": {
+        "tpr": "6%",
+        "fpr": "6%",
+        "precision": "10%"
+      },
+      "values": [
+        75,
+        0,
+        10
+      ],
+      "preset": "custom",
+      "summary": "6 TP ÷ (6 TP + 54 FP) = 10% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        10
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 0,
+      "counts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "37%"
+      },
+      "values": [
+        0,
+        0,
+        37
+      ],
+      "preset": "custom",
+      "summary": "370 TP ÷ (370 TP + 630 FP) = 37% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 25,
+      "counts": {
+        "tp": 347.8,
+        "fp": 592.2,
+        "fn": 22.2,
+        "tn": 37.8
+      },
+      "markerCounts": {
+        "tp": 347.8,
+        "fp": 592.2,
+        "fn": 22.2,
+        "tn": 37.8
+      },
+      "pointCounts": {
+        "tp": 347.8,
+        "fp": 592.2,
+        "fn": 22.2,
+        "tn": 37.8
+      },
+      "metrics": {
+        "tpr": "94%",
+        "fpr": "94%",
+        "precision": "37%"
+      },
+      "values": [
+        25,
+        0,
+        37
+      ],
+      "preset": "custom",
+      "summary": "347.8 TP ÷ (347.8 TP + 592.2 FP) = 37% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 50,
+      "counts": {
+        "tp": 185,
+        "fp": 315,
+        "fn": 185,
+        "tn": 315
+      },
+      "markerCounts": {
+        "tp": 185,
+        "fp": 315,
+        "fn": 185,
+        "tn": 315
+      },
+      "pointCounts": {
+        "tp": 185,
+        "fp": 315,
+        "fn": 185,
+        "tn": 315
+      },
+      "metrics": {
+        "tpr": "50%",
+        "fpr": "50%",
+        "precision": "37%"
+      },
+      "values": [
+        50,
+        0,
+        37
+      ],
+      "preset": "custom",
+      "summary": "185 TP ÷ (185 TP + 315 FP) = 37% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 75,
+      "counts": {
+        "tp": 22.2,
+        "fp": 37.8,
+        "fn": 347.8,
+        "tn": 592.2
+      },
+      "markerCounts": {
+        "tp": 22.2,
+        "fp": 37.8,
+        "fn": 347.8,
+        "tn": 592.2
+      },
+      "pointCounts": {
+        "tp": 22.2,
+        "fp": 37.8,
+        "fn": 347.8,
+        "tn": 592.2
+      },
+      "metrics": {
+        "tpr": "6%",
+        "fpr": "6%",
+        "precision": "37%"
+      },
+      "values": [
+        75,
+        0,
+        37
+      ],
+      "preset": "custom",
+      "summary": "22.2 TP ÷ (22.2 TP + 37.8 FP) = 37% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        37
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 0,
+      "counts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "50%"
+      },
+      "values": [
+        0,
+        0,
+        50
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 500 FP) = 50% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 25,
+      "counts": {
+        "tp": 470,
+        "fp": 470,
+        "fn": 30,
+        "tn": 30
+      },
+      "markerCounts": {
+        "tp": 470,
+        "fp": 470,
+        "fn": 30,
+        "tn": 30
+      },
+      "pointCounts": {
+        "tp": 470,
+        "fp": 470,
+        "fn": 30,
+        "tn": 30
+      },
+      "metrics": {
+        "tpr": "94%",
+        "fpr": "94%",
+        "precision": "50%"
+      },
+      "values": [
+        25,
+        0,
+        50
+      ],
+      "preset": "custom",
+      "summary": "470 TP ÷ (470 TP + 470 FP) = 50% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 50,
+      "counts": {
+        "tp": 250,
+        "fp": 250,
+        "fn": 250,
+        "tn": 250
+      },
+      "markerCounts": {
+        "tp": 250,
+        "fp": 250,
+        "fn": 250,
+        "tn": 250
+      },
+      "pointCounts": {
+        "tp": 250,
+        "fp": 250,
+        "fn": 250,
+        "tn": 250
+      },
+      "metrics": {
+        "tpr": "50%",
+        "fpr": "50%",
+        "precision": "50%"
+      },
+      "values": [
+        50,
+        0,
+        50
+      ],
+      "preset": "custom",
+      "summary": "250 TP ÷ (250 TP + 250 FP) = 50% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 75,
+      "counts": {
+        "tp": 30,
+        "fp": 30,
+        "fn": 470,
+        "tn": 470
+      },
+      "markerCounts": {
+        "tp": 30,
+        "fp": 30,
+        "fn": 470,
+        "tn": 470
+      },
+      "pointCounts": {
+        "tp": 30,
+        "fp": 30,
+        "fn": 470,
+        "tn": 470
+      },
+      "metrics": {
+        "tpr": "6%",
+        "fpr": "6%",
+        "precision": "50%"
+      },
+      "values": [
+        75,
+        0,
+        50
+      ],
+      "preset": "custom",
+      "summary": "30 TP ÷ (30 TP + 30 FP) = 50% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        50
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 0,
+      "counts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "99%"
+      },
+      "values": [
+        0,
+        0,
+        99
+      ],
+      "preset": "custom",
+      "summary": "990 TP ÷ (990 TP + 10 FP) = 99% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 25,
+      "counts": {
+        "tp": 930.6,
+        "fp": 9.4,
+        "fn": 59.4,
+        "tn": 0.6
+      },
+      "markerCounts": {
+        "tp": 930.6,
+        "fp": 9.4,
+        "fn": 59.4,
+        "tn": 0.6
+      },
+      "pointCounts": {
+        "tp": 930.6,
+        "fp": 9.4,
+        "fn": 59.4,
+        "tn": 0.6
+      },
+      "metrics": {
+        "tpr": "94%",
+        "fpr": "94%",
+        "precision": "99%"
+      },
+      "values": [
+        25,
+        0,
+        99
+      ],
+      "preset": "custom",
+      "summary": "930.6 TP ÷ (930.6 TP + 9.4 FP) = 99% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 50,
+      "counts": {
+        "tp": 495,
+        "fp": 5,
+        "fn": 495,
+        "tn": 5
+      },
+      "markerCounts": {
+        "tp": 495,
+        "fp": 5,
+        "fn": 495,
+        "tn": 5
+      },
+      "pointCounts": {
+        "tp": 495,
+        "fp": 5,
+        "fn": 495,
+        "tn": 5
+      },
+      "metrics": {
+        "tpr": "50%",
+        "fpr": "50%",
+        "precision": "99%"
+      },
+      "values": [
+        50,
+        0,
+        99
+      ],
+      "preset": "custom",
+      "summary": "495 TP ÷ (495 TP + 5 FP) = 99% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 75,
+      "counts": {
+        "tp": 59.4,
+        "fp": 0.6,
+        "fn": 930.6,
+        "tn": 9.4
+      },
+      "markerCounts": {
+        "tp": 59.4,
+        "fp": 0.6,
+        "fn": 930.6,
+        "tn": 9.4
+      },
+      "pointCounts": {
+        "tp": 59.4,
+        "fp": 0.6,
+        "fn": 930.6,
+        "tn": 9.4
+      },
+      "metrics": {
+        "tpr": "6%",
+        "fpr": "6%",
+        "precision": "99%"
+      },
+      "values": [
+        75,
+        0,
+        99
+      ],
+      "preset": "custom",
+      "summary": "59.4 TP ÷ (59.4 TP + 0.6 FP) = 99% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        99
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 0,
+      "counts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        0,
+        0,
+        100
+      ],
+      "preset": "custom",
+      "summary": "1000 TP ÷ (1000 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 25,
+      "counts": {
+        "tp": 940,
+        "fp": 0,
+        "fn": 60,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 940,
+        "fp": 0,
+        "fn": 60,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 940,
+        "fp": 0,
+        "fn": 60,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "94%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        25,
+        0,
+        100
+      ],
+      "preset": "custom",
+      "summary": "940 TP ÷ (940 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 50,
+      "counts": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 500,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 500,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 500,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "50%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        0,
+        100
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 75,
+      "counts": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 940,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 940,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 940,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "6%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        0,
+        100
+      ],
+      "preset": "custom",
+      "summary": "60 TP ÷ (60 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "N/A",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        0,
+        100
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 0,
+      "counts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "100%",
+        "precision": "0%"
+      },
+      "values": [
+        0,
+        60,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 1000 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 25,
+      "counts": {
+        "tp": 0,
+        "fp": 740,
+        "fn": 0,
+        "tn": 260
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 740,
+        "fn": 0,
+        "tn": 260
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 740,
+        "fn": 0,
+        "tn": 260
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "74%",
+        "precision": "0%"
+      },
+      "values": [
+        25,
+        60,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 740 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 50,
+      "counts": {
+        "tp": 0,
+        "fp": 40,
+        "fn": 0,
+        "tn": 960
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 40,
+        "fn": 0,
+        "tn": 960
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 40,
+        "fn": 0,
+        "tn": 960
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "4%",
+        "precision": "0%"
+      },
+      "values": [
+        50,
+        60,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 40 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 75,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        75,
+        60,
+        0
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        0
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 0,
+      "counts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "1%"
+      },
+      "values": [
+        0,
+        60,
+        1
+      ],
+      "preset": "custom",
+      "summary": "10 TP ÷ (10 TP + 990 FP) = 1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 25,
+      "counts": {
+        "tp": 10,
+        "fp": 732.6,
+        "fn": 0,
+        "tn": 257.4
+      },
+      "markerCounts": {
+        "tp": 10,
+        "fp": 732.6,
+        "fn": 0,
+        "tn": 257.4
+      },
+      "pointCounts": {
+        "tp": 10,
+        "fp": 732.6,
+        "fn": 0,
+        "tn": 257.4
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "74%",
+        "precision": "1.3%"
+      },
+      "values": [
+        25,
+        60,
+        1
+      ],
+      "preset": "custom",
+      "summary": "10 TP ÷ (10 TP + 732.6 FP) = 1.3% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 50,
+      "counts": {
+        "tp": 9.6,
+        "fp": 39.6,
+        "fn": 0.4,
+        "tn": 950.4
+      },
+      "markerCounts": {
+        "tp": 9.6,
+        "fp": 39.6,
+        "fn": 0.4,
+        "tn": 950.4
+      },
+      "pointCounts": {
+        "tp": 9.6,
+        "fp": 39.6,
+        "fn": 0.4,
+        "tn": 950.4
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "4%",
+        "precision": "19.5%"
+      },
+      "values": [
+        50,
+        60,
+        1
+      ],
+      "preset": "custom",
+      "summary": "9.6 TP ÷ (9.6 TP + 39.6 FP) = 19.5% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 75,
+      "counts": {
+        "tp": 2.6,
+        "fp": 0,
+        "fn": 7.4,
+        "tn": 990
+      },
+      "markerCounts": {
+        "tp": 2.6,
+        "fp": 0,
+        "fn": 7.4,
+        "tn": 990
+      },
+      "pointCounts": {
+        "tp": 2.6,
+        "fp": 0,
+        "fn": 7.4,
+        "tn": 990
+      },
+      "metrics": {
+        "tpr": "26%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        60,
+        1
+      ],
+      "preset": "custom",
+      "summary": "2.6 TP ÷ (2.6 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        1
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 0,
+      "counts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "10%"
+      },
+      "values": [
+        0,
+        60,
+        10
+      ],
+      "preset": "custom",
+      "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 25,
+      "counts": {
+        "tp": 100,
+        "fp": 666,
+        "fn": 0,
+        "tn": 234
+      },
+      "markerCounts": {
+        "tp": 100,
+        "fp": 666,
+        "fn": 0,
+        "tn": 234
+      },
+      "pointCounts": {
+        "tp": 100,
+        "fp": 666,
+        "fn": 0,
+        "tn": 234
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "74%",
+        "precision": "13.1%"
+      },
+      "values": [
+        25,
+        60,
+        10
+      ],
+      "preset": "custom",
+      "summary": "100 TP ÷ (100 TP + 666 FP) = 13.1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 50,
+      "counts": {
+        "tp": 96,
+        "fp": 36,
+        "fn": 4,
+        "tn": 864
+      },
+      "markerCounts": {
+        "tp": 96,
+        "fp": 36,
+        "fn": 4,
+        "tn": 864
+      },
+      "pointCounts": {
+        "tp": 96,
+        "fp": 36,
+        "fn": 4,
+        "tn": 864
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "4%",
+        "precision": "72.7%"
+      },
+      "values": [
+        50,
+        60,
+        10
+      ],
+      "preset": "custom",
+      "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 75,
+      "counts": {
+        "tp": 26,
+        "fp": 0,
+        "fn": 74,
+        "tn": 900
+      },
+      "markerCounts": {
+        "tp": 26,
+        "fp": 0,
+        "fn": 74,
+        "tn": 900
+      },
+      "pointCounts": {
+        "tp": 26,
+        "fp": 0,
+        "fn": 74,
+        "tn": 900
+      },
+      "metrics": {
+        "tpr": "26%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        60,
+        10
+      ],
+      "preset": "custom",
+      "summary": "26 TP ÷ (26 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        10
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 0,
+      "counts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "37%"
+      },
+      "values": [
+        0,
+        60,
+        37
+      ],
+      "preset": "custom",
+      "summary": "370 TP ÷ (370 TP + 630 FP) = 37% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 25,
+      "counts": {
+        "tp": 370,
+        "fp": 466.2,
+        "fn": 0,
+        "tn": 163.8
+      },
+      "markerCounts": {
+        "tp": 370,
+        "fp": 466.2,
+        "fn": 0,
+        "tn": 163.8
+      },
+      "pointCounts": {
+        "tp": 370,
+        "fp": 466.2,
+        "fn": 0,
+        "tn": 163.8
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "74%",
+        "precision": "44.2%"
+      },
+      "values": [
+        25,
+        60,
+        37
+      ],
+      "preset": "custom",
+      "summary": "370 TP ÷ (370 TP + 466.2 FP) = 44.2% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 50,
+      "counts": {
+        "tp": 355.2,
+        "fp": 25.2,
+        "fn": 14.8,
+        "tn": 604.8
+      },
+      "markerCounts": {
+        "tp": 355.2,
+        "fp": 25.2,
+        "fn": 14.8,
+        "tn": 604.8
+      },
+      "pointCounts": {
+        "tp": 355.2,
+        "fp": 25.2,
+        "fn": 14.8,
+        "tn": 604.8
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "4%",
+        "precision": "93.4%"
+      },
+      "values": [
+        50,
+        60,
+        37
+      ],
+      "preset": "custom",
+      "summary": "355.2 TP ÷ (355.2 TP + 25.2 FP) = 93.4% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 75,
+      "counts": {
+        "tp": 96.2,
+        "fp": 0,
+        "fn": 273.8,
+        "tn": 630
+      },
+      "markerCounts": {
+        "tp": 96.2,
+        "fp": 0,
+        "fn": 273.8,
+        "tn": 630
+      },
+      "pointCounts": {
+        "tp": 96.2,
+        "fp": 0,
+        "fn": 273.8,
+        "tn": 630
+      },
+      "metrics": {
+        "tpr": "26%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        60,
+        37
+      ],
+      "preset": "custom",
+      "summary": "96.2 TP ÷ (96.2 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        37
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 0,
+      "counts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "50%"
+      },
+      "values": [
+        0,
+        60,
+        50
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 500 FP) = 50% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 25,
+      "counts": {
+        "tp": 500,
+        "fp": 370,
+        "fn": 0,
+        "tn": 130
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 370,
+        "fn": 0,
+        "tn": 130
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 370,
+        "fn": 0,
+        "tn": 130
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "74%",
+        "precision": "57.5%"
+      },
+      "values": [
+        25,
+        60,
+        50
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 370 FP) = 57.5% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 50,
+      "counts": {
+        "tp": 480,
+        "fp": 20,
+        "fn": 20,
+        "tn": 480
+      },
+      "markerCounts": {
+        "tp": 480,
+        "fp": 20,
+        "fn": 20,
+        "tn": 480
+      },
+      "pointCounts": {
+        "tp": 480,
+        "fp": 20,
+        "fn": 20,
+        "tn": 480
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "4%",
+        "precision": "96%"
+      },
+      "values": [
+        50,
+        60,
+        50
+      ],
+      "preset": "generic",
+      "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 75,
+      "counts": {
+        "tp": 130,
+        "fp": 0,
+        "fn": 370,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 130,
+        "fp": 0,
+        "fn": 370,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 130,
+        "fp": 0,
+        "fn": 370,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "26%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        60,
+        50
+      ],
+      "preset": "custom",
+      "summary": "130 TP ÷ (130 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        50
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 0,
+      "counts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "99%"
+      },
+      "values": [
+        0,
+        60,
+        99
+      ],
+      "preset": "custom",
+      "summary": "990 TP ÷ (990 TP + 10 FP) = 99% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 25,
+      "counts": {
+        "tp": 990,
+        "fp": 7.4,
+        "fn": 0,
+        "tn": 2.6
+      },
+      "markerCounts": {
+        "tp": 990,
+        "fp": 7.4,
+        "fn": 0,
+        "tn": 2.6
+      },
+      "pointCounts": {
+        "tp": 990,
+        "fp": 7.4,
+        "fn": 0,
+        "tn": 2.6
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "74%",
+        "precision": "99.3%"
+      },
+      "values": [
+        25,
+        60,
+        99
+      ],
+      "preset": "custom",
+      "summary": "990 TP ÷ (990 TP + 7.4 FP) = 99.3% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 50,
+      "counts": {
+        "tp": 950.4,
+        "fp": 0.4,
+        "fn": 39.6,
+        "tn": 9.6
+      },
+      "markerCounts": {
+        "tp": 950.4,
+        "fp": 0.4,
+        "fn": 39.6,
+        "tn": 9.6
+      },
+      "pointCounts": {
+        "tp": 950.4,
+        "fp": 0.4,
+        "fn": 39.6,
+        "tn": 9.6
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "4%",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        60,
+        99
+      ],
+      "preset": "custom",
+      "summary": "950.4 TP ÷ (950.4 TP + 0.4 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 75,
+      "counts": {
+        "tp": 257.4,
+        "fp": 0,
+        "fn": 732.6,
+        "tn": 10
+      },
+      "markerCounts": {
+        "tp": 257.4,
+        "fp": 0,
+        "fn": 732.6,
+        "tn": 10
+      },
+      "pointCounts": {
+        "tp": 257.4,
+        "fp": 0,
+        "fn": 732.6,
+        "tn": 10
+      },
+      "metrics": {
+        "tpr": "26%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        60,
+        99
+      ],
+      "preset": "custom",
+      "summary": "257.4 TP ÷ (257.4 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        99
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 0,
+      "counts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        0,
+        60,
+        100
+      ],
+      "preset": "custom",
+      "summary": "1000 TP ÷ (1000 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 25,
+      "counts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        25,
+        60,
+        100
+      ],
+      "preset": "custom",
+      "summary": "1000 TP ÷ (1000 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 50,
+      "counts": {
+        "tp": 960,
+        "fp": 0,
+        "fn": 40,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 960,
+        "fp": 0,
+        "fn": 40,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 960,
+        "fp": 0,
+        "fn": 40,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        60,
+        100
+      ],
+      "preset": "custom",
+      "summary": "960 TP ÷ (960 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 75,
+      "counts": {
+        "tp": 260,
+        "fp": 0,
+        "fn": 740,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 260,
+        "fp": 0,
+        "fn": 740,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 260,
+        "fp": 0,
+        "fn": 740,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "26%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        60,
+        100
+      ],
+      "preset": "custom",
+      "summary": "260 TP ÷ (260 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "N/A",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        60,
+        100
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 0,
+      "counts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "100%",
+        "precision": "0%"
+      },
+      "values": [
+        0,
+        100,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 1000 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 25,
+      "counts": {
+        "tp": 0,
+        "fp": 240,
+        "fn": 0,
+        "tn": 760
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 240,
+        "fn": 0,
+        "tn": 760
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 240,
+        "fn": 0,
+        "tn": 760
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "24%",
+        "precision": "0%"
+      },
+      "values": [
+        25,
+        100,
+        0
+      ],
+      "preset": "custom",
+      "summary": "0 TP ÷ (0 TP + 240 FP) = 0% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 50,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        50,
+        100,
+        0
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 75,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        75,
+        100,
+        0
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "metrics": {
+        "tpr": "N/A",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        0
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 0,
+      "counts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "1%"
+      },
+      "values": [
+        0,
+        100,
+        1
+      ],
+      "preset": "custom",
+      "summary": "10 TP ÷ (10 TP + 990 FP) = 1% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 25,
+      "counts": {
+        "tp": 10,
+        "fp": 237.6,
+        "fn": 0,
+        "tn": 752.4
+      },
+      "markerCounts": {
+        "tp": 10,
+        "fp": 237.6,
+        "fn": 0,
+        "tn": 752.4
+      },
+      "pointCounts": {
+        "tp": 10,
+        "fp": 237.6,
+        "fn": 0,
+        "tn": 752.4
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "24%",
+        "precision": "4%"
+      },
+      "values": [
+        25,
+        100,
+        1
+      ],
+      "preset": "custom",
+      "summary": "10 TP ÷ (10 TP + 237.6 FP) = 4% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 50,
+      "counts": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "tn": 990
+      },
+      "markerCounts": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "tn": 990
+      },
+      "pointCounts": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "tn": 990
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        100,
+        1
+      ],
+      "preset": "custom",
+      "summary": "10 TP ÷ (10 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 75,
+      "counts": {
+        "tp": 7.6,
+        "fp": 0,
+        "fn": 2.4,
+        "tn": 990
+      },
+      "markerCounts": {
+        "tp": 7.6,
+        "fp": 0,
+        "fn": 2.4,
+        "tn": 990
+      },
+      "pointCounts": {
+        "tp": 7.6,
+        "fp": 0,
+        "fn": 2.4,
+        "tn": 990
+      },
+      "metrics": {
+        "tpr": "76%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        100,
+        1
+      ],
+      "preset": "custom",
+      "summary": "7.6 TP ÷ (7.6 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        1
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 0,
+      "counts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "10%"
+      },
+      "values": [
+        0,
+        100,
+        10
+      ],
+      "preset": "custom",
+      "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 25,
+      "counts": {
+        "tp": 100,
+        "fp": 216,
+        "fn": 0,
+        "tn": 684
+      },
+      "markerCounts": {
+        "tp": 100,
+        "fp": 216,
+        "fn": 0,
+        "tn": 684
+      },
+      "pointCounts": {
+        "tp": 100,
+        "fp": 216,
+        "fn": 0,
+        "tn": 684
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "24%",
+        "precision": "31.6%"
+      },
+      "values": [
+        25,
+        100,
+        10
+      ],
+      "preset": "custom",
+      "summary": "100 TP ÷ (100 TP + 216 FP) = 31.6% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 50,
+      "counts": {
+        "tp": 100,
+        "fp": 0,
+        "fn": 0,
+        "tn": 900
+      },
+      "markerCounts": {
+        "tp": 100,
+        "fp": 0,
+        "fn": 0,
+        "tn": 900
+      },
+      "pointCounts": {
+        "tp": 100,
+        "fp": 0,
+        "fn": 0,
+        "tn": 900
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        100,
+        10
+      ],
+      "preset": "custom",
+      "summary": "100 TP ÷ (100 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 75,
+      "counts": {
+        "tp": 76,
+        "fp": 0,
+        "fn": 24,
+        "tn": 900
+      },
+      "markerCounts": {
+        "tp": 76,
+        "fp": 0,
+        "fn": 24,
+        "tn": 900
+      },
+      "pointCounts": {
+        "tp": 76,
+        "fp": 0,
+        "fn": 24,
+        "tn": 900
+      },
+      "metrics": {
+        "tpr": "76%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        100,
+        10
+      ],
+      "preset": "custom",
+      "summary": "76 TP ÷ (76 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        10
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 0,
+      "counts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "37%"
+      },
+      "values": [
+        0,
+        100,
+        37
+      ],
+      "preset": "custom",
+      "summary": "370 TP ÷ (370 TP + 630 FP) = 37% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 25,
+      "counts": {
+        "tp": 370,
+        "fp": 151.2,
+        "fn": 0,
+        "tn": 478.8
+      },
+      "markerCounts": {
+        "tp": 370,
+        "fp": 151.2,
+        "fn": 0,
+        "tn": 478.8
+      },
+      "pointCounts": {
+        "tp": 370,
+        "fp": 151.2,
+        "fn": 0,
+        "tn": 478.8
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "24%",
+        "precision": "71%"
+      },
+      "values": [
+        25,
+        100,
+        37
+      ],
+      "preset": "custom",
+      "summary": "370 TP ÷ (370 TP + 151.2 FP) = 71% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 50,
+      "counts": {
+        "tp": 370,
+        "fp": 0,
+        "fn": 0,
+        "tn": 630
+      },
+      "markerCounts": {
+        "tp": 370,
+        "fp": 0,
+        "fn": 0,
+        "tn": 630
+      },
+      "pointCounts": {
+        "tp": 370,
+        "fp": 0,
+        "fn": 0,
+        "tn": 630
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        100,
+        37
+      ],
+      "preset": "custom",
+      "summary": "370 TP ÷ (370 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 75,
+      "counts": {
+        "tp": 281.2,
+        "fp": 0,
+        "fn": 88.8,
+        "tn": 630
+      },
+      "markerCounts": {
+        "tp": 281.2,
+        "fp": 0,
+        "fn": 88.8,
+        "tn": 630
+      },
+      "pointCounts": {
+        "tp": 281.2,
+        "fp": 0,
+        "fn": 88.8,
+        "tn": 630
+      },
+      "metrics": {
+        "tpr": "76%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        100,
+        37
+      ],
+      "preset": "custom",
+      "summary": "281.2 TP ÷ (281.2 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        37
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 0,
+      "counts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "50%"
+      },
+      "values": [
+        0,
+        100,
+        50
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 500 FP) = 50% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 25,
+      "counts": {
+        "tp": 500,
+        "fp": 120,
+        "fn": 0,
+        "tn": 380
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 120,
+        "fn": 0,
+        "tn": 380
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 120,
+        "fn": 0,
+        "tn": 380
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "24%",
+        "precision": "80.6%"
+      },
+      "values": [
+        25,
+        100,
+        50
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 120 FP) = 80.6% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 50,
+      "counts": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 0,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 0,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 0,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        100,
+        50
+      ],
+      "preset": "custom",
+      "summary": "500 TP ÷ (500 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 75,
+      "counts": {
+        "tp": 380,
+        "fp": 0,
+        "fn": 120,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 380,
+        "fp": 0,
+        "fn": 120,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 380,
+        "fp": 0,
+        "fn": 120,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "76%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        100,
+        50
+      ],
+      "preset": "custom",
+      "summary": "380 TP ÷ (380 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        50
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 0,
+      "counts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "100%",
+        "precision": "99%"
+      },
+      "values": [
+        0,
+        100,
+        99
+      ],
+      "preset": "custom",
+      "summary": "990 TP ÷ (990 TP + 10 FP) = 99% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 25,
+      "counts": {
+        "tp": 990,
+        "fp": 2.4,
+        "fn": 0,
+        "tn": 7.6
+      },
+      "markerCounts": {
+        "tp": 990,
+        "fp": 2.4,
+        "fn": 0,
+        "tn": 7.6
+      },
+      "pointCounts": {
+        "tp": 990,
+        "fp": 2.4,
+        "fn": 0,
+        "tn": 7.6
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "24%",
+        "precision": "99.8%"
+      },
+      "values": [
+        25,
+        100,
+        99
+      ],
+      "preset": "custom",
+      "summary": "990 TP ÷ (990 TP + 2.4 FP) = 99.8% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 50,
+      "counts": {
+        "tp": 990,
+        "fp": 0,
+        "fn": 0,
+        "tn": 10
+      },
+      "markerCounts": {
+        "tp": 990,
+        "fp": 0,
+        "fn": 0,
+        "tn": 10
+      },
+      "pointCounts": {
+        "tp": 990,
+        "fp": 0,
+        "fn": 0,
+        "tn": 10
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        100,
+        99
+      ],
+      "preset": "custom",
+      "summary": "990 TP ÷ (990 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 75,
+      "counts": {
+        "tp": 752.4,
+        "fp": 0,
+        "fn": 237.6,
+        "tn": 10
+      },
+      "markerCounts": {
+        "tp": 752.4,
+        "fp": 0,
+        "fn": 237.6,
+        "tn": 10
+      },
+      "pointCounts": {
+        "tp": 752.4,
+        "fp": 0,
+        "fn": 237.6,
+        "tn": 10
+      },
+      "metrics": {
+        "tpr": "76%",
+        "fpr": "0%",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        100,
+        99
+      ],
+      "preset": "custom",
+      "summary": "752.4 TP ÷ (752.4 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "0%",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        99
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 0,
+      "counts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        0,
+        100,
+        100
+      ],
+      "preset": "custom",
+      "summary": "1000 TP ÷ (1000 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 25,
+      "counts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        25,
+        100,
+        100
+      ],
+      "preset": "custom",
+      "summary": "1000 TP ÷ (1000 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 50,
+      "counts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "100%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        50,
+        100,
+        100
+      ],
+      "preset": "custom",
+      "summary": "1000 TP ÷ (1000 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 75,
+      "counts": {
+        "tp": 760,
+        "fp": 0,
+        "fn": 240,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 760,
+        "fp": 0,
+        "fn": 240,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 760,
+        "fp": 0,
+        "fn": 240,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "76%",
+        "fpr": "N/A",
+        "precision": "100%"
+      },
+      "values": [
+        75,
+        100,
+        100
+      ],
+      "preset": "custom",
+      "summary": "760 TP ÷ (760 TP + 0 FP) = 100% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 100,
+      "counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "markerCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "pointCounts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "metrics": {
+        "tpr": "0%",
+        "fpr": "N/A",
+        "precision": "N/A"
+      },
+      "values": [
+        100,
+        100,
+        100
+      ],
+      "preset": "custom",
+      "summary": "No positive predictions at this threshold.",
+      "layout": "graph",
+      "mode": "scores"
+    }
+  ],
+  "errors": [],
+  "failedRequests": []
+}

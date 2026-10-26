@@ -1,0 +1,2445 @@
+{
+  "start": 6,
+  "end": 8,
+  "total": 22,
+  "done": false,
+  "results": [
+    {
+      "id": "4ad5b18",
+      "names": [
+        "featursimple_bayes_story_overall_visual_GemFixes"
+      ],
+      "sha": "4ad5b18ff465358ac25b538f50dc2e068f7cb644",
+      "url": "http://localhost:8207/",
+      "browser": "156.0.8078.47",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "actions": [
+        {
+          "name": "range ArrowRight",
+          "id": "threshold",
+          "before": "50",
+          "after": "51",
+          "status": "PASS",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": "96%"
+            },
+            {
+              "id": "fpr",
+              "text": "6%"
+            },
+            {
+              "id": "precision",
+              "text": "64%"
+            },
+            {
+              "id": "tpNum",
+              "text": "96"
+            },
+            {
+              "id": "fnNum",
+              "text": "4"
+            },
+            {
+              "id": "fpNum",
+              "text": "54"
+            },
+            {
+              "id": "tnNum",
+              "text": "846"
+            }
+          ]
+        },
+        {
+          "name": "scenario",
+          "value": "balanced",
+          "text": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Medical test\n📋\nCheatsheet\nReset ↺\n\nYour flu test is positive. What’s the chance you really have flu? That’s precision—and it also depends on how common flu is among the people tested.\nCompare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing ",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": "96%"
+            },
+            {
+              "id": "fpr",
+              "text": "4%"
+            },
+            {
+              "id": "precision",
+              "text": "72.7%"
+            },
+            {
+              "id": "tpNum",
+              "text": "96"
+            },
+            {
+              "id": "fnNum",
+              "text": "4"
+            },
+            {
+              "id": "fpNum",
+              "text": "36"
+            },
+            {
+              "id": "tnNum",
+              "text": "864"
+            }
+          ]
+        },
+        {
+          "name": "scenario",
+          "value": "car",
+          "text": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Car braking\n📋\nCheatsheet\nReset ↺\n\nYour car’s sensor slams the emergency brakes! Is there really an obstacle ahead? In autonomous emergency braking (AEB), safety demands high sensitivity (TPR), but phantom braking (FP) risks rear-end crashes.\nCompare how obstacle frequency and sensor confidence trade off c",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": "100%"
+            },
+            {
+              "id": "fpr",
+              "text": "12%"
+            },
+            {
+              "id": "precision",
+              "text": "59.5%"
+            },
+            {
+              "id": "tpNum",
+              "text": "150"
+            },
+            {
+              "id": "fnNum",
+              "text": "0"
+            },
+            {
+              "id": "fpNum",
+              "text": "102"
+            },
+            {
+              "id": "tnNum",
+              "text": "748"
+            }
+          ]
+        },
+        {
+          "name": "scenario",
+          "value": "spam",
+          "text": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Spam filter\n📋\nCheatsheet\nReset ↺\n\nAn email was sent to your Spam folder. Is it really junk—or an important email? That’s precision. In spam filtering, a false alarm (good email discarded) is far worse than junk reaching your Inbox.\nNotice how spam rate in incoming email shifts precision, even with a fixed",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": "86%"
+            },
+            {
+              "id": "fpr",
+              "text": "2%"
+            },
+            {
+              "id": "precision",
+              "text": "96.6%"
+            },
+            {
+              "id": "tpNum",
+              "text": "344"
+            },
+            {
+              "id": "fnNum",
+              "text": "56"
+            },
+            {
+              "id": "fpNum",
+              "text": "12"
+            },
+            {
+              "id": "tnNum",
+              "text": "588"
+            }
+          ]
+        },
+        {
+          "name": "scenario",
+          "value": "fraud",
+          "text": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Fraud detection\n📋\nCheatsheet\nReset ↺\n\nYour card was declined for suspicious activity. Is it a real thief or a false alarm? Credit card fraud is rare (~1–2%), so even an accurate detector produces false alarms due to the base-rate fallacy.\nSee why high sensitivity causes frequent card blocks when fraud is ",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": "96%"
+            },
+            {
+              "id": "fpr",
+              "text": "4%"
+            },
+            {
+              "id": "precision",
+              "text": "19.5%"
+            },
+            {
+              "id": "tpNum",
+              "text": "10"
+            },
+            {
+              "id": "fnNum",
+              "text": "0"
+            },
+            {
+              "id": "fpNum",
+              "text": "40"
+            },
+            {
+              "id": "tnNum",
+              "text": "950"
+            }
+          ]
+        },
+        {
+          "name": "scenario",
+          "value": "generic",
+          "text": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Generic ML\n📋\nCheatsheet\nReset ↺\n\nThe model predicts positive. How likely is the actual class to be positive? That’s precision—and it also depends on class prevalence (the positive portion).\nCompare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TP",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": "96%"
+            },
+            {
+              "id": "fpr",
+              "text": "4%"
+            },
+            {
+              "id": "precision",
+              "text": "96%"
+            },
+            {
+              "id": "tpNum",
+              "text": "480"
+            },
+            {
+              "id": "fnNum",
+              "text": "20"
+            },
+            {
+              "id": "fpNum",
+              "text": "20"
+            },
+            {
+              "id": "tnNum",
+              "text": "480"
+            }
+          ]
+        },
+        {
+          "name": "ROC view",
+          "visibleText": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Medical test\n📋\nCheatsheet\nReset ↺\n\nYour flu test is positive. What’s the chance you really have flu? That’s precision—and it also depends on how common flu is among the people tested.\nCompare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.\n\nTPR\nSick detected\n96%\nFPR\nHealthy test +\n4%\nPrecision\nSick in test +\n72.7%\nHow easily the test says +\n50%\n0% · Never says +\n100% · Always says +\nHow different the two groups are\n60%\nHard to tell apart\nEasy to tell apart\nSick portion\n10%\n50%\n10%\n0% · no one has flu\n100% · everyone has flu\nTP\n· Flu detected\nFP\n· False alarm\nFN\n· Flu missed\nTN\n· No flu, test −\nDefault (Scores + Matrix)\n4-Up Graph\nGaussians\nROC\nPR\nBayes\n\nFull marker = 10 people; smaller = partial.\n\n0.00\n0.00\n0.25\n0.25\n0.50\n0.50\n0.75\n0.75\n1.00\n1.00\nFalse Alarm Rate (Healthy with positive test)\nDetection Rate (Sensitivity)\nROC Operating Curve\nAREA UNDER CURVE (AUC)\n0.992 ★ Excellent\nOPERATING POINT\nTPR: 96%\nFPR: 4%\nCutoff: 50%\nROW NORMALIZATION\nMoving prevalence (portion p)\ndoes NOT move this red dot!\nDECISION TRADE-OFFS\n🚨 Screening (80%)\n⚖️ Balanced (50%)\nMatches graph\n⇄\nTest +\nTest −\nActual flu\n\n100 people\nTP · Flu detected\n96\nFN · Flu missed\n4\nActual no flu\n\n900 people\nFP · False alarm\n36\nTN · No flu, test −\n864\nAmong positive tests: 96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.\nGreen: 96 have flu\nRed: 36 false alarms\n\nNumbers are averages for a group of 1,000 people. Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and score separation."
+        }
+      ],
+      "layouts": [],
+      "screenshots": [
+        "screenshots/4ad5b18-desktop.png",
+        "screenshots/4ad5b18-mobile.png",
+        "screenshots/4ad5b18-roc.png"
+      ],
+      "status": 200,
+      "desktop": {
+        "title": "CMatrixLab — Simple",
+        "url": "http://localhost:8207/",
+        "text": "CMatrixLab\nby Martin Grossman\nmartin.grossman@gmail.com\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Medical test\n📋\nCheatsheet\nReset ↺\n\nYour flu test is positive. What’s the chance you really have flu? That’s precision—and it also depends on how common flu is among the people tested.\nCompare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.\n\nTPR\nSick detected\n96%\nFPR\nHealthy test +\n4%\nPrecision\nSick in test +\n72.7%\nHow easily the test says +\n50%\n0% · Never says +\n100% · Always says +\nHow different the two groups are\n60%\nHard to tell apart\nEasy to tell apart\nSick portion\n10%\n50%\n10%\n0% · no one has flu\n100% · everyone has flu\nTP\n· Flu detected\nFP\n· False alarm\nFN\n· Flu missed\nTN\n· No flu, test −\nDefault (Scores + Matrix)\n4-Up Graph\nGaussians\nROC\nPR\nBayes\n\nFull marker = 10 people; smaller = partial.\n\nTest −\nTest +\nDrag\nActual flu\n100 people\nActual no flu\n900 people\nFN\nTP\nTN\nFP\n0.00\n0.25\n0.50\n0.75\n1.00\nFlu test score →\nMatches graph\n⇄\nTest +\nTest −\nActual flu\n\n100 people\nTP · Flu detected\n96\nFN · Flu missed\n4\nActual no flu\n\n900 people\nFP · False alarm\n36\nTN · No flu, test −\n864\nAmong positive tests: 96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.\nGreen: 96 have flu\nRed: 36 false alarms\n\nNumbers are averages for a group of 1,000 people. Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and score separation.",
+        "viewport": [
+          1440,
+          900
+        ],
+        "scroll": [
+          1440,
+          900
+        ],
+        "horizontal": false,
+        "vertical": false,
+        "controls": [
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "martin.grossman@gmail.com",
+            "aria": null,
+            "href": "mailto:martin.grossman@gmail.com",
+            "accept": null,
+            "box": {
+              "x": 315.1625061035156,
+              "y": 20.80000114440918,
+              "w": 160.21250915527344,
+              "h": 16.200000762939453
+            }
+          },
+          {
+            "tag": "SELECT",
+            "id": "presetSelect",
+            "type": null,
+            "role": null,
+            "text": "Medical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Medical test",
+            "aria": null,
+            "value": "balanced",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1046.862548828125,
+              "y": 13.90000057220459,
+              "w": 169.60000610351562,
+              "h": 30
+            },
+            "options": [
+              {
+                "value": "balanced",
+                "text": "Medical test",
+                "disabled": false
+              },
+              {
+                "value": "car",
+                "text": "Car braking",
+                "disabled": false
+              },
+              {
+                "value": "spam",
+                "text": "Spam filter",
+                "disabled": false
+              },
+              {
+                "value": "fraud",
+                "text": "Fraud detection",
+                "disabled": false
+              },
+              {
+                "value": "generic",
+                "text": "Generic ML",
+                "disabled": false
+              },
+              {
+                "value": "custom",
+                "text": "Custom: Medical test",
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "tag": "A",
+            "id": "refTopBtn",
+            "type": null,
+            "role": null,
+            "text": "📋\nCheatsheet",
+            "aria": "Metrics cheatsheet",
+            "href": "cheatsheet.html",
+            "accept": null,
+            "box": {
+              "x": 1224.4625244140625,
+              "y": 15,
+              "w": 103.75,
+              "h": 27.80000114440918
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "reset",
+            "type": null,
+            "role": null,
+            "text": "Reset ↺",
+            "aria": "Reset",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1336.2125244140625,
+              "y": 12,
+              "w": 71.7874984741211,
+              "h": 33.79999923706055
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tprCard",
+            "type": "button",
+            "role": null,
+            "text": "TPR\nSick detected\n96%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 32,
+              "y": 105,
+              "w": 450.6625061035156,
+              "h": 71.5999984741211
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "fprCard",
+            "type": "button",
+            "role": null,
+            "text": "FPR\nHealthy test +\n4%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 494.6625061035156,
+              "y": 105,
+              "w": 450.6625061035156,
+              "h": 71.5999984741211
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "precisionCard",
+            "type": "button",
+            "role": null,
+            "text": "Precision\nSick in test +\n72.7%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 957.3250122070312,
+              "y": 105,
+              "w": 450.6625061035156,
+              "h": 71.5999984741211
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "threshold",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "50",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 48.79999923706055,
+              "y": 228.3000030517578,
+              "w": 423.4624938964844,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "separation",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "60",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 508.26251220703125,
+              "y": 228.3000030517578,
+              "w": 423.4624938964844,
+              "h": 5
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "balance10",
+            "type": "button",
+            "role": null,
+            "text": "10%",
+            "aria": "Set sick portion to 10%",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1258.5625,
+              "y": 191.9499969482422,
+              "w": 37.8125,
+              "h": 25.80000114440918
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "balance50",
+            "type": "button",
+            "role": null,
+            "text": "50%",
+            "aria": "Set sick portion to 50%",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1300.375,
+              "y": 191.9499969482422,
+              "w": 37.8125,
+              "h": 25.80000114440918
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "prevalence",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "10",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 967.7250366210938,
+              "y": 228.3000030517578,
+              "w": 423.4624938964844,
+              "h": 5
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphScores",
+            "type": "button",
+            "role": "tab",
+            "text": "Default (Scores + Matrix)",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 34,
+              "y": 296.5,
+              "w": 139.1875,
+              "h": 17.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphSplit",
+            "type": "button",
+            "role": "tab",
+            "text": "4-Up Graph",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 175.1875,
+              "y": 296.5,
+              "w": 72.6624984741211,
+              "h": 17.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphGauss",
+            "type": "button",
+            "role": "tab",
+            "text": "Gaussians",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 249.85000610351562,
+              "y": 296.5,
+              "w": 63.10000228881836,
+              "h": 17.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphRoc",
+            "type": "button",
+            "role": "tab",
+            "text": "ROC",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 314.95001220703125,
+              "y": 296.5,
+              "w": 35.88750076293945,
+              "h": 17.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphPr",
+            "type": "button",
+            "role": "tab",
+            "text": "PR",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 352.8374938964844,
+              "y": 296.5,
+              "w": 27.287500381469727,
+              "h": 17.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphBayes",
+            "type": "button",
+            "role": "tab",
+            "text": "Bayes",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 382.125,
+              "y": 296.5,
+              "w": 42.48749923706055,
+              "h": 17.200000762939453
+            }
+          },
+          {
+            "tag": "svg",
+            "id": "plot",
+            "type": null,
+            "role": "slider",
+            "text": "",
+            "aria": "Flu test score threshold",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 48.79999923706055,
+              "y": 330.5,
+              "w": 539.2750244140625,
+              "h": 365.5625
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "matrixLayoutBtn",
+            "type": "button",
+            "role": null,
+            "text": "Matches graph\n⇄",
+            "aria": "Confusion matrix layout: Matches graph. Click to cycle layout.",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 637.6749877929688,
+              "y": 337.5,
+              "w": 102,
+              "h": 39.70000076293945
+            }
+          }
+        ],
+        "hiddenFiles": [],
+        "graphics": {
+          "svgs": 5,
+          "canvases": 0,
+          "plotly": false,
+          "plotlyCharts": 0,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(246, 248, 252)",
+          "text": "rgb(21, 36, 61)"
+        },
+        "metrics": [
+          {
+            "id": "tpr",
+            "text": "96%"
+          },
+          {
+            "id": "fpr",
+            "text": "4%"
+          },
+          {
+            "id": "precision",
+            "text": "72.7%"
+          },
+          {
+            "id": "tpNum",
+            "text": "96"
+          },
+          {
+            "id": "fnNum",
+            "text": "4"
+          },
+          {
+            "id": "fpNum",
+            "text": "36"
+          },
+          {
+            "id": "tnNum",
+            "text": "864"
+          }
+        ]
+      },
+      "mobile": {
+        "title": "CMatrixLab — Simple",
+        "url": "http://localhost:8207/",
+        "text": "CMatrixLab\nTry an example\nMedical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Medical test\n📋\n↺\n\nYour flu test is positive. What’s the chance you really have flu? That’s precision—and it also depends on how common flu is among the people tested.\nCompare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.\n\nTPR\nSick detected\n96%\nFPR\nHealthy test +\n4%\nPrecision\nSick in test +\n72.7%\nHow easily the test says +\n50%\nHow different the two groups are\n60%\nSick portion\n10%\n50%\n10%\nDefault\n4-Up\nGauss\nROC\nPR\nBayes\nTest −\nTest +\nDrag\nActual flu\n100 people\nActual no flu\n900 people\nFN\nTP\nTN\nFP\n0.00\n0.25\n0.50\n0.75\n1.00\nFlu test score →\nGraph\n⇄\nTest +\nTest −\nActual flu\n\n100 people\nTP\n96\nFN\n4\nActual no flu\n\n900 people\nFP\n36\nTN\n864\n96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.\nGreen: 96 have flu\nRed: 36 false alarms",
+        "viewport": [
+          390,
+          844
+        ],
+        "scroll": [
+          390,
+          844
+        ],
+        "horizontal": false,
+        "vertical": false,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "id": "presetSelect",
+            "type": null,
+            "role": null,
+            "text": "Medical test\nCar braking\nSpam filter\nFraud detection\nGeneric ML\nCustom: Medical test",
+            "aria": null,
+            "value": "balanced",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 233.91250610351562,
+              "y": 16,
+              "w": 92,
+              "h": 18.399999618530273
+            },
+            "options": [
+              {
+                "value": "balanced",
+                "text": "Medical test",
+                "disabled": false
+              },
+              {
+                "value": "car",
+                "text": "Car braking",
+                "disabled": false
+              },
+              {
+                "value": "spam",
+                "text": "Spam filter",
+                "disabled": false
+              },
+              {
+                "value": "fraud",
+                "text": "Fraud detection",
+                "disabled": false
+              },
+              {
+                "value": "generic",
+                "text": "Generic ML",
+                "disabled": false
+              },
+              {
+                "value": "custom",
+                "text": "Custom: Medical test",
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "tag": "A",
+            "id": "refTopBtn",
+            "type": null,
+            "role": null,
+            "text": "📋",
+            "aria": "Metrics cheatsheet",
+            "href": "cheatsheet.html",
+            "accept": null,
+            "box": {
+              "x": 328.9125061035156,
+              "y": 5.200000286102295,
+              "w": 30.087499618530273,
+              "h": 28
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "reset",
+            "type": null,
+            "role": null,
+            "text": "↺",
+            "aria": "Reset",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 362,
+              "y": 5.200000286102295,
+              "w": 20.399999618530273,
+              "h": 28
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tprCard",
+            "type": "button",
+            "role": null,
+            "text": "TPR\nSick detected\n96%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 8,
+              "y": 147.40000915527344,
+              "w": 121.4625015258789,
+              "h": 50.70000076293945
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "fprCard",
+            "type": "button",
+            "role": null,
+            "text": "FPR\nHealthy test +\n4%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 134.46250915527344,
+              "y": 147.40000915527344,
+              "w": 121.4625015258789,
+              "h": 50.70000076293945
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "precisionCard",
+            "type": "button",
+            "role": null,
+            "text": "Precision\nSick in test +\n72.7%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 260.9250183105469,
+              "y": 147.40000915527344,
+              "w": 121.4625015258789,
+              "h": 50.70000076293945
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "threshold",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "50",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 231.8000030517578,
+              "y": 201.90000915527344,
+              "w": 141.8000030517578,
+              "h": 28
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "separation",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "60",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 180.21250915527344,
+              "y": 230.6999969482422,
+              "w": 193.3874969482422,
+              "h": 28
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "balance10",
+            "type": "button",
+            "role": null,
+            "text": "10%",
+            "aria": "Set sick portion to 10%",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 103.20000457763672,
+              "y": 261.0249938964844,
+              "w": 35.79999923706055,
+              "h": 23.350000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "balance50",
+            "type": "button",
+            "role": null,
+            "text": "50%",
+            "aria": "Set sick portion to 50%",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 143,
+              "y": 261.0249938964844,
+              "w": 35.79999923706055,
+              "h": 23.350000381469727
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "prevalence",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "10",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 231.8000030517578,
+              "y": 258.70001220703125,
+              "w": 141.8000030517578,
+              "h": 28
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphScores",
+            "type": "button",
+            "role": "tab",
+            "text": "Default",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 89.9000015258789,
+              "y": 288.70001220703125,
+              "w": 43.22500228881836,
+              "h": 16
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphSplit",
+            "type": "button",
+            "role": "tab",
+            "text": "4-Up",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 135.125,
+              "y": 288.70001220703125,
+              "w": 32.837501525878906,
+              "h": 16
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphGauss",
+            "type": "button",
+            "role": "tab",
+            "text": "Gauss",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 169.96250915527344,
+              "y": 288.70001220703125,
+              "w": 36.66250228881836,
+              "h": 16
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphRoc",
+            "type": "button",
+            "role": "tab",
+            "text": "ROC",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 208.625,
+              "y": 288.70001220703125,
+              "w": 29.899999618530273,
+              "h": 16
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphPr",
+            "type": "button",
+            "role": "tab",
+            "text": "PR",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 240.52500915527344,
+              "y": 288.70001220703125,
+              "w": 22.075000762939453,
+              "h": 16
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tabGraphBayes",
+            "type": "button",
+            "role": "tab",
+            "text": "Bayes",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 264.6000061035156,
+              "y": 288.70001220703125,
+              "w": 35.900001525878906,
+              "h": 16
+            }
+          },
+          {
+            "tag": "svg",
+            "id": "plot",
+            "type": null,
+            "role": "slider",
+            "text": "",
+            "aria": "Flu test score threshold",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 16.80000114440918,
+              "y": 310.5,
+              "w": 356.8000183105469,
+              "h": 187.3874969482422
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "matrixLayoutBtn",
+            "type": "button",
+            "role": null,
+            "text": "Graph\n⇄",
+            "aria": "Confusion matrix layout: Matches graph. Click to cycle layout.",
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 516.5250244140625,
+              "w": 66,
+              "h": 20.825000762939453
+            }
+          }
+        ],
+        "hiddenFiles": [],
+        "graphics": {
+          "svgs": 5,
+          "canvases": 0,
+          "plotly": false,
+          "plotlyCharts": 0,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(246, 248, 252)",
+          "text": "rgb(21, 36, 61)"
+        },
+        "metrics": [
+          {
+            "id": "tpr",
+            "text": "96%"
+          },
+          {
+            "id": "fpr",
+            "text": "4%"
+          },
+          {
+            "id": "precision",
+            "text": "72.7%"
+          },
+          {
+            "id": "tpNum",
+            "text": "96"
+          },
+          {
+            "id": "fnNum",
+            "text": "4"
+          },
+          {
+            "id": "fpNum",
+            "text": "36"
+          },
+          {
+            "id": "tnNum",
+            "text": "864"
+          }
+        ]
+      },
+      "result": "OPENED"
+    },
+    {
+      "id": "4d301a2",
+      "names": [
+        "master"
+      ],
+      "sha": "4d301a2065e1acc89d9d67cbc7d58cd33be78019",
+      "url": "http://localhost:8208/",
+      "browser": "156.0.8078.47",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "actions": [
+        {
+          "name": "range ArrowRight",
+          "id": "s_tpr",
+          "before": "0.85",
+          "after": "0.851",
+          "status": "PASS",
+          "metrics": []
+        },
+        {
+          "name": "file import discovered",
+          "inputs": [
+            {
+              "id": "file_custom_data",
+              "accept": ".csv,.json"
+            }
+          ]
+        }
+      ],
+      "layouts": [],
+      "screenshots": [
+        "screenshots/4d301a2-desktop.png",
+        "screenshots/4d301a2-mobile.png",
+        "screenshots/4d301a2-mobile-full.png"
+      ],
+      "status": 200,
+      "desktop": {
+        "title": "ROC & Confusion Matrix Playground",
+        "url": "http://localhost:8208/",
+        "text": "ROC & Confusion Matrix\nTheme: Light\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nBalanced\nRare 5%\nScreening\nCustom data\nBuilt-in\nTPR\n85%\nFPR\n20%\nPrevalence\n50%\nSCORE MODEL\nScore model only — affects distributions & AUC in direct mode\nDirect Rates\nLink\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nDashed outline = positive predictions (TP + FP)\nActual P (500)\nActual N (500)\n50%\n50%\nTP\n425\nFN\n75\nFP\n100\nTN\n400\nMETRICS\nVALUES\nBARS\nEQUATIONS\nTHEORY\nHover a metric card, or tap it on iPhone, to highlight the matching pieces in the mosaic and confusion matrix. Tap the same card again to clear.\nTPR\n(Recall)\n0.850\nTP/(TP+FN)\nEquation →\nFPR\n0.200\nFP/(FP+TN)\nEquation →\nPRECISION\n(PPV)\n0.810\nTP/(TP+FP)\nEquation →\nACCURACY\n0.825\n(TP+TN)/N\nEquation →\nF1 SCORE\n0.829\n2·P·R/(P+R)\nEquation →\nAUC\n0.940\nArea under ROC\nEquation →\nNPV\n0.842\nTN/(TN+FN)\nEquation →\nMCC\n0.651\nMatthews corr.\nEquation →\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n−4\n−2\n0\n2\n4\n6\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.5\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve",
+        "viewport": [
+          1440,
+          900
+        ],
+        "scroll": [
+          1440,
+          900
+        ],
+        "horizontal": false,
+        "vertical": false,
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "themeToggle",
+            "type": "button",
+            "role": null,
+            "text": "Theme: Light",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 260.6499938964844,
+              "y": 16,
+              "w": 113.3499984741211,
+              "h": 32.79999923706055
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Balanced",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 164.3000030517578,
+              "w": 81.55000305175781,
+              "h": 30.399999618530273
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Rare 5%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 124.3499984741211,
+              "y": 164.3000030517578,
+              "w": 73.67500305175781,
+              "h": 30.399999618530273
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Screening",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 204.02500915527344,
+              "y": 164.3000030517578,
+              "w": 86.38750457763672,
+              "h": 30.399999618530273
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_reset_data",
+            "type": "button",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 165.60000610351562,
+              "y": 286.3000183105469,
+              "w": 110,
+              "h": 26.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "file_custom_data",
+            "type": "file",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": ".csv,.json",
+            "box": {
+              "x": 48.60000228881836,
+              "y": 258.5,
+              "w": 1,
+              "h": 1
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_tpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 282.70001220703125,
+              "w": 320.3999938964844,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_tpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "TPR exact percent",
+            "value": "85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 296.5,
+              "w": 72,
+              "h": 21.200000762939453
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_fpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.2",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 361.70001220703125,
+              "w": 320.3999938964844,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_fpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "FPR exact percent",
+            "value": "20",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 375.5,
+              "w": 72,
+              "h": 21.200000762939453
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_bal",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.5",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 440.70001220703125,
+              "w": 320.3999938964844,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_bal_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "Prevalence exact percent",
+            "value": "50",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 36.79999923706055,
+              "y": 454.5,
+              "w": 72,
+              "h": 21.200000762939453
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "toggle_bidirectional",
+            "type": "checkbox",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "on",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 266.5874938964844,
+              "y": 529.0250244140625,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_cm",
+            "type": null,
+            "role": null,
+            "text": "MATRIX",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 838.25,
+              "y": 31.600000381469727,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_mosaic",
+            "type": null,
+            "role": null,
+            "text": "MOSAIC",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 898.7000122070312,
+              "y": 31.600000381469727,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_vals",
+            "type": null,
+            "role": null,
+            "text": "VALUES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1153.875,
+              "y": 31.600000381469727,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_bar",
+            "type": null,
+            "role": null,
+            "text": "BARS",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1214.3250732421875,
+              "y": 31.600000381469727,
+              "w": 46.962501525878906,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_formulas",
+            "type": null,
+            "role": null,
+            "text": "EQUATIONS",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1261.2874755859375,
+              "y": 31.600000381469727,
+              "w": 80.6624984741211,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_theory",
+            "type": null,
+            "role": null,
+            "text": "THEORY",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1341.9500732421875,
+              "y": 31.600000381469727,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1018.3500366210938,
+              "y": 196.8249969482422,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1119.2625732421875,
+              "y": 196.8249969482422,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1220.175048828125,
+              "y": 196.8249969482422,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1321.0875244140625,
+              "y": 196.8249969482422,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1018.3500366210938,
+              "y": 307.82501220703125,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1119.2625732421875,
+              "y": 307.82501220703125,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1220.175048828125,
+              "y": 307.82501220703125,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1321.0875244140625,
+              "y": 307.82501220703125,
+              "w": 71.3125,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_curves",
+            "type": null,
+            "role": null,
+            "text": "CURVES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 824.7750244140625,
+              "y": 396.5874938964844,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_topview",
+            "type": null,
+            "role": null,
+            "text": "TOP VIEW",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 885.2250366210938,
+              "y": 396.5874938964844,
+              "w": 73.92500305175781,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 845.9500122070312,
+              "y": 452.7875061035156,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 869.9500122070312,
+              "y": 452.7875061035156,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 893.9500122070312,
+              "y": 452.7875061035156,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 917.9500122070312,
+              "y": 452.7875061035156,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1289.2000732421875,
+              "y": 443.9875183105469,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1313.2000732421875,
+              "y": 443.9875183105469,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1337.2000732421875,
+              "y": 443.9875183105469,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1361.2000732421875,
+              "y": 443.9875183105469,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          }
+        ],
+        "hiddenFiles": [
+          {
+            "id": "file_custom_data",
+            "accept": ".csv,.json"
+          }
+        ],
+        "graphics": {
+          "svgs": 17,
+          "canvases": 0,
+          "plotly": true,
+          "plotlyCharts": 6,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(245, 247, 251)",
+          "text": "rgb(22, 32, 51)"
+        },
+        "metrics": []
+      },
+      "mobile": {
+        "title": "ROC & Confusion Matrix Playground",
+        "url": "http://localhost:8208/",
+        "text": "ROC & Confusion Matrix\nTheme: Light\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nBalanced\nRare 5%\nScreening\nCustom data\nBuilt-in\nTPR\n85%\nFPR\n20%\nPrevalence\n50%\nSCORE MODEL\nScore model only — affects distributions & AUC in direct mode\nDirect Rates\nLink\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nDashed outline = positive predictions (TP + FP)\nActual P (500)\nActual N (500)\n50%\n50%\nTP\n425\nFN\n75\nFP\n100\nTN\n400\nMETRICS\nVALUES\nBARS\nEQUATIONS\nTHEORY\nHover a metric card, or tap it on iPhone, to highlight the matching pieces in the mosaic and confusion matrix. Tap the same card again to clear.\nTPR\n(Recall)\n0.850\nTP/(TP+FN)\nEquation →\nFPR\n0.200\nFP/(FP+TN)\nEquation →\nPRECISION\n(PPV)\n0.810\nTP/(TP+FP)\nEquation →\nACCURACY\n0.825\n(TP+TN)/N\nEquation →\nF1 SCORE\n0.829\n2·P·R/(P+R)\nEquation →\nAUC\n0.940\nArea under ROC\nEquation →\nNPV\n0.842\nTN/(TN+FN)\nEquation →\nMCC\n0.651\nMatthews corr.\nEquation →\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n0\n5\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.5\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve",
+        "viewport": [
+          390,
+          844
+        ],
+        "scroll": [
+          386,
+          2177
+        ],
+        "horizontal": false,
+        "vertical": true,
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "themeToggle",
+            "type": "button",
+            "role": null,
+            "text": "Theme: Light",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 262.76251220703125,
+              "y": 16,
+              "w": 102.4375,
+              "h": 31.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Balanced",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 154.15000915527344,
+              "w": 78.9625015258789,
+              "h": 40
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Rare 5%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 104.9625015258789,
+              "y": 154.15000915527344,
+              "w": 71.4749984741211,
+              "h": 40
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Screening",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 182.4375,
+              "y": 154.15000915527344,
+              "w": 83.61250305175781,
+              "h": 40
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_reset_data",
+            "type": "button",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 148.8000030517578,
+              "y": 281.75,
+              "w": 110,
+              "h": 26.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "file_custom_data",
+            "type": "file",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": ".csv,.json",
+            "box": {
+              "x": 31.80000114440918,
+              "y": 253.9499969482422,
+              "w": 1,
+              "h": 1
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_tpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 275.1499938964844,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_tpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "TPR exact percent",
+            "value": "85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 288.95001220703125,
+              "w": 72,
+              "h": 34
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_fpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.2",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 192.60000610351562,
+              "y": 275.1499938964844,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_fpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "FPR exact percent",
+            "value": "20",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 192.60000610351562,
+              "y": 288.95001220703125,
+              "w": 72,
+              "h": 34
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_bal",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.5",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 357.95001220703125,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_bal_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "Prevalence exact percent",
+            "value": "50",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 371.75,
+              "w": 72,
+              "h": 34
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "toggle_bidirectional",
+            "type": "checkbox",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "on",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 264.5874938964844,
+              "y": 434.75,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_cm",
+            "type": null,
+            "role": null,
+            "text": "MATRIX",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 115.9000015258789,
+              "y": 517.6500244140625,
+              "w": 117.8499984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_mosaic",
+            "type": null,
+            "role": null,
+            "text": "MOSAIC",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 233.75,
+              "y": 517.6500244140625,
+              "w": 117.8499984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_vals",
+            "type": null,
+            "role": null,
+            "text": "VALUES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 79.80000305175781,
+              "y": 894.2250366210938,
+              "w": 65.9000015258789,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_bar",
+            "type": null,
+            "role": null,
+            "text": "BARS",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 145.6999969482422,
+              "y": 894.2250366210938,
+              "w": 65.9124984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_formulas",
+            "type": null,
+            "role": null,
+            "text": "EQUATIONS",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 211.6125030517578,
+              "y": 894.2250366210938,
+              "w": 74.07500457763672,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_theory",
+            "type": null,
+            "role": null,
+            "text": "THEORY",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 285.6875,
+              "y": 894.2250366210938,
+              "w": 65.9000015258789,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 33.60000228881836,
+              "y": 1070.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 201.40000915527344,
+              "y": 1070.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 33.60000228881836,
+              "y": 1172.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 201.40000915527344,
+              "y": 1172.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 33.60000228881836,
+              "y": 1274.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 201.40000915527344,
+              "y": 1274.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 33.60000228881836,
+              "y": 1376.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Equation →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 201.40000915527344,
+              "y": 1376.5625,
+              "w": 140.1999969482422,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_curves",
+            "type": null,
+            "role": null,
+            "text": "CURVES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 127.9625015258789,
+              "y": 1433.7625732421875,
+              "w": 111.8125,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_topview",
+            "type": null,
+            "role": null,
+            "text": "TOP VIEW",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 239.77500915527344,
+              "y": 1433.7625732421875,
+              "w": 111.82500457763672,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 238.40000915527344,
+              "y": 1497.9625244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 262.3999938964844,
+              "y": 1497.9625244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 286.3999938964844,
+              "y": 1497.9625244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 310.3999938964844,
+              "y": 1497.9625244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 238.40000915527344,
+              "y": 1851.7125244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 262.3999938964844,
+              "y": 1851.7125244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 286.3999938964844,
+              "y": 1851.7125244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 310.3999938964844,
+              "y": 1851.7125244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          }
+        ],
+        "hiddenFiles": [
+          {
+            "id": "file_custom_data",
+            "accept": ".csv,.json"
+          }
+        ],
+        "graphics": {
+          "svgs": 17,
+          "canvases": 0,
+          "plotly": true,
+          "plotlyCharts": 6,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(245, 247, 251)",
+          "text": "rgb(22, 32, 51)"
+        },
+        "metrics": []
+      },
+      "result": "OPENED"
+    }
+  ]
+}

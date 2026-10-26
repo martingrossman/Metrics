@@ -1,0 +1,2424 @@
+[
+  {
+    "id": "F01",
+    "name": "Five scenario presets and domain terminology",
+    "status": "PASS",
+    "evidence": [
+      {
+        "p": "balanced",
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores",
+        "labels": [
+          "Your flu test is positive. What’s the chance you really have flu? That’s precision—and it also depends on how common flu is among the people tested.Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.",
+          "Sick portion"
+        ]
+      },
+      {
+        "p": "car",
+        "counts": {
+          "tp": 150,
+          "fp": 102,
+          "fn": 0,
+          "tn": 748
+        },
+        "markerCounts": {
+          "tp": 150,
+          "fp": 102,
+          "fn": 0,
+          "tn": 748
+        },
+        "pointCounts": {
+          "tp": 150,
+          "fp": 102,
+          "fn": 0,
+          "tn": 748
+        },
+        "metrics": {
+          "tpr": "100%",
+          "fpr": "12%",
+          "precision": "59.5%"
+        },
+        "values": [
+          60,
+          70,
+          15
+        ],
+        "preset": "car",
+        "summary": "150 TP ÷ (150 TP + 102 FP) = 59.5% Precision.",
+        "layout": "graph",
+        "mode": "scores",
+        "labels": [
+          "Your car’s sensor slams the emergency brakes! Is there really an obstacle ahead? In autonomous emergency braking (AEB), safety demands high sensitivity (TPR), but phantom braking (FP) risks rear-end crashes.Compare how obstacle frequency and sensor confidence trade off crash avoidance against phantom stops.",
+          "Obstacle portion"
+        ]
+      },
+      {
+        "p": "spam",
+        "counts": {
+          "tp": 344,
+          "fp": 12,
+          "fn": 56,
+          "tn": 588
+        },
+        "markerCounts": {
+          "tp": 344,
+          "fp": 12,
+          "fn": 56,
+          "tn": 588
+        },
+        "pointCounts": {
+          "tp": 344,
+          "fp": 12,
+          "fn": 56,
+          "tn": 588
+        },
+        "metrics": {
+          "tpr": "86%",
+          "fpr": "2%",
+          "precision": "96.6%"
+        },
+        "values": [
+          45,
+          55,
+          40
+        ],
+        "preset": "spam",
+        "summary": "344 TP ÷ (344 TP + 12 FP) = 96.6% Precision.",
+        "layout": "graph",
+        "mode": "scores",
+        "labels": [
+          "An email was sent to your Spam folder. Is it really junk—or an important email? That’s precision. In spam filtering, a false alarm (good email discarded) is far worse than junk reaching your Inbox.Notice how spam rate in incoming email shifts precision, even with a fixed classification model.",
+          "Spam portion"
+        ]
+      },
+      {
+        "p": "fraud",
+        "counts": {
+          "tp": 9.6,
+          "fp": 39.6,
+          "fn": 0.4,
+          "tn": 950.4
+        },
+        "markerCounts": {
+          "tp": 9.6,
+          "fp": 39.6,
+          "fn": 0.4,
+          "tn": 950.4
+        },
+        "pointCounts": {
+          "tp": 9.6,
+          "fp": 39.6,
+          "fn": 0.4,
+          "tn": 950.4
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "19.5%"
+        },
+        "values": [
+          50,
+          60,
+          1
+        ],
+        "preset": "fraud",
+        "summary": "9.6 TP ÷ (9.6 TP + 39.6 FP) = 19.5% Precision.",
+        "layout": "graph",
+        "mode": "scores",
+        "labels": [
+          "Your card was declined for suspicious activity. Is it a real thief or a false alarm? Credit card fraud is rare (~1–2%), so even an accurate detector produces false alarms due to the base-rate fallacy.See why high sensitivity causes frequent card blocks when fraud is rare.",
+          "Fraud portion"
+        ]
+      },
+      {
+        "p": "generic",
+        "counts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "markerCounts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "pointCounts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "96%"
+        },
+        "values": [
+          50,
+          60,
+          50
+        ],
+        "preset": "generic",
+        "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+        "layout": "graph",
+        "mode": "scores",
+        "labels": [
+          "The model predicts positive. How likely is the actual class to be positive? That’s precision—and it also depends on class prevalence (the positive portion).Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.",
+          "Positive portion"
+        ]
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F02",
+    "name": "Native range keyboard control and Custom state",
+    "status": "PASS",
+    "evidence": {
+      "s": {
+        "counts": {
+          "tp": 150,
+          "fp": 136,
+          "fn": 0,
+          "tn": 714
+        },
+        "markerCounts": {
+          "tp": 150,
+          "fp": 136,
+          "fn": 0,
+          "tn": 714
+        },
+        "pointCounts": {
+          "tp": 150,
+          "fp": 136,
+          "fn": 0,
+          "tn": 714
+        },
+        "metrics": {
+          "tpr": "100%",
+          "fpr": "16%",
+          "precision": "52.4%"
+        },
+        "values": [
+          61,
+          70,
+          15
+        ],
+        "preset": "custom",
+        "summary": "150 TP ÷ (150 TP + 136 FP) = 52.4% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      "custom": "Custom: Car braking"
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "F03",
+    "name": "10%/50% controls preserve separation and threshold",
+    "status": "PASS",
+    "evidence": {
+      "a": {
+        "counts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "markerCounts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "pointCounts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "96%"
+        },
+        "values": [
+          50,
+          60,
+          50
+        ],
+        "preset": "custom",
+        "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      "b": {
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      }
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "M01",
+    "name": "Independent weighted counts, rates, marker totals; 105 rendered states",
+    "status": "PASS",
+    "evidence": {
+      "renderedStates": 105,
+      "tolerance": "counts 1e-7; displayed rates 0.051 percentage points"
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "M02",
+    "name": "Threshold monotonicity with conventional positive-score cutoff",
+    "status": "PASS",
+    "evidence": [
+      {
+        "v": 0,
+        "tpr": 1,
+        "fpr": 1
+      },
+      {
+        "v": 5,
+        "tpr": 1,
+        "fpr": 1
+      },
+      {
+        "v": 10,
+        "tpr": 1,
+        "fpr": 0.98
+      },
+      {
+        "v": 15,
+        "tpr": 1,
+        "fpr": 0.9400000000000001
+      },
+      {
+        "v": 20,
+        "tpr": 1,
+        "fpr": 0.88
+      },
+      {
+        "v": 25,
+        "tpr": 1,
+        "fpr": 0.74
+      },
+      {
+        "v": 30,
+        "tpr": 1,
+        "fpr": 0.58
+      },
+      {
+        "v": 35,
+        "tpr": 1,
+        "fpr": 0.38
+      },
+      {
+        "v": 40,
+        "tpr": 1,
+        "fpr": 0.22
+      },
+      {
+        "v": 45,
+        "tpr": 0.9800000000000001,
+        "fpr": 0.12
+      },
+      {
+        "v": 50,
+        "tpr": 0.96,
+        "fpr": 0.04
+      },
+      {
+        "v": 55,
+        "tpr": 0.8800000000000001,
+        "fpr": 0.02
+      },
+      {
+        "v": 60,
+        "tpr": 0.78,
+        "fpr": 0
+      },
+      {
+        "v": 65,
+        "tpr": 0.62,
+        "fpr": 0
+      },
+      {
+        "v": 70,
+        "tpr": 0.42000000000000004,
+        "fpr": 0
+      },
+      {
+        "v": 75,
+        "tpr": 0.26,
+        "fpr": 0
+      },
+      {
+        "v": 80,
+        "tpr": 0.12,
+        "fpr": 0
+      },
+      {
+        "v": 85,
+        "tpr": 0.06,
+        "fpr": 0
+      },
+      {
+        "v": 90,
+        "tpr": 0.02,
+        "fpr": 0
+      },
+      {
+        "v": 95,
+        "tpr": 0,
+        "fpr": 0
+      },
+      {
+        "v": 100,
+        "tpr": 0,
+        "fpr": 0
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "M03",
+    "name": "Rare-event base-rate invariance and precision",
+    "status": "PASS",
+    "evidence": [
+      {
+        "counts": {
+          "tp": 9.6,
+          "fp": 39.6,
+          "fn": 0.4,
+          "tn": 950.4
+        },
+        "markerCounts": {
+          "tp": 9.6,
+          "fp": 39.6,
+          "fn": 0.4,
+          "tn": 950.4
+        },
+        "pointCounts": {
+          "tp": 9.6,
+          "fp": 39.6,
+          "fn": 0.4,
+          "tn": 950.4
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "19.5%"
+        },
+        "values": [
+          50,
+          60,
+          1
+        ],
+        "preset": "custom",
+        "summary": "9.6 TP ÷ (9.6 TP + 39.6 FP) = 19.5% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      {
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      {
+        "counts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "markerCounts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "pointCounts": {
+          "tp": 480,
+          "fp": 20,
+          "fn": 20,
+          "tn": 480
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "96%"
+        },
+        "values": [
+          50,
+          60,
+          50
+        ],
+        "preset": "custom",
+        "summary": "480 TP ÷ (480 TP + 20 FP) = 96% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      {
+        "counts": {
+          "tp": 950.4,
+          "fp": 0.4,
+          "fn": 39.6,
+          "tn": 9.6
+        },
+        "markerCounts": {
+          "tp": 950.4,
+          "fp": 0.4,
+          "fn": 39.6,
+          "tn": 9.6
+        },
+        "pointCounts": {
+          "tp": 950.4,
+          "fp": 0.4,
+          "fn": 39.6,
+          "tn": 9.6
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "100%"
+        },
+        "values": [
+          50,
+          60,
+          99
+        ],
+        "preset": "custom",
+        "summary": "950.4 TP ÷ (950.4 TP + 0.4 FP) = 100% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F04",
+    "name": "Three matrix layouts preserve model and highlights",
+    "status": "PASS",
+    "evidence": [
+      {
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "scikit",
+          "mode": "scores"
+        },
+        "h": {
+          "included": [
+            "group tp",
+            "group fp"
+          ],
+          "num": "2 / 3 / 3 / 4",
+          "den": "1 / 3 / 3 / 4"
+        }
+      },
+      {
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "standard",
+          "mode": "scores"
+        },
+        "h": {
+          "included": [
+            "group tp",
+            "group fp"
+          ],
+          "num": "1 / 2 / 2 / 3",
+          "den": "1 / 2 / 3 / 3"
+        }
+      },
+      {
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        },
+        "h": {
+          "included": [
+            "group tp",
+            "group fp"
+          ],
+          "num": "1 / 3 / 2 / 4",
+          "den": "1 / 3 / 3 / 4"
+        }
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F05",
+    "name": "Six graph modes preserve model and valid SVG coordinates",
+    "status": "PASS",
+    "evidence": [
+      {
+        "id": "tabGraphScores",
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      },
+      {
+        "id": "tabGraphSplit",
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "split"
+        }
+      },
+      {
+        "id": "tabGraphGauss",
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "gauss"
+        }
+      },
+      {
+        "id": "tabGraphRoc",
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "roc"
+        }
+      },
+      {
+        "id": "tabGraphPr",
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "pr"
+        }
+      },
+      {
+        "id": "tabGraphBayes",
+        "s": {
+          "counts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "markerCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "pointCounts": {
+            "tp": 96,
+            "fp": 36,
+            "fn": 4,
+            "tn": 864
+          },
+          "metrics": {
+            "tpr": "96%",
+            "fpr": "4%",
+            "precision": "72.7%"
+          },
+          "values": [
+            50,
+            60,
+            10
+          ],
+          "preset": "balanced",
+          "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+          "layout": "graph",
+          "mode": "bayes"
+        }
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F06",
+    "name": "Hover/focus/Enter pin/Escape clear for three metrics",
+    "status": "PASS",
+    "evidence": [
+      {
+        "id": "tpr",
+        "included": [
+          "fn",
+          "tp"
+        ]
+      },
+      {
+        "id": "fpr",
+        "included": [
+          "fp",
+          "tn"
+        ]
+      },
+      {
+        "id": "precision",
+        "included": [
+          "fp",
+          "tp"
+        ]
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F07",
+    "name": "Matching dot/tile hover links",
+    "status": "PASS",
+    "evidence": {
+      "id": "0",
+      "square": "tile focus",
+      "circle": "point focus"
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "F08",
+    "name": "Threshold mouse drag, pointer capture and clamp beyond graph",
+    "status": "PASS",
+    "evidence": {
+      "right": {
+        "counts": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 100,
+          "tn": 900
+        },
+        "markerCounts": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 100,
+          "tn": 900
+        },
+        "pointCounts": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 100,
+          "tn": 900
+        },
+        "metrics": {
+          "tpr": "0%",
+          "fpr": "0%",
+          "precision": "N/A"
+        },
+        "values": [
+          0,
+          60,
+          10
+        ],
+        "preset": "custom",
+        "summary": "No positive tests at this setting.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      "left": {
+        "counts": {
+          "tp": 100,
+          "fp": 900,
+          "fn": 0,
+          "tn": 0
+        },
+        "markerCounts": {
+          "tp": 100,
+          "fp": 900,
+          "fn": 0,
+          "tn": 0
+        },
+        "pointCounts": {
+          "tp": 100,
+          "fp": 900,
+          "fn": 0,
+          "tn": 0
+        },
+        "metrics": {
+          "tpr": "100%",
+          "fpr": "100%",
+          "precision": "10%"
+        },
+        "values": [
+          100,
+          60,
+          10
+        ],
+        "preset": "custom",
+        "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      }
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "F09",
+    "name": "Graph slider keyboard Home/End/Arrow/Page keys",
+    "status": "PASS",
+    "evidence": [
+      {
+        "key": "Home",
+        "s": {
+          "counts": {
+            "tp": 100,
+            "fp": 900,
+            "fn": 0,
+            "tn": 0
+          },
+          "markerCounts": {
+            "tp": 100,
+            "fp": 900,
+            "fn": 0,
+            "tn": 0
+          },
+          "pointCounts": {
+            "tp": 100,
+            "fp": 900,
+            "fn": 0,
+            "tn": 0
+          },
+          "metrics": {
+            "tpr": "100%",
+            "fpr": "100%",
+            "precision": "10%"
+          },
+          "values": [
+            100,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "100 TP ÷ (100 TP + 900 FP) = 10% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      },
+      {
+        "key": "End",
+        "s": {
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "markerCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "pointCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "metrics": {
+            "tpr": "0%",
+            "fpr": "0%",
+            "precision": "N/A"
+          },
+          "values": [
+            0,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "No positive tests at this setting.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      },
+      {
+        "key": "ArrowLeft",
+        "s": {
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "markerCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "pointCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "metrics": {
+            "tpr": "0%",
+            "fpr": "0%",
+            "precision": "N/A"
+          },
+          "values": [
+            1,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "No positive tests at this setting.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      },
+      {
+        "key": "ArrowRight",
+        "s": {
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "markerCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "pointCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "metrics": {
+            "tpr": "0%",
+            "fpr": "0%",
+            "precision": "N/A"
+          },
+          "values": [
+            0,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "No positive tests at this setting.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      },
+      {
+        "key": "PageDown",
+        "s": {
+          "counts": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 98,
+            "tn": 900
+          },
+          "markerCounts": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 98,
+            "tn": 900
+          },
+          "pointCounts": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 98,
+            "tn": 900
+          },
+          "metrics": {
+            "tpr": "2%",
+            "fpr": "0%",
+            "precision": "100%"
+          },
+          "values": [
+            10,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "2 TP ÷ (2 TP + 0 FP) = 100% Precision.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      },
+      {
+        "key": "PageUp",
+        "s": {
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "markerCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "pointCounts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 100,
+            "tn": 900
+          },
+          "metrics": {
+            "tpr": "0%",
+            "fpr": "0%",
+            "precision": "N/A"
+          },
+          "values": [
+            0,
+            60,
+            10
+          ],
+          "preset": "custom",
+          "summary": "No positive tests at this setting.",
+          "layout": "graph",
+          "mode": "scores"
+        }
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F10",
+    "name": "Group drag changes separation and prevalence on long vertical gesture",
+    "status": "PASS",
+    "evidence": {
+      "counts": {
+        "tp": 201.6,
+        "fp": 31.6,
+        "fn": 8.4,
+        "tn": 758.4
+      },
+      "markerCounts": {
+        "tp": 201.6,
+        "fp": 31.6,
+        "fn": 8.4,
+        "tn": 758.4
+      },
+      "pointCounts": {
+        "tp": 201.6,
+        "fp": 31.6,
+        "fn": 8.4,
+        "tn": 758.4
+      },
+      "metrics": {
+        "tpr": "96%",
+        "fpr": "4%",
+        "precision": "86.4%"
+      },
+      "values": [
+        50,
+        60,
+        21
+      ],
+      "preset": "custom",
+      "summary": "201.6 TP ÷ (201.6 TP + 31.6 FP) = 86.4% Precision.",
+      "layout": "graph",
+      "mode": "scores"
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "F11",
+    "name": "Repeated resets clear state and highlighted metric",
+    "status": "PASS",
+    "evidence": [
+      {
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      {
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      {
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      }
+    ],
+    "log": "qa_core"
+  },
+  {
+    "id": "F12",
+    "name": "Refresh behavior (observation; persistence not promised)",
+    "status": "PASS",
+    "evidence": {
+      "before": {
+        "counts": {
+          "tp": 100,
+          "fp": 612,
+          "fn": 0,
+          "tn": 288
+        },
+        "markerCounts": {
+          "tp": 100,
+          "fp": 612,
+          "fn": 0,
+          "tn": 288
+        },
+        "pointCounts": {
+          "tp": 100,
+          "fp": 612,
+          "fn": 0,
+          "tn": 288
+        },
+        "metrics": {
+          "tpr": "100%",
+          "fpr": "68%",
+          "precision": "14%"
+        },
+        "values": [
+          73,
+          60,
+          10
+        ],
+        "preset": "custom",
+        "summary": "100 TP ÷ (100 TP + 612 FP) = 14% Precision.",
+        "layout": "scikit",
+        "mode": "split"
+      },
+      "after": {
+        "counts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "markerCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "pointCounts": {
+          "tp": 96,
+          "fp": 36,
+          "fn": 4,
+          "tn": 864
+        },
+        "metrics": {
+          "tpr": "96%",
+          "fpr": "4%",
+          "precision": "72.7%"
+        },
+        "values": [
+          50,
+          60,
+          10
+        ],
+        "preset": "balanced",
+        "summary": "96 TP ÷ (96 TP + 36 FP) = 72.7% Precision.",
+        "layout": "graph",
+        "mode": "scores"
+      },
+      "note": "Returns to defaults; no documented persistence feature."
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "F13",
+    "name": "Dashboard panel drag/resize feature discovery",
+    "status": "NOT IMPLEMENTED",
+    "evidence": {
+      "status": "NOT IMPLEMENTED",
+      "before": {
+        "x": 616.875,
+        "y": 315.70001220703125,
+        "width": 791.112548828125,
+        "height": 391.29998779296875
+      },
+      "after": {
+        "x": 616.875,
+        "y": 315.70001220703125,
+        "width": 791.112548828125,
+        "height": 391.29998779296875
+      },
+      "note": "Data markers are not draggable dashboard widgets; resizing/reordering absent."
+    },
+    "log": "qa_core"
+  },
+  {
+    "id": "M04",
+    "name": "Reference calculator independently validates eight metrics on ten count sets",
+    "status": "PASS",
+    "evidence": {
+      "countSets": 10,
+      "metrics": 8
+    },
+    "log": "qa_math"
+  },
+  {
+    "id": "F14",
+    "name": "Reference calculator preset selection, metric selection, invalid inputs",
+    "status": "PASS",
+    "evidence": [
+      {
+        "p": "balanced",
+        "total": "100",
+        "metrics": "Accuracy\n80.0%\nF1\n76.2%\nPrecision\n80.0%\nRecall\n72.7%\nSpecificity\n85.7%\nBalanced accuracy\n79.2%\nMCC\n0.592\nFPR\n14.3%"
+      },
+      {
+        "p": "rare",
+        "total": "1,000",
+        "metrics": "Accuracy\n97.8%\nF1\n42.1%\nPrecision\n28.6%\nRecall\n80.0%\nSpecificity\n98.0%\nBalanced accuracy\n89.0%\nMCC\n0.470\nFPR\n2.0%"
+      },
+      {
+        "p": "screening",
+        "total": "1,000",
+        "metrics": "Accuracy\n90.8%\nF1\n68.1%\nPrecision\n52.1%\nRecall\n98.0%\nSpecificity\n90.0%\nBalanced accuracy\n94.0%\nMCC\n0.676\nFPR\n10.0%"
+      },
+      {
+        "p": "precise",
+        "total": "1,000",
+        "metrics": "Accuracy\n94.9%\nF1\n66.2%\nPrecision\n98.0%\nRecall\n50.0%\nSpecificity\n99.9%\nBalanced accuracy\n74.9%\nMCC\n0.680\nFPR\n0.1%"
+      },
+      {
+        "p": "automotive",
+        "total": "1,000",
+        "metrics": "Accuracy\n98.8%\nF1\n94.2%\nPrecision\n90.7%\nRecall\n98.0%\nSpecificity\n98.9%\nBalanced accuracy\n98.4%\nMCC\n0.936\nFPR\n1.1%"
+      },
+      {
+        "p": "empty",
+        "total": "0",
+        "metrics": "Accuracy\nN/A\nF1\nN/A\nPrecision\nN/A\nRecall\nN/A\nSpecificity\nN/A\nBalanced accuracy\nN/A\nMCC\nN/A\nFPR\nN/A"
+      },
+      {
+        "v": "-1",
+        "error": "Enter zero or a positive whole number in each cell."
+      },
+      {
+        "v": "1.5",
+        "error": "Enter zero or a positive whole number in each cell."
+      },
+      {
+        "v": "",
+        "error": "Enter zero or a positive whole number in each cell."
+      },
+      {
+        "v": "9007199254740992",
+        "error": "Enter zero or a positive whole number in each cell."
+      }
+    ],
+    "log": "qa_math"
+  },
+  {
+    "id": "E01",
+    "name": "All four learning tabs, terminology toggle, and live content",
+    "status": "PASS",
+    "evidence": {
+      "tabs": [
+        "basics",
+        "formulas",
+        "bayes",
+        "tradeoffs"
+      ],
+      "toggle": "Switch to generic ML terminology"
+    },
+    "log": "qa_math"
+  },
+  {
+    "id": "M05",
+    "name": "Learn formula values (corrected test locator) for eight metrics",
+    "status": "PASS",
+    "evidence": {
+      "counts": {
+        "tp": 355.2,
+        "fp": 25.2,
+        "fn": 14.8,
+        "tn": 604.8
+      },
+      "expected": {
+        "tpr": 0.96,
+        "fpr": 0.04,
+        "precision": 0.9337539432176657,
+        "tnr": 0.96,
+        "npv": 0.9761136216914139,
+        "fnr": 0.04,
+        "accuracy": 0.96,
+        "f1": 0.9466950959488273
+      },
+      "actual": {
+        "tpr": "355.2 ÷ (355.2 + 14.8) = 96%",
+        "fpr": "25.2 ÷ (25.2 + 604.8) = 4%",
+        "precision": "355.2 ÷ (355.2 + 25.2) = 93.4%",
+        "tnr": "604.8 ÷ (604.8 + 25.2) = 96%",
+        "npv": "604.8 ÷ (604.8 + 14.8) = 97.6%",
+        "fnr": "14.8 ÷ (355.2 + 14.8) = 4%",
+        "accuracy": "96%",
+        "f1": "0.947"
+      },
+      "note": "Initial attempt used nonexistent #calculation-accuracy; harness corrected to #liveAccuracyTop. Initial timeout is not an application defect."
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "E02",
+    "name": "Formula numerator/denominator buttons highlight correct outcomes",
+    "status": "PASS",
+    "evidence": [
+      {
+        "name": "tpr",
+        "part": "numerator",
+        "included": [
+          "tp"
+        ]
+      },
+      {
+        "name": "tpr",
+        "part": "denominator",
+        "included": [
+          "fn",
+          "tp"
+        ]
+      },
+      {
+        "name": "fpr",
+        "part": "numerator",
+        "included": [
+          "fp"
+        ]
+      },
+      {
+        "name": "fpr",
+        "part": "denominator",
+        "included": [
+          "fp",
+          "tn"
+        ]
+      },
+      {
+        "name": "precision",
+        "part": "numerator",
+        "included": [
+          "tp"
+        ]
+      },
+      {
+        "name": "precision",
+        "part": "denominator",
+        "included": [
+          "fp",
+          "tp"
+        ]
+      },
+      {
+        "name": "tnr",
+        "part": "numerator",
+        "included": [
+          "tn"
+        ]
+      },
+      {
+        "name": "tnr",
+        "part": "denominator",
+        "included": [
+          "fp",
+          "tn"
+        ]
+      },
+      {
+        "name": "npv",
+        "part": "numerator",
+        "included": [
+          "tn"
+        ]
+      },
+      {
+        "name": "npv",
+        "part": "denominator",
+        "included": [
+          "fn",
+          "tn"
+        ]
+      },
+      {
+        "name": "fnr",
+        "part": "numerator",
+        "included": [
+          "fn"
+        ]
+      },
+      {
+        "name": "fnr",
+        "part": "denominator",
+        "included": [
+          "fn",
+          "tp"
+        ]
+      }
+    ],
+    "log": "qa_math"
+  },
+  {
+    "id": "E03",
+    "name": "Accuracy-paradox demo and reset cutoff",
+    "status": "PASS",
+    "evidence": {
+      "tpr": "0%",
+      "accuracy": "90%",
+      "prevalence": "10"
+    },
+    "log": "qa_math"
+  },
+  {
+    "id": "M06",
+    "name": "F1 zero-detection edge case agrees with direct count formula",
+    "status": "FAIL",
+    "error": "[{\"repeat\":0,\"tp\":\"0\",\"fp\":\"0\",\"fn\":\"100\",\"actual\":\"N/A\",\"expected\":0},{\"repeat\":1,\"tp\":\"0\",\"fp\":\"0\",\"fn\":\"100\",\"actual\":\"N/A\",\"expected\":0}]",
+    "log": "qa_math"
+  },
+  {
+    "id": "E04",
+    "name": "Bayes posterior and comparison buttons independently match direct counts",
+    "status": "PASS",
+    "evidence": [
+      {
+        "p": 1,
+        "c": [
+          9.6,
+          39.6,
+          0.4,
+          950.4
+        ],
+        "expected": 0.19512195121951217,
+        "value": "0.19512195121951217",
+        "edge": "Positive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×."
+      },
+      {
+        "p": 10,
+        "c": [
+          96,
+          36,
+          4,
+          864
+        ],
+        "expected": 0.7272727272727273,
+        "value": "0.7272727272727273",
+        "edge": "Positive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×."
+      },
+      {
+        "p": 50,
+        "c": [
+          480,
+          20,
+          20,
+          480
+        ],
+        "expected": 0.96,
+        "value": "0.96",
+        "edge": "Positive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×."
+      },
+      {
+        "p": 0,
+        "c": [
+          0,
+          40,
+          0,
+          960
+        ],
+        "expected": 0,
+        "value": "0",
+        "edge": "One actual group is empty, so its rate is N/A."
+      },
+      {
+        "p": 100,
+        "c": [
+          960,
+          0,
+          40,
+          0
+        ],
+        "expected": 1,
+        "value": "1",
+        "edge": "One actual group is empty, so its rate is N/A."
+      }
+    ],
+    "log": "qa_math"
+  },
+  {
+    "id": "E05",
+    "name": "Cost tradeoff presets and synchronized sliders",
+    "status": "PASS",
+    "evidence": [
+      {
+        "p": "screening",
+        "threshold": 80,
+        "tpr": "100%",
+        "fpr": "88%"
+      },
+      {
+        "p": "balanced",
+        "threshold": 50,
+        "tpr": "96%",
+        "fpr": "4%"
+      },
+      {
+        "p": "conservative",
+        "threshold": 20,
+        "tpr": "12%",
+        "fpr": "0%"
+      }
+    ],
+    "log": "qa_math"
+  },
+  {
+    "id": "E06",
+    "name": "Accuracy-paradox narrative uses consistent prevalence and percentage",
+    "status": "FAIL",
+    "error": "[\"⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \\\"Negative\\\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\\n\",\"⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \\\"Negative\\\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\\n\"]",
+    "log": "qa_math"
+  },
+  {
+    "id": "M07",
+    "name": "ROC-AUC and PR-AUC versus independent continuous Gaussian integration",
+    "status": "PASS",
+    "evidence": [
+      {
+        "sep": 0,
+        "p": 1,
+        "actualRoc": 0.5,
+        "expectedRoc": 0.5000000000000001,
+        "actualPr": 0.01,
+        "expectedPr": 0.009999999999999972
+      },
+      {
+        "sep": 0,
+        "p": 10,
+        "actualRoc": 0.5,
+        "expectedRoc": 0.5000000000000001,
+        "actualPr": 0.1,
+        "expectedPr": 0.09999999999999987
+      },
+      {
+        "sep": 0,
+        "p": 50,
+        "actualRoc": 0.5,
+        "expectedRoc": 0.5000000000000001,
+        "actualPr": 0.5,
+        "expectedPr": 0.5000000000000001
+      },
+      {
+        "sep": 30,
+        "p": 1,
+        "actualRoc": 0.831,
+        "expectedRoc": 0.8307129961366723,
+        "actualPr": 0.087,
+        "expectedPr": 0.08634965552024164
+      },
+      {
+        "sep": 30,
+        "p": 10,
+        "actualRoc": 0.831,
+        "expectedRoc": 0.8307129961366723,
+        "actualPr": 0.421,
+        "expectedPr": 0.4208766415372372
+      },
+      {
+        "sep": 30,
+        "p": 50,
+        "actualRoc": 0.831,
+        "expectedRoc": 0.8307129961366723,
+        "actualPr": 0.828,
+        "expectedPr": 0.8276684122641402
+      },
+      {
+        "sep": 60,
+        "p": 1,
+        "actualRoc": 0.992,
+        "expectedRoc": 0.9918358778036982,
+        "actualPr": 0.803,
+        "expectedPr": 0.8031007696736987
+      },
+      {
+        "sep": 60,
+        "p": 10,
+        "actualRoc": 0.992,
+        "expectedRoc": 0.9918358778036982,
+        "actualPr": 0.951,
+        "expectedPr": 0.9511232072477563
+      },
+      {
+        "sep": 60,
+        "p": 50,
+        "actualRoc": 0.992,
+        "expectedRoc": 0.9918358778036982,
+        "actualPr": 0.992,
+        "expectedPr": 0.9920174304708033
+      },
+      {
+        "sep": 100,
+        "p": 1,
+        "actualRoc": 1,
+        "expectedRoc": 0.9999999993232533,
+        "actualPr": 1,
+        "expectedPr": 0.9999999345028567
+      },
+      {
+        "sep": 100,
+        "p": 10,
+        "actualRoc": 1,
+        "expectedRoc": 0.9999999993232533,
+        "actualPr": 1,
+        "expectedPr": 0.9999999939257376
+      },
+      {
+        "sep": 100,
+        "p": 50,
+        "actualRoc": 1,
+        "expectedRoc": 0.9999999993232533,
+        "actualPr": 1,
+        "expectedPr": 0.9999999993233692
+      }
+    ],
+    "log": "qa_math"
+  },
+  {
+    "id": "M08",
+    "name": "ROC/PR/Bayes operating points agree with the same confusion counts",
+    "status": "PASS",
+    "evidence": [
+      {
+        "svg": "rocPlot",
+        "point": {
+          "x": 79.6,
+          "y": 67.40000000000003
+        },
+        "expected": {
+          "x": 0.04,
+          "y": 0.96
+        }
+      },
+      {
+        "svg": "prPlot",
+        "point": {
+          "x": 392.4,
+          "y": 75.53627760252363
+        },
+        "expected": {
+          "x": 0.96,
+          "y": 0.9337539432176657
+        }
+      },
+      {
+        "svg": "bayesPlot",
+        "point": {
+          "x": 200.8,
+          "y": 75.53627760252363
+        },
+        "expected": {
+          "x": 0.37,
+          "y": 0.9337539432176657
+        }
+      }
+    ],
+    "log": "qa_math"
+  },
+  {
+    "id": "E07",
+    "name": "Scenario-specific accessible summary labels",
+    "status": "FAIL",
+    "error": "[{\"repeat\":0,\"p\":\"car\",\"label\":\"150 people with flu and 102 false alarms\"},{\"repeat\":0,\"p\":\"spam\",\"label\":\"344 people with flu and 12 false alarms\"},{\"repeat\":0,\"p\":\"fraud\",\"label\":\"9.6 people with flu and 39.6 false alarms\"},{\"repeat\":1,\"p\":\"car\",\"label\":\"150 people with flu and 102 false alarms\"},{\"repeat\":1,\"p\":\"spam\",\"label\":\"344 people with flu and 12 false alarms\"},{\"repeat\":1,\"p\":\"fraud\",\"label\":\"9.6 people with flu and 39.6 false alarms\"}]",
+    "log": "qa_math"
+  },
+  {
+    "id": "F15",
+    "name": "Cheatsheet search, category, collapse/expand, no results and reset",
+    "status": "PASS",
+    "evidence": {
+      "all": "32 of 32 metrics",
+      "search": "12 of 32 metrics",
+      "category": "5 of 32 metrics"
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "F16",
+    "name": "Reference filters and disclosures, recheck with initial categories collapsed",
+    "status": "PASS",
+    "evidence": {
+      "all": "35 of 35 metrics",
+      "cats": [
+        {
+          "c": "core",
+          "result": "8 of 35 metrics"
+        },
+        {
+          "c": "imb",
+          "result": "7 of 35 metrics"
+        },
+        {
+          "c": "err",
+          "result": "8 of 35 metrics"
+        },
+        {
+          "c": "rank",
+          "result": "5 of 35 metrics"
+        },
+        {
+          "c": "ops",
+          "result": "7 of 35 metrics"
+        }
+      ],
+      "search": "1 of 35 metrics",
+      "hash": "#metric-8",
+      "note": "Initial generic toggle assertion assumed categories initially open. Rechecked using explicit action names; application behavior passes. After filtering, persisted open details can leave the toggle already in Collapse state."
+    },
+    "log": "qa_rechecks"
+  },
+  {
+    "id": "F17",
+    "name": "Industry examples and linked calculator scenarios",
+    "status": "PASS",
+    "evidence": {
+      "controls": [
+        {
+          "tag": "A",
+          "value": "medical",
+          "text": "Medical example"
+        },
+        {
+          "tag": "A",
+          "value": "aeb",
+          "text": "AEB example"
+        },
+        {
+          "tag": "A",
+          "value": "blocking",
+          "text": "Automatic-blocking example"
+        },
+        {
+          "tag": "A",
+          "value": "factory",
+          "text": "Factory example"
+        },
+        {
+          "tag": "A",
+          "value": "fraud",
+          "text": "Review-queue example"
+        },
+        {
+          "tag": "A",
+          "value": "vision",
+          "text": "Object-detection example"
+        },
+        {
+          "tag": "A",
+          "value": "probability",
+          "text": "Risk-score example"
+        },
+        {
+          "tag": "A",
+          "value": "aeb",
+          "text": "Driving-hours example"
+        },
+        {
+          "tag": "A",
+          "value": "safety",
+          "text": "Rare-hazard example"
+        },
+        {
+          "tag": "A",
+          "value": "factory",
+          "text": "See which metric to choose, with a worked example →"
+        }
+      ],
+      "rows": [
+        {
+          "value": "medical",
+          "hash": "#scenario-medical",
+          "text": ""
+        },
+        {
+          "value": "aeb",
+          "hash": "#scenario-aeb",
+          "text": ""
+        },
+        {
+          "value": "blocking",
+          "hash": "#scenario-blocking",
+          "text": ""
+        },
+        {
+          "value": "factory",
+          "hash": "#scenario-factory",
+          "text": ""
+        },
+        {
+          "value": "fraud",
+          "hash": "#scenario-fraud",
+          "text": ""
+        },
+        {
+          "value": "vision",
+          "hash": "#scenario-vision",
+          "text": ""
+        },
+        {
+          "value": "probability",
+          "hash": "#scenario-probability",
+          "text": ""
+        },
+        {
+          "value": "safety",
+          "hash": "#scenario-safety",
+          "text": ""
+        }
+      ]
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "F18",
+    "name": "Simulator, cheatsheet, reference and learning navigation",
+    "status": "PASS",
+    "evidence": {
+      "paths": [
+        "http://localhost:8080/cheatsheet.html",
+        "http://localhost:8080/reference.html",
+        "http://localhost:8080/index.html",
+        "http://localhost:8080/index.html"
+      ],
+      "note": "Learn is intentionally unlinked; opened directly as documented."
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "F19",
+    "name": "Reference print control invokes print and restores disclosure state",
+    "status": "PASS",
+    "evidence": {
+      "before": 1,
+      "during": 48,
+      "after": 1,
+      "note": "Print invocation and before/after hooks exercised; OS print dialog and physical/PDF output not tested."
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "A01",
+    "name": "Accessible names for simulator range controls",
+    "status": "FAIL",
+    "error": "[{\"id\":\"threshold\",\"ariaLabel\":null,\"labelledby\":null,\"labels\":[],\"title\":\"Move right to detect weaker flu signals: more flu detections and more false alarms.\"},{\"id\":\"separation\",\"ariaLabel\":null,\"labelledby\":null,\"labels\":[],\"title\":\"\"},{\"id\":\"prevalence\",\"ariaLabel\":null,\"labelledby\":null,\"labels\":[\"Sick portion\"],\"title\":\"\"}]",
+    "log": "qa_pages"
+  },
+  {
+    "id": "A02",
+    "name": "Keyboard graph tabs and visible focus behavior",
+    "status": "PASS",
+    "evidence": {
+      "before": "tabGraphScores",
+      "after": "tabGraphScores",
+      "active": "tabGraphScores",
+      "focus": {
+        "id": "tabGraphSplit",
+        "outline": "rgb(145, 183, 255) solid 2.4px",
+        "boxShadow": "none"
+      },
+      "note": "Tab/Enter works; ArrowRight does not select or move to the next dashboard tab (ARIA tab-pattern gap)."
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "A03",
+    "name": "ROC decision pills can be reached and activated by keyboard",
+    "status": "FAIL",
+    "error": "{\"pills\":[{\"value\":\"80\",\"role\":null,\"tabindex\":null,\"text\":\"🚨 Screening (80%)\"},{\"value\":\"50\",\"role\":null,\"tabindex\":null,\"text\":\"⚖️ Balanced (50%)\"}],\"visited\":[{\"id\":\"tabGraphPr\",\"cost\":null},{\"id\":\"tabGraphBayes\",\"cost\":null},{\"id\":\"matrixLayoutBtn\",\"cost\":null},{\"id\":\"\",\"cost\":null},{\"id\":\"\",\"cost\":null},{\"id\":\"presetSelect\",\"cost\":null},{\"id\":\"refTopBtn\",\"cost\":null},{\"id\":\"reset\",\"cost\":null},{\"id\":\"tprCard\",\"cost\":null},{\"id\":\"fprCard\",\"cost\":null},{\"id\":\"precisionCard\",\"cost\":null},{\"id\":\"threshold\",\"cost\":null},{\"id\":\"separation\",\"cost\":null},{\"id\":\"balance10\",\"cost\":null},{\"id\":\"balance50\",\"cost\":null},{\"id\":\"prevalence\",\"cost\":null},{\"id\":\"tabGraphScores\",\"cost\":null},{\"id\":\"tabGraphSplit\",\"cost\":null},{\"id\":\"tabGraphGauss\",\"cost\":null},{\"id\":\"tabGraphRoc\",\"cost\":null},{\"id\":\"tabGraphPr\",\"cost\":null},{\"id\":\"tabGraphBayes\",\"cost\":null},{\"id\":\"matrixLayoutBtn\",\"cost\":null},{\"id\":\"\",\"cost\":null},{\"id\":\"\",\"cost\":null}]}",
+    "log": "qa_pages"
+  },
+  {
+    "id": "G01",
+    "name": "ROC cost pills and conventional cutoff label agree",
+    "status": "FAIL",
+    "error": "[{\"repeat\":0,\"slider\":\"80\",\"shown\":\"Cutoff: 80%\",\"actualScoreCutoff\":null},{\"repeat\":1,\"slider\":\"80\",\"shown\":\"Cutoff: 80%\",\"actualScoreCutoff\":null}]",
+    "log": "qa_pages"
+  },
+  {
+    "id": "R01",
+    "name": "Rapid slider/preset/view changes and redraw robustness",
+    "status": "PASS",
+    "evidence": {
+      "updates": 150,
+      "presetViewSwitches": 20,
+      "invalidSvgAttributes": 0,
+      "totalMs": 2564.2999999970198
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "R02",
+    "name": "Resize preserves model; switching view during captured drag is safe",
+    "status": "PASS",
+    "evidence": {
+      "before": "100 TP ÷ (100 TP + 612 FP) = 14% Precision.",
+      "after": "100 TP ÷ (100 TP + 612 FP) = 14% Precision."
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "P01",
+    "name": "Initial load timing on five warm localhost navigations",
+    "status": "PASS",
+    "evidence": [
+      {
+        "domContentLoaded": 117,
+        "load": 118.79999999701977,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 71.09999999403954,
+        "load": 80,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 66,
+        "load": 76.90000000596046,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 81.59999999403954,
+        "load": 97.69999998807907,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 102.70000000298023,
+        "load": 119.40000000596046,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": [
+          {
+            "name": "first-paint",
+            "time": 156
+          },
+          {
+            "name": "first-contentful-paint",
+            "time": 156
+          }
+        ]
+      }
+    ],
+    "log": "qa_pages"
+  },
+  {
+    "id": "T01",
+    "name": "Real Chromium touch events: threshold drag, tap-to-pin and vertical 4-Up swipe",
+    "status": "PASS",
+    "evidence": {
+      "thresholdAfterDrag": "34",
+      "pinned": "true",
+      "scrollBefore": 0,
+      "scrollAfter": 138.39999389648438,
+      "errors": []
+    },
+    "log": "qa_pages"
+  },
+  {
+    "id": "A04",
+    "name": "Missing separation name and mouse-only cost pills reproduce twice",
+    "status": "FAIL",
+    "error": "[{\"repeat\":0,\"name\":null,\"labels\":0,\"pills\":[{\"tabindex\":null,\"role\":null},{\"tabindex\":null,\"role\":null}]},{\"repeat\":1,\"name\":null,\"labels\":0,\"pills\":[{\"tabindex\":null,\"role\":null},{\"tabindex\":null,\"role\":null}]}]",
+    "log": "qa_rechecks"
+  },
+  {
+    "id": "E08",
+    "name": "PR-AUC naming distinguishes trapezoidal integral from Average Precision",
+    "status": "FAIL",
+    "error": "[\"0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\\\"Sick portion\\\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!\",\"0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\\\"Sick portion\\\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!\"]",
+    "log": "qa_rechecks"
+  },
+  {
+    "id": "G02",
+    "name": "ROC cost preset active state in Generic ML",
+    "status": "FAIL",
+    "error": "[{\"repeat\":0,\"threshold\":\"20\",\"state\":[{\"value\":\"80\",\"fill\":\"#f8fafc\"},{\"value\":\"50\",\"fill\":\"#f8fafc\"}]},{\"repeat\":1,\"threshold\":\"20\",\"state\":[{\"value\":\"80\",\"fill\":\"#f8fafc\"},{\"value\":\"50\",\"fill\":\"#f8fafc\"}]}]",
+    "log": "qa_rechecks"
+  },
+  {
+    "id": "V01",
+    "name": "Default primary panels exceed short-phone/tablet viewport, repeated loads",
+    "status": "FAIL",
+    "error": "[{\"repeat\":0,\"viewport\":[320,568],\"document\":[305,770],\"matrixBottom\":670.5249938964844,\"scoreBottom\":455.02501678466797},{\"repeat\":0,\"viewport\":[375,667],\"document\":[360,722],\"matrixBottom\":638.3125,\"scoreBottom\":448.81251525878906},{\"repeat\":0,\"viewport\":[768,1024],\"document\":[753,1203],\"matrixBottom\":1088.1000061035156,\"scoreBottom\":698.8000183105469},{\"repeat\":0,\"viewport\":[1024,768],\"document\":[1009,1138],\"matrixBottom\":1041.4000549316406,\"scoreBottom\":652.1000061035156},{\"repeat\":1,\"viewport\":[320,568],\"document\":[305,770],\"matrixBottom\":670.5249938964844,\"scoreBottom\":455.02501678466797},{\"repeat\":1,\"viewport\":[375,667],\"document\":[360,722],\"matrixBottom\":638.3125,\"scoreBottom\":448.81251525878906},{\"repeat\":1,\"viewport\":[768,1024],\"document\":[753,1203],\"matrixBottom\":1088.1000061035156,\"scoreBottom\":698.8000183105469},{\"repeat\":1,\"viewport\":[1024,768],\"document\":[1009,1138],\"matrixBottom\":1041.4000549316406,\"scoreBottom\":652.1000061035156}]",
+    "log": "qa_rechecks"
+  },
+  {
+    "id": "V02",
+    "name": "Mobile touch targets meet project 44x44 minimum",
+    "status": "FAIL",
+    "error": "[{\"id\":\"presetSelect\",\"width\":92,\"height\":18.399999618530273,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"reset\",\"width\":20.399999618530273,\"height\":28,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"threshold\",\"width\":141.8000030517578,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"separation\",\"width\":193.3874969482422,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"balance10\",\"width\":35.79999923706055,\"height\":23.350000381469727,\"font\":\"11px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"balance50\",\"width\":35.79999923706055,\"height\":23.350000381469727,\"font\":\"11px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"prevalence\",\"width\":141.8000030517578,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphScores\",\"width\":43.22500228881836,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphSplit\",\"width\":32.837501525878906,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphGauss\",\"width\":36.66250228881836,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphRoc\",\"width\":29.899999618530273,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphPr\",\"width\":22.075000762939453,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphBayes\",\"width\":35.900001525878906,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"}]",
+    "log": "qa_rechecks"
+  },
+  {
+    "id": "M09",
+    "name": "Reference worked examples independently recomputed from displayed counts",
+    "status": "PASS",
+    "evidence": {
+      "examples": 33,
+      "note": "ROC-AUC and PR-AUC perfect/random ranking examples reviewed conceptually; continuous values separately independently integrated."
+    },
+    "log": "qa_final"
+  },
+  {
+    "id": "V03",
+    "name": "Learning, reference and cheatsheet fit horizontal width on mobile and desktop",
+    "status": "PASS",
+    "evidence": {
+      "pageTabViewportChecks": 24,
+      "note": "Vertical scrolling is intentional for long educational/reference pages."
+    },
+    "log": "qa_final"
+  },
+  {
+    "id": "P02",
+    "name": "Sustained pointer drag frame and handler-to-next-frame timing",
+    "status": "PASS",
+    "evidence": {
+      "wallMs": 2208,
+      "moves": 90,
+      "frameSamples": 134,
+      "delaySamples": 91
+    },
+    "log": "qa_final"
+  },
+  {
+    "id": "B01",
+    "name": "No console errors, uncaught exceptions, failed requests or malformed SVG in campaign",
+    "status": "PASS",
+    "evidence": [],
+    "log": "qa_final"
+  },
+  {
+    "id": "M10",
+    "name": "Independent normal-CDF/quantile expected counts on 105 executed browser states",
+    "status": "PASS",
+    "evidence": "independent-distribution-results.json"
+  },
+  {
+    "id": "R03",
+    "name": "All six graph views at prevalence 0/100 and sensitivity 0/50/100",
+    "status": "PASS",
+    "evidence": "36 executed combinations; no malformed SVG, visible NaN/Infinity or uncaught errors. TPR/FPR/precision show N/A for undefined ratios. Recorded in boundary-results.json."
+  }
+]

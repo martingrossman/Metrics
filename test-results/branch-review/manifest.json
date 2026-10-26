@@ -1,0 +1,1138 @@
+{
+  "currentBranch": "featursimple_bayes_story_overall_visual_GemFixes",
+  "currentHead": "4ad5b18ff465358ac25b538f50dc2e068f7cb644",
+  "refCount": 32,
+  "branchNames": [
+    "Branch_1e973a51",
+    "custom_data",
+    "feature_mosaic_improvments",
+    "feature_simple_bayes_story",
+    "feature_simple_bayes_story_overall_visual",
+    "feature_simple_hover_metrics",
+    "simple",
+    "featursimple_bayes_story_overall_visual_GemFixes",
+    "master",
+    "mobile_view_rework",
+    "refactor_big",
+    "simple_cld",
+    "custom_data_2000",
+    "feature_simple_dragging_thr",
+    "main",
+    "mosaic_bounds",
+    "old_Release",
+    "old_Release_Dark_Claude",
+    "old_claude_improvments",
+    "old_claude_theme",
+    "old_dev",
+    "old_from_scratch",
+    "old_movable"
+  ],
+  "versions": [
+    {
+      "sha": "1e973a517d24b66e04d895c5f21427ba813c01ce",
+      "id": "1e973a5",
+      "refs": [
+        "refs/heads/Branch_1e973a51"
+      ],
+      "names": [
+        "Branch_1e973a51"
+      ],
+      "date": "2026-10-24T18:27:02+02:00",
+      "subject": "Add configurable group dragging for separation and proportions",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\1e973a5",
+      "htmlFiles": [
+        "cheatsheet.html",
+        "index.html",
+        "learn.html",
+        "reference.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "AGENT.md",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "New Text Document.txt",
+        "README.md",
+        "Tunnels.txt",
+        "cheatsheet.html",
+        "index.html",
+        "learn.html",
+        "package-lock.json",
+        "package.json",
+        "readme.txt",
+        "reference.html",
+        "scratch/fix_header_grid_row.cjs",
+        "scratch/replace_with_layout_btn.cjs",
+        "scratch/take_screenshots.cjs",
+        "scratch/test_mobile_fit.cjs",
+        "scratch/update_metric_mobile.cjs",
+        "scripts/check.cjs",
+        "scripts/drag.test.cjs",
+        "scripts/fourup.test.cjs",
+        "scripts/learning.test.cjs",
+        "scripts/metrics.test.cjs",
+        "scripts/p1.test.cjs",
+        "scripts/reference.test.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs",
+        "teaching_review.md"
+      ],
+      "exportedFiles": [
+        "cheatsheet.html",
+        "index.html",
+        "learn.html",
+        "package-lock.json",
+        "package.json",
+        "reference.html"
+      ],
+      "indexSha256": "3a5e14edf77eaf30a0e81a3f2b5239628be14938c9392983a461fc068f3c7b68",
+      "indexBytes": 166860,
+      "sourceTitle": "CMatrixLab — Simple",
+      "externalAssets": [],
+      "recentCommits": [
+        "1e973a5 Add configurable group dragging for separation and proportions",
+        "25e242b draging",
+        "a4b9896 Explain scenario metrics inline and simplify reference starting layout",
+        "88fa1f1 Stack mobile metric captions below values and default to graph-matched matrix"
+      ],
+      "port": 8201,
+      "url": "http://localhost:8201/"
+    },
+    {
+      "sha": "62826067267d98d3b6b7ebfb95b4ce4f2574f59c",
+      "id": "6282606",
+      "refs": [
+        "refs/heads/custom_data"
+      ],
+      "names": [
+        "custom_data"
+      ],
+      "date": "2026-04-06T19:44:59+02:00",
+      "subject": "custom data comsetics",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\6282606",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "indexSha256": "cf80c7f81c6842885fe4165382c079b531921c6c6ade561077c96e5ca6fccf82",
+      "indexBytes": 180353,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "6282606 custom data comsetics",
+        "e87536c topview circle 2.5 to 4",
+        "5a1ac8f working",
+        "113988d fixed reload"
+      ],
+      "port": 8202,
+      "url": "http://localhost:8202/"
+    },
+    {
+      "sha": "40918b193385ba1f687265158ed20b4a83d6d6e5",
+      "id": "40918b1",
+      "refs": [
+        "refs/heads/feature_mosaic_improvments"
+      ],
+      "names": [
+        "feature_mosaic_improvments"
+      ],
+      "date": "2026-04-06T12:10:02+02:00",
+      "subject": "font increase in mosaic",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\40918b1",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "indexSha256": "ea1827a4b0f3f739ebbbf0e5c000855de12eafbe49cd710abfd6be448e6568df",
+      "indexBytes": 153021,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "40918b1 font increase in mosaic",
+        "425c0ae actual on btoom",
+        "6c68edb aligned axis cm mosaic",
+        "85e23a5 updated overlay cm"
+      ],
+      "port": 8203,
+      "url": "http://localhost:8203/"
+    },
+    {
+      "sha": "7db2c1bd58d9aab29831f012ecccd9dfa69e729a",
+      "id": "7db2c1b",
+      "refs": [
+        "refs/heads/feature_simple_bayes_story",
+        "refs/remotes/origin/feature_simple_bayes_story"
+      ],
+      "names": [
+        "feature_simple_bayes_story"
+      ],
+      "date": "2026-10-20T15:57:01+02:00",
+      "subject": "position learn",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\7db2c1b",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "README.md",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "scripts/check.cjs",
+        "scripts/drag.test.cjs",
+        "scripts/learning.test.cjs",
+        "scripts/metrics.test.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs"
+      ],
+      "exportedFiles": [
+        "index.html",
+        "package-lock.json",
+        "package.json"
+      ],
+      "indexSha256": "486ebda1dbf4ec5cc498d999fe1298a9132179afd13f00a2f965237c9f467267",
+      "indexBytes": 99632,
+      "sourceTitle": "CMatrixLab — Simple",
+      "externalAssets": [],
+      "recentCommits": [
+        "7db2c1b position learn",
+        "f1bc634 mod theory",
+        "4a3eab4 imprvmen",
+        "a0af2f9 added hover metrics"
+      ],
+      "port": 8204,
+      "url": "http://localhost:8204/"
+    },
+    {
+      "sha": "b37faceb99796dd73f0858c725a185c80d792fe5",
+      "id": "b37face",
+      "refs": [
+        "refs/heads/feature_simple_bayes_story_overall_visual",
+        "refs/remotes/origin/feature_simple_bayes_story_overall_visual"
+      ],
+      "names": [
+        "feature_simple_bayes_story_overall_visual"
+      ],
+      "date": "2026-10-21T08:19:02+02:00",
+      "subject": "sliders in bayes",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\b37face",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "README.md",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "scripts/check.cjs",
+        "scripts/drag.test.cjs",
+        "scripts/learning.test.cjs",
+        "scripts/metrics.test.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs"
+      ],
+      "exportedFiles": [
+        "index.html",
+        "package-lock.json",
+        "package.json"
+      ],
+      "indexSha256": "c908da9ec71d542c542d7ada2dd02c57e09ec5f432c810e6fd811c3927397cdb",
+      "indexBytes": 114926,
+      "sourceTitle": "CMatrixLab — Simple",
+      "externalAssets": [],
+      "recentCommits": [
+        "b37face sliders in bayes",
+        "ae63624 improvem position exlnation metrics",
+        "8216751 position butotn",
+        "7db2c1b position learn"
+      ],
+      "port": 8205,
+      "url": "http://localhost:8205/"
+    },
+    {
+      "sha": "a0af2f9ec6d4b75eb1b59a5904619a4f39f6bdfc",
+      "id": "a0af2f9",
+      "refs": [
+        "refs/heads/feature_simple_hover_metrics",
+        "refs/heads/simple",
+        "refs/remotes/origin/feature_simple_hover_metrics",
+        "refs/remotes/origin/simple"
+      ],
+      "names": [
+        "feature_simple_hover_metrics",
+        "simple"
+      ],
+      "date": "2026-10-20T07:31:42+02:00",
+      "subject": "added hover metrics",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\a0af2f9",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "README.md",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "scripts/check.cjs",
+        "scripts/drag.test.cjs",
+        "scripts/metrics.test.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs"
+      ],
+      "exportedFiles": [
+        "index.html",
+        "package-lock.json",
+        "package.json"
+      ],
+      "indexSha256": "a87111781f7836d2c7ac5a2f9e3acea9d9e71e5db5800d8f32721716a1d8b307",
+      "indexBytes": 67089,
+      "sourceTitle": "CMatrixLab — Simple",
+      "externalAssets": [],
+      "recentCommits": [
+        "a0af2f9 added hover metrics",
+        "a9c5545 added handle",
+        "f361ef5 integers",
+        "c7fced8 refactor"
+      ],
+      "port": 8206,
+      "url": "http://localhost:8206/"
+    },
+    {
+      "sha": "4ad5b18ff465358ac25b538f50dc2e068f7cb644",
+      "id": "4ad5b18",
+      "refs": [
+        "refs/heads/featursimple_bayes_story_overall_visual_GemFixes",
+        "refs/remotes/origin/featursimple_bayes_story_overall_visual_GemFixes"
+      ],
+      "names": [
+        "featursimple_bayes_story_overall_visual_GemFixes"
+      ],
+      "date": "2026-10-25T08:30:12+01:00",
+      "subject": "added test prompt",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\4ad5b18",
+      "htmlFiles": [
+        "cheatsheet.html",
+        "index.html",
+        "learn.html",
+        "reference.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "AGENT.md",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "New Text Document.txt",
+        "README.md",
+        "Tunnels.txt",
+        "cheatsheet.html",
+        "index.html",
+        "learn.html",
+        "package-lock.json",
+        "package.json",
+        "readme.txt",
+        "reference.html",
+        "scratch/fix_header_grid_row.cjs",
+        "scratch/replace_with_layout_btn.cjs",
+        "scratch/take_screenshots.cjs",
+        "scratch/test_mobile_fit.cjs",
+        "scratch/update_metric_mobile.cjs",
+        "scripts/check.cjs",
+        "scripts/drag.test.cjs",
+        "scripts/fourup.test.cjs",
+        "scripts/learning.test.cjs",
+        "scripts/metrics.test.cjs",
+        "scripts/p1.test.cjs",
+        "scripts/reference.test.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs",
+        "teaching_review.md",
+        "tests/FULL_QA_PROMPT.md",
+        "tests/test_promot.txt"
+      ],
+      "exportedFiles": [
+        "cheatsheet.html",
+        "index.html",
+        "learn.html",
+        "package-lock.json",
+        "package.json",
+        "reference.html"
+      ],
+      "indexSha256": "f12b9508296145cdc4fdc229fb7b6669c045ce9c3917a67f40ca08358dfbcd9a",
+      "indexBytes": 168737,
+      "sourceTitle": "CMatrixLab — Simple",
+      "externalAssets": [],
+      "recentCommits": [
+        "4ad5b18 added test prompt",
+        "6696510 Ignore generated Playwright MCP artifacts",
+        "9737c8f add mcp add QA prompt",
+        "4820c67 drag icon improvment"
+      ],
+      "port": 8207,
+      "url": "http://localhost:8207/"
+    },
+    {
+      "sha": "4d301a2065e1acc89d9d67cbc7d58cd33be78019",
+      "id": "4d301a2",
+      "refs": [
+        "refs/heads/master",
+        "refs/remotes/origin/master"
+      ],
+      "names": [
+        "master"
+      ],
+      "date": "2026-04-14T07:21:43+02:00",
+      "subject": "Archive old prototypes and update gitignore",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\4d301a2",
+      "htmlFiles": [
+        "archive/design_0/index.html",
+        "archive/dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "archive/design_0/index.css",
+        "archive/design_0/index.html",
+        "archive/design_0/js/app.js",
+        "archive/dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "exportedFiles": [
+        "archive/design_0/index.css",
+        "archive/design_0/index.html",
+        "archive/design_0/js/app.js",
+        "archive/dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "indexSha256": "8166d7aaaabb6f6b5b08b19bd0e9abe83860d58a2cf93b00f0f2f563faf8e9fe",
+      "indexBytes": 187104,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cloud.umami.is/script.js",
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "4d301a2 Archive old prototypes and update gitignore",
+        "dfdd3e9 add umami",
+        "8facffd from 1000 to 2000 rows",
+        "e54de22 same for matrix"
+      ],
+      "port": 8208,
+      "url": "http://localhost:8208/"
+    },
+    {
+      "sha": "1f35d2634c6c1bc4f1c589e508a38aae92c0092c",
+      "id": "1f35d26",
+      "refs": [
+        "refs/heads/mobile_view_rework",
+        "refs/remotes/origin/mobile_view_rework"
+      ],
+      "names": [
+        "mobile_view_rework"
+      ],
+      "date": "2026-05-11T08:19:08+02:00",
+      "subject": "mproved",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\1f35d26",
+      "htmlFiles": [
+        "archive/design_0/index.html",
+        "archive/dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "archive/design_0/index.css",
+        "archive/design_0/index.html",
+        "archive/design_0/js/app.js",
+        "archive/dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "exportedFiles": [
+        "archive/design_0/index.css",
+        "archive/design_0/index.html",
+        "archive/design_0/js/app.js",
+        "archive/dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "indexSha256": "1f3876b58d6e0b60159d41e042184fe68ef4f9e31d1262cf83cbb2657af07190",
+      "indexBytes": 199360,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cloud.umami.is/script.js",
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "1f35d26 mproved",
+        "55d3c7a improvemnt",
+        "00caef2 rename link mdel to gaussina",
+        "72d8dea imprved"
+      ],
+      "port": 8209,
+      "url": "http://localhost:8209/"
+    },
+    {
+      "sha": "fea3edaa6f0dbdc5d8a8c4d3229ba9d7e8568926",
+      "id": "fea3eda",
+      "refs": [
+        "refs/heads/refactor_big",
+        "refs/remotes/origin/refactor_big"
+      ],
+      "names": [
+        "refactor_big"
+      ],
+      "date": "2026-04-12T07:52:56+02:00",
+      "subject": "add tests",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\fea3eda",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "AGENTS.md",
+        "CNAME",
+        "VISUAL_TEST_CHECKLIST.md",
+        "analystics.txt",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "high_level_app_flow.md",
+        "index.html",
+        "metrics_core.js",
+        "package-lock.json",
+        "package.json",
+        "playwright.config.js",
+        "sample_data.csv",
+        "tests/metrics_core.test.js",
+        "tests/static_server.js",
+        "tests/visual.spec.js"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "metrics_core.js",
+        "package-lock.json",
+        "package.json",
+        "playwright.config.js",
+        "sample_data.csv"
+      ],
+      "indexSha256": "db8f82710625b27db6be93f308f07d804c03fa8e7b39c71bdfd7d7a4b8bc797e",
+      "indexBytes": 180853,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "fea3eda add tests",
+        "14a6a52 add node modules to ignore",
+        "050788d Add test dependencies and lockfile",
+        "1525509 visual_checklist"
+      ],
+      "port": 8210,
+      "url": "http://localhost:8210/"
+    },
+    {
+      "sha": "c64062256bd4a3d8b62b2c4d9df98814d48d1948",
+      "id": "c640622",
+      "refs": [
+        "refs/heads/simple_cld",
+        "refs/remotes/origin/simple_cld"
+      ],
+      "names": [
+        "simple_cld"
+      ],
+      "date": "2026-10-19T08:58:09+02:00",
+      "subject": "separation flu",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\c640622",
+      "htmlFiles": [
+        "cmatrixlab_minimal_readable.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "README.md",
+        "cmatrixlab_minimal_readable.html",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "scripts/check.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs"
+      ],
+      "exportedFiles": [
+        "cmatrixlab_minimal_readable.html",
+        "index.html",
+        "package-lock.json",
+        "package.json"
+      ],
+      "indexSha256": "fad10a976d1fa02a063cf1f0049fee2dc4613c22c24d824b1d573269812097b4",
+      "indexBytes": 454,
+      "sourceTitle": "CMatrixLab",
+      "externalAssets": [],
+      "recentCommits": [
+        "c640622 separation flu",
+        "f17d51c sensitivity slider",
+        "f9f6302 sesniivity",
+        "7dd5c5b swithc"
+      ],
+      "port": 8211,
+      "url": "http://localhost:8211/"
+    },
+    {
+      "sha": "8facffd67569ada6dda6123520d8c3484be8818c",
+      "id": "8facffd",
+      "refs": [
+        "refs/remotes/origin/custom_data_2000"
+      ],
+      "names": [
+        "custom_data_2000"
+      ],
+      "date": "2026-04-07T15:39:15+02:00",
+      "subject": "from 1000 to 2000 rows",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\8facffd",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "indexSha256": "ffcb3d8314a296e6cf28d28da57aa29a77711bcbefdae7320a30a0dddfd053e0",
+      "indexBytes": 186984,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "8facffd from 1000 to 2000 rows",
+        "e54de22 same for matrix",
+        "971a248 cosmretics",
+        "c911d3e improved  boundray"
+      ],
+      "port": 8212,
+      "url": "http://localhost:8212/"
+    },
+    {
+      "sha": "a9c55450dbcf34e4c2b81b2c2f762ab2f82ed298",
+      "id": "a9c5545",
+      "refs": [
+        "refs/remotes/origin/feature_simple_dragging_thr"
+      ],
+      "names": [
+        "feature_simple_dragging_thr"
+      ],
+      "date": "2026-10-20T07:18:08+02:00",
+      "subject": "added handle",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\a9c5545",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "CMatrixLab_CODE_GUIDE.md",
+        "CNAME",
+        "README.md",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "scripts/check.cjs",
+        "scripts/drag.test.cjs",
+        "scripts/serve.cjs",
+        "scripts/serve.test.cjs"
+      ],
+      "exportedFiles": [
+        "index.html",
+        "package-lock.json",
+        "package.json"
+      ],
+      "indexSha256": "451cb80325e110ac7f1199e129215dc204064e1d1f1d2e9b3e46ac9f97a56cea",
+      "indexBytes": 60375,
+      "sourceTitle": "CMatrixLab — Simple",
+      "externalAssets": [],
+      "recentCommits": [
+        "a9c5545 added handle",
+        "f361ef5 integers",
+        "c7fced8 refactor",
+        "c640622 separation flu"
+      ],
+      "port": 8213,
+      "url": "http://localhost:8213/"
+    },
+    {
+      "sha": "3c2e2765dcb2f877035f1a57c61090aae04c7bb9",
+      "id": "3c2e276",
+      "refs": [
+        "refs/remotes/origin/main"
+      ],
+      "names": [
+        "main"
+      ],
+      "date": "2026-03-29T08:15:01+02:00",
+      "subject": "Updated responsive CSS for mobile layout improvements.",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\3c2e276",
+      "htmlFiles": [
+        "dev/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        ".vscode/settings.json",
+        "CNAME",
+        "dev/index.css",
+        "dev/index.html",
+        "dev/js/app.js",
+        "index.html"
+      ],
+      "exportedFiles": [
+        "dev/index.css",
+        "dev/index.html",
+        "dev/js/app.js",
+        "index.html"
+      ],
+      "indexSha256": "33466bde26f86c55be126fb9d81a22af4b6696e1ca6234687cb49eb8aa8a35e6",
+      "indexBytes": 45254,
+      "sourceTitle": "Classifier Metrics Playground",
+      "externalAssets": [
+        "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap",
+        "https://cdn.plot.ly/plotly-2.30.0.min.js"
+      ],
+      "recentCommits": [
+        "3c2e276 Updated responsive CSS for mobile layout improvements.",
+        "f7184a7 Refactor: Extract CSS and JS into separate files for better maintainability and performance",
+        "a729181 Push updated JavaScript code for drag-drop, resize, layout persistence, and render logic",
+        "6aeeea4 resizible tiles"
+      ],
+      "port": 8214,
+      "url": "http://localhost:8214/"
+    },
+    {
+      "sha": "e54de2254ef26892dc38aa02ea0f9ef6e6768428",
+      "id": "e54de22",
+      "refs": [
+        "refs/remotes/origin/mosaic_bounds"
+      ],
+      "names": [
+        "mosaic_bounds"
+      ],
+      "date": "2026-04-06T22:11:58+02:00",
+      "subject": "same for matrix",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\e54de22",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html",
+        "sample_data.csv"
+      ],
+      "indexSha256": "6b45743c63c3f0deb0bea795f302ea7d0bda7b2513ca09ba246fd56ac4236ce6",
+      "indexBytes": 186984,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "e54de22 same for matrix",
+        "971a248 cosmretics",
+        "c911d3e improved  boundray",
+        "8586b46 works on cm"
+      ],
+      "port": 8215,
+      "url": "http://localhost:8215/"
+    },
+    {
+      "sha": "95035165f6f9da21961b11df89b31ac2a14c8d41",
+      "id": "9503516",
+      "refs": [
+        "refs/remotes/origin/old_Release"
+      ],
+      "names": [
+        "old_Release"
+      ],
+      "date": "2026-03-08T16:37:29+01:00",
+      "subject": "Update index.html",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\9503516",
+      "htmlFiles": [
+        "dev/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        "dev/index.html",
+        "index.html"
+      ],
+      "exportedFiles": [
+        "dev/index.html",
+        "index.html"
+      ],
+      "indexSha256": "3059c852ec87c8a288369fff1e7b3734a64aee2dda84a11c4211e951e1181e5d",
+      "indexBytes": 43596,
+      "sourceTitle": "Classifier Metrics Playground",
+      "externalAssets": [
+        "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap",
+        "https://cdn.plot.ly/plotly-2.30.0.min.js"
+      ],
+      "recentCommits": [
+        "9503516 Update index.html",
+        "1a7b5cb init",
+        "ce97d3a Fix missing newline at end of index.html",
+        "9ac9f92 Merge pull request #8 from martingrossman/movable"
+      ],
+      "port": 8216,
+      "url": "http://localhost:8216/"
+    },
+    {
+      "sha": "ce97d3abbc8cf73f2db7ce70b60fcd42db58e289",
+      "id": "ce97d3a",
+      "refs": [
+        "refs/remotes/origin/old_Release_Dark_Claude"
+      ],
+      "names": [
+        "old_Release_Dark_Claude"
+      ],
+      "date": "2026-03-07T22:43:44+01:00",
+      "subject": "Fix missing newline at end of index.html",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\ce97d3a",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        "index.html"
+      ],
+      "exportedFiles": [
+        "index.html"
+      ],
+      "indexSha256": "3059c852ec87c8a288369fff1e7b3734a64aee2dda84a11c4211e951e1181e5d",
+      "indexBytes": 43596,
+      "sourceTitle": "Classifier Metrics Playground",
+      "externalAssets": [
+        "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap",
+        "https://cdn.plot.ly/plotly-2.30.0.min.js"
+      ],
+      "recentCommits": [
+        "ce97d3a Fix missing newline at end of index.html",
+        "9ac9f92 Merge pull request #8 from martingrossman/movable",
+        "9a7762a Update grid layout styles in index.html",
+        "05f90c2 Fix CSS variable syntax and update layout order"
+      ],
+      "port": 8217,
+      "url": "http://localhost:8217/"
+    },
+    {
+      "sha": "04bef33d734ca33eda00e7fe8d9f1b9693e7f356",
+      "id": "04bef33",
+      "refs": [
+        "refs/remotes/origin/old_claude_improvments"
+      ],
+      "names": [
+        "old_claude_improvments"
+      ],
+      "date": "2026-04-05T16:32:01+02:00",
+      "subject": "ok dekstop and mobile",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\04bef33",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".claude/settings.local.json",
+        ".gitignore",
+        "CNAME",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "indexSha256": "9fa5f949b43ca595604889adab926bcc06ec16da2fdbd3e1867e0c87b591e4d4",
+      "indexBytes": 116864,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "04bef33 ok dekstop and mobile",
+        "3c6c3fe good desktop and mobile",
+        "840d020 good desktop design",
+        "e50c4c8 improved"
+      ],
+      "port": 8218,
+      "url": "http://localhost:8218/"
+    },
+    {
+      "sha": "5176eb167434a3ccffa285f6303985df2fbd6e4c",
+      "id": "5176eb1",
+      "refs": [
+        "refs/remotes/origin/old_claude_theme"
+      ],
+      "names": [
+        "old_claude_theme"
+      ],
+      "date": "2026-03-07T15:16:10+01:00",
+      "subject": "improved lyoit for portrait mobile",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\5176eb1",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        "index.html"
+      ],
+      "exportedFiles": [
+        "index.html"
+      ],
+      "indexSha256": "799e9c719f646e9f6e07746e4e25ca58da1a6051f65314d3221dd5d081e0624b",
+      "indexBytes": 34424,
+      "sourceTitle": "Classifier Metrics Playground",
+      "externalAssets": [
+        "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap",
+        "https://cdn.plot.ly/plotly-2.30.0.min.js"
+      ],
+      "recentCommits": [
+        "5176eb1 improved lyoit for portrait mobile",
+        "29fb6a9 cosmetics",
+        "96fc7c7 moible_support",
+        "39d4f19 claude_dash init"
+      ],
+      "port": 8219,
+      "url": "http://localhost:8219/"
+    },
+    {
+      "sha": "7d5385160a4b7dd8b2547c42b000f82199985822",
+      "id": "7d53851",
+      "refs": [
+        "refs/remotes/origin/old_dev"
+      ],
+      "names": [
+        "old_dev"
+      ],
+      "date": "2026-03-31T06:57:59+02:00",
+      "subject": "some",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\7d53851",
+      "htmlFiles": [
+        "dev/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        ".vscode/settings.json",
+        "CNAME",
+        "dev/index.css",
+        "dev/index.html",
+        "dev/js/app.js",
+        "index.html",
+        "styles/mosaic.css"
+      ],
+      "exportedFiles": [
+        "dev/index.css",
+        "dev/index.html",
+        "dev/js/app.js",
+        "index.html",
+        "styles/mosaic.css"
+      ],
+      "indexSha256": "33466bde26f86c55be126fb9d81a22af4b6696e1ca6234687cb49eb8aa8a35e6",
+      "indexBytes": 45254,
+      "sourceTitle": "Classifier Metrics Playground",
+      "externalAssets": [
+        "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap",
+        "https://cdn.plot.ly/plotly-2.30.0.min.js"
+      ],
+      "recentCommits": [
+        "7d53851 some",
+        "a89f603 update",
+        "5d0f4a2 mobile",
+        "391ad29 Push updated CSS for Mosaic fonts and layout adjustments to dev branch"
+      ],
+      "port": 8220,
+      "url": "http://localhost:8220/"
+    },
+    {
+      "sha": "ffb6fc519d997170ab7757bb6ba2eba780b288b5",
+      "id": "ffb6fc5",
+      "refs": [
+        "refs/remotes/origin/old_from_scratch"
+      ],
+      "names": [
+        "old_from_scratch"
+      ],
+      "date": "2026-04-05T12:20:51+02:00",
+      "subject": "vscode gitignore",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\ffb6fc5",
+      "htmlFiles": [
+        "design_0/index.html",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "allFiles": [
+        ".gitignore",
+        "CNAME",
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "exportedFiles": [
+        "design_0/index.css",
+        "design_0/index.html",
+        "design_0/js/app.js",
+        "dev_2/index.html",
+        "index.html"
+      ],
+      "indexSha256": "fb0796e10cd0c4cb01704665e0f5a351f0b4db4de4697fc7fa14eb45a911ee8f",
+      "indexBytes": 91675,
+      "sourceTitle": "ROC &amp; Confusion Matrix Playground",
+      "externalAssets": [
+        "https://cdn.plot.ly/plotly-2.27.0.min.js"
+      ],
+      "recentCommits": [
+        "ffb6fc5 vscode gitignore",
+        "ffc0ac9 gitignore",
+        "f4e49c9 improvment",
+        "0362cf0 deleted vscode, renamed dev"
+      ],
+      "port": 8221,
+      "url": "http://localhost:8221/"
+    },
+    {
+      "sha": "9a7762a423b099d988a20164583d5f9a4f1ae9f6",
+      "id": "9a7762a",
+      "refs": [
+        "refs/remotes/origin/old_movable"
+      ],
+      "names": [
+        "old_movable"
+      ],
+      "date": "2026-03-07T22:35:37+01:00",
+      "subject": "Update grid layout styles in index.html",
+      "directory": "C:\\Users\\martin\\Documents\\GitHub\\Metrics\\test-results\\branch-review\\versions\\9a7762a",
+      "htmlFiles": [
+        "index.html"
+      ],
+      "allFiles": [
+        "index.html"
+      ],
+      "exportedFiles": [
+        "index.html"
+      ],
+      "indexSha256": "3059c852ec87c8a288369fff1e7b3734a64aee2dda84a11c4211e951e1181e5d",
+      "indexBytes": 43596,
+      "sourceTitle": "Classifier Metrics Playground",
+      "externalAssets": [
+        "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap",
+        "https://cdn.plot.ly/plotly-2.30.0.min.js"
+      ],
+      "recentCommits": [
+        "9a7762a Update grid layout styles in index.html",
+        "05f90c2 Fix CSS variable syntax and update layout order",
+        "eab8c19 improved",
+        "d8eebd2 improved compatibility"
+      ],
+      "port": 8222,
+      "url": "http://localhost:8222/"
+    }
+  ]
+}

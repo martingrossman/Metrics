@@ -1,0 +1,230 @@
+- main [ref=f104e2]:
+  - generic [ref=f104e3]:
+    - generic [ref=f104e4]:
+      - generic [ref=f104e15]: CMatrixLab
+      - generic [ref=f104e16]:
+        - text: by Martin Grossman
+        - link "martin.grossman@gmail.com" [ref=f104e17] [cursor=pointer]:
+          - /url: mailto:martin.grossman@gmail.com
+    - generic [ref=f104e18]:
+      - generic [ref=f104e19]:
+        - generic [ref=f104e20]: Try an example
+        - combobox "Try an example" [ref=f104e21] [cursor=pointer]
+      - link "Metrics cheatsheet" [ref=f104e22] [cursor=pointer]:
+        - /url: cheatsheet.html
+        - text: 📋
+        - generic [ref=f104e23]: Cheatsheet
+      - button "Reset" [active] [ref=f104e24] [cursor=pointer]: Reset ↺
+  - paragraph [ref=f104e25]:
+    - strong [ref=f104e26]: Your flu test is positive. What’s the chance you really have flu?
+    - text: That’s precision—and it also depends on how common flu is among the people tested.Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.
+  - generic [ref=f104e27]:
+    - button "TPR Sick detected 96%" [ref=f104e28] [cursor=pointer]:
+      - generic [ref=f104e29]:
+        - text: TPR
+        - generic [ref=f104e30]: Sick detected
+      - strong [ref=f104e31]: 96%
+    - button "FPR Healthy test + 4%" [ref=f104e32] [cursor=pointer]:
+      - generic [ref=f104e33]:
+        - text: FPR
+        - generic [ref=f104e34]: Healthy test +
+      - strong [ref=f104e35]: 4%
+    - button "Precision Sick in test + 72.7%" [ref=f104e36] [cursor=pointer]:
+      - generic [ref=f104e37]:
+        - text: Precision
+        - generic [ref=f104e38]: Sick in test +
+      - strong [ref=f104e39]: 72.7%
+  - region "Flu test controls" [ref=f104e40]:
+    - generic [ref=f104e41]:
+      - generic [ref=f104e42]:
+        - generic [ref=f104e43]: How easily the test says +
+        - status "How easily the test says + 50% — how easily the test says positive; score cutoff 0.50 0% · Never says + 100% · Always says +" [ref=f104e44]: 50%
+      - 'slider "Move right to detect weaker flu signals: more flu detections and more false alarms." [ref=f104e45] [cursor=pointer]': "50"
+      - generic [ref=f104e46]:
+        - generic [ref=f104e47]: 0% · Never says +
+        - generic [ref=f104e48]: 100% · Always says +
+    - generic [ref=f104e49]:
+      - generic [ref=f104e50]:
+        - generic [ref=f104e51]: How different the two groups are
+        - status "How different the two groups are 60 Hard to tell apart Easy to tell apart" [ref=f104e52]: 60%
+      - slider [ref=f104e53] [cursor=pointer]: "60"
+      - generic [ref=f104e54]:
+        - generic [ref=f104e55]: Hard to tell apart
+        - generic [ref=f104e56]: Easy to tell apart
+    - generic [ref=f104e57]:
+      - generic [ref=f104e58]:
+        - generic "Percentage of people who actually have flu" [ref=f104e59]: Sick portion
+        - generic [ref=f104e60]
+      - slider "Sick portion" [ref=f104e64] [cursor=pointer]: "10"
+      - generic [ref=f104e65]:
+        - generic [ref=f104e66]: 0% · no one has flu
+        - generic [ref=f104e67]: 100% · everyone has flu
+  - generic "Classification outcome colors" [ref=f104e68]:
+    - generic [ref=f104e69]:
+      - text: TP
+      - generic [ref=f104e71]: · Flu detected
+    - generic [ref=f104e72]:
+      - text: FP
+      - generic [ref=f104e74]: · False alarm
+    - generic [ref=f104e75]:
+      - text: FN
+      - generic [ref=f104e77]: · Flu missed
+    - generic [ref=f104e78]:
+      - text: TN
+      - generic [ref=f104e80]: · No flu, test −
+  - generic [ref=f104e81]:
+    - tablist "View mode selector" [ref=f104e82]:
+      - tab "Default (Scores + Matrix)" [selected] [ref=f104e83] [cursor=pointer]
+      - tab "4-Up Graph" [ref=f104e84] [cursor=pointer]
+      - tab "Gaussians" [ref=f104e85] [cursor=pointer]
+      - tab "ROC" [ref=f104e86] [cursor=pointer]
+      - tab "PR" [ref=f104e87] [cursor=pointer]
+      - tab "Bayes" [ref=f104e88] [cursor=pointer]
+    - paragraph [ref=f104e89]: Full marker = 10 people; smaller = partial.
+  - generic [ref=f104e90]:
+    - group "Flu test score graph" [ref=f104e91]:
+      - slider "Flu test score threshold" [ref=f104e93]:
+        - generic [ref=f104e96]: Test −
+        - generic [ref=f104e97]: Test +
+        - 'img "Drag the groups: left or right changes separation; up or down changes proportions."'
+        - generic [ref=f104e98]: Actual flu
+        - generic [ref=f104e99]: 100 people
+        - generic [ref=f104e100]: Actual no flu
+        - generic [ref=f104e101]: 900 people
+        - generic "TP · 10 people · flu test score 0.854" [ref=f104e104]
+        - generic "TP · 10 people · flu test score 0.790" [ref=f104e105]
+        - generic "TP · 10 people · flu test score 0.751" [ref=f104e106]
+        - generic "TP · 10 people · flu test score 0.721" [ref=f104e107]
+        - generic "TP · 10 people · flu test score 0.693" [ref=f104e108]
+        - generic "TP · 10 people · flu test score 0.667" [ref=f104e109]
+        - generic "TP · 10 people · flu test score 0.639" [ref=f104e110]
+        - generic "TP · 10 people · flu test score 0.609" [ref=f104e111]
+        - generic "TP · 10 people · flu test score 0.570" [ref=f104e112]
+        - generic "TP · 6 people · flu test score 0.524" [ref=f104e113]
+        - generic "FN · 4 people · flu test score 0.457" [ref=f104e114]
+        - generic "FP · 10 people · flu test score 0.567" [ref=f104e115]
+        - generic "FP · 10 people · flu test score 0.551" [ref=f104e116]
+        - generic "FP · 10 people · flu test score 0.525" [ref=f104e117]
+        - generic "FP · 6 people · flu test score 0.519" [ref=f104e118]
+        - generic "TN · 10 people · flu test score 0.073" [ref=f104e119]
+        - generic "TN · 10 people · flu test score 0.089" [ref=f104e120]
+        - generic "TN · 10 people · flu test score 0.115" [ref=f104e121]
+        - generic "TN · 10 people · flu test score 0.132" [ref=f104e122]
+        - generic "TN · 10 people · flu test score 0.146" [ref=f104e123]
+        - generic "TN · 10 people · flu test score 0.156" [ref=f104e124]
+        - generic "TN · 10 people · flu test score 0.165" [ref=f104e125]
+        - generic "TN · 10 people · flu test score 0.173" [ref=f104e126]
+        - generic "TN · 10 people · flu test score 0.181" [ref=f104e127]
+        - generic "TN · 10 people · flu test score 0.187" [ref=f104e128]
+        - generic "TN · 10 people · flu test score 0.194" [ref=f104e129]
+        - generic "TN · 10 people · flu test score 0.199" [ref=f104e130]
+        - generic "TN · 10 people · flu test score 0.205" [ref=f104e131]
+        - generic "TN · 10 people · flu test score 0.210" [ref=f104e132]
+        - generic "TN · 10 people · flu test score 0.215" [ref=f104e133]
+        - generic "TN · 10 people · flu test score 0.220" [ref=f104e134]
+        - generic "TN · 10 people · flu test score 0.224" [ref=f104e135]
+        - generic "TN · 10 people · flu test score 0.229" [ref=f104e136]
+        - generic "TN · 10 people · flu test score 0.233" [ref=f104e137]
+        - generic "TN · 10 people · flu test score 0.237" [ref=f104e138]
+        - generic "TN · 10 people · flu test score 0.241" [ref=f104e139]
+        - generic "TN · 10 people · flu test score 0.245" [ref=f104e140]
+        - generic "TN · 10 people · flu test score 0.249" [ref=f104e141]
+        - generic "TN · 10 people · flu test score 0.252" [ref=f104e142]
+        - generic "TN · 10 people · flu test score 0.256" [ref=f104e143]
+        - generic "TN · 10 people · flu test score 0.259" [ref=f104e144]
+        - generic "TN · 10 people · flu test score 0.263" [ref=f104e145]
+        - generic "TN · 10 people · flu test score 0.266" [ref=f104e146]
+        - generic "TN · 10 people · flu test score 0.269" [ref=f104e147]
+        - generic "TN · 10 people · flu test score 0.273" [ref=f104e148]
+        - generic "TN · 10 people · flu test score 0.276" [ref=f104e149]
+        - generic "TN · 10 people · flu test score 0.279" [ref=f104e150]
+        - generic "TN · 10 people · flu test score 0.282" [ref=f104e151]
+        - generic "TN · 10 people · flu test score 0.285" [ref=f104e152]
+        - generic "TN · 10 people · flu test score 0.289" [ref=f104e153]
+        - generic "TN · 10 people · flu test score 0.292" [ref=f104e154]
+        - generic "TN · 10 people · flu test score 0.295" [ref=f104e155]
+        - generic "TN · 10 people · flu test score 0.298" [ref=f104e156]
+        - generic "TN · 10 people · flu test score 0.301" [ref=f104e157]
+        - generic "TN · 10 people · flu test score 0.304" [ref=f104e158]
+        - generic "TN · 10 people · flu test score 0.307" [ref=f104e159]
+        - generic "TN · 10 people · flu test score 0.310" [ref=f104e160]
+        - generic "TN · 10 people · flu test score 0.313" [ref=f104e161]
+        - generic "TN · 10 people · flu test score 0.316" [ref=f104e162]
+        - generic "TN · 10 people · flu test score 0.319" [ref=f104e163]
+        - generic "TN · 10 people · flu test score 0.321" [ref=f104e164]
+        - generic "TN · 10 people · flu test score 0.324" [ref=f104e165]
+        - generic "TN · 10 people · flu test score 0.327" [ref=f104e166]
+        - generic "TN · 10 people · flu test score 0.330" [ref=f104e167]
+        - generic "TN · 10 people · flu test score 0.333" [ref=f104e168]
+        - generic "TN · 10 people · flu test score 0.336" [ref=f104e169]
+        - generic "TN · 10 people · flu test score 0.339" [ref=f104e170]
+        - generic "TN · 10 people · flu test score 0.342" [ref=f104e171]
+        - generic "TN · 10 people · flu test score 0.345" [ref=f104e172]
+        - generic "TN · 10 people · flu test score 0.348" [ref=f104e173]
+        - generic "TN · 10 people · flu test score 0.351" [ref=f104e174]
+        - generic "TN · 10 people · flu test score 0.355" [ref=f104e175]
+        - generic "TN · 10 people · flu test score 0.358" [ref=f104e176]
+        - generic "TN · 10 people · flu test score 0.361" [ref=f104e177]
+        - generic "TN · 10 people · flu test score 0.364" [ref=f104e178]
+        - generic "TN · 10 people · flu test score 0.367" [ref=f104e179]
+        - generic "TN · 10 people · flu test score 0.371" [ref=f104e180]
+        - generic "TN · 10 people · flu test score 0.374" [ref=f104e181]
+        - generic "TN · 10 people · flu test score 0.377" [ref=f104e182]
+        - generic "TN · 10 people · flu test score 0.381" [ref=f104e183]
+        - generic "TN · 10 people · flu test score 0.384" [ref=f104e184]
+        - generic "TN · 10 people · flu test score 0.388" [ref=f104e185]
+        - generic "TN · 10 people · flu test score 0.391" [ref=f104e186]
+        - generic "TN · 10 people · flu test score 0.395" [ref=f104e187]
+        - generic "TN · 10 people · flu test score 0.399" [ref=f104e188]
+        - generic "TN · 10 people · flu test score 0.403" [ref=f104e189]
+        - generic "TN · 10 people · flu test score 0.407" [ref=f104e190]
+        - generic "TN · 10 people · flu test score 0.411" [ref=f104e191]
+        - generic "TN · 10 people · flu test score 0.416" [ref=f104e192]
+        - generic "TN · 10 people · flu test score 0.420" [ref=f104e193]
+        - generic "TN · 10 people · flu test score 0.425" [ref=f104e194]
+        - generic "TN · 10 people · flu test score 0.430" [ref=f104e195]
+        - generic "TN · 10 people · flu test score 0.435" [ref=f104e196]
+        - generic "TN · 10 people · flu test score 0.441" [ref=f104e197]
+        - generic "TN · 10 people · flu test score 0.446" [ref=f104e198]
+        - generic "TN · 10 people · flu test score 0.453" [ref=f104e199]
+        - generic "TN · 10 people · flu test score 0.459" [ref=f104e200]
+        - generic "TN · 10 people · flu test score 0.467" [ref=f104e201]
+        - generic "TN · 10 people · flu test score 0.475" [ref=f104e202]
+        - generic "TN · 10 people · flu test score 0.484" [ref=f104e203]
+        - generic "TN · 10 people · flu test score 0.494" [ref=f104e204]
+        - generic "TN · 4 people · flu test score 0.494" [ref=f104e205]
+        - generic [aria-hidden]: FN
+        - generic [aria-hidden]: TP
+        - generic [aria-hidden]: TN
+        - generic [aria-hidden]: FP
+        - generic [ref=f104e208]: "0.00"
+        - generic [ref=f104e209]: "0.25"
+        - generic [ref=f104e210]: "0.50"
+        - generic [ref=f104e211]: "0.75"
+        - generic [ref=f104e212]: "1.00"
+        - generic [ref=f104e213]: Flu test score →
+    - group "Flu test results" [ref=f104e214]:
+      - generic [ref=f104e215]:
+        - 'button "Confusion matrix layout: Matches graph. Click to switch." [ref=f104e217] [cursor=pointer]'
+        - generic [ref=f104e220]: Test +
+        - generic [ref=f104e221]: Test −
+      - generic [ref=f104e222]:
+        - generic [ref=f104e223]
+        - generic [ref=f104e225]
+        - generic [ref=f104e240]
+        - generic [ref=f104e246]
+        - generic [ref=f104e248]
+        - generic [ref=f104e257]
+  - generic "Each full dot or square represents 10 people; smaller markers represent partial counts. Sick portion changes counts; TPR and FPR stay fixed." [ref=f104e349]:
+    - generic [ref=f104e350]:
+      - strong [ref=f104e351]: "Among positive tests:"
+      - generic [ref=f104e352]:
+        - text: 96 TP ÷ (96 TP + 36 FP) =
+        - emphasis [ref=f104e353]: 72.7% Precision
+        - text: .
+    - generic [ref=f104e354]:
+      - img "96 people with flu and 36 false alarms" [ref=f104e355]
+      - generic [ref=f104e358]:
+        - generic [ref=f104e359]: "Green: 96 have flu"
+        - generic [ref=f104e360]: "Red: 36 false alarms"
+  - paragraph [ref=f104e361]: Numbers are averages for a group of 1,000 people. Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and score separation.

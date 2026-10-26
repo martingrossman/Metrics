@@ -1,0 +1,2005 @@
+{
+  "method": "Supplemental installed Playwright WebKit execution; primary campaign uses Playwright MCP Chromium.",
+  "tests": [
+    {
+      "id": "W-pin-320",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-320-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-320-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-320-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-320-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-320-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-375",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-375-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-375-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-375-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-375-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-375-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-390",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-390-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-390-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-390-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-390-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-390-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-402",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-402-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-402-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-402-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-402-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-402-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-430",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-430-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-430-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-430-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-430-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-430-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-360",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-360-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-360-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-360-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-360-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-360-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-412",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-412-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-412-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-412-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-412-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-412-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-768",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-768-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-768-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-768-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-768-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-768-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-1024",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-1024-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-1024-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1024-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-1024-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1024-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-1366",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-1366-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-1366-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1366-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-1366-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1366-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-1440",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-1440-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-1440-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1440-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-1440-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1440-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-1920",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-1920-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-1920-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1920-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-1920-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-1920-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-pin-2560",
+      "status": "PASS",
+      "pinned": "true",
+      "cleared": "false"
+    },
+    {
+      "id": "W-preset-2560-balanced",
+      "status": "PASS",
+      "preset": "balanced",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "72.7%"
+      ]
+    },
+    {
+      "id": "W-preset-2560-car",
+      "status": "PASS",
+      "preset": "car",
+      "total": 1000,
+      "rates": [
+        "100%",
+        "12%",
+        "59.5%"
+      ]
+    },
+    {
+      "id": "W-preset-2560-spam",
+      "status": "PASS",
+      "preset": "spam",
+      "total": 1000,
+      "rates": [
+        "86%",
+        "2%",
+        "96.6%"
+      ]
+    },
+    {
+      "id": "W-preset-2560-fraud",
+      "status": "PASS",
+      "preset": "fraud",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "19.5%"
+      ]
+    },
+    {
+      "id": "W-preset-2560-generic",
+      "status": "PASS",
+      "preset": "generic",
+      "total": 1000,
+      "rates": [
+        "96%",
+        "4%",
+        "96%"
+      ]
+    },
+    {
+      "id": "W-f1-zero",
+      "status": "FAIL",
+      "actual": "N/A",
+      "expected": "0.000"
+    }
+  ],
+  "responsive": [
+    {
+      "w": 320,
+      "h": 568,
+      "modes": [
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "scroll": [
+            320,
+            755
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-320x568-default.png"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "scroll": [
+            320,
+            896
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-320x568-4up.png"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "scroll": [
+            320,
+            755
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "scroll": [
+            320,
+            755
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "scroll": [
+            320,
+            755
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "scroll": [
+            320,
+            755
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "modes": [
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "scroll": [
+            375,
+            738
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-375x667-default.png"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "scroll": [
+            375,
+            987
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-375x667-4up.png"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "scroll": [
+            375,
+            738
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "scroll": [
+            375,
+            738
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "scroll": [
+            375,
+            738
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "scroll": [
+            375,
+            738
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "modes": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll": [
+            390,
+            844
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-390x844-default.png"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll": [
+            390,
+            1012
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-390x844-4up.png"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll": [
+            390,
+            844
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll": [
+            390,
+            844
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll": [
+            390,
+            844
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll": [
+            390,
+            844
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 402,
+      "h": 874,
+      "modes": [
+        {
+          "viewport": [
+            402,
+            874
+          ],
+          "scroll": [
+            402,
+            874
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-402x874-default.png"
+        },
+        {
+          "viewport": [
+            402,
+            874
+          ],
+          "scroll": [
+            402,
+            1009
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-402x874-4up.png"
+        },
+        {
+          "viewport": [
+            402,
+            874
+          ],
+          "scroll": [
+            402,
+            874
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            402,
+            874
+          ],
+          "scroll": [
+            402,
+            874
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            402,
+            874
+          ],
+          "scroll": [
+            402,
+            874
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            402,
+            874
+          ],
+          "scroll": [
+            402,
+            874
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 430,
+      "h": 932,
+      "modes": [
+        {
+          "viewport": [
+            430,
+            932
+          ],
+          "scroll": [
+            430,
+            932
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-430x932-default.png"
+        },
+        {
+          "viewport": [
+            430,
+            932
+          ],
+          "scroll": [
+            430,
+            1056
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-430x932-4up.png"
+        },
+        {
+          "viewport": [
+            430,
+            932
+          ],
+          "scroll": [
+            430,
+            932
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            430,
+            932
+          ],
+          "scroll": [
+            430,
+            932
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            430,
+            932
+          ],
+          "scroll": [
+            430,
+            932
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            430,
+            932
+          ],
+          "scroll": [
+            430,
+            932
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 360,
+      "h": 800,
+      "modes": [
+        {
+          "viewport": [
+            360,
+            800
+          ],
+          "scroll": [
+            360,
+            800
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-360x800-default.png"
+        },
+        {
+          "viewport": [
+            360,
+            800
+          ],
+          "scroll": [
+            360,
+            962
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-360x800-4up.png"
+        },
+        {
+          "viewport": [
+            360,
+            800
+          ],
+          "scroll": [
+            360,
+            800
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            360,
+            800
+          ],
+          "scroll": [
+            360,
+            800
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            360,
+            800
+          ],
+          "scroll": [
+            360,
+            800
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            360,
+            800
+          ],
+          "scroll": [
+            360,
+            800
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 412,
+      "h": 915,
+      "modes": [
+        {
+          "viewport": [
+            412,
+            915
+          ],
+          "scroll": [
+            412,
+            915
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-412x915-default.png"
+        },
+        {
+          "viewport": [
+            412,
+            915
+          ],
+          "scroll": [
+            412,
+            1026
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-412x915-4up.png"
+        },
+        {
+          "viewport": [
+            412,
+            915
+          ],
+          "scroll": [
+            412,
+            915
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            412,
+            915
+          ],
+          "scroll": [
+            412,
+            915
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            412,
+            915
+          ],
+          "scroll": [
+            412,
+            915
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            412,
+            915
+          ],
+          "scroll": [
+            412,
+            915
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 768,
+      "h": 1024,
+      "modes": [
+        {
+          "viewport": [
+            768,
+            1024
+          ],
+          "scroll": [
+            768,
+            1207
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-768x1024-default.png"
+        },
+        {
+          "viewport": [
+            768,
+            1024
+          ],
+          "scroll": [
+            768,
+            1053
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-768x1024-4up.png"
+        },
+        {
+          "viewport": [
+            768,
+            1024
+          ],
+          "scroll": [
+            768,
+            1207
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            768,
+            1024
+          ],
+          "scroll": [
+            768,
+            1207
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            768,
+            1024
+          ],
+          "scroll": [
+            768,
+            1207
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            768,
+            1024
+          ],
+          "scroll": [
+            768,
+            1207
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "modes": [
+        {
+          "viewport": [
+            1024,
+            768
+          ],
+          "scroll": [
+            1024,
+            1142
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-1024x768-default.png"
+        },
+        {
+          "viewport": [
+            1024,
+            768
+          ],
+          "scroll": [
+            1024,
+            769
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-1024x768-4up.png"
+        },
+        {
+          "viewport": [
+            1024,
+            768
+          ],
+          "scroll": [
+            1024,
+            1142
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            1024,
+            768
+          ],
+          "scroll": [
+            1024,
+            1142
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            1024,
+            768
+          ],
+          "scroll": [
+            1024,
+            1142
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            1024,
+            768
+          ],
+          "scroll": [
+            1024,
+            1142
+          ],
+          "horizontal": false,
+          "vertical": true,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 1366,
+      "h": 768,
+      "modes": [
+        {
+          "viewport": [
+            1366,
+            768
+          ],
+          "scroll": [
+            1366,
+            768
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-1366x768-default.png"
+        },
+        {
+          "viewport": [
+            1366,
+            768
+          ],
+          "scroll": [
+            1366,
+            769
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-1366x768-4up.png"
+        },
+        {
+          "viewport": [
+            1366,
+            768
+          ],
+          "scroll": [
+            1366,
+            768
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            1366,
+            768
+          ],
+          "scroll": [
+            1366,
+            768
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            1366,
+            768
+          ],
+          "scroll": [
+            1366,
+            768
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            1366,
+            768
+          ],
+          "scroll": [
+            1366,
+            768
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "modes": [
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "scroll": [
+            1440,
+            900
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-1440x900-default.png"
+        },
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "scroll": [
+            1440,
+            901
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-1440x900-4up.png"
+        },
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "scroll": [
+            1440,
+            900
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "scroll": [
+            1440,
+            900
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "scroll": [
+            1440,
+            900
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "scroll": [
+            1440,
+            900
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "modes": [
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "scroll": [
+            1920,
+            1080
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-1920x1080-default.png"
+        },
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "scroll": [
+            1920,
+            1080
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-1920x1080-4up.png"
+        },
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "scroll": [
+            1920,
+            1080
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "scroll": [
+            1920,
+            1080
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "scroll": [
+            1920,
+            1080
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "scroll": [
+            1920,
+            1080
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    },
+    {
+      "w": 2560,
+      "h": 1440,
+      "modes": [
+        {
+          "viewport": [
+            2560,
+            1440
+          ],
+          "scroll": [
+            2560,
+            1440
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "default",
+          "screenshot": "screenshots/webkit-2560x1440-default.png"
+        },
+        {
+          "viewport": [
+            2560,
+            1440
+          ],
+          "scroll": [
+            2560,
+            1440
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "4up",
+          "screenshot": "screenshots/webkit-2560x1440-4up.png"
+        },
+        {
+          "viewport": [
+            2560,
+            1440
+          ],
+          "scroll": [
+            2560,
+            1440
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "gauss"
+        },
+        {
+          "viewport": [
+            2560,
+            1440
+          ],
+          "scroll": [
+            2560,
+            1440
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "roc"
+        },
+        {
+          "viewport": [
+            2560,
+            1440
+          ],
+          "scroll": [
+            2560,
+            1440
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "pr"
+        },
+        {
+          "viewport": [
+            2560,
+            1440
+          ],
+          "scroll": [
+            2560,
+            1440
+          ],
+          "horizontal": false,
+          "vertical": false,
+          "invalidSvg": false,
+          "mode": "bayes"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "version": "26.4",
+  "status": "COMPLETE"
+}

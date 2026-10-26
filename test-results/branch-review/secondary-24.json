@@ -1,0 +1,878 @@
+{
+  "start": 24,
+  "end": 28,
+  "total": 28,
+  "done": true,
+  "results": [
+    {
+      "id": "04bef33",
+      "names": [
+        "old_claude_improvments"
+      ],
+      "path": "dev_2/index.html",
+      "url": "http://localhost:8218/dev_2/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/04bef33-dev_2_index_html-desktop.png",
+        "screenshots/04bef33-dev_2_index_html-mobile.png"
+      ],
+      "title": "ROC & Confusion Matrix Playground",
+      "text": "ROC & Confusion Matrix\nTheme: Light\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nBalanced\nRare 5%\nScreening\nTPR\n90%\nFPR\n10%\nPrevalence\n50%\nThreshold\nmanual\nSCORE MODEL\nScore model only — affects distributions & AUC in direct mode\nDirect Rates\nLink\nμ Neg\n0.0\nσ Neg\n1.0\nμ Pos\n2.0\nσ Pos\n1.0\nN\n1000\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nTP\n450\nTN\n450\nActual P (500)\nActual N (500)\n50%\n50%\nTPR\nFNR\nFPR\nTNR\nMETRICS\nVALUES\nBARS\nTHEORY\nACCURACY\n0.900\n(TP+TN)/N\nPRECISION (PPV)\n0.900\nTP/(TP+FP)\nSee why →\nRECALL (TPR)\n0.900\nTP/(TP+FN)\nSPECIFICITY (TNR)\n0.900\nTN/(TN+FP)\nF1 SCORE\n0.900\n2·P·R/(P+R)\nAUC\n0.940\nArea under ROC\nNPV\n0.900\nTN/(TN+FN)\nMCC\n0.800\nMatthews corr.\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n−4\n−2\n0\n2\n4\n6\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.2\n0.4\n0.6\n0.8\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve",
+      "controls": [
+        {
+          "id": "themeToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Theme: Light"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balanced"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Rare 5%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Screening"
+        },
+        {
+          "id": "s_tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_tpr_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_fpr_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_bal",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_bal_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_thresh",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "toggle_bidirectional",
+          "tag": "INPUT",
+          "type": "checkbox",
+          "text": ""
+        },
+        {
+          "id": "s_mu_neg",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_std_neg",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_mu_pos",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_std_pos",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_N",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "btn_cm",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Matrix"
+        },
+        {
+          "id": "btn_mosaic",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Mosaic"
+        },
+        {
+          "id": "btn_metrics_vals",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Values"
+        },
+        {
+          "id": "btn_metrics_bar",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Bars"
+        },
+        {
+          "id": "btn_metrics_eqs",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Theory"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "See why →"
+        },
+        {
+          "id": "btn_dist_curves",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Curves"
+        },
+        {
+          "id": "btn_dist_topview",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Top View"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "   .cls-0{fill:#000;}  .cls-1{fill:#FFF;}  .cls-2{fill:#F26;}  .cls-3{fill:#D69;}  .cls-4{fill:#BAC;"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "   .cls-0{fill:#000;}  .cls-1{fill:#FFF;}  .cls-2{fill:#F26;}  .cls-3{fill:#D69;}  .cls-4{fill:#BAC;"
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "7d53851",
+      "names": [
+        "old_dev"
+      ],
+      "path": "dev/index.html",
+      "url": "http://localhost:8220/dev/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/7d53851-dev_index_html-desktop.png",
+        "screenshots/7d53851-dev_index_html-mobile.png"
+      ],
+      "title": "Classifier Metrics Playground",
+      "text": "Classifier Metrics Playground\nN · π · TPR · FPR → live\nTry: TPR=90%, FPR=5%, π=1% → watch Precision collapse.\n⠇ Edit Layout\n↺ Reset\nGrab ⠇ on any panel to reorder\nPARAMETERS\nDataset size (N)\nLog · 100 → 500k\nPrevalence (π)\n% positives\nTPR (Sensitivity)\nTrue Positive Rate\nFPR (1−Spec)\nFalse Positive Rate\nLIVE EQUATIONS\nCOUNTS\nN (Total)\n5,030\nTP+FN+FP+TN\nP (Actual)\n1,506\nP=TP+FN\nNeg (Actual)\n3,524\nNeg=TN+FP\nPred+ (Predict+)\n2,110\nPred+=TP+FP\nPred- (Predict-)\n2,920\nPred-=TN+FN\nRATES\nTPR (Recall)\n70.06%\nTP/P=TP/(TP+FN)\nFNR (Miss)\n29.94%\nFN/P=FN/(TP+FN)\nTNR (Specificity)\n70.06%\nTN/Neg=TN/(TN+FP)\nFPR (Fallout)\n29.94%\nFP/Neg=FP/(TN+FP)\nSCORES\nPrec (Precission)\n50.00%\nTP/Pred+=TP/(TP+FP)\nNPV (Neg. Pred. Value)\n84.56%\nTN/Pred-=TN/(TN+FN)\nAcc (Accuracy)\n70.06%\n(TP+TN)/N = (TP+TN)/5,030\nF1 (Balance)\n58.35%\n2TP/(P+Pred+) = 2TP/(2TP+FP+FN)\nBAcc (Balanced)\n70.06%\n½×(TP/P + TN/Neg)\nCONFUSION MATRIX\nTN 2,469\nFP 1,055\nFN 451\nTP 1,055\nActual Neg\nActual Pos\nP=1,506 N=3,524 | TP=1,055 FP=1,055 TN=2,469 FN=451\nTP\nFN\nFP\nTN\nPrediction\nDERIVED METRICS\nPRECISION\n50.0%\nF1\n58.4%\nACCURACY\n70.1%\nBAL ACC\n70.1%\nTNR\n70.1%\nNPV\n84.6%\nPRESETS\nBalanced\nπ=50%\nImbalanced\nπ=10%\nV. Imbalanced\nπ=1%\nPerfect\nTPR≈100 FPR≈0\nRandom\nTPR=FPR\nReset\ndefaults\nCOUNTS\n1,055\n1,055\n2,469\n451\n2,110\n2,920\nTP\nFP\nTN\nFN\nPred+\nPred-\n0\n1000\n2000\n3000\ncount\nRATES\n70.1\n29.9\n50.0\n70.1\n58.4\n70.1\n84.6\nTPR\nFPR\nPrec\nAcc\nF1\nBAcc\nNPV\n0\n50\n100\n%\nROC · ISO-LR⁺\n  LR⁺=2.3\n0\n0.5\n1\n0\n0.5\n1\nFPR\nTPR\nPRECISION-RECALL\n0\n0.5\n1\n0\n0.5\n1\nRecall\nPrecision",
+      "controls": [
+        {
+          "id": "editToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "⠇ Edit Layout"
+        },
+        {
+          "id": "resetLayout",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "↺ Reset"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "nVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "n",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "piVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "pi",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "tprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "fprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "bal",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balancedπ=50%"
+        },
+        {
+          "id": "imb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Imbalancedπ=10%"
+        },
+        {
+          "id": "vimb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "V. Imbalancedπ=1%"
+        },
+        {
+          "id": "perfect",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "PerfectTPR≈100 FPR≈0"
+        },
+        {
+          "id": "random",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "RandomTPR=FPR"
+        },
+        {
+          "id": "resetBtn",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Resetdefaults"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "ffb6fc5",
+      "names": [
+        "old_from_scratch"
+      ],
+      "path": "design_0/index.html",
+      "url": "http://localhost:8221/design_0/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/ffb6fc5-design_0_index_html-desktop.png",
+        "screenshots/ffb6fc5-design_0_index_html-mobile.png"
+      ],
+      "title": "Classifier Metrics Playground",
+      "text": "Classifier Metrics Playground\nN · π · TPR · FPR → live\nTry: TPR=90%, FPR=5%, π=1% → watch Precision collapse.\n⠇ Edit Layout\n↺ Reset\nGrab ⠇ on any panel to reorder\nPARAMETERS\nDataset size (N)\nLog · 100 → 500k\nPrevalence (π)\n% positives\nTPR (Sensitivity)\nTrue Positive Rate\nFPR (1−Spec)\nFalse Positive Rate\nLIVE EQUATIONS\nCOUNTS\nN (Total)\n5,030\nTP+FN+FP+TN\nP (Actual)\n1,506\nP=TP+FN\nNeg (Actual)\n3,524\nNeg=TN+FP\nPred+ (Predict+)\n2,110\nPred+=TP+FP\nPred- (Predict-)\n2,920\nPred-=TN+FN\nRATES\nTPR (Recall)\n70.06%\nTP/P=TP/(TP+FN)\nFNR (Miss)\n29.94%\nFN/P=FN/(TP+FN)\nTNR (Specificity)\n70.06%\nTN/Neg=TN/(TN+FP)\nFPR (Fallout)\n29.94%\nFP/Neg=FP/(TN+FP)\nSCORES\nPrec (Precission)\n50.00%\nTP/Pred+=TP/(TP+FP)\nNPV (Neg. Pred. Value)\n84.56%\nTN/Pred-=TN/(TN+FN)\nAcc (Accuracy)\n70.06%\n(TP+TN)/N = (TP+TN)/5,030\nF1 (Balance)\n58.35%\n2TP/(P+Pred+) = 2TP/(2TP+FP+FN)\nBAcc (Balanced)\n70.06%\n½×(TP/P + TN/Neg)\nCONFUSION MATRIX\nTN 2,469\nFP 1,055\nFN 451\nTP 1,055\nActual Neg\nActual Pos\nP=1,506 N=3,524 | TP=1,055 FP=1,055 TN=2,469 FN=451\nTP\nFN\nFP\nTN\nPrediction\nDERIVED METRICS\nPRECISION\n50.0%\nF1\n58.4%\nACCURACY\n70.1%\nBAL ACC\n70.1%\nTNR\n70.1%\nNPV\n84.6%\nPRESETS\nBalanced\nπ=50%\nImbalanced\nπ=10%\nV. Imbalanced\nπ=1%\nPerfect\nTPR≈100 FPR≈0\nRandom\nTPR=FPR\nReset\ndefaults\nCOUNTS\n1,055\n1,055\n2,469\n451\n2,110\n2,920\nTP\nFP\nTN\nFN\nPred+\nPred-\n0\n1000\n2000\n3000\ncount\nRATES\n70.1\n29.9\n50.0\n70.1\n58.4\n70.1\n84.6\nTPR\nFPR\nPrec\nAcc\nF1\nBAcc\nNPV\n0\n50\n100\n%\nROC · ISO-LR⁺\n  LR⁺=2.3\n0\n0.5\n1\n0\n0.5\n1\nFPR\nTPR\nPRECISION-RECALL\n0\n0.5\n1\n0\n0.5\n1\nRecall\nPrecision",
+      "controls": [
+        {
+          "id": "editToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "⠇ Edit Layout"
+        },
+        {
+          "id": "resetLayout",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "↺ Reset"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "nVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "n",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "piVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "pi",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "tprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "fprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "bal",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balancedπ=50%"
+        },
+        {
+          "id": "imb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Imbalancedπ=10%"
+        },
+        {
+          "id": "vimb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "V. Imbalancedπ=1%"
+        },
+        {
+          "id": "perfect",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "PerfectTPR≈100 FPR≈0"
+        },
+        {
+          "id": "random",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "RandomTPR=FPR"
+        },
+        {
+          "id": "resetBtn",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Resetdefaults"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "ffb6fc5",
+      "names": [
+        "old_from_scratch"
+      ],
+      "path": "dev_2/index.html",
+      "url": "http://localhost:8221/dev_2/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/ffb6fc5-dev_2_index_html-desktop.png",
+        "screenshots/ffb6fc5-dev_2_index_html-mobile.png"
+      ],
+      "title": "ROC & Confusion Matrix Playground",
+      "text": "ROC & Confusion Matrix Playground\nTheme: Light\nPARAMETERS\nBIDIRECTIONAL LINK\nDirect Rates\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nStart simple with ready-made TPR/FPR/Balance combinations, then shape the score model only if you want more depth.\nBalanced\nRare 5%\nScreening\nOPTIONAL\nShape the score model\nCurves/AUC only • Neg 0.0/1.0 | Pos 2.0/1.0\n+\nSTEP 1\nChoose TPR, FPR, and balance\nDirect | TPR 90% | FPR 10% | Prev 50%\n-\nTPR (Sensitivity)\n90%\nType exact % for tails like 0.3 or 99.7\n%\nFPR (1 − Specificity)\n10%\nType exact % for rare false-positive rates\n%\nBalance (P prevalence)\n50%\nUse exact % when prevalence is tiny or near-certain\n%\nThreshold (linked only)\nmanual\nSTEP 2\nChoose sample count\n1000 samples | ~500 pos | ~500 neg\n+\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n−4\n−2\n0\n2\n4\n6\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.2\n0.4\n0.6\n0.8\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nTP\n450\nTN\n450\n← Predicted Positive →\nActual P (500)\nActual N (500)\n50%\n50%\nTPR\nFNR\nDERIVED METRICS\nVALUES\nBARS\nTHEORY\nACCURACY\n0.900\n(TP+TN)/N\nPRECISION (PPV)\n0.900\nTP/(TP+FP)\nRECALL (TPR)\n0.900\nTP/(TP+FN)\nSPECIFICITY (TNR)\n0.900\nTN/(TN+FP)\nF1 SCORE\n0.900\n2·P·R/(P+R)\nAUC\n0.940\nArea under ROC\nNPV\n0.900\nTN/(TN+FN)\nMCC\n0.800\nMatthews corr.",
+      "controls": [
+        {
+          "id": "themeToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Theme: Light"
+        },
+        {
+          "id": "toggle_bidirectional",
+          "tag": "INPUT",
+          "type": "checkbox",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balanced"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Rare 5%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Screening"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "\n        \n          Optional\n          Shape the score model\n          Curves/AUC only • Neg 0.0/1.0"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "\n        \n          Step 1\n          Choose TPR, FPR, and balance\n          Direct | TPR 90% | FPR 1"
+        },
+        {
+          "id": "s_tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_tpr_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_fpr_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_bal",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_bal_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_thresh",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "\n        \n          Step 2\n          Choose sample count\n          1000 samples | ~500 pos | ~500 ne"
+        },
+        {
+          "id": "btn_dist_curves",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Curves"
+        },
+        {
+          "id": "btn_dist_topview",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Top View"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "   .cls-0{fill:#000;}  .cls-1{fill:#FFF;}  .cls-2{fill:#F26;}  .cls-3{fill:#D69;}  .cls-4{fill:#BAC;"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "   .cls-0{fill:#000;}  .cls-1{fill:#FFF;}  .cls-2{fill:#F26;}  .cls-3{fill:#D69;}  .cls-4{fill:#BAC;"
+        },
+        {
+          "id": "btn_cm",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Matrix"
+        },
+        {
+          "id": "btn_mosaic",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Mosaic"
+        },
+        {
+          "id": "btn_metrics_vals",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Values"
+        },
+        {
+          "id": "btn_metrics_bar",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Bars"
+        },
+        {
+          "id": "btn_metrics_eqs",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Theory"
+        }
+      ],
+      "status": "OPENED"
+    }
+  ]
+}

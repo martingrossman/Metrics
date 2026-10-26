@@ -1,0 +1,505 @@
+{
+  "tests": [
+    {
+      "id": "F16",
+      "name": "Reference filters and disclosures, recheck with initial categories collapsed",
+      "status": "PASS",
+      "evidence": {
+        "all": "35 of 35 metrics",
+        "cats": [
+          {
+            "c": "core",
+            "result": "8 of 35 metrics"
+          },
+          {
+            "c": "imb",
+            "result": "7 of 35 metrics"
+          },
+          {
+            "c": "err",
+            "result": "8 of 35 metrics"
+          },
+          {
+            "c": "rank",
+            "result": "5 of 35 metrics"
+          },
+          {
+            "c": "ops",
+            "result": "7 of 35 metrics"
+          }
+        ],
+        "search": "1 of 35 metrics",
+        "hash": "#metric-8",
+        "note": "Initial generic toggle assertion assumed categories initially open. Rechecked using explicit action names; application behavior passes. After filtering, persisted open details can leave the toggle already in Collapse state."
+      }
+    },
+    {
+      "id": "A04",
+      "name": "Missing separation name and mouse-only cost pills reproduce twice",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"name\":null,\"labels\":0,\"pills\":[{\"tabindex\":null,\"role\":null},{\"tabindex\":null,\"role\":null}]},{\"repeat\":1,\"name\":null,\"labels\":0,\"pills\":[{\"tabindex\":null,\"role\":null},{\"tabindex\":null,\"role\":null}]}]"
+    },
+    {
+      "id": "E08",
+      "name": "PR-AUC naming distinguishes trapezoidal integral from Average Precision",
+      "status": "FAIL",
+      "error": "[\"0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\\\"Sick portion\\\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!\",\"0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\\\"Sick portion\\\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!\"]"
+    },
+    {
+      "id": "G02",
+      "name": "ROC cost preset active state in Generic ML",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"threshold\":\"20\",\"state\":[{\"value\":\"80\",\"fill\":\"#f8fafc\"},{\"value\":\"50\",\"fill\":\"#f8fafc\"}]},{\"repeat\":1,\"threshold\":\"20\",\"state\":[{\"value\":\"80\",\"fill\":\"#f8fafc\"},{\"value\":\"50\",\"fill\":\"#f8fafc\"}]}]"
+    },
+    {
+      "id": "V01",
+      "name": "Default primary panels exceed short-phone/tablet viewport, repeated loads",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"viewport\":[320,568],\"document\":[305,770],\"matrixBottom\":670.5249938964844,\"scoreBottom\":455.02501678466797},{\"repeat\":0,\"viewport\":[375,667],\"document\":[360,722],\"matrixBottom\":638.3125,\"scoreBottom\":448.81251525878906},{\"repeat\":0,\"viewport\":[768,1024],\"document\":[753,1203],\"matrixBottom\":1088.1000061035156,\"scoreBottom\":698.8000183105469},{\"repeat\":0,\"viewport\":[1024,768],\"document\":[1009,1138],\"matrixBottom\":1041.4000549316406,\"scoreBottom\":652.1000061035156},{\"repeat\":1,\"viewport\":[320,568],\"document\":[305,770],\"matrixBottom\":670.5249938964844,\"scoreBottom\":455.02501678466797},{\"repeat\":1,\"viewport\":[375,667],\"document\":[360,722],\"matrixBottom\":638.3125,\"scoreBottom\":448.81251525878906},{\"repeat\":1,\"viewport\":[768,1024],\"document\":[753,1203],\"matrixBottom\":1088.1000061035156,\"scoreBottom\":698.8000183105469},{\"repeat\":1,\"viewport\":[1024,768],\"document\":[1009,1138],\"matrixBottom\":1041.4000549316406,\"scoreBottom\":652.1000061035156}]"
+    },
+    {
+      "id": "V02",
+      "name": "Mobile touch targets meet project 44x44 minimum",
+      "status": "FAIL",
+      "error": "[{\"id\":\"presetSelect\",\"width\":92,\"height\":18.399999618530273,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"reset\",\"width\":20.399999618530273,\"height\":28,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"threshold\",\"width\":141.8000030517578,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"separation\",\"width\":193.3874969482422,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"balance10\",\"width\":35.79999923706055,\"height\":23.350000381469727,\"font\":\"11px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"balance50\",\"width\":35.79999923706055,\"height\":23.350000381469727,\"font\":\"11px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"prevalence\",\"width\":141.8000030517578,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphScores\",\"width\":43.22500228881836,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphSplit\",\"width\":32.837501525878906,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphGauss\",\"width\":36.66250228881836,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphRoc\",\"width\":29.899999618530273,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphPr\",\"width\":22.075000762939453,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphBayes\",\"width\":35.900001525878906,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"}]"
+    }
+  ],
+  "reproductions": [
+    {
+      "id": "accessibility",
+      "rows": [
+        {
+          "repeat": 0,
+          "name": null,
+          "labels": 0,
+          "pills": [
+            {
+              "tabindex": null,
+              "role": null
+            },
+            {
+              "tabindex": null,
+              "role": null
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "name": null,
+          "labels": 0,
+          "pills": [
+            {
+              "tabindex": null,
+              "role": null
+            },
+            {
+              "tabindex": null,
+              "role": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-auc-label",
+      "rows": [
+        "0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\"Sick portion\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!",
+        "0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\"Sick portion\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!"
+      ]
+    },
+    {
+      "id": "generic-cost-active",
+      "rows": [
+        {
+          "repeat": 0,
+          "threshold": "20",
+          "state": [
+            {
+              "value": "80",
+              "fill": "#f8fafc"
+            },
+            {
+              "value": "50",
+              "fill": "#f8fafc"
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "threshold": "20",
+          "state": [
+            {
+              "value": "80",
+              "fill": "#f8fafc"
+            },
+            {
+              "value": "50",
+              "fill": "#f8fafc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "responsive-default",
+      "rows": [
+        {
+          "repeat": 0,
+          "viewport": [
+            320,
+            568
+          ],
+          "document": [
+            305,
+            770
+          ],
+          "matrixBottom": 670.5249938964844,
+          "scoreBottom": 455.02501678466797
+        },
+        {
+          "repeat": 0,
+          "viewport": [
+            375,
+            667
+          ],
+          "document": [
+            360,
+            722
+          ],
+          "matrixBottom": 638.3125,
+          "scoreBottom": 448.81251525878906
+        },
+        {
+          "repeat": 0,
+          "viewport": [
+            768,
+            1024
+          ],
+          "document": [
+            753,
+            1203
+          ],
+          "matrixBottom": 1088.1000061035156,
+          "scoreBottom": 698.8000183105469
+        },
+        {
+          "repeat": 0,
+          "viewport": [
+            1024,
+            768
+          ],
+          "document": [
+            1009,
+            1138
+          ],
+          "matrixBottom": 1041.4000549316406,
+          "scoreBottom": 652.1000061035156
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            320,
+            568
+          ],
+          "document": [
+            305,
+            770
+          ],
+          "matrixBottom": 670.5249938964844,
+          "scoreBottom": 455.02501678466797
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            375,
+            667
+          ],
+          "document": [
+            360,
+            722
+          ],
+          "matrixBottom": 638.3125,
+          "scoreBottom": 448.81251525878906
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            768,
+            1024
+          ],
+          "document": [
+            753,
+            1203
+          ],
+          "matrixBottom": 1088.1000061035156,
+          "scoreBottom": 698.8000183105469
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            1024,
+            768
+          ],
+          "document": [
+            1009,
+            1138
+          ],
+          "matrixBottom": 1041.4000549316406,
+          "scoreBottom": 652.1000061035156
+        }
+      ]
+    },
+    {
+      "id": "touch-targets",
+      "rows": [
+        {
+          "id": "presetSelect",
+          "width": 92,
+          "height": 18.399999618530273,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "reset",
+          "width": 20.399999618530273,
+          "height": 28,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "threshold",
+          "width": 141.8000030517578,
+          "height": 28,
+          "font": "14px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "separation",
+          "width": 193.3874969482422,
+          "height": 28,
+          "font": "14px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "balance10",
+          "width": 35.79999923706055,
+          "height": 23.350000381469727,
+          "font": "11px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "balance50",
+          "width": 35.79999923706055,
+          "height": 23.350000381469727,
+          "font": "11px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "prevalence",
+          "width": 141.8000030517578,
+          "height": 28,
+          "font": "14px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphScores",
+          "width": 43.22500228881836,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphSplit",
+          "width": 32.837501525878906,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphGauss",
+          "width": 36.66250228881836,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphRoc",
+          "width": 29.899999618530273,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphPr",
+          "width": 22.075000762939453,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphBayes",
+          "width": 35.900001525878906,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        }
+      ]
+    }
+  ],
+  "definitions": [
+    {
+      "id": "metric-0",
+      "text": "\n   AccuracyHow often is the model right?\n   The percentage of all predictions that are right. This includes correctly finding a problem and correctly saying there is no problem.Higher is better(TP + TN) / NExampleMedical test: 32 people with the condition test positive and 48 people without it test negative. (32 + 48) / 100 = 80%.What this tells youThe test is right for 80 of 100 people. To understand the other 20 results, look separately at missed illnesses and false alarms.Watch outAccuracy can hide missed problems when most cases are normal. If only 1 in 100 transactions is fraud, saying “not fraud” every time gives 99% accuracy.Compare with: Balanced accuracy · Error rate"
+    },
+    {
+      "id": "metric-1",
+      "text": "\n   PrecisionPPV · positive predictive valueHow many alerts are real?\n   Of everything the model flags, how much is a real problem?Higher is betterTP / (TP + FP)ExampleFraud alerts: 40 payments are flagged. Of these, 32 are fraud and 8 are normal. Precision = 32 / 40 = 80%.What this tells youAn 80% precision means 1 in 5 flagged cases is a false alarm. A review team would spend 8 of these 40 checks on normal payments.Watch outHigh precision does not mean you found most problems. A fraud detector could flag only a few obvious cases and miss the rest.Compare with: Recall · FDR"
+    },
+    {
+      "id": "metric-2",
+      "text": "\n   RecallTPR · sensitivityHow many real problems does it catch?\n   Of all the real problems, how many does the model find?Higher is betterTP / (TP + FN)ExampleMedical test: 44 people have the condition. The test finds 32 and misses 12. Recall = 32 / 44 ≈ 72.7%.What this tells youThe test finds about 73 out of every 100 people who have the condition. FNR describes the other side: the share it misses.Watch outFlagging everything gives 100% recall, but also many false alarms. Check precision to see whether the alerts are useful.Compare with: Precision · FNR"
+    },
+    {
+      "id": "metric-3",
+      "text": "\n   SpecificityTNR · true negative rateHow many normal cases does it leave alone?\n   Of all the cases without a problem, how many does the model correctly leave alone?Higher is betterTN / (TN + FP)ExampleSpam filter: of 56 legitimate emails, 48 stay in the inbox and 8 are wrongly marked as spam. Specificity = 48 / 56 ≈ 85.7%.What this tells youThe filter leaves about 86% of legitimate emails alone. To check how many spam messages it catches, look at recall.Watch outHigh specificity can still mean many false alarms when there are many normal cases. It also says nothing about how many real problems are missed.Compare with: FPR · NPV"
+    },
+    {
+      "id": "metric-4",
+      "text": "\n   F1F1 scoreCan one score balance catching problems and avoiding false alarms?\n   One score that combines precision and recall. Both need to be good for F1 to be high.Higher is better2TP / (2TP + FP + FN)ExampleFraud detector: 32 correct alerts, 8 false alarms, and 12 missed fraud cases. F1 = 64 / (64 + 8 + 12) ≈ 76.2%.What this tells youUse F1 to compare the balance between finding fraud and keeping alerts useful. A score of 76.2% does not mean 76.2% of all payments were classified correctly.Watch outF1 leaves out correct negative results. It also does not know whether a missed problem is more costly than a false alarm.Compare with: Precision · Recall · Fβ"
+    },
+    {
+      "id": "metric-5",
+      "text": "\n   FβF-beta scoreWhat if one kind of mistake matters more?\n   Like F1, but you choose what matters more. A beta (β) above 1 favors finding problems; a beta below 1 favors reliable alerts.Higher is better(1 + β²) · P · R / (β² · P + R)ExampleA screening model has precision 80% and recall 72.7%. With β = 1, its score is about 76.2%; with β = 2, it is about 74.1%.What this tells youThe predictions have not changed. The lower F2 score reflects the extra emphasis on recall, which is the weaker rate in this example.Watch outChoose beta before comparing models. Beta does not directly represent the money or harm caused by either kind of mistake.Compare with: F1 · F2 · F0.5"
+    },
+    {
+      "id": "metric-6",
+      "text": "\n   F2β = 2What if missing a problem matters more?\n   Combines precision and recall, with more weight on finding real problems than avoiding false alarms.Higher is better5 · P · R / (4 · P + R)ExampleMedical screening: precision is 80% and recall is 32/44. F2 = 5 × 0.8 × (32/44) / (4 × 0.8 + 32/44) ≈ 74.1%.What this tells youF2 may suit a comparison where missing a case matters more. In its count formula, a missed case gets four times the weight of a false alarm.Watch outYou can improve F2 while creating too many false alarms. Check whether people can handle the extra alerts.Compare with: Recall · F1 · F0.5"
+    },
+    {
+      "id": "metric-7",
+      "text": "\n   F0.5β = 0.5What if a false alarm matters more?\n   Combines precision and recall, with more weight on making positive predictions reliable.Higher is better1.25 · P · R / (0.25 · P + R)ExampleAutomatic fraud blocking: precision is 80% and recall is 32/44. F0.5 = 1.25 × 0.8 × (32/44) / (0.25 × 0.8 + 32/44) ≈ 78.4%.What this tells youThis score puts more emphasis on avoiding wrong blocks. In its count formula, a false alarm gets four times the weight of a missed case.Watch outA model can make very reliable alerts while missing many problems. Always check recall too.Compare with: Precision · F1 · F2"
+    },
+    {
+      "id": "metric-8",
+      "text": "\n   Balanced accuracyDoes it handle both groups well, even if one is rare?\n   Checks both classes separately, then averages the two results. The larger class does not get more weight.Higher is better(TPR + TNR) / 2ExampleFactory inspection: 72.7% of defective parts are found and 85.7% of good parts are correctly passed. Balanced accuracy ≈ (72.7% + 85.7%) / 2 = 79.2%.What this tells youThis helps when defects are rare. If both classes are present, a model that calls every part “good” scores 50%, even if ordinary accuracy looks high.Watch outIt treats catching problems and clearing normal cases as equally important. Your application may need a different balance.Compare with: Accuracy · G-mean · Youden’s J"
+    },
+    {
+      "id": "metric-9",
+      "text": "\n   G-meanGeometric mean of class recallsIs it doing well on both groups?\n   Combines how well the model finds problems and clears normal cases. A very poor result on either side pulls the score down.Higher is better√(TPR · TNR)ExampleFactory inspection: recall = 32/44 and specificity = 48/56. G-mean = √((32/44) × (48/56)) ≈ 79.0%.What this tells youIf the inspection system finds no defects at all, G-mean becomes zero. Correctly passing every good part cannot make up for that.Watch outThe score does not show which side is failing. Check recall and specificity separately to find the problem.Compare with: Balanced accuracy · Recall · Specificity"
+    },
+    {
+      "id": "metric-10",
+      "text": "\n   Youden’s JInformednessWhich cutoff balances finding problems and clearing normal cases?\n   Combines recall and specificity on a scale where 1 is perfect and 0 means their sum is 1. It can help compare cutoff settings.Higher is better · 0 = chance levelTPR + TNR − 1ExampleMedical test: J = 32/44 + 48/56 − 1 ≈ 0.584.What this tells youYou could compare J at several cutoffs to find a balance between catching illness and avoiding false alarms. This gives recall and specificity equal importance.Watch outThe cutoff with the highest J may still create too many false alarms or misses for your application.Compare with: Balanced accuracy · ROC-AUC"
+    },
+    {
+      "id": "metric-11",
+      "text": "\n   MCCMatthews correlation coefficientHow well do the predicted labels match the real ones?\n   A single score that uses all four results: correct alerts, correct clearances, false alarms, and misses.Higher is better(TP · TN − FP · FN) / √((TP + FP)(TP + FN)(TN + FP)(TN + FN))ExampleFraud detector: (32 × 48 − 8 × 12) / √(40 × 44 × 56 × 60) ≈ 0.592.What this tells youMCC runs from −1 to +1. +1 means every label is right, 0 means no correlation, and −1 means every label is reversed. It is not a percentage of correct payments.Watch outThe formula cannot be calculated if an actual or predicted class has no cases. Software conventions vary; some tools report zero instead of N/A.Compare with: Balanced accuracy · Cohen’s κ"
+    },
+    {
+      "id": "metric-12",
+      "text": "\n   Cohen’s κKappaHow much agreement is there beyond the expected overlap?\n   Measures agreement after subtracting the agreement expected from the actual and predicted class proportions.Higher is better · 0 = chance agreement(pₒ − pₑ) / (1 − pₑ)ExampleTwo reviewers label medical images. They agree on 80%. The class proportions give expected agreement of 51.2%. κ = (0.8 − 0.512) / (1 − 0.512) ≈ 0.590.What this tells youA kappa of 0 means agreement is at that expected level. A value of 1 means complete agreement. The score is not the same as the raw agreement percentage.Watch outChanging how common each class is can change kappa, even if the model has not improved. Compare scores on similar data.Compare with: Accuracy · MCC"
+    },
+    {
+      "id": "metric-13",
+      "text": "\n   Jaccard / IoUIntersection over unionHow much do the marked and real regions overlap?\n   Measures the overlap between what was marked positive and what really was positive.Higher is betterTP / (TP + FP + FN)ExampleMedical image: 32 pixels are correctly marked, 8 are wrongly marked, and 12 are missed. IoU = 32 / (32 + 8 + 12) ≈ 61.5%.What this tells youThe marked and true regions overlap by 61.5% of their combined area. Extra marked pixels and missed pixels both reduce the score.Watch outCorrectly unmarked areas do not count. For bounding boxes, IoU uses the boxes’ areas, not counts of classified objects.Compare with: F1 · Fowlkes–Mallows"
+    },
+    {
+      "id": "metric-14",
+      "text": "\n   MarkednessCan you trust both kinds of prediction?\n   Combines how reliable positive and negative predictions are. It adds precision and NPV, then subtracts 1.Higher is betterPPV + NPV − 1ExampleMedical test: precision = 32/40 = 80%; NPV = 48/60 = 80%. Markedness = 0.8 + 0.8 − 1 = 0.6.What this tells youThis summarizes trust in both test results. If the follow-up after a positive result differs from the action after a negative result, inspect the two rates separately.Watch outBoth rates change when problems become more or less common. The formula is undefined if the model never predicts one of the classes.Compare with: Precision · NPV · Youden’s J"
+    },
+    {
+      "id": "metric-15",
+      "text": "\n   FPRFalse positive rate · 1 − specificityHow often are normal cases wrongly flagged?\n   Of all normal cases, how many are wrongly flagged?Lower is betterFP / (FP + TN)ExampleCar warning system: of 56 situations with no hazard, 8 trigger a warning. FPR = 8 / 56 ≈ 14.3%.What this tells youFor every 100 no-hazard situations like these, about 14 would trigger a false warning. Multiply by the expected number of situations to estimate the workload.Watch outDo not confuse FPR with the share of alerts that are wrong. That is FDR. FPR starts with all normal cases.Compare with: Specificity · FDR"
+    },
+    {
+      "id": "metric-16",
+      "text": "\n   FNRFalse negative rate · 1 − recallHow many real problems are missed?\n   Of all real problems, how many does the model miss? It is 1 minus recall.Lower is betterFN / (FN + TP)ExampleMedical test: 12 of the 44 people with the condition are missed. FNR = 12 / 44 ≈ 27.3%.What this tells youThis describes the same result as 72.7% recall, from the opposite side. It can be easier to say “about 27% were missed.”Watch outA low miss rate can come with many false alarms. Check both before choosing a setting.Compare with: Recall · FPR"
+    },
+    {
+      "id": "metric-17",
+      "text": "\n   FDRFalse discovery rate · 1 − precisionHow many alerts are false alarms?\n   Of all positive predictions, how many are false alarms? It is 1 minus precision.Lower is betterFP / (TP + FP)ExampleFraud review: 8 of 40 flagged payments are normal. FDR = 8 / 40 = 20%.What this tells youHere, 20% of alerts are wrong. In a team reviewing every alert, 1 in 5 reviews would be spent on a normal payment.Watch outFDR depends on how common problems are. Also, FDR and FPR answer different questions, despite both being about false alarms.Compare with: Precision · FPR"
+    },
+    {
+      "id": "metric-18",
+      "text": "\n   FORFalse omission rate · 1 − NPVHow many cleared cases still have a problem?\n   Of all cases the model clears, how many actually have a problem? It is 1 minus NPV.Lower is betterFN / (TN + FN)ExampleMedical test: 60 people test negative, but 12 of them have the condition. FOR = 12 / 60 = 20%.What this tells youIn this example, 1 in 5 negative results is wrong. FNR asks a different question: how many of all people with the condition were missed?Watch outThe rate may look small simply because problems are rare. Check recall to see how many of all real problems were missed.Compare with: NPV · FNR"
+    },
+    {
+      "id": "metric-19",
+      "text": "\n   NPVNegative predictive valueHow many negative results are correct?\n   Of all negative predictions, how many really are negative?Higher is betterTN / (TN + FN)ExampleMedical test: 60 people test negative and 48 really do not have the condition. NPV = 48 / 60 = 80%.What this tells youIn this example, 4 in 5 negative results are correct. Specificity is different: it starts with everyone who does not have the condition.Watch outWhen problems are rare, NPV can be high even if the model misses most of them. A high NPV alone does not show that a test finds illness well.Compare with: Specificity · FOR · Precision"
+    },
+    {
+      "id": "metric-20",
+      "text": "\n   Error rate1 − accuracyHow often is the model wrong?\n   The percentage of all predictions that are wrong. It is 1 minus accuracy.Lower is better(FP + FN) / NExampleFactory inspection: 8 good parts are rejected and 12 faulty parts are passed. Error rate = (8 + 12) / 100 = 20%.What this tells youThe system makes 20 mistakes in 100 checks. Look at the two types of mistake separately before deciding what to improve.Watch outThis counts every mistake equally. A missed pedestrian and an unnecessary car warning may have very different consequences.Compare with: Accuracy · FPR · FNR"
+    },
+    {
+      "id": "metric-21",
+      "text": "\n   Fowlkes–MallowsBinary positive-class formHow can precision and recall be combined another way?\n   Combines precision and recall by multiplying them and taking the square root.Higher is better√(P · R)ExampleSearch results: precision is 80% and recall is 32/44. Fowlkes–Mallows = √(0.8 × (32/44)) ≈ 76.3%.What this tells youBoth precision and recall need to be high. Like F1, this score leaves out correct negative results; it just combines the two rates differently.Watch outThis version uses individual positive predictions. In clustering, the same metric name uses pairs of samples instead, so the results are not directly comparable.Compare with: F1 · Jaccard / IoU"
+    },
+    {
+      "id": "metric-22",
+      "text": "\n   Diagnostic odds ratioDORHow well does a test separate the two groups?\n   Combines a test’s ability to find problems and avoid false alarms into one odds ratio.Higher is better(TP · TN) / (FP · FN)ExampleMedical test: DOR = (32 × 48) / (8 × 12) = 16.What this tells youA result above 1 means the test separates the groups in the intended direction; 1 means it does not. A DOR of 16 does not mean a 16% or 16-fold probability of illness.Watch outThe same ratio can come from very different recall and specificity values. If FP or FN is zero, the result can be infinite or undefined.Compare with: Recall · Specificity · MCC"
+    },
+    {
+      "id": "metric-23",
+      "text": "\n   ROC-AUCArea under the ROC curveDo real problems appear near the top of the list?\n   Checks whether real positives tend to receive higher scores than negatives, across different cutoffs.Higher is better∫ TPR d(FPR)ExampleFraud ranking: if every fraudulent payment has a higher score than every normal payment, ROC-AUC = 1. Random ordering has an expected AUC of 0.5.What this tells youAUC summarizes ordering, not the final decision. Check precision and recall at the cutoff you would actually use.Watch outA good AUC does not guarantee useful alerts at your chosen cutoff. It also does not tell you whether a score such as “80% risk” is accurate.Compare with: PR-AUC · Average precision · Log loss"
+    },
+    {
+      "id": "metric-24",
+      "text": "\n   PR-AUCArea under the precision–recall curveHow useful are the alerts as you try to find more problems?\n   Summarizes how alert reliability changes as you try to find more positives.Higher is better∫ P dRExampleFraud ranking: a perfect ordering keeps precision at 100% while finding all fraud cases, giving PR-AUC = 1.What this tells youThis is useful when only a small share of payments are fraud. The curve helps show how many false alarms come with finding more fraud.Watch outState how the area is calculated. PR-AUC can change when positives become rarer, so compare models on the same evaluation data.Compare with: Average precision · ROC-AUC"
+    },
+    {
+      "id": "metric-25",
+      "text": "\n   Average precisionAPAre relevant results appearing early in the list?\n   Averages precision at the points where another positive is found, giving more weight to larger gains in recall.Higher is betterΣₖ (Rₖ − Rₖ₋₁) · PₖExampleSearch ranking: results are relevant, irrelevant, relevant. AP = 0.5 × 1 + 0.5 × (2/3) ≈ 0.833.What this tells youThe first relevant result is found with no wasted review. Finding the second requires passing one irrelevant result, so precision drops to 2/3. AP combines those two points.Watch outAP is not generally the same as trapezoidal PR-AUC. Object-detection benchmarks may use other averaging and matching rules; state which ones you use.Compare with: PR-AUC · ROC-AUC"
+    },
+    {
+      "id": "metric-26",
+      "text": "\n   Log lossBinary cross-entropyIs the model confident about the right answers?\n   Checks the probabilities the model assigns. It gives a large penalty when the model is very sure and wrong.Lower is better · 0 = perfect−mean(y · ln(p) + (1 − y) · ln(1 − p))ExampleFraud prediction: a payment is fraud. Predicting 80% fraud gives loss −ln(0.8) ≈ 0.223. Predicting only 1% gives about 4.605.What this tells youThe second prediction is punished much more because it was confidently wrong. Average the loss across payments to compare probability models.Watch outA completely confident wrong prediction has infinite theoretical loss. Software usually limits probabilities slightly to avoid this. Lower loss does not by itself prove good calibration.Compare with: Brier score · ROC-AUC"
+    },
+    {
+      "id": "metric-27",
+      "text": "\n   Brier scoreBinary probability scoreHow close are the predicted chances to what happens?\n   Measures the average squared gap between a predicted probability and what actually happened: 1 for positive, 0 for negative.Lower is better · 0 = perfectmean((p − y)²)ExampleMedical prediction: a person has the condition, and the model predicted an 80% chance. The squared error is (0.8 − 1)² = 0.04.What this tells youZero is best. Average this error over all people. A model that predicts the same chance for everyone can be a useful starting point for comparison.Watch outA low score can partly reflect how rare positives are. Compare with a model that always predicts the positive rate. This score measures more than calibration alone.Compare with: Log loss · ROC-AUC"
+    },
+    {
+      "id": "metric-28",
+      "text": "\n   False alarms per hourFP/hHow often is someone interrupted by a false alarm?\n   Counts how many false alarm events occur per hour of operation.Lower is betterFP / operating hoursExampleCar warning system: 12 false alarm events during 6 hours of driving gives 12 / 6 = 2 false alarms per hour.What this tells youThis helps estimate how often a driver is interrupted. Also check whether the alarms cluster in particular places or conditions.Watch outDefine when repeated warnings count as one event. A warning that stays on for several seconds should not silently become dozens of separate alarms.Compare with: False alarms per kilometer · False positives per frame · FPR"
+    },
+    {
+      "id": "metric-29",
+      "text": "\n   False alarms per kilometerFP/kmHow many false alarms occur over a journey?\n   Counts false alarm events relative to the distance traveled.Lower is betterFP / kilometers traveledExampleCar warning system: 12 false alarm events over 600 km gives 0.02 per km, or 2 per 100 km.What this tells youThis describes an average over distance. It is not the probability of an alarm in each kilometer; several alarms could occur close together.Watch outCompare similar driving conditions. A busy city street and a quiet highway offer different chances for false alarms, even over the same distance.Compare with: False alarms per hour · False positives per frame"
+    },
+    {
+      "id": "metric-30",
+      "text": "\n   False positives per frameFP/frameHow many false objects appear in the camera output?\n   Counts the average number of false object detections in each camera or sensor frame.Lower is betterFP / processed framesExampleVehicle camera: 20 false detections across 1,000 frames gives 20 / 1,000 = 0.02 FP/frame.What this tells youThis helps check the detector before repeated detections are grouped into tracks or warnings. A frame can contain more than one false detection.Watch outThe same false object may be counted in many frames. This is different from counting one warning to a driver.Compare with: False alarms per hour · False alarms per kilometer · Track recall"
+    },
+    {
+      "id": "metric-31",
+      "text": "\n   Misses per hourFN/hHow many events are missed per hour?\n   Counts missed events relative to the time the system was running.Lower is betterMissed events / operating hoursExampleCar detector: 3 pedestrian events were missed during 6 hours of driving. Misses/hour = 3 / 6 = 0.5.What this tells youMissing 3 out of 3 events is very different from missing 3 out of 300. The hourly rate alone cannot show that difference.Watch outFew misses may simply mean few real hazards occurred. Report how many events were available to detect, and check recall too.Compare with: FNR · Recall · False alarms per hour"
+    },
+    {
+      "id": "metric-32",
+      "text": "\n   Detection latencyResponse delayHow long does it take to spot something?\n   Measures how long the system takes to detect an event after a chosen starting point.Lower is bettert(detected) − t(event start)ExampleCar detector: a pedestrian becomes visible at 10.0 seconds and is detected at 10.3 seconds. Delay = 0.3 seconds, or 300 ms.What this tells youState when the clock starts, such as first visibility. Detection time is only part of the total time before the car brakes.Watch outAn average can hide slow responses. Report slow cases too, and count completely missed events separately.Compare with: Time to detection · Misses per hour"
+    },
+    {
+      "id": "metric-33",
+      "text": "\n   Time to detectionTTDHow long until a detection is confirmed?\n   Measures the time until the first detection that meets your rules, such as being confirmed over several frames.Lower is bettermin{tᵢ : valid detection} − t₀ExampleVehicle camera: an object becomes visible at 4.0 seconds. The first confirmed detection arrives at 4.2 seconds. TTD = 0.2 seconds.What this tells youRequiring several consistent detections can remove brief false alarms, but it can also delay confirmation. This metric often overlaps with detection latency.Watch outUse the same start and confirmation rules when comparing systems. A brief detection and a stable, confirmed detection are different results.Compare with: Detection latency · Track recall"
+    },
+    {
+      "id": "metric-34",
+      "text": "\n   Track recallObject-level tracking recallHow many real objects does the tracker follow?\n   Of all real object tracks, how many did the system recover? A track is the same object followed over time.Higher is betterDetected ground-truth tracks / all ground-truth tracksExampleVehicle tracker: 50 pedestrian tracks are labeled in a video. The system recovers 45 under the chosen rule. Track recall = 45 / 50 = 90%.What this tells youThis counts whole tracks, not frames. Recovering a track does not necessarily mean the person was followed correctly in every frame.Watch outDefine how much of a track must be recovered to count. This score alone does not tell you whether the system loses objects briefly or swaps their identities.Compare with: False positives per frame · Time to detection · Recall"
+    }
+  ],
+  "errors": []
+}

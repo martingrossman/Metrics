@@ -1,0 +1,221 @@
+{
+  "mobileTabs": [
+    {
+      "target": "cmPanel",
+      "visible": true,
+      "screenshot": "screenshots/1f35d26-mobile-cmPanel.png"
+    },
+    {
+      "target": "metricsPanel",
+      "visible": true,
+      "screenshot": "screenshots/1f35d26-mobile-metricsPanel.png"
+    },
+    {
+      "target": "distPanel",
+      "visible": true,
+      "screenshot": "screenshots/1f35d26-mobile-distPanel.png"
+    },
+    {
+      "target": "rocPanel",
+      "visible": true,
+      "screenshot": "screenshots/1f35d26-mobile-rocPanel.png"
+    }
+  ],
+  "dragComparison": [
+    {
+      "id": "1e973a5",
+      "before": [
+        {
+          "id": "separation",
+          "value": "60"
+        },
+        {
+          "id": "prevalence",
+          "value": "10"
+        }
+      ],
+      "horizontal": [
+        {
+          "id": "separation",
+          "value": "63"
+        },
+        {
+          "id": "prevalence",
+          "value": "10"
+        }
+      ],
+      "final": [
+        {
+          "id": "separation",
+          "value": "63"
+        },
+        {
+          "id": "prevalence",
+          "value": "10"
+        }
+      ],
+      "screenshot": "screenshots/1e973a5-axis-switch.png"
+    },
+    {
+      "id": "4ad5b18",
+      "before": [
+        {
+          "id": "separation",
+          "value": "60"
+        },
+        {
+          "id": "prevalence",
+          "value": "10"
+        }
+      ],
+      "horizontal": [
+        {
+          "id": "separation",
+          "value": "62"
+        },
+        {
+          "id": "prevalence",
+          "value": "10"
+        }
+      ],
+      "final": [
+        {
+          "id": "separation",
+          "value": "60"
+        },
+        {
+          "id": "prevalence",
+          "value": "18"
+        }
+      ],
+      "screenshot": "screenshots/4ad5b18-axis-switch.png"
+    }
+  ],
+  "learningComparison": [
+    {
+      "id": "7db2c1b",
+      "visibleInputs": [
+        {
+          "id": "threshold",
+          "value": "50"
+        },
+        {
+          "id": "separation",
+          "value": "60"
+        },
+        {
+          "id": "prevalence",
+          "value": "50"
+        }
+      ],
+      "text": "Bayes’ theorem: from a positive test to the chance of flu\n\nStart with how common flu is (prior p = 50%). Then combine true detections (TPR) and false alarms (FPR) to find the posterior probability P(flu | test +).\n\n1\nPrior · Base rate\nActual flu\np = 50% of 1,000\n500\nActual no flu\n1 − p = 50% of 1,000\n500\n2\nEvidence · 500 Test +\nFlu detected (TP)\nTPR (96%) × 500\n480\nFalse alarms (FP)\nFPR (4%) × 500\n20\n3\nPosterior · Precision\n96%\nPrecision\n\n480 of 500 positive tests have flu.\n\nBayes’ theorem in rate form\n\nThe bar | means “given”. TPR and FPR condition on the actual group (P(test + | flu) and P(test + | no flu)), while Precision flips the condition to ask about a positive result (P(flu | test +)).\n\n0.96 × 0.5 ÷ [0.96 × 0.5 + 0.04 × 0.5] = 96%\n\nThe same precision as in the graph, calculated from TPR, FPR, and the prior p.\n\nP(A | B) =\nP(B | A) × P(A)\nP(B)\nPrecision =\nTPR × p\nTPR × p + FPR × (1 − p)\nCompare 10% vs. 50% sick portion\nSame signal sensitivity and score separation · tap a card to switch\n10% sick portion\n72.7% Precision\n96 TP vs. 36 FP (132 Test +)\n50% sick portion\n96% Precision\n480 TP vs. 20 FP (500 Test +)\n\nPrior · p\n\nP(flu)\n\nBase rate (50%) before seeing the test result\n\nTPR\n\nP(test + | flu)\n\nOf people with flu, how many test positive? (96%)\n\nFPR\n\nP(test + | no flu)\n\nOf people without flu, how many test positive? (4%)\n\nPrecision\n\nP(flu | test +)\n\nOf people testing positive, how many have flu? (96%)"
+    },
+    {
+      "id": "b37face",
+      "visibleInputs": [
+        {
+          "id": "threshold",
+          "value": "50"
+        },
+        {
+          "id": "separation",
+          "value": "60"
+        },
+        {
+          "id": "prevalence",
+          "value": "50"
+        },
+        {
+          "id": "bayesThreshold",
+          "value": "50"
+        },
+        {
+          "id": "bayesSeparation",
+          "value": "60"
+        },
+        {
+          "id": "bayesPrevalence",
+          "value": "50"
+        }
+      ],
+      "text": "Bayes’ theorem in 3 natural steps: from 1,000 people to your chance of flu\n\nThe easiest way to understand Bayes’ theorem is with 1,000 people: first split them by how common flu is (p = 50%), next count how many from each row get a Test +, and finally take the sick share of all positive tests (P(flu | test +)).\n\nSensitivity to the flu signal\n50%\n0% · Less sensitive\n100% · More sensitive\nHow different the two groups are\n60%\nHard to tell apart\nEasy to tell apart\nSick portion\n50%\n0% · no one has flu\n100% · everyone has flu\n1\nPrior · Start with 1,000 people\nActual flu\n1,000 × p (50%)\n500\nActual no flu\n1,000 × (1 − p) (50%)\n500\n2\nEvidence · 500 Test +\nSick people caught (TP)\nTPR (96%) × 500\n480\nHealthy false alarms (FP)\nFPR (4%) × 500\n20\n3\nPosterior · Precision\n96%\nPrecision\n\n480 of 500 positive tests truly have flu.\n\nWhy the 1,000-person count formula equals Bayes’ formula\n\nThe vertical bar | means “given” (which group we restrict our attention to). Because TP = 1,000 × TPR × p and FP = 1,000 × FPR × (1 − p), the population size 1,000 cancels out from top and bottom—turning expected counts into Bayes’ exact rate formula for P(flu | test +).\n\n0.96 × 0.5 ÷ [0.96 × 0.5 + 0.04 × 0.5] = 96%\n\nPositive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×. Dividing TP by FP gives Posterior Odds = LR+ × Prior Odds.\n\n1. CONDITIONAL PROBABILITY (BAYES’ RULE)\nP(A | B) =\nP(B | A) × P(A)\nP(B | A) × P(A) + P(B | not A) × P(not A)\n2. CANCEL N = 1,000 FROM TP ÷ (TP + FP)\nPrecision =\nTPR × p\nTPR × p + FPR × (1 − p)\nCompare 10% vs. 50% sick portion\nSame signal sensitivity and score separation · tap a card to switch\n10% sick portion\n72.7% Precision\n96 TP vs. 36 FP (132 Test +)\n50% sick portion\n96% Precision\n480 TP vs. 20 FP (500 Test +)\n\nPrior · p\n\nP(flu)\n\nBase rate (50%) before seeing the test result\n\nTPR\n\nP(test + | flu)\n\nIf a person really has the flu, what is the chance the test catches it? (96%)\n\nFPR\n\nP(test + | no flu)\n\nIf a person does NOT have the flu, what is the chance of a false alarm? (4%)\n"
+    }
+  ],
+  "advanced": [
+    {
+      "id": "themeToggle",
+      "type": "button",
+      "text": "Theme: Light"
+    },
+    {
+      "id": "",
+      "type": "button",
+      "text": "Balanced"
+    },
+    {
+      "id": "",
+      "type": "button",
+      "text": "Rare 5%"
+    },
+    {
+      "id": "s_tpr",
+      "type": "range",
+      "text": ""
+    },
+    {
+      "id": "i_tpr_pct",
+      "type": "text",
+      "text": ""
+    },
+    {
+      "id": "s_fpr",
+      "type": "range",
+      "text": ""
+    },
+    {
+      "id": "i_fpr_pct",
+      "type": "text",
+      "text": ""
+    },
+    {
+      "id": "s_bal",
+      "type": "range",
+      "text": ""
+    },
+    {
+      "id": "i_bal_pct",
+      "type": "text",
+      "text": ""
+    },
+    {
+      "id": "mobileAdvancedToolsToggle",
+      "type": "button",
+      "text": "Hide advanced"
+    },
+    {
+      "id": "",
+      "type": "button",
+      "text": "Matrix"
+    },
+    {
+      "id": "",
+      "type": "button",
+      "text": "Metrics"
+    },
+    {
+      "id": "",
+      "type": "button",
+      "text": "Curves"
+    },
+    {
+      "id": "",
+      "type": "button",
+      "text": "ROC"
+    }
+  ],
+  "mainDevMissingCss": {
+    "url": "http://localhost:8214/dev/css/styles.css",
+    "status": 404,
+    "body": "Not found"
+  }
+}

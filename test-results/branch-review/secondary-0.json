@@ -1,0 +1,1352 @@
+{
+  "start": 0,
+  "end": 6,
+  "total": 28,
+  "done": false,
+  "results": [
+    {
+      "id": "1e973a5",
+      "names": [
+        "Branch_1e973a51"
+      ],
+      "path": "cheatsheet.html",
+      "url": "http://localhost:8201/cheatsheet.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/1e973a5-cheatsheet_html-desktop.png",
+        "screenshots/1e973a5-cheatsheet_html-mobile.png"
+      ],
+      "title": "Metrics Cheatsheet · CMatrixLab",
+      "text": "Skip to metrics\n← CMatrixLab\nFull reference →\nMetrics cheatsheet\n\n32 metrics · ✓ good for · ✗ watch out\n\nFormula key\nSearch metrics\nCategory\nAll metrics\nCore\nImbalance\nError rates\nRanking\nIn practice\n\n32 of 32 metrics\n\nCollapse all\nCORE\n8 metrics\n›\nAccuracy ↑\nHigher is better\n(TP + TN) / N\n\n✓\nGood for:\nOverall correctness on balanced data.\n\n✗\nWatch out:\nCan hide poor results on rare positives.\n\nPrecision ↑\nHigher is better\nTP / (TP + FP)\n\n✓\nGood for:\nReliable alerts; fewer false alarms.\n\n✗\nWatch out:\nCan miss many positives.\n\nRecall ↑\nHigher is better\nTP / (TP + FN)\n\n✓\nGood for:\nFinding positives; fewer misses.\n\n✗\nWatch out:\nCan produce many false alarms.\n\nSpecificity ↑\nHigher is better\nTN / (TN + FP)\n\n✓\nGood for:\nCorrectly clearing negative cases.\n\n✗\nWatch out:\nDoes not show how many positives are caught.\n\nF1 ↑\nHigher is better\n2TP / (2TP + FP + FN)\n\n✓\nGood for:\nOne score for precision and recall.\n\n✗\nWatch out:\nIgnores true negatives and error costs.\n\nFβ ↑\nHigher is better\n(1 + β²) · P · R / (β² · P + R)\n\n✓\nGood for:\nChoosing emphasis: β > 1 recall, β < 1 precision.\n\n✗\nWatch out:\nβ is not a direct error-cost ratio.\n\nF2 ↑\nHigher is better\n5 · P · R / (4 · P + R)\n\n✓\nGood for:\nGiving recall more emphasis.\n\n✗\nWatch out:\nCheck the false-alarm workload.\n\nF0.5 ↑\nHigher is better\n1.25 · P · R / (0.25 · P + R)\n\n✓\nGood for:\nGiving precision more emphasis.\n\n✗\nWatch out:\nCheck how many positives are missed.\n\nIMBALANCE\n7 metrics\n›\nBalanced accuracy ↑\nHigher is better\n(TPR + TNR) / 2\n\n✓\nGood for:\nGiving both actual classes equal weight.\n\n✗\nWatch out:\nEqual class weight may not fit your costs.\n\nG-mean ↑\nHigher is better\n√(TPR · TNR)\n\n✓\nGood for:\nRequiring both class recalls to be good.\n\n✗\nWatch out:\nZero if either class recall is zero.\n\nYouden’s J ↑\nHigher is better · 0 = chance level\nTPR + TNR − 1\n\n✓\nGood for:\nChoosing a recall–specificity balance.\n\n✗\nWatch out:\nMay not select the lowest-cost cutoff.\n\nMCC ↑\nHigher is better\n(TP · TN − FP · FN) / √((TP + FP)(TP + FN)(TN + FP)(TN + FN))\n\n✓\nGood for:\nOne score using all four outcomes.\n\n✗\nWatch out:\nUndefined with an empty actual or predicted class.\n\nCohen’s κ ↑\nHigher is better · 0 = chance agreement\n(pₒ − pₑ) / (1 − pₑ)\n\n✓\nGood for:\nAgreement beyond expected chance.\n\n✗\nWatch out:\nChanges with class proportions.\n\nJaccard / IoU ↑\nHigher is better\nTP / (TP + FP + FN)\n\n✓\nGood for:\nOverlap of predicted and true positives.\n\n✗\nWatch out:\nIgnores correctly predicted negatives.\n\nMarkedness ↑\nHigher is better\nPPV + NPV − 1\n\n✓\nGood for:\nTrust in positive and negative predictions.\n\n✗\nWatch out:\nChanges with how common positives are.\n\nERROR RATES\n8 metrics\n›\nFPR ↓\nLower is better\nFP / (FP + TN)\n\n✓\nGood for:\nFalse alarms among actual negatives.\n\n✗\nWatch out:\nSmall rates can still mean many alarms.\n\nFNR ↓\nLower is better\nFN / (FN + TP)\n\n✓\nGood for:\nMisses among actual positives.\n\n✗\nWatch out:\nSays nothing about false alarms.\n\nFDR ↓\nLower is better\nFP / (TP + FP)\n\n✓\nGood for:\nFalse alarms among positive predictions.\n\n✗\nWatch out:\nChanges with how common positives are.\n\nFOR ↓\nLower is better\nFN / (TN + FN)\n\n✓\nGood for:\nMissed positives among negative predictions.\n\n✗\nWatch out:\nCan look low when positives are rare.\n\nNPV ↑\nHigher is better\nTN / (TN + FN)\n\n✓\nGood for:\nTrust in a negative prediction.\n\n✗\nWatch out:\nCan look high when positives are rare.\n\nError rate ↓\nLower is better\n(FP + FN) / N\n\n✓\nGood for:\nOverall share of wrong predictions.\n\n✗\nWatch out:\nTreats misses and false alarms equally.\n\nFowlkes–Mallows ↑\nHigher is better\n√(P · R)\n\n✓\nGood for:\nGeometric mean of precision and recall.\n\n✗\nWatch out:\nIgnores true negatives and error costs.\n\nDiagnostic odds ratio ↑\nHigher is better\n(TP · TN) / (FP · FN)\n\n✓\nGood for:\nSummarizing test separation as an odds ratio.\n\n✗\nWatch out:\nInfinite or undefined with zero FP or FN.\n\nRANKING & PROBABILITY\n5 metrics\n›\nROC-AUC ↑\nHigher is better\n∫ TPR d(FPR)\n\n✓\nGood for:\nRanking positives above negatives.\n\n✗\nWatch out:\nHigh AUC can still mean poor alert precision.\n\nPR-AUC ↑\nHigher is better\n∫ P dR\n\n✓\nGood for:\nPrecision–recall tradeoffs for rare positives.\n\n✗\nWatch out:\nDepends on prevalence and integration method.\n\nAverage precision ↑\nHigher is better\nΣₖ (Rₖ − Rₖ₋₁) · Pₖ\n\n✓\nGood for:\nPrecision at successive recall gains.\n\n✗\nWatch out:\nAP, mAP, and trapezoidal PR-AUC differ.\n\nLog loss ↓\nLower is better · 0 = perfect\n−mean(y · ln(p) + (1 − y) · ln(1 − p))\n\n✓\nGood for:\nScoring probabilities; penalizing confident errors.\n\n✗\nWatch out:\nConfident wrong predictions get very large loss.\n\nBrier score ↓\nLower is better · 0 = perfect\nmean((p − y)²)\n\n✓\nGood for:\nScoring squared probability errors.\n\n✗\nWatch out:\nCompare with a constant-prevalence baseline.\n\nIN PRACTICE\n4 metrics\n›\nFalse alarms per hour / km ↓\nLower is better\nFP / observed hours or kilometers\n\n✓\nGood for:\nEstimating alarm burden over time or distance.\n\n✗\nWatch out:\nDefine and group alarm events consistently.\n\nDetection latency ↓\nLower is better\nt(detected) − t(event start)\n\n✓\nGood for:\nMeasuring how quickly detection happens.\n\n✗\nWatch out:\nReport slow cases and missed events too.\n\nRecall lower bound ↑\nHigher is better\nLower confidence bound for TP / (TP + FN)\n\n✓\nGood for:\nAllowing for uncertainty in measured recall.\n\n✗\nWatch out:\nNeeds a stated method and enough test cases.\n\nRecall per scenario ↑\nHigher is better\nTP / (TP + FN), within each scenario\n\n✓\nGood for:\nFinding weak spots such as night or rain.\n\n✗\nWatch out:\nSmall groups give uncertain results.",
+      "controls": [
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Skip to metrics"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "← CMatrixLab"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Full reference →"
+        },
+        {
+          "id": "q",
+          "tag": "INPUT",
+          "type": "search",
+          "text": ""
+        },
+        {
+          "id": "category",
+          "tag": "SELECT",
+          "type": "select-one",
+          "text": "\n      All metricsCoreImbalanceError ratesRankingIn practice\n    "
+        },
+        {
+          "id": "fold-all",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Collapse all"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Core8 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Imbalance7 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Error rates8 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Ranking & probability5 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "In practice4 metrics›"
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "1e973a5",
+      "names": [
+        "Branch_1e973a51"
+      ],
+      "path": "learn.html",
+      "url": "http://localhost:8201/learn.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/1e973a5-learn_html-desktop.png",
+        "screenshots/1e973a5-learn_html-mobile.png"
+      ],
+      "title": "CMatrixLab · Learn: From a Result to a Probability",
+      "text": "CMatrixLab\nLEARN\n← Simulator\nGeneric ML\n📋 Cheatsheet\n📖 Reference\nReset\n↺\nLIVE INTERACTIVE METRICS (N = 1,000 CASES)\nMove sliders to observe how metrics and probability update\nTPR (Sensitivity)\n96%\nTP ÷ (TP + FN)\nFPR (Fall-out)\n4%\nFP ÷ (FP + TN)\nPrecision (PPV)\n96%\nTP ÷ (TP + FP)\nAccuracy\n96%\n(TP + TN) ÷ Total\nDecision Cutoff / Sensitivity\n50%\n0% · Strict (+ rare)\n100% · Lenient (+ easily)\nClass Separation\n60%\n0% · Heavy overlap\n100% · Perfect split\nSick / Positive Portion (p)\n50%\n0% · None positive\n100% · All positive\nSCORE DISTRIBUTION & CUTOFF\nCUTOFF: 0.50\n2×2 MATRIX COUNTS\nSUM: 1,000\nTP (True Pos)\n480\nFN (False Neg)\n20\nFP (False Pos)\n20\nTN (True Neg)\n480\n\nA CLOSER LOOK\n\nYou tested positive. What is the chance you really have the flu?\n← Simulator\nREFERENCE\nComprehensive 35 Classification Metrics Reference & Checklist\nAll formulas, failure modes, imbalance scores & operational perception metrics\n📋 Cheatsheet\nOpen Reference Checklist ↗\nThe basics\nFormulas\nBayes\nROC & Trade-offs\nA test’s accuracy on sick people is not your chance of being sick.\n\nWhen you get a Test +, you don’t know whether you came from the sick group or the healthy group. Right now, out of 1,000 people, 500 have the flu (yielding 480 true catches) and 500 are healthy (yielding 20 false alarms). Your actual chance of having the flu is 480 out of all 500 positive tests (96%).\n\nSee the step-by-step Bayes proof →\n50%\nBefore · sick portion (p)\n→\n96%\nAfter Test + · Precision\nLikelihood Ratio (LR+ = TPR ÷ FPR): 24× · How strongly a Test + boosts the odds of flu\nTPR\n96%\n\nIf a person really has the flu, what is the chance the test catches it?\n\nP(test + | flu) · Row rate · Fixed when sick portion changes\n\nFPR\n4%\n\nIf a person does NOT have the flu, what is the chance of a false alarm?\n\nP(test + | no flu) · Row rate · Fixed when sick portion changes\n\nPrecision\n96%\n\nIf a person gets a positive test (Test +), what is the chance they truly have the flu?\n\nP(flu | test +) · Column rate · Changes with sick portion\n\nFour possible outcomes (2×2 Confusion Matrix)\nAverages for 1,000 people\nTop-left · Sick, Test +\nTP · 480\nFlu caught: person really has the flu, and the test came back positive (Test +).\nTop-right · Sick, Test −\nFN · 20\nFlu missed: person really has the flu, but the test came back negative (Test −).\nBottom-left · Healthy, Test +\nFP · 20\nFalse alarm: person does not have the flu, yet the test came back positive (Test +).\nBottom-right · Healthy, Test −\nTN · 480\nCorrectly cleared: person does not have the flu, and the test came back negative (Test −).\nOther layouts you’ll see\nSame four cells, different positions\nStandard (Wikipedia / Medical) ✓ Active\nTest +\nTest −\nSick\nTP\nFN\nHealthy\nFP\nTN\nRows: actual (+ first) · Columns: test (+ first)\nMatches graph (Score order)\nTest −\nTest +\nSick\nFN\nTP\nHealthy\nTN\nFP\nRows: actual (+ first) · Columns: test (− first)\nscikit-learn (Python / ML)\nTest −\nTest +\nHealthy\nTN\nFP\nSick\nFN\nTP\nRows: actual · Columns: predicted · negative first\n\nWhy a rare disease creates mostly false alarms. When flu is rare (10% sick), 900 of 1,000 people are healthy. A 4% false-alarm rate on 900 healthy people creates 36 false alarms, next to only 96 true catches, so Precision is 72.7%.\n\nWith the test cutoff and score separation fixed, changing the sick portion changes Precision while TPR and FPR stay fixed wherever both rates are defined.\n\nOverall Accuracy & The False Security Trap\nWhy accuracy alone can be dangerously deceptive on rare events\nTest Accuracy: (All correct results ÷ Total)\n960 out of 1,000 cases correctly classified\n96%\nAccuracy\n\nAccuracy measures how often the test gives the right answer: catching flu (480 TP) plus clearing healthy people (480 TN).\n\n⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \"Negative\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\n⚡ Demo: Always predict Negative\nReset cutoff\nREFERENCE & CHECKLIST\nComplete 35 Classification Metrics Reference & Checklist\nAll 35 formulas across 5 categories, failure modes, and an interactive 2×2 live calculator.\n📋 Cheatsheet\nOpen Reference Checklist ↗\n35 METRICS\nComprehensive Classification Metrics Reference & Checklist\nComplete guide with all 35 formulas, failure modes, imbalance metrics & interactive calculator\nOpen Metrics Reference & Checklist ↗\nCMatrixLab · Standalone Interactive Classifier Metrics Learning Guide · Martin Grossman",
+      "controls": [
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "CMatrixLab Learn"
+        },
+        {
+          "id": "closeLearn",
+          "tag": "A",
+          "type": "",
+          "text": "← Simulator"
+        },
+        {
+          "id": "modeToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Generic MLML"
+        },
+        {
+          "id": "refTopBtn",
+          "tag": "A",
+          "type": "",
+          "text": "📋 Cheatsheet"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "📖 Reference"
+        },
+        {
+          "id": "reset",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Reset ↺"
+        },
+        {
+          "id": "threshold",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "separation",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "prevalence",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "topCloseBtn",
+          "tag": "A",
+          "type": "",
+          "text": "← Simulator"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "📋 Cheatsheet"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Open Reference Checklist ↗"
+        },
+        {
+          "id": "tab-basics",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "The basics"
+        },
+        {
+          "id": "tab-formulas",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Formulas"
+        },
+        {
+          "id": "tab-bayes",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Bayes"
+        },
+        {
+          "id": "tab-tradeoffs",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "ROC & Trade-offs"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "See the step-by-step Bayes proof →"
+        },
+        {
+          "id": "demoAlwaysNegative",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "⚡ Demo: Always predict Negative"
+        },
+        {
+          "id": "demoDefaultCutoff",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Reset cutoff"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "📋 Cheatsheet"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Open Reference Checklist ↗"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Open Metrics Reference & Checklist ↗"
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "1e973a5",
+      "names": [
+        "Branch_1e973a51"
+      ],
+      "path": "reference.html",
+      "url": "http://localhost:8201/reference.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/1e973a5-reference_html-desktop.png",
+        "screenshots/1e973a5-reference_html-mobile.png"
+      ],
+      "title": "Metrics Reference · CMatrixLab",
+      "text": "Skip to metrics\n← CMatrixLab\nQuick cheatsheet →\nPrint / PDF\nMetrics reference\n\nWhat does each score tell you? Explore simple explanations and examples from medicine, driving, fraud detection, and more.\n\nHelp me choose a metric\n\nChoose by the decision you need to make: finding problems, reducing false alarms, keeping a review queue manageable, or trusting a predicted chance.\n\nYou do not want to miss a problem\n\nUse recall to see how many real problems you catch. FNR tells you how many you miss.\n\nExamples: finding an illness in a medical test, or spotting a pedestrian in front of a car. Check false alarms too, and test situations such as night or rain separately. Medical example · AEB example\n\nYou want fewer false alarms\n\nUse precision to check how many alerts are real. FPR tells you how often normal cases get flagged.\n\nExamples: keeping legitimate emails out of spam, avoiding wrong fraud blocks, or reducing unnecessary car warnings. Check that you still catch enough real problems. Automatic-blocking example\n\nYou want one overall score\n\nUse accuracy for a simple count of correct predictions. If one class is much rarer, also check balanced accuracy or MCC.\n\nExample: finding faulty parts in a factory where almost every part is good. Always look at missed defects and rejected good parts separately. Factory example\n\nYou want the most likely problems first\n\nUse ROC-AUC to check the ordering of scores. For rare problems, PR-AUC or AP also helps show how useful the alerts are as you find more cases.\n\nExample: putting suspicious payments at the top of a fraud review queue. Check the results for the number of payments your team can actually review. Review-queue example · Object-detection example\n\nYou need to trust the predicted chances\n\nUse log loss or Brier score to check probability predictions.\n\nExample: if many patients each receive a 20% risk estimate, does about 1 in 5 have the condition? A calibration plot helps you check this. Risk-score example\n\nYou care about what happens over time\n\nCheck false alarms per hour or kilometer, detection delay, and track recall.\n\nExample: a car should spot a pedestrian quickly, keep following them, and avoid repeated false warnings. Decide what counts as one warning before measuring it. Driving-hours example · Rare-hazard example\n\nChoose the setting that catches enough problems without causing too many false alarms. Try a scenario in the calculator ↓\n\nExamples by industry: driving, medicine, fraud & more\nFormula key & reading tips\nSearch metrics\nCategory\nAll metrics\nCore\nImbalance\nError rates\nRanking\nIn practice\n\n35 of 35 metrics\n\nExpand categories\nExpand details\nCORE METRICS\n8 metrics\n›\nCLASS IMBALANCE & AGREEMENT\n7 metrics\n›\nERROR RATES & RELATED SCORES\n8 metrics\n›\nRANKING & PROBABILITY\n5 metrics\n›\nIN PRACTICE\n7 metrics\n›\nConfusion matrix calculator\n\nExamples use made-up numbers to explain the metrics. They are not performance targets, and they do not change when you edit the calculator.\n\nDefinitions: scikit-learn evaluation guide · Average precision conventions. For driving and tracking metrics, define what counts as an event or a successful detection before comparing results.",
+      "controls": [
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Skip to metrics"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "← CMatrixLab"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Quick cheatsheet →"
+        },
+        {
+          "id": "print",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Print / PDF"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Medical example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "AEB example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Automatic-blocking example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Factory example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Review-queue example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Object-detection example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Risk-score example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Driving-hours example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Rare-hazard example"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Try a scenario in the calculator ↓"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "FPR"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "MVTec AD dataset"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Specificity"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "FDA diagnostic-test reporting guidance"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Average precision"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "PR-AUC"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "FPR"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "False alarms per hour"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "False alarms per kilometer"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Detection latency"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "False positives per frame"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "NHTSA 2024 AEB test design (pp. 188–189)"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "NIST: exposure needed for a rare-event test"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Average precision"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Official COCO evaluation code"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Detection latency"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "False alarms per hour"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "False alarms per kilometer"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "FDA guidance: counts, subgroups, and confidence intervals"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Brier score"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Log loss"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "ROC-AUC"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "scikit-learn: calibration curves"
+        },
+        {
+          "id": "metricSearch",
+          "tag": "INPUT",
+          "type": "search",
+          "text": ""
+        },
+        {
+          "id": "category",
+          "tag": "SELECT",
+          "type": "select-one",
+          "text": "All metricsCoreImbalanceError ratesRankingIn practice"
+        },
+        {
+          "id": "fold-groups",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Expand categories"
+        },
+        {
+          "id": "fold-details",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Expand details"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Core metrics8 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Class imbalance & agreement7 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Error rates & related scores8 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Ranking & probability5 metrics›"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "In practice7 metrics›"
+        },
+        {
+          "id": "preset",
+          "tag": "SELECT",
+          "type": "select-one",
+          "text": "Factory inspectionFraud detectionMedical screeningAutomatic fraud blockingPedestrian detectionNo cas"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "FPR"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "See which metric to choose, with a worked example →"
+        },
+        {
+          "id": "inTP",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "inFN",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "inFP",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "inTN",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Accuracy80.0%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "F176.2%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Precision80.0%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Recall72.7%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Specificity85.7%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balanced accuracy79.2%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "MCC0.592"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "FPR14.3%"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "scikit-learn evaluation guide"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "Average precision conventions"
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "6282606",
+      "names": [
+        "custom_data"
+      ],
+      "path": "design_0/index.html",
+      "url": "http://localhost:8202/design_0/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/6282606-design_0_index_html-desktop.png",
+        "screenshots/6282606-design_0_index_html-mobile.png"
+      ],
+      "title": "Classifier Metrics Playground",
+      "text": "Classifier Metrics Playground\nN · π · TPR · FPR → live\nTry: TPR=90%, FPR=5%, π=1% → watch Precision collapse.\n⠇ Edit Layout\n↺ Reset\nGrab ⠇ on any panel to reorder\nPARAMETERS\nDataset size (N)\nLog · 100 → 500k\nPrevalence (π)\n% positives\nTPR (Sensitivity)\nTrue Positive Rate\nFPR (1−Spec)\nFalse Positive Rate\nLIVE EQUATIONS\nCOUNTS\nN (Total)\n5,030\nTP+FN+FP+TN\nP (Actual)\n1,506\nP=TP+FN\nNeg (Actual)\n3,524\nNeg=TN+FP\nPred+ (Predict+)\n2,110\nPred+=TP+FP\nPred- (Predict-)\n2,920\nPred-=TN+FN\nRATES\nTPR (Recall)\n70.06%\nTP/P=TP/(TP+FN)\nFNR (Miss)\n29.94%\nFN/P=FN/(TP+FN)\nTNR (Specificity)\n70.06%\nTN/Neg=TN/(TN+FP)\nFPR (Fallout)\n29.94%\nFP/Neg=FP/(TN+FP)\nSCORES\nPrec (Precission)\n50.00%\nTP/Pred+=TP/(TP+FP)\nNPV (Neg. Pred. Value)\n84.56%\nTN/Pred-=TN/(TN+FN)\nAcc (Accuracy)\n70.06%\n(TP+TN)/N = (TP+TN)/5,030\nF1 (Balance)\n58.35%\n2TP/(P+Pred+) = 2TP/(2TP+FP+FN)\nBAcc (Balanced)\n70.06%\n½×(TP/P + TN/Neg)\nCONFUSION MATRIX\nTN 2,469\nFP 1,055\nFN 451\nTP 1,055\nActual Neg\nActual Pos\nP=1,506 N=3,524 | TP=1,055 FP=1,055 TN=2,469 FN=451\nTP\nFN\nFP\nTN\nPrediction\nDERIVED METRICS\nPRECISION\n50.0%\nF1\n58.4%\nACCURACY\n70.1%\nBAL ACC\n70.1%\nTNR\n70.1%\nNPV\n84.6%\nPRESETS\nBalanced\nπ=50%\nImbalanced\nπ=10%\nV. Imbalanced\nπ=1%\nPerfect\nTPR≈100 FPR≈0\nRandom\nTPR=FPR\nReset\ndefaults\nCOUNTS\n1,055\n1,055\n2,469\n451\n2,110\n2,920\nTP\nFP\nTN\nFN\nPred+\nPred-\n0\n1000\n2000\n3000\ncount\nRATES\n70.1\n29.9\n50.0\n70.1\n58.4\n70.1\n84.6\nTPR\nFPR\nPrec\nAcc\nF1\nBAcc\nNPV\n0\n50\n100\n%\nROC · ISO-LR⁺\n  LR⁺=2.3\n0\n0.5\n1\n0\n0.5\n1\nFPR\nTPR\nPRECISION-RECALL\n0\n0.5\n1\n0\n0.5\n1\nRecall\nPrecision",
+      "controls": [
+        {
+          "id": "editToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "⠇ Edit Layout"
+        },
+        {
+          "id": "resetLayout",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "↺ Reset"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "nVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "n",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "piVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "pi",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "tprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "fprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "bal",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balancedπ=50%"
+        },
+        {
+          "id": "imb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Imbalancedπ=10%"
+        },
+        {
+          "id": "vimb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "V. Imbalancedπ=1%"
+        },
+        {
+          "id": "perfect",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "PerfectTPR≈100 FPR≈0"
+        },
+        {
+          "id": "random",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "RandomTPR=FPR"
+        },
+        {
+          "id": "resetBtn",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Resetdefaults"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "6282606",
+      "names": [
+        "custom_data"
+      ],
+      "path": "dev_2/index.html",
+      "url": "http://localhost:8202/dev_2/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/6282606-dev_2_index_html-desktop.png",
+        "screenshots/6282606-dev_2_index_html-mobile.png"
+      ],
+      "title": "ROC & Confusion Matrix Playground",
+      "text": "ROC & Confusion Matrix\nTheme: Light\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nBalanced\nRare 5%\nScreening\nTPR\n90%\nFPR\n10%\nPrevalence\n50%\nThreshold\nmanual\nSCORE MODEL\nScore model only — affects distributions & AUC in direct mode\nDirect Rates\nLink\nμ Neg\n0.0\nσ Neg\n1.0\nμ Pos\n2.0\nσ Pos\n1.0\nN\n1000\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nTP\n450\nTN\n450\nActual P (500)\nActual N (500)\n50%\n50%\nTPR\nFNR\nFPR\nTNR\nMETRICS\nVALUES\nBARS\nTHEORY\nACCURACY\n0.900\n(TP+TN)/N\nPRECISION (PPV)\n0.900\nTP/(TP+FP)\nSee why →\nRECALL (TPR)\n0.900\nTP/(TP+FN)\nSPECIFICITY (TNR)\n0.900\nTN/(TN+FP)\nF1 SCORE\n0.900\n2·P·R/(P+R)\nAUC\n0.940\nArea under ROC\nNPV\n0.900\nTN/(TN+FN)\nMCC\n0.800\nMatthews corr.\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n−4\n−2\n0\n2\n4\n6\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.5\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve",
+      "controls": [
+        {
+          "id": "themeToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Theme: Light"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balanced"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Rare 5%"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Screening"
+        },
+        {
+          "id": "s_tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_tpr_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_fpr_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_bal",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "i_bal_pct",
+          "tag": "INPUT",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "s_thresh",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "toggle_bidirectional",
+          "tag": "INPUT",
+          "type": "checkbox",
+          "text": ""
+        },
+        {
+          "id": "s_mu_neg",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_std_neg",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_mu_pos",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_std_pos",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "s_N",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "btn_cm",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Matrix"
+        },
+        {
+          "id": "btn_mosaic",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Mosaic"
+        },
+        {
+          "id": "btn_metrics_vals",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Values"
+        },
+        {
+          "id": "btn_metrics_bar",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Bars"
+        },
+        {
+          "id": "btn_metrics_eqs",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Theory"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "See why →"
+        },
+        {
+          "id": "btn_dist_curves",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Curves"
+        },
+        {
+          "id": "btn_dist_topview",
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Top View"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "   .cls-0{fill:#000;}  .cls-1{fill:#FFF;}  .cls-2{fill:#F26;}  .cls-3{fill:#D69;}  .cls-4{fill:#BAC;"
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "A",
+          "type": "",
+          "text": "   .cls-0{fill:#000;}  .cls-1{fill:#FFF;}  .cls-2{fill:#F26;}  .cls-3{fill:#D69;}  .cls-4{fill:#BAC;"
+        }
+      ],
+      "status": "OPENED"
+    },
+    {
+      "id": "40918b1",
+      "names": [
+        "feature_mosaic_improvments"
+      ],
+      "path": "design_0/index.html",
+      "url": "http://localhost:8203/design_0/index.html",
+      "errors": [],
+      "screenshots": [
+        "screenshots/40918b1-design_0_index_html-desktop.png",
+        "screenshots/40918b1-design_0_index_html-mobile.png"
+      ],
+      "title": "Classifier Metrics Playground",
+      "text": "Classifier Metrics Playground\nN · π · TPR · FPR → live\nTry: TPR=90%, FPR=5%, π=1% → watch Precision collapse.\n⠇ Edit Layout\n↺ Reset\nGrab ⠇ on any panel to reorder\nPARAMETERS\nDataset size (N)\nLog · 100 → 500k\nPrevalence (π)\n% positives\nTPR (Sensitivity)\nTrue Positive Rate\nFPR (1−Spec)\nFalse Positive Rate\nLIVE EQUATIONS\nCOUNTS\nN (Total)\n5,030\nTP+FN+FP+TN\nP (Actual)\n1,506\nP=TP+FN\nNeg (Actual)\n3,524\nNeg=TN+FP\nPred+ (Predict+)\n2,110\nPred+=TP+FP\nPred- (Predict-)\n2,920\nPred-=TN+FN\nRATES\nTPR (Recall)\n70.06%\nTP/P=TP/(TP+FN)\nFNR (Miss)\n29.94%\nFN/P=FN/(TP+FN)\nTNR (Specificity)\n70.06%\nTN/Neg=TN/(TN+FP)\nFPR (Fallout)\n29.94%\nFP/Neg=FP/(TN+FP)\nSCORES\nPrec (Precission)\n50.00%\nTP/Pred+=TP/(TP+FP)\nNPV (Neg. Pred. Value)\n84.56%\nTN/Pred-=TN/(TN+FN)\nAcc (Accuracy)\n70.06%\n(TP+TN)/N = (TP+TN)/5,030\nF1 (Balance)\n58.35%\n2TP/(P+Pred+) = 2TP/(2TP+FP+FN)\nBAcc (Balanced)\n70.06%\n½×(TP/P + TN/Neg)\nCONFUSION MATRIX\nTN 2,469\nFP 1,055\nFN 451\nTP 1,055\nActual Neg\nActual Pos\nP=1,506 N=3,524 | TP=1,055 FP=1,055 TN=2,469 FN=451\nTP\nFN\nFP\nTN\nPrediction\nDERIVED METRICS\nPRECISION\n50.0%\nF1\n58.4%\nACCURACY\n70.1%\nBAL ACC\n70.1%\nTNR\n70.1%\nNPV\n84.6%\nPRESETS\nBalanced\nπ=50%\nImbalanced\nπ=10%\nV. Imbalanced\nπ=1%\nPerfect\nTPR≈100 FPR≈0\nRandom\nTPR=FPR\nReset\ndefaults\nCOUNTS\n1,055\n1,055\n2,469\n451\n2,110\n2,920\nTP\nFP\nTN\nFN\nPred+\nPred-\n0\n1000\n2000\n3000\ncount\nRATES\n70.1\n29.9\n50.0\n70.1\n58.4\n70.1\n84.6\nTPR\nFPR\nPrec\nAcc\nF1\nBAcc\nNPV\n0\n50\n100\n%\nROC · ISO-LR⁺\n  LR⁺=2.3\n0\n0.5\n1\n0\n0.5\n1\nFPR\nTPR\nPRECISION-RECALL\n0\n0.5\n1\n0\n0.5\n1\nRecall\nPrecision",
+      "controls": [
+        {
+          "id": "editToggle",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "⠇ Edit Layout"
+        },
+        {
+          "id": "resetLayout",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "↺ Reset"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "nVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "n",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "piVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "pi",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "tprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "tpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "fprVal",
+          "tag": "INPUT",
+          "type": "number",
+          "text": ""
+        },
+        {
+          "id": "fpr",
+          "tag": "INPUT",
+          "type": "range",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "bal",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Balancedπ=50%"
+        },
+        {
+          "id": "imb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Imbalancedπ=10%"
+        },
+        {
+          "id": "vimb",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "V. Imbalancedπ=1%"
+        },
+        {
+          "id": "perfect",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "PerfectTPR≈100 FPR≈0"
+        },
+        {
+          "id": "random",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "RandomTPR=FPR"
+        },
+        {
+          "id": "resetBtn",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Resetdefaults"
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        },
+        {
+          "id": "",
+          "tag": "BUTTON",
+          "type": "button",
+          "text": ""
+        }
+      ],
+      "status": "OPENED"
+    }
+  ]
+}

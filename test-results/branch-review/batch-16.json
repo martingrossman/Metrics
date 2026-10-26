@@ -1,0 +1,2227 @@
+{
+  "start": 16,
+  "end": 18,
+  "total": 22,
+  "done": false,
+  "results": [
+    {
+      "id": "ce97d3a",
+      "names": [
+        "old_Release_Dark_Claude"
+      ],
+      "sha": "ce97d3abbc8cf73f2db7ce70b60fcd42db58e289",
+      "url": "http://localhost:8217/",
+      "browser": "156.0.8078.47",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "actions": [
+        {
+          "name": "range ArrowRight",
+          "id": "n",
+          "before": "460",
+          "after": "461",
+          "status": "PASS",
+          "metrics": [
+            {
+              "id": "tpr",
+              "text": ""
+            },
+            {
+              "id": "fpr",
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "layouts": [],
+      "screenshots": [
+        "screenshots/ce97d3a-desktop.png",
+        "screenshots/ce97d3a-mobile.png"
+      ],
+      "status": 200,
+      "desktop": {
+        "title": "Classifier Metrics Playground",
+        "url": "http://localhost:8217/",
+        "text": "Classifier Metrics Playground\nN · π · TPR · FPR → live\nTry: TPR=90%, FPR=5%, π=1% → watch Precision collapse.\n⠇ Edit Layout\n↺ Reset\nGrab ⠇ on any panel to reorder\nPARAMETERS\nDataset size (N)\nLog · 100 → 500k\nPrevalence (π)\n% positives\nTPR (Sensitivity)\nTrue Positive Rate\nFPR (1−Spec)\nFalse Positive Rate\nLIVE EQUATIONS\nWidth\nCOUNTS\nN\n5,030\nTP+FN+FP+TN\nP\n1,506\nTP+FN\nNeg\n3,524\nTN+FP\nRATES\nTPR\n70.06%\nTP/(TP+FN)\nFNR\n29.94%\nFN/(TP+FN)\nTNR\n70.06%\nTN/(TN+FP)\nFPR\n29.94%\nFP/(TN+FP)\nSCORES\nPrec\n50.00%\nTP/(TP+FP)\nNPV\n84.56%\nTN/(TN+FN)\nAcc\n70.06%\n(TP+TN)/N\nF1\n58.35%\n2TP/(2TP+FP+FN)\nBAcc\n70.06%\n½×(TPR+TNR)\nCONFUSION MATRIX\nTN 2,469\nFP 1,055\nFN 451\nTP 1,055\nActual Neg\nActual Pos\nP=1,506 N=3,524 | TP=1,055 FP=1,055 TN=2,469 FN=451\nTP\nFN\nFP\nTN\nDERIVED METRICS\nPRECISION\n50.0%\nF1\n58.4%\nACCURACY\n70.1%\nBAL ACC\n70.1%\nTNR\n70.1%\nNPV\n84.6%\nPRESETS\nBalanced\nπ=50%\nImbalanced\nπ=10%\nV. Imbalanced\nπ=1%\nPerfect\nTPR≈100 FPR≈0\nRandom\nTPR=FPR\nReset\ndefaults\nCOUNTS\n1,055\n1,055\n2,469\n451\nTP\nFP\nTN\nFN\n0\n1000\n2000\ncount\nRATES\n70.1\n29.9\n50.0\n70.1\n58.4\n70.1\n84.6\nTPR\nFPR\nPrec\nAcc\nF1\nBAcc\nNPV\n0\n50\n100\n%\nROC · ISO-LR⁺\n  LR⁺=2.3\n0\n0.5\n1\n0\n0.5\n1\nFPR\nTPR\nPRECISION-RECALL\n0\n0.5\n1\n0\n0.5\n1\nRecall\nPrecision",
+        "viewport": [
+          1440,
+          900
+        ],
+        "scroll": [
+          1440,
+          900
+        ],
+        "horizontal": false,
+        "vertical": false,
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "editToggle",
+            "type": "button",
+            "role": null,
+            "text": "⠇ Edit Layout",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 10,
+              "y": 45.20000076293945,
+              "w": 90.26250457763672,
+              "h": 22.399999618530273
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "resetLayout",
+            "type": "button",
+            "role": null,
+            "text": "↺ Reset",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 108.26250457763672,
+              "y": 45.60000228881836,
+              "w": 62.525001525878906,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "nVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "5030",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 200.75,
+              "y": 114.20000457763672,
+              "w": 147.1999969482422,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "n",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "460",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20.80000114440918,
+              "y": 142.60000610351562,
+              "w": 327.1499938964844,
+              "h": 3
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "piVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "29.94",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 296.75,
+              "y": 167.40000915527344,
+              "w": 51.20000076293945,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "pi",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "-0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20.80000114440918,
+              "y": 195.8000030517578,
+              "w": 327.1499938964844,
+              "h": 3
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "tprVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "70.06",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 296.75,
+              "y": 220.60000610351562,
+              "w": 51.20000076293945,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "tpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20.80000114440918,
+              "y": 249,
+              "w": 327.1499938964844,
+              "h": 3
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "fprVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "29.94",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 296.75,
+              "y": 273.8000183105469,
+              "w": 51.20000076293945,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "fpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "-0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20.80000114440918,
+              "y": 302.20001220703125,
+              "w": 327.1499938964844,
+              "h": 3
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "eqSizeBtn",
+            "type": "button",
+            "role": null,
+            "text": "Width",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 665.4874877929688,
+              "y": 84,
+              "w": 38.212501525878906,
+              "h": 16.80000114440918
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "bal",
+            "type": "button",
+            "role": null,
+            "text": "Balanced\nπ=50%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20.80000114440918,
+              "y": 589.6000366210938,
+              "w": 106.375,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "imb",
+            "type": "button",
+            "role": null,
+            "text": "Imbalanced\nπ=10%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 131.1750030517578,
+              "y": 589.6000366210938,
+              "w": 106.38750457763672,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "vimb",
+            "type": "button",
+            "role": null,
+            "text": "V. Imbalanced\nπ=1%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 241.5625,
+              "y": 589.6000366210938,
+              "w": 106.38750457763672,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "perfect",
+            "type": "button",
+            "role": null,
+            "text": "Perfect\nTPR≈100 FPR≈0",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20.80000114440918,
+              "y": 627,
+              "w": 106.375,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "random",
+            "type": "button",
+            "role": null,
+            "text": "Random\nTPR=FPR",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 131.1750030517578,
+              "y": 627,
+              "w": 106.38750457763672,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "resetBtn",
+            "type": "button",
+            "role": null,
+            "text": "Reset\ndefaults",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 241.5625,
+              "y": 627,
+              "w": 106.38750457763672,
+              "h": 33.400001525878906
+            }
+          }
+        ],
+        "hiddenFiles": [],
+        "graphics": {
+          "svgs": 23,
+          "canvases": 0,
+          "plotly": true,
+          "plotlyCharts": 12,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(13, 15, 20)",
+          "text": "rgb(240, 242, 247)"
+        },
+        "metrics": [
+          {
+            "id": "tpr",
+            "text": ""
+          },
+          {
+            "id": "fpr",
+            "text": ""
+          }
+        ]
+      },
+      "mobile": {
+        "title": "Classifier Metrics Playground",
+        "url": "http://localhost:8217/",
+        "text": "Classifier Metrics Playground\nDrag panels by ⠇ grip to rearrange.\n⠇ Edit Layout\n↺ Reset\nPARAMETERS\nDataset size (N)\nLog · 100 → 500k\nPrevalence (π)\n% positives\nTPR (Sensitivity)\nTrue Positive Rate\nFPR (1−Spec)\nFalse Positive Rate\nLIVE EQUATIONS\nWidth\nCOUNTS\nN\n5,030\nTP+FN+FP+TN\nP\n1,506\nTP+FN\nNeg\n3,524\nTN+FP\nRATES\nTPR\n70.06%\nTP/(TP+FN)\nFNR\n29.94%\nFN/(TP+FN)\nTNR\n70.06%\nTN/(TN+FP)\nFPR\n29.94%\nFP/(TN+FP)\nSCORES\nPrec\n50.00%\nTP/(TP+FP)\nNPV\n84.56%\nTN/(TN+FN)\nAcc\n70.06%\n(TP+TN)/N\nF1\n58.35%\n2TP/(2TP+FP+FN)\nBAcc\n70.06%\n½×(TPR+TNR)\nCONFUSION MATRIX\nTN 2,469\nFP 1,055\nFN 451\nTP 1,055\nActual Neg\nActual Pos\nP=1,506 N=3,524 | TP=1,055 FP=1,055 TN=2,469 FN=451\nTP\nFN\nFP\nTN\nDERIVED METRICS\nPRECISION\n50.0%\nF1\n58.4%\nACCURACY\n70.1%\nBAL ACC\n70.1%\nTNR\n70.1%\nNPV\n84.6%\nPRESETS\nBalanced\nπ=50%\nImbalanced\nπ=10%\nV. Imbalanced\nπ=1%\nPerfect\nTPR≈100 FPR≈0\nRandom\nTPR=FPR\nReset\ndefaults\nCOUNTS\n1,055\n1,055\n2,469\n451\nTP\nFP\nTN\nFN\n0\n1000\n2000\ncount\nRATES\n70.1\n29.9\n50.0\n70.1\n58.4\n70.1\n84.6\nTPR\nFPR\nPrec\nAcc\nF1\nBAcc\nNPV\n0\n50\n100\n%\nROC · ISO-LR⁺\n  LR⁺=2.3\n0\n0.5\n1\n0\n0.5\n1\nFPR\nTPR\nPRECISION-RECALL\n0\n0.5\n1\n0\n0.5\n1\nRecall\nPrecision",
+        "viewport": [
+          390,
+          844
+        ],
+        "scroll": [
+          390,
+          844
+        ],
+        "horizontal": false,
+        "vertical": false,
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "editToggle",
+            "type": "button",
+            "role": null,
+            "text": "⠇ Edit Layout",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 8,
+              "y": 62,
+              "w": 90.26250457763672,
+              "h": 22.399999618530273
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "resetLayout",
+            "type": "button",
+            "role": null,
+            "text": "↺ Reset",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 106.26250457763672,
+              "y": 62.400001525878906,
+              "w": 62.525001525878906,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "nVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "5030",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 74.67500305175781,
+              "y": 134.8000030517578,
+              "w": 104.7249984741211,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "n",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "460",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 165,
+              "w": 160.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "piVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "29.94",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 128.1999969482422,
+              "y": 191.8000030517578,
+              "w": 51.20000076293945,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "pi",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "-0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 218.1999969482422,
+              "w": 160.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "tprVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "70.06",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 128.1999969482422,
+              "y": 245,
+              "w": 51.20000076293945,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "tpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 271.3999938964844,
+              "w": 160.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "fprVal",
+            "type": "number",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "29.94",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 128.1999969482422,
+              "y": 298.20001220703125,
+              "w": 51.20000076293945,
+              "h": 16.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "fpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "-0.85",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 324.6000061035156,
+              "w": 160.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "eqSizeBtn",
+            "type": "button",
+            "role": null,
+            "text": "Width",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 329.38751220703125,
+              "y": 103,
+              "w": 38.212501525878906,
+              "h": 16.80000114440918
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "bal",
+            "type": "button",
+            "role": null,
+            "text": "Balanced\nπ=50%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 679.7999877929688,
+              "w": 78.30000305175781,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "imb",
+            "type": "button",
+            "role": null,
+            "text": "Imbalanced\nπ=10%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 101.0999984741211,
+              "y": 679.7999877929688,
+              "w": 78.30000305175781,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "vimb",
+            "type": "button",
+            "role": null,
+            "text": "V. Imbalanced\nπ=1%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 717.2000122070312,
+              "w": 78.30000305175781,
+              "h": 44.60000228881836
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "perfect",
+            "type": "button",
+            "role": null,
+            "text": "Perfect\nTPR≈100 FPR≈0",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 101.0999984741211,
+              "y": 717.2000122070312,
+              "w": 78.30000305175781,
+              "h": 44.60000228881836
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "random",
+            "type": "button",
+            "role": null,
+            "text": "Random\nTPR=FPR",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 18.80000114440918,
+              "y": 765.7999877929688,
+              "w": 78.30000305175781,
+              "h": 33.400001525878906
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "resetBtn",
+            "type": "button",
+            "role": null,
+            "text": "Reset\ndefaults",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 101.0999984741211,
+              "y": 765.7999877929688,
+              "w": 78.30000305175781,
+              "h": 33.400001525878906
+            }
+          }
+        ],
+        "hiddenFiles": [],
+        "graphics": {
+          "svgs": 23,
+          "canvases": 0,
+          "plotly": true,
+          "plotlyCharts": 12,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(13, 15, 20)",
+          "text": "rgb(240, 242, 247)"
+        },
+        "metrics": [
+          {
+            "id": "tpr",
+            "text": ""
+          },
+          {
+            "id": "fpr",
+            "text": ""
+          }
+        ]
+      },
+      "result": "OPENED"
+    },
+    {
+      "id": "04bef33",
+      "names": [
+        "old_claude_improvments"
+      ],
+      "sha": "04bef33d734ca33eda00e7fe8d9f1b9693e7f356",
+      "url": "http://localhost:8218/",
+      "browser": "156.0.8078.47",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "actions": [
+        {
+          "name": "range ArrowRight",
+          "id": "s_tpr",
+          "before": "0.9",
+          "after": "0.901",
+          "status": "PASS",
+          "metrics": []
+        }
+      ],
+      "layouts": [],
+      "screenshots": [
+        "screenshots/04bef33-desktop.png",
+        "screenshots/04bef33-desktop-full.png",
+        "screenshots/04bef33-mobile.png",
+        "screenshots/04bef33-mobile-full.png"
+      ],
+      "status": 200,
+      "desktop": {
+        "title": "ROC & Confusion Matrix Playground",
+        "url": "http://localhost:8218/",
+        "text": "ROC & Confusion Matrix\nTheme: Light\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nBalanced\nRare 5%\nScreening\nTPR\n90%\nFPR\n10%\nPrevalence\n50%\nThreshold\nmanual\nSCORE MODEL\nScore model only — affects distributions & AUC in direct mode\nDirect Rates\nLink\nμ Neg\n0.0\nσ Neg\n1.0\nμ Pos\n2.0\nσ Pos\n1.0\nN\n1000\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nTP\n450\nTN\n450\nActual P (500)\nActual N (500)\n50%\n50%\nTPR\nFNR\nFPR\nTNR\nMETRICS\nVALUES\nBARS\nTHEORY\nACCURACY\n0.900\n(TP+TN)/N\nPRECISION (PPV)\n0.900\nTP/(TP+FP)\nSee why →\nRECALL (TPR)\n0.900\nTP/(TP+FN)\nSPECIFICITY (TNR)\n0.900\nTN/(TN+FP)\nF1 SCORE\n0.900\n2·P·R/(P+R)\nAUC\n0.940\nArea under ROC\nNPV\n0.900\nTN/(TN+FN)\nMCC\n0.800\nMatthews corr.\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n−4\n−2\n0\n2\n4\n6\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.2\n0.4\n0.6\n0.8\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve",
+        "viewport": [
+          1440,
+          900
+        ],
+        "scroll": [
+          1425,
+          1222
+        ],
+        "horizontal": false,
+        "vertical": true,
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "themeToggle",
+            "type": "button",
+            "role": null,
+            "text": "Theme: Light",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1279.050048828125,
+              "y": 16,
+              "w": 113.3499984741211,
+              "h": 32.79999923706055
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Balanced",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 186.85000610351562,
+              "y": 100.5,
+              "w": 78.70000457763672,
+              "h": 33.20000076293945
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Rare 5%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 271.5500183105469,
+              "y": 100.5,
+              "w": 72.0625,
+              "h": 33.20000076293945
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Screening",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 349.6125183105469,
+              "y": 100.5,
+              "w": 85.32500457763672,
+              "h": 33.20000076293945
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_tpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.9",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 48.400001525878906,
+              "y": 179.6999969482422,
+              "w": 317,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_tpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "TPR exact percent",
+            "value": "90",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 48.400001525878906,
+              "y": 193.5,
+              "w": 72,
+              "h": 21.200000762939453
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_fpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 385.3999938964844,
+              "y": 179.6999969482422,
+              "w": 317,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_fpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "FPR exact percent",
+            "value": "10",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 385.3999938964844,
+              "y": 193.5,
+              "w": 72,
+              "h": 21.200000762939453
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_bal",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.5",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 722.4000244140625,
+              "y": 179.6999969482422,
+              "w": 317,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_bal_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "Prevalence exact percent",
+            "value": "50",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 722.4000244140625,
+              "y": 193.5,
+              "w": 72,
+              "h": 21.200000762939453
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_thresh",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1059.4000244140625,
+              "y": 205.90000915527344,
+              "w": 317,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "toggle_bidirectional",
+            "type": "checkbox",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "on",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1285.7874755859375,
+              "y": 256.70001220703125,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_mu_neg",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 48.400001525878906,
+              "y": 321.1000061035156,
+              "w": 249.60000610351562,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_std_neg",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 318,
+              "y": 321.1000061035156,
+              "w": 249.60000610351562,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_mu_pos",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "2",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 587.6000366210938,
+              "y": 321.1000061035156,
+              "w": 249.60000610351562,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_std_pos",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 857.2000122070312,
+              "y": 321.1000061035156,
+              "w": 249.60000610351562,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_N",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1000",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1126.800048828125,
+              "y": 321.1000061035156,
+              "w": 249.60000610351562,
+              "h": 4
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_cm",
+            "type": null,
+            "role": null,
+            "text": "MATRIX",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 642.7875366210938,
+              "y": 376.3000183105469,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_mosaic",
+            "type": null,
+            "role": null,
+            "text": "MOSAIC",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 703.2374877929688,
+              "y": 376.3000183105469,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_vals",
+            "type": null,
+            "role": null,
+            "text": "VALUES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1206.9375,
+              "y": 376.3000183105469,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_bar",
+            "type": null,
+            "role": null,
+            "text": "BARS",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1267.3875732421875,
+              "y": 376.3000183105469,
+              "w": 46.962501525878906,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_eqs",
+            "type": null,
+            "role": null,
+            "text": "THEORY",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1314.3499755859375,
+              "y": 376.3000183105469,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "See why →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1109.6375732421875,
+              "y": 490.70001220703125,
+              "w": 51.45000076293945,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_curves",
+            "type": null,
+            "role": null,
+            "text": "CURVES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 629.3125,
+              "y": 813.9000244140625,
+              "w": 60.45000076293945,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_topview",
+            "type": null,
+            "role": null,
+            "text": "TOP VIEW",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 689.7625122070312,
+              "y": 813.9000244140625,
+              "w": 73.92500305175781,
+              "h": 21.600000381469727
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 546.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 578.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 602.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 634.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 658.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 682.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 706.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": "https://plotly.com/",
+            "accept": null,
+            "box": {
+              "x": 738.4874877929688,
+              "y": 854.1000366210938,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1109.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1141.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1165.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1189.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1213.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1245.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1269.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1293.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 1317.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": "https://plotly.com/",
+            "accept": null,
+            "box": {
+              "x": 1349.5999755859375,
+              "y": 845.2999877929688,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          }
+        ],
+        "hiddenFiles": [],
+        "graphics": {
+          "svgs": 27,
+          "canvases": 0,
+          "plotly": true,
+          "plotlyCharts": 6,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(245, 247, 251)",
+          "text": "rgb(22, 32, 51)"
+        },
+        "metrics": []
+      },
+      "mobile": {
+        "title": "ROC & Confusion Matrix Playground",
+        "url": "http://localhost:8218/",
+        "text": "ROC & Confusion Matrix\nTheme: Light\nDirect mode: TPR, FPR, and balance are set manually. Distributions still shape the score views, ROC curve, and AUC, so the ROC point may sit off the curve.\nDIRECT QUICK STARTS\nBalanced\nRare 5%\nScreening\nTPR\n90%\nFPR\n10%\nPrevalence\n50%\nThreshold\nmanual\nSCORE MODEL\nScore model only — affects distributions & AUC in direct mode\nDirect Rates\nLink\nμ Neg\n0.0\nσ Neg\n1.0\nμ Pos\n2.0\nσ Pos\n1.0\nN\n1000\nCONFUSION MATRIX\nMATRIX\nMOSAIC\nTP\n450\nTN\n450\nActual P (500)\nActual N (500)\n50%\n50%\nTPR\nFNR\nFPR\nTNR\nMETRICS\nVALUES\nBARS\nTHEORY\nACCURACY\n0.900\n(TP+TN)/N\nPRECISION (PPV)\n0.900\nTP/(TP+FP)\nSee why →\nRECALL (TPR)\n0.900\nTP/(TP+FN)\nSPECIFICITY (TNR)\n0.900\nTN/(TN+FP)\nF1 SCORE\n0.900\n2·P·R/(P+R)\nAUC\n0.940\nArea under ROC\nNPV\n0.900\nTN/(TN+FN)\nMCC\n0.800\nMatthews corr.\nCLASS DISTRIBUTIONS\nCURVES\nTOP VIEW\n0\n5\n0\n0.05\n0.1\n0.15\n0.2\nNegative\nPositive\nScore\nWeighted Density\nDirect mode: threshold detached from TPR/FPR\nROC CURVE\n0\n0.5\n1\n0\n0.2\n0.4\n0.6\n0.8\n1\nROC\nManual Pt\nFPR\nTPR\nDirect mode: manual point may sit off the ROC curve",
+        "viewport": [
+          390,
+          844
+        ],
+        "scroll": [
+          386,
+          1937
+        ],
+        "horizontal": false,
+        "vertical": true,
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "themeToggle",
+            "type": "button",
+            "role": null,
+            "text": "Theme: Light",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 262.76251220703125,
+              "y": 16,
+              "w": 102.4375,
+              "h": 31.200000762939453
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Balanced",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 127.55000305175781,
+              "w": 64.55000305175781,
+              "h": 19.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Rare 5%",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 90.55000305175781,
+              "y": 127.55000305175781,
+              "w": 58.6875,
+              "h": 19.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "Screening",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 155.2375030517578,
+              "y": 127.55000305175781,
+              "w": 70.4124984741211,
+              "h": 19.600000381469727
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_tpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.9",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 179.5500030517578,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_tpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "TPR exact percent",
+            "value": "90",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 192.35000610351562,
+              "w": 72,
+              "h": 18.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_fpr",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 192.60000610351562,
+              "y": 179.5500030517578,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_fpr_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "FPR exact percent",
+            "value": "10",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 192.60000610351562,
+              "y": 192.35000610351562,
+              "w": 72,
+              "h": 18.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_bal",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0.5",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 244.15000915527344,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "i_bal_pct",
+            "type": "text",
+            "role": null,
+            "text": "",
+            "aria": "Prevalence exact percent",
+            "value": "50",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 256.95001220703125,
+              "w": 72,
+              "h": 18.399999618530273
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_thresh",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 192.60000610351562,
+              "y": 265.5500183105469,
+              "w": 162.60000610351562,
+              "h": 5
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "toggle_bidirectional",
+            "type": "checkbox",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "on",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 264.5874938964844,
+              "y": 304.3500061035156,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_mu_neg",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "0",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 384.25,
+              "w": 106.4000015258789,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_std_neg",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 134.40000915527344,
+              "y": 384.25,
+              "w": 106.4000015258789,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_mu_pos",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "2",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 248.8000030517578,
+              "y": 384.25,
+              "w": 106.4000015258789,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_std_pos",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 20,
+              "y": 423.45001220703125,
+              "w": 106.4000015258789,
+              "h": 4
+            }
+          },
+          {
+            "tag": "INPUT",
+            "id": "s_N",
+            "type": "range",
+            "role": null,
+            "text": "",
+            "aria": null,
+            "value": "1000",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 134.40000915527344,
+              "y": 423.45001220703125,
+              "w": 106.4000015258789,
+              "h": 4
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_cm",
+            "type": null,
+            "role": null,
+            "text": "MATRIX",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 115.9000015258789,
+              "y": 462.6499938964844,
+              "w": 117.8499984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_mosaic",
+            "type": null,
+            "role": null,
+            "text": "MOSAIC",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 233.75,
+              "y": 462.6499938964844,
+              "w": 117.8499984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_vals",
+            "type": null,
+            "role": null,
+            "text": "VALUES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 79.80000305175781,
+              "y": 802.6000366210938,
+              "w": 90.5999984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_bar",
+            "type": null,
+            "role": null,
+            "text": "BARS",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 170.40000915527344,
+              "y": 802.6000366210938,
+              "w": 90.5999984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_metrics_eqs",
+            "type": null,
+            "role": null,
+            "text": "THEORY",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 261,
+              "y": 802.6000366210938,
+              "w": 90.5999984741211,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "text": "See why →",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 201.40000915527344,
+              "y": 920.2000122070312,
+              "w": 51.45000076293945,
+              "h": 12
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_curves",
+            "type": null,
+            "role": null,
+            "text": "CURVES",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 127.9625015258789,
+              "y": 1288.2000732421875,
+              "w": 111.8125,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "id": "btn_dist_topview",
+            "type": null,
+            "role": null,
+            "text": "TOP VIEW",
+            "aria": null,
+            "value": "",
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 239.77500915527344,
+              "y": 1288.2000732421875,
+              "w": 111.82500457763672,
+              "h": 29.600000381469727
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 134.40000915527344,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 166.40000915527344,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 190.40000915527344,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 222.40000915527344,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 246.40000915527344,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 270.3999938964844,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 294.3999938964844,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": "https://plotly.com/",
+            "accept": null,
+            "box": {
+              "x": 326.3999938964844,
+              "y": 1336.4000244140625,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 86.4000015258789,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 118.4000015258789,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 142.40000915527344,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 166.40000915527344,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 190.40000915527344,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 222.40000915527344,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 246.40000915527344,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 270.3999938964844,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": null,
+            "accept": null,
+            "box": {
+              "x": 294.3999938964844,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          },
+          {
+            "tag": "A",
+            "id": "",
+            "type": null,
+            "role": null,
+            "text": "",
+            "aria": null,
+            "href": "https://plotly.com/",
+            "accept": null,
+            "box": {
+              "x": 326.3999938964844,
+              "y": 1643.2000732421875,
+              "w": 24,
+              "h": 25.200000762939453
+            }
+          }
+        ],
+        "hiddenFiles": [],
+        "graphics": {
+          "svgs": 27,
+          "canvases": 0,
+          "plotly": true,
+          "plotlyCharts": 6,
+          "gridStack": 0,
+          "resizeHandles": 0,
+          "dragHandles": 0
+        },
+        "colors": {
+          "background": "rgb(245, 247, 251)",
+          "text": "rgb(22, 32, 51)"
+        },
+        "metrics": []
+      },
+      "result": "OPENED"
+    }
+  ]
+}

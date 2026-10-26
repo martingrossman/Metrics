@@ -1,0 +1,11 @@
+{
+  "name": "cmatrixlab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone interactive classifier metrics demo",
+  "scripts": {
+    "serve": "node scripts/serve.cjs",
+    "test": "node --test scripts/serve.test.cjs scripts/drag.test.cjs scripts/metrics.test.cjs scripts/learning.test.cjs scripts/reference.test.cjs scripts/fourup.test.cjs && node scripts/check.cjs"
+  },
+  "devDependencies": { "playwright": "1.59.1" }
+}

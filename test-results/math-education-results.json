@@ -1,0 +1,930 @@
+{
+  "tests": [
+    {
+      "id": "M04",
+      "name": "Reference calculator independently validates eight metrics on nine count sets",
+      "status": "PASS",
+      "evidence": {
+        "countSets": 10,
+        "metrics": 8
+      }
+    },
+    {
+      "id": "F14",
+      "name": "Reference calculator preset selection, metric selection, invalid inputs",
+      "status": "PASS",
+      "evidence": [
+        {
+          "p": "balanced",
+          "total": "100",
+          "metrics": "Accuracy\n80.0%\nF1\n76.2%\nPrecision\n80.0%\nRecall\n72.7%\nSpecificity\n85.7%\nBalanced accuracy\n79.2%\nMCC\n0.592\nFPR\n14.3%"
+        },
+        {
+          "p": "rare",
+          "total": "1,000",
+          "metrics": "Accuracy\n97.8%\nF1\n42.1%\nPrecision\n28.6%\nRecall\n80.0%\nSpecificity\n98.0%\nBalanced accuracy\n89.0%\nMCC\n0.470\nFPR\n2.0%"
+        },
+        {
+          "p": "screening",
+          "total": "1,000",
+          "metrics": "Accuracy\n90.8%\nF1\n68.1%\nPrecision\n52.1%\nRecall\n98.0%\nSpecificity\n90.0%\nBalanced accuracy\n94.0%\nMCC\n0.676\nFPR\n10.0%"
+        },
+        {
+          "p": "precise",
+          "total": "1,000",
+          "metrics": "Accuracy\n94.9%\nF1\n66.2%\nPrecision\n98.0%\nRecall\n50.0%\nSpecificity\n99.9%\nBalanced accuracy\n74.9%\nMCC\n0.680\nFPR\n0.1%"
+        },
+        {
+          "p": "automotive",
+          "total": "1,000",
+          "metrics": "Accuracy\n98.8%\nF1\n94.2%\nPrecision\n90.7%\nRecall\n98.0%\nSpecificity\n98.9%\nBalanced accuracy\n98.4%\nMCC\n0.936\nFPR\n1.1%"
+        },
+        {
+          "p": "empty",
+          "total": "0",
+          "metrics": "Accuracy\nN/A\nF1\nN/A\nPrecision\nN/A\nRecall\nN/A\nSpecificity\nN/A\nBalanced accuracy\nN/A\nMCC\nN/A\nFPR\nN/A"
+        },
+        {
+          "v": "-1",
+          "error": "Enter zero or a positive whole number in each cell."
+        },
+        {
+          "v": "1.5",
+          "error": "Enter zero or a positive whole number in each cell."
+        },
+        {
+          "v": "",
+          "error": "Enter zero or a positive whole number in each cell."
+        },
+        {
+          "v": "9007199254740992",
+          "error": "Enter zero or a positive whole number in each cell."
+        }
+      ]
+    },
+    {
+      "id": "E01",
+      "name": "All four learning tabs, terminology toggle, and live content",
+      "status": "PASS",
+      "evidence": {
+        "tabs": [
+          "basics",
+          "formulas",
+          "bayes",
+          "tradeoffs"
+        ],
+        "toggle": "Switch to generic ML terminology"
+      }
+    },
+    {
+      "id": "M05",
+      "name": "Learn formula values for TPR/FPR/PPV/TNR/NPV/FNR/Accuracy/F1",
+      "status": "FAIL",
+      "error": "locator.textContent: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#calculation-accuracy')\u001b[22m\n"
+    },
+    {
+      "id": "E02",
+      "name": "Formula numerator/denominator buttons highlight correct outcomes",
+      "status": "PASS",
+      "evidence": [
+        {
+          "name": "tpr",
+          "part": "numerator",
+          "included": [
+            "tp"
+          ]
+        },
+        {
+          "name": "tpr",
+          "part": "denominator",
+          "included": [
+            "fn",
+            "tp"
+          ]
+        },
+        {
+          "name": "fpr",
+          "part": "numerator",
+          "included": [
+            "fp"
+          ]
+        },
+        {
+          "name": "fpr",
+          "part": "denominator",
+          "included": [
+            "fp",
+            "tn"
+          ]
+        },
+        {
+          "name": "precision",
+          "part": "numerator",
+          "included": [
+            "tp"
+          ]
+        },
+        {
+          "name": "precision",
+          "part": "denominator",
+          "included": [
+            "fp",
+            "tp"
+          ]
+        },
+        {
+          "name": "tnr",
+          "part": "numerator",
+          "included": [
+            "tn"
+          ]
+        },
+        {
+          "name": "tnr",
+          "part": "denominator",
+          "included": [
+            "fp",
+            "tn"
+          ]
+        },
+        {
+          "name": "npv",
+          "part": "numerator",
+          "included": [
+            "tn"
+          ]
+        },
+        {
+          "name": "npv",
+          "part": "denominator",
+          "included": [
+            "fn",
+            "tn"
+          ]
+        },
+        {
+          "name": "fnr",
+          "part": "numerator",
+          "included": [
+            "fn"
+          ]
+        },
+        {
+          "name": "fnr",
+          "part": "denominator",
+          "included": [
+            "fn",
+            "tp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "name": "Accuracy-paradox demo and reset cutoff",
+      "status": "PASS",
+      "evidence": {
+        "tpr": "0%",
+        "accuracy": "90%",
+        "prevalence": "10"
+      }
+    },
+    {
+      "id": "M06",
+      "name": "F1 zero-detection edge case agrees with direct count formula",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"tp\":\"0\",\"fp\":\"0\",\"fn\":\"100\",\"actual\":\"N/A\",\"expected\":0},{\"repeat\":1,\"tp\":\"0\",\"fp\":\"0\",\"fn\":\"100\",\"actual\":\"N/A\",\"expected\":0}]"
+    },
+    {
+      "id": "E04",
+      "name": "Bayes posterior and comparison buttons independently match direct counts",
+      "status": "PASS",
+      "evidence": [
+        {
+          "p": 1,
+          "c": [
+            9.6,
+            39.6,
+            0.4,
+            950.4
+          ],
+          "expected": 0.19512195121951217,
+          "value": "0.19512195121951217",
+          "edge": "Positive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×."
+        },
+        {
+          "p": 10,
+          "c": [
+            96,
+            36,
+            4,
+            864
+          ],
+          "expected": 0.7272727272727273,
+          "value": "0.7272727272727273",
+          "edge": "Positive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×."
+        },
+        {
+          "p": 50,
+          "c": [
+            480,
+            20,
+            20,
+            480
+          ],
+          "expected": 0.96,
+          "value": "0.96",
+          "edge": "Positive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×."
+        },
+        {
+          "p": 0,
+          "c": [
+            0,
+            40,
+            0,
+            960
+          ],
+          "expected": 0,
+          "value": "0",
+          "edge": "One actual group is empty, so its rate is N/A."
+        },
+        {
+          "p": 100,
+          "c": [
+            960,
+            0,
+            40,
+            0
+          ],
+          "expected": 1,
+          "value": "1",
+          "edge": "One actual group is empty, so its rate is N/A."
+        }
+      ]
+    },
+    {
+      "id": "E05",
+      "name": "Cost tradeoff presets and synchronized sliders",
+      "status": "PASS",
+      "evidence": [
+        {
+          "p": "screening",
+          "threshold": 80,
+          "tpr": "100%",
+          "fpr": "88%"
+        },
+        {
+          "p": "balanced",
+          "threshold": 50,
+          "tpr": "96%",
+          "fpr": "4%"
+        },
+        {
+          "p": "conservative",
+          "threshold": 20,
+          "tpr": "12%",
+          "fpr": "0%"
+        }
+      ]
+    },
+    {
+      "id": "E06",
+      "name": "Accuracy-paradox narrative uses consistent prevalence and percentage",
+      "status": "FAIL",
+      "error": "[\"⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \\\"Negative\\\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\\n\",\"⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \\\"Negative\\\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\\n\"]"
+    },
+    {
+      "id": "M07",
+      "name": "ROC-AUC and PR-AUC versus independent continuous Gaussian integration",
+      "status": "PASS",
+      "evidence": [
+        {
+          "sep": 0,
+          "p": 1,
+          "actualRoc": 0.5,
+          "expectedRoc": 0.5000000000000001,
+          "actualPr": 0.01,
+          "expectedPr": 0.009999999999999972
+        },
+        {
+          "sep": 0,
+          "p": 10,
+          "actualRoc": 0.5,
+          "expectedRoc": 0.5000000000000001,
+          "actualPr": 0.1,
+          "expectedPr": 0.09999999999999987
+        },
+        {
+          "sep": 0,
+          "p": 50,
+          "actualRoc": 0.5,
+          "expectedRoc": 0.5000000000000001,
+          "actualPr": 0.5,
+          "expectedPr": 0.5000000000000001
+        },
+        {
+          "sep": 30,
+          "p": 1,
+          "actualRoc": 0.831,
+          "expectedRoc": 0.8307129961366723,
+          "actualPr": 0.087,
+          "expectedPr": 0.08634965552024164
+        },
+        {
+          "sep": 30,
+          "p": 10,
+          "actualRoc": 0.831,
+          "expectedRoc": 0.8307129961366723,
+          "actualPr": 0.421,
+          "expectedPr": 0.4208766415372372
+        },
+        {
+          "sep": 30,
+          "p": 50,
+          "actualRoc": 0.831,
+          "expectedRoc": 0.8307129961366723,
+          "actualPr": 0.828,
+          "expectedPr": 0.8276684122641402
+        },
+        {
+          "sep": 60,
+          "p": 1,
+          "actualRoc": 0.992,
+          "expectedRoc": 0.9918358778036982,
+          "actualPr": 0.803,
+          "expectedPr": 0.8031007696736987
+        },
+        {
+          "sep": 60,
+          "p": 10,
+          "actualRoc": 0.992,
+          "expectedRoc": 0.9918358778036982,
+          "actualPr": 0.951,
+          "expectedPr": 0.9511232072477563
+        },
+        {
+          "sep": 60,
+          "p": 50,
+          "actualRoc": 0.992,
+          "expectedRoc": 0.9918358778036982,
+          "actualPr": 0.992,
+          "expectedPr": 0.9920174304708033
+        },
+        {
+          "sep": 100,
+          "p": 1,
+          "actualRoc": 1,
+          "expectedRoc": 0.9999999993232533,
+          "actualPr": 1,
+          "expectedPr": 0.9999999345028567
+        },
+        {
+          "sep": 100,
+          "p": 10,
+          "actualRoc": 1,
+          "expectedRoc": 0.9999999993232533,
+          "actualPr": 1,
+          "expectedPr": 0.9999999939257376
+        },
+        {
+          "sep": 100,
+          "p": 50,
+          "actualRoc": 1,
+          "expectedRoc": 0.9999999993232533,
+          "actualPr": 1,
+          "expectedPr": 0.9999999993233692
+        }
+      ]
+    },
+    {
+      "id": "M08",
+      "name": "ROC/PR/Bayes operating points agree with the same confusion counts",
+      "status": "PASS",
+      "evidence": [
+        {
+          "svg": "rocPlot",
+          "point": {
+            "x": 79.6,
+            "y": 67.40000000000003
+          },
+          "expected": {
+            "x": 0.04,
+            "y": 0.96
+          }
+        },
+        {
+          "svg": "prPlot",
+          "point": {
+            "x": 392.4,
+            "y": 75.53627760252363
+          },
+          "expected": {
+            "x": 0.96,
+            "y": 0.9337539432176657
+          }
+        },
+        {
+          "svg": "bayesPlot",
+          "point": {
+            "x": 200.8,
+            "y": 75.53627760252363
+          },
+          "expected": {
+            "x": 0.37,
+            "y": 0.9337539432176657
+          }
+        }
+      ]
+    },
+    {
+      "id": "E07",
+      "name": "Scenario-specific accessible summary labels",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"p\":\"car\",\"label\":\"150 people with flu and 102 false alarms\"},{\"repeat\":0,\"p\":\"spam\",\"label\":\"344 people with flu and 12 false alarms\"},{\"repeat\":0,\"p\":\"fraud\",\"label\":\"9.6 people with flu and 39.6 false alarms\"},{\"repeat\":1,\"p\":\"car\",\"label\":\"150 people with flu and 102 false alarms\"},{\"repeat\":1,\"p\":\"spam\",\"label\":\"344 people with flu and 12 false alarms\"},{\"repeat\":1,\"p\":\"fraud\",\"label\":\"9.6 people with flu and 39.6 false alarms\"}]"
+    }
+  ],
+  "calculations": [
+    {
+      "counts": [
+        32,
+        8,
+        12,
+        48
+      ],
+      "expected": {
+        "accuracy": 0.8,
+        "precision": 0.8,
+        "recall": 0.7272727272727273,
+        "specificity": 0.8571428571428571,
+        "fpr": 0.14285714285714285,
+        "fnr": 0.2727272727272727,
+        "npv": 0.8,
+        "f1": 0.7619047619047619,
+        "balancedAcc": 0.7922077922077921,
+        "mcc": 0.592156525463792
+      },
+      "actual": {
+        "accuracy": "80.0%",
+        "f1": "76.2%",
+        "precision": "80.0%",
+        "recall": "72.7%",
+        "specificity": "85.7%",
+        "balancedAcc": "79.2%",
+        "mcc": "0.592",
+        "fpr": "14.3%"
+      }
+    },
+    {
+      "counts": [
+        8,
+        20,
+        2,
+        970
+      ],
+      "expected": {
+        "accuracy": 0.978,
+        "precision": 0.2857142857142857,
+        "recall": 0.8,
+        "specificity": 0.9797979797979798,
+        "fpr": 0.020202020202020204,
+        "fnr": 0.2,
+        "npv": 0.9979423868312757,
+        "f1": 0.42105263157894735,
+        "balancedAcc": 0.88989898989899,
+        "mcc": 0.47031361898976076
+      },
+      "actual": {
+        "accuracy": "97.8%",
+        "f1": "42.1%",
+        "precision": "28.6%",
+        "recall": "80.0%",
+        "specificity": "98.0%",
+        "balancedAcc": "89.0%",
+        "mcc": "0.470",
+        "fpr": "2.0%"
+      }
+    },
+    {
+      "counts": [
+        98,
+        90,
+        2,
+        810
+      ],
+      "expected": {
+        "accuracy": 0.908,
+        "precision": 0.5212765957446809,
+        "recall": 0.98,
+        "specificity": 0.9,
+        "fpr": 0.1,
+        "fnr": 0.02,
+        "npv": 0.9975369458128078,
+        "f1": 0.6805555555555556,
+        "balancedAcc": 0.94,
+        "mcc": 0.6756892159644033
+      },
+      "actual": {
+        "accuracy": "90.8%",
+        "f1": "68.1%",
+        "precision": "52.1%",
+        "recall": "98.0%",
+        "specificity": "90.0%",
+        "balancedAcc": "94.0%",
+        "mcc": "0.676",
+        "fpr": "10.0%"
+      }
+    },
+    {
+      "counts": [
+        50,
+        1,
+        50,
+        899
+      ],
+      "expected": {
+        "accuracy": 0.949,
+        "precision": 0.9803921568627451,
+        "recall": 0.5,
+        "specificity": 0.9988888888888889,
+        "fpr": 0.0011111111111111111,
+        "fnr": 0.5,
+        "npv": 0.9473129610115911,
+        "f1": 0.6622516556291391,
+        "balancedAcc": 0.7494444444444445,
+        "mcc": 0.6803100583358028
+      },
+      "actual": {
+        "accuracy": "94.9%",
+        "f1": "66.2%",
+        "precision": "98.0%",
+        "recall": "50.0%",
+        "specificity": "99.9%",
+        "balancedAcc": "74.9%",
+        "mcc": "0.680",
+        "fpr": "0.1%"
+      }
+    },
+    {
+      "counts": [
+        98,
+        10,
+        2,
+        890
+      ],
+      "expected": {
+        "accuracy": 0.988,
+        "precision": 0.9074074074074074,
+        "recall": 0.98,
+        "specificity": 0.9888888888888889,
+        "fpr": 0.011111111111111112,
+        "fnr": 0.02,
+        "npv": 0.9977578475336323,
+        "f1": 0.9423076923076923,
+        "balancedAcc": 0.9844444444444445,
+        "mcc": 0.9364852151105494
+      },
+      "actual": {
+        "accuracy": "98.8%",
+        "f1": "94.2%",
+        "precision": "90.7%",
+        "recall": "98.0%",
+        "specificity": "98.9%",
+        "balancedAcc": "98.4%",
+        "mcc": "0.936",
+        "fpr": "1.1%"
+      }
+    },
+    {
+      "counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "expected": {
+        "accuracy": null,
+        "precision": null,
+        "recall": null,
+        "specificity": null,
+        "fpr": null,
+        "fnr": null,
+        "npv": null,
+        "f1": null,
+        "balancedAcc": null,
+        "mcc": null
+      },
+      "actual": {
+        "accuracy": "N/A",
+        "f1": "N/A",
+        "precision": "N/A",
+        "recall": "N/A",
+        "specificity": "N/A",
+        "balancedAcc": "N/A",
+        "mcc": "N/A",
+        "fpr": "N/A"
+      }
+    },
+    {
+      "counts": [
+        0,
+        0,
+        10,
+        990
+      ],
+      "expected": {
+        "accuracy": 0.99,
+        "precision": null,
+        "recall": 0,
+        "specificity": 1,
+        "fpr": 0,
+        "fnr": 1,
+        "npv": 0.99,
+        "f1": 0,
+        "balancedAcc": 0.5,
+        "mcc": null
+      },
+      "actual": {
+        "accuracy": "99.0%",
+        "f1": "0.0%",
+        "precision": "N/A",
+        "recall": "0.0%",
+        "specificity": "100.0%",
+        "balancedAcc": "50.0%",
+        "mcc": "N/A",
+        "fpr": "0.0%"
+      }
+    },
+    {
+      "counts": [
+        0,
+        10,
+        10,
+        980
+      ],
+      "expected": {
+        "accuracy": 0.98,
+        "precision": 0,
+        "recall": 0,
+        "specificity": 0.98989898989899,
+        "fpr": 0.010101010101010102,
+        "fnr": 1,
+        "npv": 0.98989898989899,
+        "f1": 0,
+        "balancedAcc": 0.494949494949495,
+        "mcc": -0.010101010101010102
+      },
+      "actual": {
+        "accuracy": "98.0%",
+        "f1": "0.0%",
+        "precision": "0.0%",
+        "recall": "0.0%",
+        "specificity": "99.0%",
+        "balancedAcc": "49.5%",
+        "mcc": "-0.010",
+        "fpr": "1.0%"
+      }
+    },
+    {
+      "counts": [
+        10,
+        0,
+        0,
+        990
+      ],
+      "expected": {
+        "accuracy": 1,
+        "precision": 1,
+        "recall": 1,
+        "specificity": 1,
+        "fpr": 0,
+        "fnr": 0,
+        "npv": 1,
+        "f1": 1,
+        "balancedAcc": 1,
+        "mcc": 1
+      },
+      "actual": {
+        "accuracy": "100.0%",
+        "f1": "100.0%",
+        "precision": "100.0%",
+        "recall": "100.0%",
+        "specificity": "100.0%",
+        "balancedAcc": "100.0%",
+        "mcc": "1.000",
+        "fpr": "0.0%"
+      }
+    },
+    {
+      "counts": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "expected": {
+        "accuracy": 0,
+        "precision": 0,
+        "recall": 0,
+        "specificity": 0,
+        "fpr": 1,
+        "fnr": 1,
+        "npv": 0,
+        "f1": 0,
+        "balancedAcc": 0,
+        "mcc": -1
+      },
+      "actual": {
+        "accuracy": "0.0%",
+        "f1": "0.0%",
+        "precision": "0.0%",
+        "recall": "0.0%",
+        "specificity": "0.0%",
+        "balancedAcc": "0.0%",
+        "mcc": "-1.000",
+        "fpr": "100.0%"
+      }
+    }
+  ],
+  "learning": [
+    {
+      "tab": "basics",
+      "text": "A test’s accuracy on sick people is not your chance of being sick.\n\nWhen you get a Test +, you don’t know whether you came from the sick group or the healthy group. Right now, out of 1,000 people, 500 have the flu (yielding 480 true catches) and 500 are healthy (yielding 20 false alarms). Your actual chance of having the flu is 480 out of all 500 positive tests (96%).\n\nSee the step-by-step Bayes proof →\n50%\nBefore · sick portion (p)\n→\n96%\nAfter Test + · Precision\nLikelihood Ratio (LR+ = TPR ÷ FPR): 24× · How strongly a Test + boosts the odds of flu\nTPR\n96%\n\nIf a person really has the flu, what is the chance the test catches it?\n\nP(test + | flu) · Row rate · Fixed when sick portion changes\n\nFPR\n4%\n\nIf a person does NOT have the flu, what is the chance of a false alarm?\n\nP(test + | no flu) · Row rate · Fixed when sick portion changes\n\nPrecision\n96%\n\nIf a person gets a positive test (Test +), what is the chance they truly have the flu?\n\nP(flu | test +) · Column rate · Changes with sick portion\n\nFour possible outcomes (2×2 Confusion Matrix)\nAverages for 1,000 people\nTop-left · Sick, Test +\nTP · 480\nFlu caught: person really has the flu, and the test came back positive (Test +).\nTop-right · Sick, Test −\nFN · 20\nFlu missed: person really has the flu, but the test came back negative (Test −).\nBottom-left · Healthy, Test +\nFP · 20\nFalse alarm: person does not have the flu, yet the test came back positive (Test +).\nBottom-right · Healthy, Test −\nTN · 480\nCorrectly cleared: person does not have the flu, and the test came back negative (Test −).\nOther layouts you’ll see\nSame four cells, different positions\nStandard (Wikipedia / Medical) ✓ Active\nTest +\nTest −\nSick\nTP\nFN\nHealthy\nFP\nTN\nRows: actual (+ first) · Columns: test (+ first)\nMatches graph (Score order)\nTest −\nTest +\nSick\nFN\nTP\nHealthy\nTN\nFP\nRows: actual (+ first) · Columns: test (− first)\nscikit-learn (Python / ML)\nTest −\nTest +\nHealthy\nTN\nFP\nSick\nFN\nTP\nRows: actual · Columns: predicted · negative first\n\nWhy a rare disease creates mostly false alarms. When flu is rare (10% sick), 900 of 1,000 people are healthy. A 4% false-alarm rate on 900 healthy people creates 36 false alarms, next to only 96 true catches, so Precision is 72.7%.\n\nWith the test cutoff and score separation fixed, changing the sick portion changes Precision while TPR and FPR stay fixed wherever both rates are defined.\n\nOverall Accuracy & The False Security Trap\nWhy accuracy alone can be dangerously deceptive on rare events\nTest Accuracy: (All correct results ÷ Total)\n960 out of 1,000 cases correctly classified\n96%\nAccuracy\n\nAccuracy measures how often the test gives the right answer: catching flu (480 TP) plus clearing healthy people (480 TN).\n\n⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \"Negative\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\n⚡ Demo: Always predict Negative\nReset cutoff\nREFERENCE & CHECKLIST\nComplete 35 Classification Metrics Reference & Checklist\nAll 35 formulas across 5 categories, failure modes, and an interactive 2×2 live calculator.\n📋 Cheatsheet\nOpen Reference Checklist ↗"
+    },
+    {
+      "tab": "formulas",
+      "text": "Same top number (TP), different bottom group: why TPR ≠ Precision\n\nLook at TPR and Precision below: both have the exact same top number (TP = sick people caught)! The only difference is who you divide by. TPR divides horizontally by all sick people (top row), while Precision divides vertically by all positive tests (left column, which mixes sick catches with healthy false alarms). Hover or tap any part of a fraction below to outline it above.\n\nTPR\nRow rate (horizontal slice)\n96%\n\nIf a person really has the flu, what is the chance the test catches it?\n\nTPR =\nTP\nTP + FN\nIn plain words =\nSick people caught (TP)\nAll sick people (TP + FN)\n\n480 ÷ (480 + 20) = 96%\n\nP(test + | flu) · Sensitivity / Recall\n\nFPR\nRow rate (horizontal slice)\n4%\n\nIf a person does NOT have the flu, what is the chance of a false alarm?\n\nFPR =\nFP\nFP + TN\nIn plain words =\nHealthy false alarms (FP)\nAll healthy people (FP + TN)\n\n20 ÷ (20 + 480) = 4%\n\nP(test + | no flu) · False alarm rate (1 − Specificity)\n\nPrecision\nColumn rate (vertical slice)\n96%\n\nIf a person gets a positive test (Test +), what is the chance they truly have the flu?\n\nPrecision =\nTP\nTP + FP\nIn plain words =\nSick people caught (TP)\nAll positive tests (TP + FP)\n\n480 ÷ (480 + 20) = 96%\n\nP(flu | test +) · Positive predictive value (PPV)\n\nThe Negative Outcomes: Specificity, NPV, and Miss Rate\nHow the test behaves on negative predictions and missed cases\nSpecificity (Healthy cleared)\nRow rate (horizontal slice)\n96%\n\nIf a person does NOT have the flu, what is the chance of correctly clearing them?\n\nSpecificity (Healthy cleared) =\nTN\nTN + FP\nIn plain words =\nHealthy cleared (TN)\nAll healthy people (TN + FP)\n\n480 ÷ (480 + 20) = 96%\n\nP(test − | no flu) · True negative rate / Healthy clear rate\n\nNPV (True chance you are healthy)\nColumn rate (vertical slice)\n96%\n\nIf a person gets a negative test (Test −), what is the chance they truly do not have the flu?\n\nNPV (True chance you are healthy) =\nTN\nTN + FN\nIn plain words =\nHealthy cleared (TN)\nAll negative tests (TN + FN)\n\n480 ÷ (480 + 20) = 96%\n\nP(no flu | test −) · Post-test probability of being healthy\n\nMiss Rate (Flu missed)\nRow rate (horizontal slice)\n4%\n\nIf a person really has the flu, what is the chance the test misses it?\n\nMiss Rate (Flu missed) =\nFN\nTP + FN\nIn plain words =\nFlu missed (FN)\nAll sick people (TP + FN)\n\n20 ÷ (480 + 20) = 4%\n\nP(test − | flu) · False negative rate / Missed flu rate\n\nF1 Score (Summary of Precision & Recall)\nHarmonic mean of Precision and Recall (TPR)\n0.960\n96%\nF1 = 2 ×\nPrecision × Recall\nPrecision + Recall\n= 2 ×\n96% × 96%\n96% + 96%\n= 0.960\n\nWhy use F1? It penalizes tests that sacrifice one metric for the other: if either Precision or Recall is terrible, F1 is dragged down.\nImportant caveat: F1 ignores healthy people who tested negative (TN)—it only looks at catches and mistakes among positive results.\n\nEXPANDED METRIC CATALOG\nNeed MCC, Cohen's Kappa, Balanced Accuracy, or Youden's J?\nExplore all 35 metrics with formulas, strengths, pitfalls, and domain recommendations.\nOpen Metrics Reference ↗"
+    },
+    {
+      "tab": "bayes",
+      "text": "Bayes’ theorem in 3 natural steps: from 1,000 people to your chance of flu\n\nThe easiest way to understand Bayes’ theorem is with 1,000 people: first split them by how common flu is (p = 50%), next count how many from each row get a Test +, and finally take the sick share of all positive tests (P(flu | test +)).\n\nHow easily the test says +\n50%\n0% · Strict\n100% · Lenient\nHow different the two groups are\n60%\nHard to tell apart\nEasy to tell apart\nSick portion\n50%\n0% · None sick\n100% · All sick\n1\nPrior · Start with 1,000 people\nActual flu\n1,000 × p (50%)\n500\nActual no flu\n1,000 × (1 − p) (50%)\n500\n2\nEvidence · 500 Test +\nSick people caught (TP)\nTPR (96%) × 500\n480\nHealthy false alarms (FP)\nFPR (4%) × 500\n20\n3\nPosterior · Precision\n96%\nPrecision\n\n480 of 500 positive tests truly have flu.\n\nWhy the 1,000-person count formula equals Bayes’ formula\n\nThe vertical bar | means “given”. Because TP = 1,000 × TPR × p and FP = 1,000 × FPR × (1 − p), the population size 1,000 cancels out from top and bottom—turning expected counts into Bayes’ exact rate formula for P(flu | test +).\n\n0.96 × 0.5 ÷ [0.96 × 0.5 + 0.04 × 0.5] = 96%\n\nPositive Likelihood Ratio (LR+ = TPR ÷ FPR): 24×.\n\n1. CONDITIONAL PROBABILITY (BAYES’ RULE)\nP(A | B) =\nP(B | A) × P(A)\nP(B | A) × P(A) + P(B | not A) × P(not A)\n2. CANCEL N = 1,000 FROM TP ÷ (TP + FP)\nPrecision =\nTPR × p\nTPR × p + FPR × (1 − p)\n100%\n50%\n0%\n0%\n50%\n100%\nPrior Prevalence (p)\nPrecision\n Live position: p = 50%, Precision = 96%\nThe Base-Rate Curve: Why Rare Diseases Deceive\n\nNotice how steep the curve is on the left! Even with a high-quality test, when a disease is rare (low p), a positive test is more likely to be a false alarm than a true case. Slide Sick portion above to move the blue dot along this curve.\n\nMoving the cutoff or separation changes the curve shape; moving the portion slider travels along it.\n\nCompare 10% vs. 50% sick portion\nSame test cutoff and separation · tap a card to switch\n10% sick portion\n72.7% Precision\n96 TP vs. 36 FP (132 Test +)\n50% sick portion\n96% Precision\n480 TP vs. 20 FP (500 Test +)\n\nPrior · p\n\nP(flu)\n\nBase rate (50%) before seeing the prediction\n\nTPR\n\nP(test + | flu)\n\nIf a person really has the flu, what is the chance the test catches it? (96%)\n\nFPR\n\nP(test + | no flu)\n\nIf a person does NOT have the flu, what is the chance of a false alarm? (4%)\n\nPrecision\n\nP(flu | test +)\n\nIf a person gets a positive test (Test +), what is the chance they truly have the flu? (96%)"
+    },
+    {
+      "tab": "tradeoffs",
+      "text": "Trade-offs & The ROC Curve: Choosing Your Mistakes\n\nMedical tests and detection systems cannot be perfect: making a test more sensitive to catch every sick person inherently creates more false alarms. The ROC curve plots this fundamental trade-off across all cutoffs.\n\nHow easily the test says +\n50%\n0% · Strict\n100% · Lenient\nHow different the two groups are\n60%\nHard to tell apart\nEasy to tell apart\nSick portion\n50%\n0% · None sick\n100% · All sick\nPrior-Weighted Gaussians:\n50% vs 50%\nCutoff: 0.50\n0.00\n0.50\n1.00\n TP (480)\n FP (20)\n FN (20)\n TN (480)\nArea Under Curve (AUC):\n0.992\n(Excellent)\n1.0\n0.5\n0.0\n0.0\n0.5\n1.0\nFalse Positive Rate (FPR)\nTrue Positive Rate (TPR)\n Operating point: TPR = 96%, FPR = 4%\nPR-AUC:\n0.992\n(Base p=0.50)\n1.0\n0.5\n0.0\n0.0\n0.5\n1.0\nRecall / Sensitivity (TPR)\nPrecision (PPV)\n Prec = 96%, Rec = 96%\nBayes Posterior:\n96%\n(at p=50%)\n100%\n50%\n0%\n0%\n50%\n100%\nPrior Prevalence (p)\nPrecision (PPV)\n Prior p = 50% → Precision = 96%\nHow Sick Portion Changes Gaussians & Precision–Recall (While ROC Stays Fixed)\n\nDrag the Sick portion slider above: watch the green Actual flu Gaussian grow or shrink relative to the gray Actual no flu Gaussian. The ROC curve stays completely fixed, whereas the Precision–Recall curve bends dramatically because false alarms (red FP tail) overwhelm true catches when p is small!\n\n✨ Key Insight — ROC vs. PR under Imbalance: Move the Sick portion slider to 10% or 1%. The ROC red dot does not move at all, while the Precision–Recall curve and Gaussian heights immediately reveal the true false-alarm burden!\nError Costs: Which mistake is worse?\nSelect a real-world scenario to apply the optimal decision cutoff\n🚨 1. Screening / Safety First\nMissing flu lets illness spread to vulnerable people. Cutoff set to 80% to catch nearly every case.\n⚖️ 2. Balanced (Equal Weight)\nFalse alarms and missed cases are equally undesirable. Standard 50% cutoff.\n🛡️ 3. Conservative / High Stakes\nUnnecessary treatments or panic carry severe harm. Only positive when high confidence."
+    }
+  ],
+  "curves": [
+    {
+      "sep": 0,
+      "p": 1,
+      "actualRoc": 0.5,
+      "expectedRoc": 0.5000000000000001,
+      "actualPr": 0.01,
+      "expectedPr": 0.009999999999999972
+    },
+    {
+      "sep": 0,
+      "p": 10,
+      "actualRoc": 0.5,
+      "expectedRoc": 0.5000000000000001,
+      "actualPr": 0.1,
+      "expectedPr": 0.09999999999999987
+    },
+    {
+      "sep": 0,
+      "p": 50,
+      "actualRoc": 0.5,
+      "expectedRoc": 0.5000000000000001,
+      "actualPr": 0.5,
+      "expectedPr": 0.5000000000000001
+    },
+    {
+      "sep": 30,
+      "p": 1,
+      "actualRoc": 0.831,
+      "expectedRoc": 0.8307129961366723,
+      "actualPr": 0.087,
+      "expectedPr": 0.08634965552024164
+    },
+    {
+      "sep": 30,
+      "p": 10,
+      "actualRoc": 0.831,
+      "expectedRoc": 0.8307129961366723,
+      "actualPr": 0.421,
+      "expectedPr": 0.4208766415372372
+    },
+    {
+      "sep": 30,
+      "p": 50,
+      "actualRoc": 0.831,
+      "expectedRoc": 0.8307129961366723,
+      "actualPr": 0.828,
+      "expectedPr": 0.8276684122641402
+    },
+    {
+      "sep": 60,
+      "p": 1,
+      "actualRoc": 0.992,
+      "expectedRoc": 0.9918358778036982,
+      "actualPr": 0.803,
+      "expectedPr": 0.8031007696736987
+    },
+    {
+      "sep": 60,
+      "p": 10,
+      "actualRoc": 0.992,
+      "expectedRoc": 0.9918358778036982,
+      "actualPr": 0.951,
+      "expectedPr": 0.9511232072477563
+    },
+    {
+      "sep": 60,
+      "p": 50,
+      "actualRoc": 0.992,
+      "expectedRoc": 0.9918358778036982,
+      "actualPr": 0.992,
+      "expectedPr": 0.9920174304708033
+    },
+    {
+      "sep": 100,
+      "p": 1,
+      "actualRoc": 1,
+      "expectedRoc": 0.9999999993232533,
+      "actualPr": 1,
+      "expectedPr": 0.9999999345028567
+    },
+    {
+      "sep": 100,
+      "p": 10,
+      "actualRoc": 1,
+      "expectedRoc": 0.9999999993232533,
+      "actualPr": 1,
+      "expectedPr": 0.9999999939257376
+    },
+    {
+      "sep": 100,
+      "p": 50,
+      "actualRoc": 1,
+      "expectedRoc": 0.9999999993232533,
+      "actualPr": 1,
+      "expectedPr": 0.9999999993233692
+    }
+  ],
+  "observations": [
+    {
+      "id": "F1-zero",
+      "rows": [
+        {
+          "repeat": 0,
+          "tp": "0",
+          "fp": "0",
+          "fn": "100",
+          "actual": "N/A",
+          "expected": 0
+        },
+        {
+          "repeat": 1,
+          "tp": "0",
+          "fp": "0",
+          "fn": "100",
+          "actual": "N/A",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "accuracy-trap",
+      "rows": [
+        "⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \"Negative\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\n",
+        "⚠️ The False Security Trap: When flu is rare (e.g. 10% sick), a broken test that says \"Negative\" to every single patient achieves an impressive 50% accuracy—while failing to catch a single sick person (TPR = 0%)!\n"
+      ]
+    },
+    {
+      "id": "domain-aria",
+      "rows": [
+        {
+          "repeat": 0,
+          "p": "car",
+          "label": "150 people with flu and 102 false alarms"
+        },
+        {
+          "repeat": 0,
+          "p": "spam",
+          "label": "344 people with flu and 12 false alarms"
+        },
+        {
+          "repeat": 0,
+          "p": "fraud",
+          "label": "9.6 people with flu and 39.6 false alarms"
+        },
+        {
+          "repeat": 1,
+          "p": "car",
+          "label": "150 people with flu and 102 false alarms"
+        },
+        {
+          "repeat": 1,
+          "p": "spam",
+          "label": "344 people with flu and 12 false alarms"
+        },
+        {
+          "repeat": 1,
+          "p": "fraud",
+          "label": "9.6 people with flu and 39.6 false alarms"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,80 @@
+{
+  "start": 21,
+  "end": 22,
+  "total": 22,
+  "done": true,
+  "results": [
+    {
+      "id": "9a7762a",
+      "names": [
+        "old_movable"
+      ],
+      "actions": [
+        {
+          "name": "panel reorder + width change + refresh persistence",
+          "status": "PASS",
+          "evidence": {
+            "before": [
+              "params",
+              "equations",
+              "mosaic",
+              "kpis",
+              "presets",
+              "counts",
+              "rates",
+              "roc",
+              "pr"
+            ],
+            "after": [
+              "equations",
+              "mosaic",
+              "params",
+              "kpis",
+              "presets",
+              "counts",
+              "rates",
+              "roc",
+              "pr"
+            ],
+            "refreshed": [
+              "equations",
+              "mosaic",
+              "params",
+              "kpis",
+              "presets",
+              "counts",
+              "rates",
+              "roc",
+              "pr"
+            ],
+            "reorderChanged": true,
+            "persisted": true,
+            "sizing": {
+              "old": "tile",
+              "new": "tile span2"
+            },
+            "storage": {
+              "cmp_layout_order": "[\"equations\",\"mosaic\",\"params\",\"kpis\",\"presets\",\"counts\",\"rates\",\"roc\",\"pr\"]",
+              "cmp_layout_order_v1": "[\"equations\",\"mosaic\",\"params\",\"kpis\",\"presets\",\"counts\",\"rates\",\"roc\",\"pr\"]",
+              "cmp_eq_class": "tile span2"
+            }
+          }
+        }
+      ],
+      "errors": [],
+      "screenshots": [
+        "screenshots/9a7762a-layout-edited.png"
+      ],
+      "mobileContainers": [
+        {
+          "tag": "BODY",
+          "id": "",
+          "class": "",
+          "client": 844,
+          "scroll": 1267,
+          "overflowY": "auto"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1895 @@
+{
+  "method": "Independent Simpson normal-CDF integration and quantile counting; compared against executed browser states. No application model functions called.",
+  "rows": [
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 0,
+      "expected": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 25,
+      "expected": {
+        "tp": 0,
+        "fp": 940,
+        "fn": 0,
+        "tn": 60
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 940,
+        "fn": 0,
+        "tn": 60
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 50,
+      "expected": {
+        "tp": 0,
+        "fp": 500,
+        "fn": 0,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 500,
+        "fn": 0,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 75,
+      "expected": {
+        "tp": 0,
+        "fp": 60,
+        "fn": 0,
+        "tn": 940
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 60,
+        "fn": 0,
+        "tn": 940
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 0,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 0,
+      "expected": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 25,
+      "expected": {
+        "tp": 9.4,
+        "fp": 930.6,
+        "fn": 0.5999999999999996,
+        "tn": 59.39999999999998
+      },
+      "actual": {
+        "tp": 9.4,
+        "fp": 930.6,
+        "fn": 0.6,
+        "tn": 59.4
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 50,
+      "expected": {
+        "tp": 5,
+        "fp": 495,
+        "fn": 5,
+        "tn": 495
+      },
+      "actual": {
+        "tp": 5,
+        "fp": 495,
+        "fn": 5,
+        "tn": 495
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 75,
+      "expected": {
+        "tp": 0.6,
+        "fp": 59.4,
+        "fn": 9.4,
+        "tn": 930.6
+      },
+      "actual": {
+        "tp": 0.6,
+        "fp": 59.4,
+        "fn": 9.4,
+        "tn": 930.6
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 1,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 0,
+      "expected": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 25,
+      "expected": {
+        "tp": 94,
+        "fp": 846,
+        "fn": 6,
+        "tn": 54
+      },
+      "actual": {
+        "tp": 94,
+        "fp": 846,
+        "fn": 6,
+        "tn": 54
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 50,
+      "expected": {
+        "tp": 50,
+        "fp": 450,
+        "fn": 50,
+        "tn": 450
+      },
+      "actual": {
+        "tp": 50,
+        "fp": 450,
+        "fn": 50,
+        "tn": 450
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 75,
+      "expected": {
+        "tp": 6,
+        "fp": 54,
+        "fn": 94,
+        "tn": 846
+      },
+      "actual": {
+        "tp": 6,
+        "fp": 54,
+        "fn": 94,
+        "tn": 846
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 10,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 0,
+      "expected": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 25,
+      "expected": {
+        "tp": 347.8,
+        "fp": 592.2,
+        "fn": 22.19999999999999,
+        "tn": 37.799999999999955
+      },
+      "actual": {
+        "tp": 347.8,
+        "fp": 592.2,
+        "fn": 22.2,
+        "tn": 37.8
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 50,
+      "expected": {
+        "tp": 185,
+        "fp": 315,
+        "fn": 185,
+        "tn": 315
+      },
+      "actual": {
+        "tp": 185,
+        "fp": 315,
+        "fn": 185,
+        "tn": 315
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 75,
+      "expected": {
+        "tp": 22.2,
+        "fp": 37.8,
+        "fn": 347.8,
+        "tn": 592.2
+      },
+      "actual": {
+        "tp": 22.2,
+        "fp": 37.8,
+        "fn": 347.8,
+        "tn": 592.2
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 37,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 0,
+      "expected": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 25,
+      "expected": {
+        "tp": 470,
+        "fp": 470,
+        "fn": 30,
+        "tn": 30
+      },
+      "actual": {
+        "tp": 470,
+        "fp": 470,
+        "fn": 30,
+        "tn": 30
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 50,
+      "expected": {
+        "tp": 250,
+        "fp": 250,
+        "fn": 250,
+        "tn": 250
+      },
+      "actual": {
+        "tp": 250,
+        "fp": 250,
+        "fn": 250,
+        "tn": 250
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 75,
+      "expected": {
+        "tp": 30,
+        "fp": 30,
+        "fn": 470,
+        "tn": 470
+      },
+      "actual": {
+        "tp": 30,
+        "fp": 30,
+        "fn": 470,
+        "tn": 470
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 50,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 0,
+      "expected": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 25,
+      "expected": {
+        "tp": 930.6,
+        "fp": 9.4,
+        "fn": 59.39999999999998,
+        "tn": 0.5999999999999996
+      },
+      "actual": {
+        "tp": 930.6,
+        "fp": 9.4,
+        "fn": 59.4,
+        "tn": 0.6
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 50,
+      "expected": {
+        "tp": 495,
+        "fp": 5,
+        "fn": 495,
+        "tn": 5
+      },
+      "actual": {
+        "tp": 495,
+        "fp": 5,
+        "fn": 495,
+        "tn": 5
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 75,
+      "expected": {
+        "tp": 59.4,
+        "fp": 0.6,
+        "fn": 930.6,
+        "tn": 9.4
+      },
+      "actual": {
+        "tp": 59.4,
+        "fp": 0.6,
+        "fn": 930.6,
+        "tn": 9.4
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 99,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 0,
+      "expected": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 25,
+      "expected": {
+        "tp": 940,
+        "fp": 0,
+        "fn": 60,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 940,
+        "fp": 0,
+        "fn": 60,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 50,
+      "expected": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 500,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 500,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 75,
+      "expected": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 940,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 940,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 0,
+      "prev": 100,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 0,
+      "expected": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 25,
+      "expected": {
+        "tp": 0,
+        "fp": 740,
+        "fn": 0,
+        "tn": 260
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 740,
+        "fn": 0,
+        "tn": 260
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 50,
+      "expected": {
+        "tp": 0,
+        "fp": 40,
+        "fn": 0,
+        "tn": 960
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 40,
+        "fn": 0,
+        "tn": 960
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 75,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 0,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 0,
+      "expected": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 25,
+      "expected": {
+        "tp": 10,
+        "fp": 732.6,
+        "fn": 0,
+        "tn": 257.4
+      },
+      "actual": {
+        "tp": 10,
+        "fp": 732.6,
+        "fn": 0,
+        "tn": 257.4
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 50,
+      "expected": {
+        "tp": 9.6,
+        "fp": 39.6,
+        "fn": 0.40000000000000036,
+        "tn": 950.4
+      },
+      "actual": {
+        "tp": 9.6,
+        "fp": 39.6,
+        "fn": 0.4,
+        "tn": 950.4
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 75,
+      "expected": {
+        "tp": 2.6,
+        "fp": 0,
+        "fn": 7.4,
+        "tn": 990
+      },
+      "actual": {
+        "tp": 2.6,
+        "fp": 0,
+        "fn": 7.4,
+        "tn": 990
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 1,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 0,
+      "expected": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 25,
+      "expected": {
+        "tp": 100,
+        "fp": 666,
+        "fn": 0,
+        "tn": 234
+      },
+      "actual": {
+        "tp": 100,
+        "fp": 666,
+        "fn": 0,
+        "tn": 234
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 50,
+      "expected": {
+        "tp": 96,
+        "fp": 36,
+        "fn": 4,
+        "tn": 864
+      },
+      "actual": {
+        "tp": 96,
+        "fp": 36,
+        "fn": 4,
+        "tn": 864
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 75,
+      "expected": {
+        "tp": 26,
+        "fp": 0,
+        "fn": 74,
+        "tn": 900
+      },
+      "actual": {
+        "tp": 26,
+        "fp": 0,
+        "fn": 74,
+        "tn": 900
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 10,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 0,
+      "expected": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 25,
+      "expected": {
+        "tp": 370,
+        "fp": 466.2,
+        "fn": 0,
+        "tn": 163.8
+      },
+      "actual": {
+        "tp": 370,
+        "fp": 466.2,
+        "fn": 0,
+        "tn": 163.8
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 50,
+      "expected": {
+        "tp": 355.2,
+        "fp": 25.2,
+        "fn": 14.800000000000011,
+        "tn": 604.8
+      },
+      "actual": {
+        "tp": 355.2,
+        "fp": 25.2,
+        "fn": 14.8,
+        "tn": 604.8
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 75,
+      "expected": {
+        "tp": 96.2,
+        "fp": 0,
+        "fn": 273.8,
+        "tn": 630
+      },
+      "actual": {
+        "tp": 96.2,
+        "fp": 0,
+        "fn": 273.8,
+        "tn": 630
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 37,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 0,
+      "expected": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 25,
+      "expected": {
+        "tp": 500,
+        "fp": 370,
+        "fn": 0,
+        "tn": 130
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 370,
+        "fn": 0,
+        "tn": 130
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 50,
+      "expected": {
+        "tp": 480,
+        "fp": 20,
+        "fn": 20,
+        "tn": 480
+      },
+      "actual": {
+        "tp": 480,
+        "fp": 20,
+        "fn": 20,
+        "tn": 480
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 75,
+      "expected": {
+        "tp": 130,
+        "fp": 0,
+        "fn": 370,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 130,
+        "fp": 0,
+        "fn": 370,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 50,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 0,
+      "expected": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 25,
+      "expected": {
+        "tp": 990,
+        "fp": 7.4,
+        "fn": 0,
+        "tn": 2.5999999999999996
+      },
+      "actual": {
+        "tp": 990,
+        "fp": 7.4,
+        "fn": 0,
+        "tn": 2.6
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 50,
+      "expected": {
+        "tp": 950.4,
+        "fp": 0.4,
+        "fn": 39.60000000000002,
+        "tn": 9.6
+      },
+      "actual": {
+        "tp": 950.4,
+        "fp": 0.4,
+        "fn": 39.6,
+        "tn": 9.6
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 75,
+      "expected": {
+        "tp": 257.4,
+        "fp": 0,
+        "fn": 732.6,
+        "tn": 10
+      },
+      "actual": {
+        "tp": 257.4,
+        "fp": 0,
+        "fn": 732.6,
+        "tn": 10
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 99,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 0,
+      "expected": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 25,
+      "expected": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 50,
+      "expected": {
+        "tp": 960,
+        "fp": 0,
+        "fn": 40,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 960,
+        "fp": 0,
+        "fn": 40,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 75,
+      "expected": {
+        "tp": 260,
+        "fp": 0,
+        "fn": 740,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 260,
+        "fp": 0,
+        "fn": 740,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 60,
+      "prev": 100,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 0,
+      "expected": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 1000,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 25,
+      "expected": {
+        "tp": 0,
+        "fp": 240,
+        "fn": 0,
+        "tn": 760
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 240,
+        "fn": 0,
+        "tn": 760
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 50,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 75,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 0,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 1000
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 0,
+      "expected": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 10,
+        "fp": 990,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 25,
+      "expected": {
+        "tp": 10,
+        "fp": 237.6,
+        "fn": 0,
+        "tn": 752.4
+      },
+      "actual": {
+        "tp": 10,
+        "fp": 237.6,
+        "fn": 0,
+        "tn": 752.4
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 50,
+      "expected": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "tn": 990
+      },
+      "actual": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "tn": 990
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 75,
+      "expected": {
+        "tp": 7.6,
+        "fp": 0,
+        "fn": 2.4000000000000004,
+        "tn": 990
+      },
+      "actual": {
+        "tp": 7.6,
+        "fp": 0,
+        "fn": 2.4,
+        "tn": 990
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 1,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 10,
+        "tn": 990
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 0,
+      "expected": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 100,
+        "fp": 900,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 25,
+      "expected": {
+        "tp": 100,
+        "fp": 216,
+        "fn": 0,
+        "tn": 684
+      },
+      "actual": {
+        "tp": 100,
+        "fp": 216,
+        "fn": 0,
+        "tn": 684
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 50,
+      "expected": {
+        "tp": 100,
+        "fp": 0,
+        "fn": 0,
+        "tn": 900
+      },
+      "actual": {
+        "tp": 100,
+        "fp": 0,
+        "fn": 0,
+        "tn": 900
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 75,
+      "expected": {
+        "tp": 76,
+        "fp": 0,
+        "fn": 24,
+        "tn": 900
+      },
+      "actual": {
+        "tp": 76,
+        "fp": 0,
+        "fn": 24,
+        "tn": 900
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 10,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 100,
+        "tn": 900
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 0,
+      "expected": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 370,
+        "fp": 630,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 25,
+      "expected": {
+        "tp": 370,
+        "fp": 151.2,
+        "fn": 0,
+        "tn": 478.8
+      },
+      "actual": {
+        "tp": 370,
+        "fp": 151.2,
+        "fn": 0,
+        "tn": 478.8
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 50,
+      "expected": {
+        "tp": 370,
+        "fp": 0,
+        "fn": 0,
+        "tn": 630
+      },
+      "actual": {
+        "tp": 370,
+        "fp": 0,
+        "fn": 0,
+        "tn": 630
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 75,
+      "expected": {
+        "tp": 281.2,
+        "fp": 0,
+        "fn": 88.80000000000001,
+        "tn": 630
+      },
+      "actual": {
+        "tp": 281.2,
+        "fp": 0,
+        "fn": 88.8,
+        "tn": 630
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 37,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 370,
+        "tn": 630
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 0,
+      "expected": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 500,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 25,
+      "expected": {
+        "tp": 500,
+        "fp": 120,
+        "fn": 0,
+        "tn": 380
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 120,
+        "fn": 0,
+        "tn": 380
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 50,
+      "expected": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 0,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 500,
+        "fp": 0,
+        "fn": 0,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 75,
+      "expected": {
+        "tp": 380,
+        "fp": 0,
+        "fn": 120,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 380,
+        "fp": 0,
+        "fn": 120,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 50,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 500,
+        "tn": 500
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 0,
+      "expected": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 990,
+        "fp": 10,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 25,
+      "expected": {
+        "tp": 990,
+        "fp": 2.4,
+        "fn": 0,
+        "tn": 7.6
+      },
+      "actual": {
+        "tp": 990,
+        "fp": 2.4,
+        "fn": 0,
+        "tn": 7.6
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 50,
+      "expected": {
+        "tp": 990,
+        "fp": 0,
+        "fn": 0,
+        "tn": 10
+      },
+      "actual": {
+        "tp": 990,
+        "fp": 0,
+        "fn": 0,
+        "tn": 10
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 75,
+      "expected": {
+        "tp": 752.4,
+        "fp": 0,
+        "fn": 237.60000000000002,
+        "tn": 10
+      },
+      "actual": {
+        "tp": 752.4,
+        "fp": 0,
+        "fn": 237.6,
+        "tn": 10
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 99,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 990,
+        "tn": 10
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 0,
+      "expected": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 25,
+      "expected": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 50,
+      "expected": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 75,
+      "expected": {
+        "tp": 760,
+        "fp": 0,
+        "fn": 240,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 760,
+        "fp": 0,
+        "fn": 240,
+        "tn": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "sep": 100,
+      "prev": 100,
+      "cutoff": 100,
+      "expected": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "actual": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1000,
+        "tn": 0
+      },
+      "status": "PASS"
+    }
+  ]
+}

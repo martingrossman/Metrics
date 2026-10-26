@@ -1,0 +1,337 @@
+{
+  "tests": [
+    {
+      "id": "F16",
+      "name": "Reference filters and disclosures, recheck with initial categories collapsed",
+      "status": "FAIL",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Expand details', exact: true })\u001b[22m\n"
+    },
+    {
+      "id": "A04",
+      "name": "Missing separation name and mouse-only cost pills reproduce twice",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"name\":null,\"labels\":0,\"pills\":[{\"tabindex\":null,\"role\":null},{\"tabindex\":null,\"role\":null}]},{\"repeat\":1,\"name\":null,\"labels\":0,\"pills\":[{\"tabindex\":null,\"role\":null},{\"tabindex\":null,\"role\":null}]}]"
+    },
+    {
+      "id": "E08",
+      "name": "PR-AUC naming distinguishes trapezoidal integral from Average Precision",
+      "status": "FAIL",
+      "error": "[\"0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\\\"Sick portion\\\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!\",\"0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\\\"Sick portion\\\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!\"]"
+    },
+    {
+      "id": "G02",
+      "name": "ROC cost preset active state in Generic ML",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"threshold\":\"20\",\"state\":[{\"value\":\"80\",\"fill\":\"#f8fafc\"},{\"value\":\"50\",\"fill\":\"#f8fafc\"}]},{\"repeat\":1,\"threshold\":\"20\",\"state\":[{\"value\":\"80\",\"fill\":\"#f8fafc\"},{\"value\":\"50\",\"fill\":\"#f8fafc\"}]}]"
+    },
+    {
+      "id": "V01",
+      "name": "Default primary panels exceed short-phone/tablet viewport, repeated loads",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"viewport\":[320,568],\"document\":[305,770],\"matrixBottom\":670.5249938964844,\"scoreBottom\":455.02501678466797},{\"repeat\":0,\"viewport\":[375,667],\"document\":[360,722],\"matrixBottom\":638.3125,\"scoreBottom\":448.81251525878906},{\"repeat\":0,\"viewport\":[768,1024],\"document\":[753,1203],\"matrixBottom\":1088.1000061035156,\"scoreBottom\":698.8000183105469},{\"repeat\":0,\"viewport\":[1024,768],\"document\":[1009,1138],\"matrixBottom\":1041.4000549316406,\"scoreBottom\":652.1000061035156},{\"repeat\":1,\"viewport\":[320,568],\"document\":[305,770],\"matrixBottom\":670.5249938964844,\"scoreBottom\":455.02501678466797},{\"repeat\":1,\"viewport\":[375,667],\"document\":[360,722],\"matrixBottom\":638.3125,\"scoreBottom\":448.81251525878906},{\"repeat\":1,\"viewport\":[768,1024],\"document\":[753,1203],\"matrixBottom\":1088.1000061035156,\"scoreBottom\":698.8000183105469},{\"repeat\":1,\"viewport\":[1024,768],\"document\":[1009,1138],\"matrixBottom\":1041.4000549316406,\"scoreBottom\":652.1000061035156}]"
+    },
+    {
+      "id": "V02",
+      "name": "Mobile touch targets meet project 44x44 minimum",
+      "status": "FAIL",
+      "error": "[{\"id\":\"presetSelect\",\"width\":92,\"height\":18.399999618530273,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"reset\",\"width\":20.399999618530273,\"height\":28,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"threshold\",\"width\":141.8000030517578,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"separation\",\"width\":193.3874969482422,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"balance10\",\"width\":35.79999923706055,\"height\":23.350000381469727,\"font\":\"11px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"balance50\",\"width\":35.79999923706055,\"height\":23.350000381469727,\"font\":\"11px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"prevalence\",\"width\":141.8000030517578,\"height\":28,\"font\":\"14px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphScores\",\"width\":43.22500228881836,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphSplit\",\"width\":32.837501525878906,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphGauss\",\"width\":36.66250228881836,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphRoc\",\"width\":29.899999618530273,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphPr\",\"width\":22.075000762939453,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"},{\"id\":\"tabGraphBayes\",\"width\":35.900001525878906,\"height\":16,\"font\":\"10px\",\"before\":\"none\",\"after\":\"none\"}]"
+    }
+  ],
+  "reproductions": [
+    {
+      "id": "accessibility",
+      "rows": [
+        {
+          "repeat": 0,
+          "name": null,
+          "labels": 0,
+          "pills": [
+            {
+              "tabindex": null,
+              "role": null
+            },
+            {
+              "tabindex": null,
+              "role": null
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "name": null,
+          "labels": 0,
+          "pills": [
+            {
+              "tabindex": null,
+              "role": null
+            },
+            {
+              "tabindex": null,
+              "role": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-auc-label",
+      "rows": [
+        "0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\"Sick portion\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!",
+        "0.000.000.250.250.500.500.750.751.001.00Recall / Sensitivity (Sick Caught · TPR)Precision (PPV)Precision–Recall (PR) CurveBaseline p = 10%PR-AUC (AVG PRECISION)0.951 (Base 0.10)OPERATING POINTPrecision: 72.7%Recall (TPR): 96%Cutoff: 50%SENSITIVE TO IMBALANCEUnlike the ROC curve, moving\"Sick portion\" (p) bends thisentire curve and shifts thedashed chance baseline (y = p).Use 4-Up Graph to compareROC vs PR side-by-side!"
+      ]
+    },
+    {
+      "id": "generic-cost-active",
+      "rows": [
+        {
+          "repeat": 0,
+          "threshold": "20",
+          "state": [
+            {
+              "value": "80",
+              "fill": "#f8fafc"
+            },
+            {
+              "value": "50",
+              "fill": "#f8fafc"
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "threshold": "20",
+          "state": [
+            {
+              "value": "80",
+              "fill": "#f8fafc"
+            },
+            {
+              "value": "50",
+              "fill": "#f8fafc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "responsive-default",
+      "rows": [
+        {
+          "repeat": 0,
+          "viewport": [
+            320,
+            568
+          ],
+          "document": [
+            305,
+            770
+          ],
+          "matrixBottom": 670.5249938964844,
+          "scoreBottom": 455.02501678466797
+        },
+        {
+          "repeat": 0,
+          "viewport": [
+            375,
+            667
+          ],
+          "document": [
+            360,
+            722
+          ],
+          "matrixBottom": 638.3125,
+          "scoreBottom": 448.81251525878906
+        },
+        {
+          "repeat": 0,
+          "viewport": [
+            768,
+            1024
+          ],
+          "document": [
+            753,
+            1203
+          ],
+          "matrixBottom": 1088.1000061035156,
+          "scoreBottom": 698.8000183105469
+        },
+        {
+          "repeat": 0,
+          "viewport": [
+            1024,
+            768
+          ],
+          "document": [
+            1009,
+            1138
+          ],
+          "matrixBottom": 1041.4000549316406,
+          "scoreBottom": 652.1000061035156
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            320,
+            568
+          ],
+          "document": [
+            305,
+            770
+          ],
+          "matrixBottom": 670.5249938964844,
+          "scoreBottom": 455.02501678466797
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            375,
+            667
+          ],
+          "document": [
+            360,
+            722
+          ],
+          "matrixBottom": 638.3125,
+          "scoreBottom": 448.81251525878906
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            768,
+            1024
+          ],
+          "document": [
+            753,
+            1203
+          ],
+          "matrixBottom": 1088.1000061035156,
+          "scoreBottom": 698.8000183105469
+        },
+        {
+          "repeat": 1,
+          "viewport": [
+            1024,
+            768
+          ],
+          "document": [
+            1009,
+            1138
+          ],
+          "matrixBottom": 1041.4000549316406,
+          "scoreBottom": 652.1000061035156
+        }
+      ]
+    },
+    {
+      "id": "touch-targets",
+      "rows": [
+        {
+          "id": "presetSelect",
+          "width": 92,
+          "height": 18.399999618530273,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "reset",
+          "width": 20.399999618530273,
+          "height": 28,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "threshold",
+          "width": 141.8000030517578,
+          "height": 28,
+          "font": "14px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "separation",
+          "width": 193.3874969482422,
+          "height": 28,
+          "font": "14px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "balance10",
+          "width": 35.79999923706055,
+          "height": 23.350000381469727,
+          "font": "11px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "balance50",
+          "width": 35.79999923706055,
+          "height": 23.350000381469727,
+          "font": "11px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "prevalence",
+          "width": 141.8000030517578,
+          "height": 28,
+          "font": "14px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphScores",
+          "width": 43.22500228881836,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphSplit",
+          "width": 32.837501525878906,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphGauss",
+          "width": 36.66250228881836,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphRoc",
+          "width": 29.899999618530273,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphPr",
+          "width": 22.075000762939453,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        },
+        {
+          "id": "tabGraphBayes",
+          "width": 35.900001525878906,
+          "height": 16,
+          "font": "10px",
+          "before": "none",
+          "after": "none"
+        }
+      ]
+    }
+  ],
+  "definitions": [],
+  "errors": []
+}

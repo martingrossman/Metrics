@@ -1,0 +1,135 @@
+{
+  "start": 3,
+  "end": 6,
+  "total": 22,
+  "done": false,
+  "results": [
+    {
+      "id": "7db2c1b",
+      "names": [
+        "feature_simple_bayes_story"
+      ],
+      "actions": [
+        {
+          "name": "metric pin and precision/balance teaching interaction",
+          "status": "PASS",
+          "evidence": {
+            "pin": "true",
+            "before": "96%",
+            "after": "72.7%",
+            "tpr": "96%",
+            "fpr": "4%"
+          }
+        },
+        {
+          "name": "threshold line drag",
+          "status": "PASS",
+          "evidence": {
+            "before": "50",
+            "after": "35"
+          }
+        },
+        {
+          "name": "four learning tabs",
+          "status": "PASS",
+          "evidence": [
+            {
+              "name": "basics",
+              "text": "A positive test is a clue, not the final answer.\n\nActual tells us whether a person really has flu; the test predicts positive (+) or negative (−). Even an accurate test can produce many false alarms when flu is rare.\n\nExplore the Bayes breakdown →\n10%\nBefore · sick portion (p)\n→\n100%\nAfter Test + · Precision\nTPR\n62%\n\nOf people with flu, how many test positive?\n\nP(test + | flu) · Fixed when sick portion changes\n\nFPR\n0%\n\nOf people without flu, how many test positive?\n\nP(test + | no flu) · Fixed when sick portion changes\n\nPrecision\n100%\n\nOf people testing positive, how many have flu?\n\nP(flu | test +) · Changes with sick portion\n\nFour possible outcomes\n1,000 weighted people\nTP · 62\nFlu detected: flu, test +\nFP · 0\nFalse alarm: no flu, test +\nFN · 38\nFlu missed: flu, test −\nTN · 900\nCorrectly cleared: no flu, test −\n\nWhy balance matters. When flu is more common, more positive tests come from people who really have flu.\n\nWith the signal sensitivity and score separation fixed, changing the sick portion changes Precision while TPR and FPR stay fixed wherever both rates are defined.\n\nHow this demonstration works"
+            },
+            {
+              "name": "formulas",
+              "text": "Every metric is a fraction of two regions\n\nEach rate asks: how many of the reference group (denominator) landed in the target outcome (numerator)? Hover over or tap any part of a fraction below to outline its group in the graphs above. Tap again to clear.\n\nTPR\n62%\n\nOf people with flu, how many test positive?\n\nTPR =\nTP\nTP + FN\n\n62 ÷ (62 + 38) = 62%\n\nP(test + | flu) · Sensitivity / Recall\n\nFPR\n0%\n\nOf people without flu, how many test positive?\n\nFPR =\nFP\nFP + TN\n\n0 ÷ (0 + 900) = 0%\n\nP(test + | no flu) · False alarm rate (1 − Specificity)\n\nPrecision\n100%\n\nOf people testing positive, how many have flu?\n\nPrecision =\nTP\nTP + FP\n\n62 ÷ (62 + 0) = 100%\n\nP(flu | test +) · Positive predictive value (PPV)\n\nSolid underline: the numerator counted. Dashed underline: the denominator group it is divided by. A rate is N/A when its denominator is zero. Display rounding never changes a calculation."
+            },
+            {
+              "name": "bayes",
+              "text": "Bayes’ theorem: from a positive test to the chance of flu\n\nStart with how common flu is (prior p = 10%). Then combine true detections (TPR) and false alarms (FPR) to find the posterior probability P(flu | test +).\n\n1\nPrior · Base rate\nActual flu\np = 10% of 1,000\n100\nActual no flu\n1 − p = 90% of 1,000\n900\n2\nEvidence · 62 Test +\nFlu detected (TP)\nTPR (62%) × 100\n62\nFalse alarms (FP)\nFPR (0%) × 900\n0\n3\nPosterior · Precision\n100%\nPrecision\n\n62 of 62 positive tests have flu.\n\nBayes’ theorem in rate form\n\nThe bar | means “given”. TPR and FPR condition on the actual group (P(test + | flu) and P(test + | no flu)), while Precision flips the condition to ask about a positive result (P(flu | test +)).\n\n0.62 × 0.1 ÷ [0.62 × 0.1 + 0 × 0.9] = 100%\n\nThe same precision as in the graph, calculated from TPR, FPR, and the prior p.\n\nP(A | B) =\nP(B | A) × P(A)\nP(B)\nPrecision =\nTPR × p\nTPR × p + FPR × (1 − p)\nCompare 10% vs. 50% sick portion\nSame signal sensitivity and score separation · tap a card to switch\n10% sick portion\n100% Precision\n62 TP vs. 0 FP (62 Test +)\n50% sick portion\n100% Precision\n310 TP vs. 0 FP (310 Test +)\n\nPrior · p\n\nP(flu)\n\nBase rate (10%) before seeing the test result\n\nTPR\n\nP(test + | flu)\n\nOf people with flu, how many test positive? (62%)\n\nFPR\n\nP(test + | no flu)\n\nOf people without flu, how many test positive? (0%)\n\nPrecision\n\nP(flu | test +)\n\nOf people testing positive, how many have flu? (100%)"
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "screenshots": [],
+      "mobileContainers": []
+    },
+    {
+      "id": "b37face",
+      "names": [
+        "feature_simple_bayes_story_overall_visual"
+      ],
+      "actions": [
+        {
+          "name": "metric pin and precision/balance teaching interaction",
+          "status": "PASS",
+          "evidence": {
+            "pin": "true",
+            "before": "96%",
+            "after": "72.7%",
+            "tpr": "96%",
+            "fpr": "4%"
+          }
+        },
+        {
+          "name": "threshold line drag",
+          "status": "PASS",
+          "evidence": {
+            "before": "50",
+            "after": "35"
+          }
+        },
+        {
+          "name": "four learning tabs",
+          "status": "PASS",
+          "evidence": [
+            {
+              "name": "basics",
+              "text": "A test’s accuracy on sick people is not your chance of being sick.\n\nWhen you get a Test +, you don’t know whether you came from the sick group or the healthy group. Right now, out of 1,000 people, 100 have the flu (yielding 62 true catches) and 900 are healthy (yielding 0 false alarms). Your actual chance of having the flu is 62 out of all 62 positive tests (100%).\n\nSee the step-by-step Bayes proof →\n10%\nBefore · sick portion (p)\n→\n100%\nAfter Test + · Precision\nLikelihood Ratio (LR+ = TPR ÷ FPR): ∞ (0 false alarms) · How strongly a Test + boosts the odds of flu\nTPR\n62%\n\nIf a person really has the flu, what is the chance the test catches it?\n\nP(test + | flu) · Row rate · Fixed when sick portion changes\n\nFPR\n0%\n\nIf a person does NOT have the flu, what is the chance of a false alarm?\n\nP(test + | no flu) · Row rate · Fixed when sick portion changes\n\nPrecision\n100%\n\nIf a person gets a positive test (Test +), what is the chance they truly have the flu?\n\nP(flu | test +) · Column rate · Changes with sick portion\n\nFour possible outcomes (2×2 Confusion Matrix)\n1,000 weighted people · arranged in the exact same 2×2 positions as the matrix above\nTop-left · Sick, Test −\nFN · 38\nFlu missed: person really has the flu, but the test came back negative (Test −).\nTop-right · Sick, Test +\nTP · 62\nFlu caught: person really has the flu, and the test came back positive (Test +).\nBottom-left · Healthy, Test −\nTN · 900\nCorrectly cleared: person does not have the flu, and the test came back negative (Test −).\nBottom-right · Healthy, Test +\nFP · 0\nFalse alarm: person does not have the flu, yet the test came back positive (Test +).\n\nWhy a rare disease creates mostly false alarms. When flu is rare (say 10% sick), 900 out of 1,000 people are healthy. Even a small 4% false-alarm rate on 900 healthy p"
+            },
+            {
+              "name": "formulas",
+              "text": "Same top number (TP), different bottom group: why TPR ≠ Precision\n\nLook at TPR and Precision below: both have the exact same top number (TP = sick people caught)! The only difference is who you divide by. TPR divides horizontally by all sick people (top row), while Precision divides vertically by all positive tests (right column, which mixes sick catches with healthy false alarms). Hover or tap any part of a fraction below to outline it above.\n\nTPR\nRow rate (horizontal slice)\n62%\n\nIf a person really has the flu, what is the chance the test catches it?\n\nTPR =\nTP\nTP + FN\nIn plain words =\nSick people caught (TP)\nAll sick people (TP + FN)\n\n62 ÷ (62 + 38) = 62%\n\nP(test + | flu) · Sensitivity / Recall\n\nFPR\nRow rate (horizontal slice)\n0%\n\nIf a person does NOT have the flu, what is the chance of a false alarm?\n\nFPR =\nFP\nFP + TN\nIn plain words =\nHealthy false alarms (FP)\nAll healthy people (FP + TN)\n\n0 ÷ (0 + 900) = 0%\n\nP(test + | no flu) · False alarm rate (1 − Specificity)\n\nPrecision\nColumn rate (vertical slice)\n100%\n\nIf a person gets a positive test (Test +), what is the chance they truly have the flu?\n\nPrecision =\nTP\nTP + FP\nIn plain words =\nSick people caught (TP)\nAll positive tests (TP + FP)\n\n62 ÷ (62 + 0) = 100%\n\nP(flu | test +) · Positive predictive value (PPV)\n\nSolid underline: the numerator counted. Dashed underline: the denominator group it is divided by. A rate is N/A when its denominator is zero. Display rounding never changes a calculation."
+            },
+            {
+              "name": "bayes",
+              "text": "Bayes’ theorem in 3 natural steps: from 1,000 people to your chance of flu\n\nThe easiest way to understand Bayes’ theorem is with 1,000 people: first split them by how common flu is (p = 10%), next count how many from each row get a Test +, and finally take the sick share of all positive tests (P(flu | test +)).\n\nSensitivity to the flu signal\n35%\n0% · Less sensitive\n100% · More sensitive\nHow different the two groups are\n60%\nHard to tell apart\nEasy to tell apart\nSick portion\n10%\n0% · no one has flu\n100% · everyone has flu\n1\nPrior · Start with 1,000 people\nActual flu\n1,000 × p (10%)\n100\nActual no flu\n1,000 × (1 − p) (90%)\n900\n2\nEvidence · 62 Test +\nSick people caught (TP)\nTPR (62%) × 100\n62\nHealthy false alarms (FP)\nFPR (0%) × 900\n0\n3\nPosterior · Precision\n100%\nPrecision\n\n62 of 62 positive tests truly have flu.\n\nWhy the 1,000-person count formula equals Bayes’ formula\n\nThe vertical bar | means “given” (which group we restrict our attention to). Because TP = 1,000 × TPR × p and FP = 1,000 × FPR × (1 − p), the population size 1,000 cancels out from top and bottom—turning expected counts into Bayes’ exact rate formula for P(flu | test +).\n\n0.62 × 0.1 ÷ [0.62 × 0.1 + 0 × 0.9] = 100%\n\nPositive Likelihood Ratio (LR+ = TPR ÷ FPR): ∞ (0 false alarms). Dividing TP by FP gives Posterior Odds = LR+ × Prior Odds.\n\n1. CONDITIONAL PROBABILITY (BAYES’ RULE)\nP(A | B) =\nP(B | A) × P(A)\nP(B | A) × P(A) + P(B | not A) × P(not A)\n2. CANCEL N = 1,000 FROM TP ÷ (TP + FP)\nPrecision =\nTPR × p\nTPR × p + FPR × (1 − p)\nCompare 10% vs. 50% sick portion\nSame signal sensitivity and score separation · tap a card to switch\n10% sick portion\n100% Precision\n62 TP vs. 0 FP (62 Test +)\n50% sick portion\n100% Precision\n310 TP vs. 0 FP (310 Test +)\n\nPrior · p\n\nP(flu)\n\nBase rate (10%) before seeing the test resul"
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "screenshots": [],
+      "mobileContainers": []
+    },
+    {
+      "id": "a0af2f9",
+      "names": [
+        "feature_simple_hover_metrics",
+        "simple"
+      ],
+      "actions": [
+        {
+          "name": "metric pin and precision/balance teaching interaction",
+          "status": "PASS",
+          "evidence": {
+            "pin": "true",
+            "before": "96%",
+            "after": "72.7%",
+            "tpr": "96%",
+            "fpr": "4%"
+          }
+        },
+        {
+          "name": "threshold line drag",
+          "status": "PASS",
+          "evidence": {
+            "before": "50",
+            "after": "35"
+          }
+        }
+      ],
+      "errors": [],
+      "screenshots": [],
+      "mobileContainers": []
+    }
+  ]
+}

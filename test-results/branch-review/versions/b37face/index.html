@@ -1,0 +1,2959 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fc">
+  <title>CMatrixLab — Simple</title>
+
+  <!-- Edit the CSS variables below to change the color palette. -->
+  <style>
+  :root {
+    --bg: #f6f8fc;
+    --ink: #15243d;
+    --muted: #64748b;
+    --line: #e3e9f2;
+    --blue: #246cf0;
+    --tp: #0ea976;
+    --fp: #e64b60;
+    --fn: #f2a527;
+    --tn: #a4afc0;
+    --font-caption: 12px;
+    --font-body: 14px;
+    --font-heading: 22px;
+    --font-count: 32px;
+    --font-metric: 40px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0px;
+    background: var(--bg);
+    font: 14px / 1.35 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+  }
+
+  button, input {
+    font: inherit;
+  }
+
+  .container {
+    max-width: 1420px;
+    margin: auto;
+    padding: 12px 22px 10px;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 8px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: var(--font-heading);
+    font-weight: 800;
+    letter-spacing: -0.7px;
+  }
+
+  .brand-credit {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #526886;
+    font-size: var(--font-caption);
+    font-weight: 500;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .brand-credit a, .author-credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .logo {
+    display: grid;
+    grid-template-columns: repeat(3, 7px);
+    gap: 3px;
+  }
+
+  .logo i {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: rgb(44, 121, 250);
+  }
+
+  .logo i:nth-child(3n) {
+    background: rgb(164, 200, 252);
+  }
+
+  .reset {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px 13px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .top-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mode-short { display: none; }
+  .mode-toggle { color: #6d43bc; border-color: #ddd3f5; }
+
+  .card {
+    background: rgb(255, 255, 255);
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    box-shadow: rgba(25, 50, 81, 0.02) 0px 2px 12px;
+  }
+
+  .story {
+    margin: 0 0 8px;
+    color: #435572;
+    font-size: var(--font-body);
+    line-height: 1.4;
+  }
+
+  .story strong {
+    display: inline;
+    color: var(--ink);
+    font-size: var(--font-body);
+    line-height: 1.25;
+    margin-bottom: 2px;
+  }
+
+  .story span {
+    color: var(--muted);
+  }
+
+  .controls {
+    padding: 10px 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+    gap: 36px;
+    margin-bottom: 8px;
+  }
+
+  .control {
+    min-width: 0px;
+  }
+
+  .control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: 700;
+    font-size: var(--font-body);
+  }
+
+  .val {
+    background: rgb(237, 243, 255);
+    color: var(--blue);
+    padding: 4px 8px;
+    border-radius: 7px;
+    font-size: var(--font-body);
+    min-width: 49px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .control:has(#prevalence) .val, .control:has(#bayesPrevalence) .val {
+    background: #f1edff;
+    color: rgb(119, 81, 206);
+  }
+
+  .balance-values {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .balance-preset {
+    border: 1px solid #ddd3f5;
+    border-radius: 7px;
+    background: #fcfaff;
+    color: #6d43bc;
+    padding: 4px 6px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .balance-preset[aria-pressed="true"] {
+    background: #f7f4ff;
+    border-color: #b6a0df;
+    color: #6d43bc;
+  }
+
+  input[type="range"] {
+    display: block;
+    width: 100%;
+    margin: 10px 0px 3px;
+    accent-color: var(--blue);
+    cursor: pointer;
+  }
+
+  .control input#prevalence, .control input#bayesPrevalence {
+    accent-color: rgb(128, 90, 213);
+    color: rgb(128, 90, 213);
+  }
+
+  .endpoints {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: var(--font-caption);
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 6px 0px 7px;
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-caption);
+    font-weight: 700;
+    color: rgb(79, 96, 121);
+  }
+
+  .dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 3px;
+  }
+
+  .tp {
+    background: var(--tp);
+  }
+
+  .fp {
+    background: var(--fp);
+  }
+
+  .fn {
+    background: var(--fn);
+  }
+
+  .tn {
+    background: var(--tn);
+  }
+
+  .key {
+    margin: 0 0 5px;
+    text-align: center;
+    color: var(--muted);
+    font-size: var(--font-caption);
+  }
+
+  .views {
+    display: grid;
+    grid-template-columns: 0.96fr 1.04fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .panel {
+    padding: 14px 16px 16px;
+    min-width: 0px;
+  }
+
+  .plot {
+    width: 100%;
+    display: block;
+    touch-action: none;
+    background: rgb(251, 252, 255);
+    border: 1px solid rgb(237, 241, 246);
+    border-radius: 10px;
+  }
+
+  .plot text {
+    font-family: Inter, system-ui, sans-serif;
+  }
+
+  .plot:focus-visible {
+    outline: 2px solid #246cf0;
+    outline-offset: 2px;
+  }
+
+  .threshold-drag {
+    cursor: ew-resize;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .plot.dragging {
+    cursor: ew-resize;
+  }
+
+  .threshold-drag:hover .threshold-grip,
+  .plot.dragging .threshold-grip,
+  .plot:focus-visible .threshold-grip {
+    fill: #e2ecff;
+  }
+
+  .plot .point {
+    transition: opacity 0.1s;
+  }
+
+  .plot .point.muted {
+    opacity: 0.17;
+  }
+
+  .plot .point.focus {
+    stroke: rgb(17, 31, 56);
+    stroke-width: 2.3;
+  }
+
+  .population-header {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .population-header div:not(:first-child) {
+    text-align: center;
+    font-size: var(--font-heading);
+    font-weight: 700;
+    border-radius: 9px;
+    padding: 12px 4px;
+  }
+
+  .population-header div:nth-child(2) {
+    background: rgb(239, 244, 255);
+    color: rgb(44, 103, 194);
+  }
+
+  .population-header div:nth-child(3) {
+    background: rgb(255, 240, 242);
+    color: rgb(201, 72, 89);
+  }
+
+  .population {
+    position: relative;
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, var(--matrix-row-height, 155px));
+    gap: 8px;
+  }
+
+  .row-label {
+    align-self: center;
+    text-align: right;
+    font-weight: 700;
+    font-size: var(--font-heading);
+    line-height: 1.25;
+    padding-right: 6px;
+  }
+
+  .row-label small {
+    display: block;
+    margin-top: 6px;
+    color: #526886;
+    font-size: var(--font-body);
+    font-weight: 500;
+  }
+
+  .group {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .group.fn {
+    background: rgb(255, 250, 240);
+    border-color: rgb(250, 236, 209);
+  }
+
+  .group.tp {
+    background: rgb(241, 252, 247);
+    border-color: rgb(214, 243, 228);
+  }
+
+  .group.tn {
+    background: rgb(247, 249, 252);
+  }
+
+  .group.fp {
+    background: rgb(255, 245, 246);
+    border-color: rgb(247, 219, 224);
+  }
+
+  .group-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: var(--font-body);
+    font-weight: 700;
+  }
+
+  .group-top strong {
+    font-size: var(--font-count);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .group.tp .group-top {
+    color: rgb(11, 144, 102);
+  }
+
+  .group.fp .group-top {
+    color: rgb(203, 63, 83);
+  }
+
+  .group.fn .group-top {
+    color: rgb(182, 124, 29);
+  }
+
+  .group.tn .group-top {
+    color: rgb(113, 128, 152);
+  }
+
+  .tiles {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 3px;
+    flex: none;
+    overflow: hidden;
+  }
+
+  .tile {
+    flex: 0 0 auto;
+    border-radius: 2.5px;
+    cursor: default;
+    --tile-size: 14px;
+    width: calc(var(--tile-size) * var(--weight-scale,1));
+    height: calc(var(--tile-size) * var(--weight-scale,1));
+    transition: width 0.12s, height 0.12s;
+  }
+
+  .tile.muted {
+    opacity: 0.18;
+  }
+
+  .tile.focus {
+    outline: rgb(24, 44, 71) solid 2px;
+    outline-offset: 2px;
+    transform: scale(1.25);
+  }
+
+  @media (min-width: 651px) {
+    .group { padding: 8px; gap: 8px; }
+    .tiles { gap: 2px; }
+    .tile { --tile-size: 12px; }
+  }
+
+  .metrics {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    position: sticky;
+    top: 0px;
+    z-index: 20;
+    padding: 4px 0px;
+    background: var(--bg);
+    grid-template-columns: repeat(3, minmax(0px, 1fr));
+  }
+
+  .metric {
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    padding: 10px 18px 6px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .metric:hover {
+    border-color: #c4b2ee;
+  }
+
+  .metric.active, .metric:focus-visible {
+    border-color: #8056d9;
+    box-shadow: inset 0 0 0 1px #8056d9;
+    outline: none;
+  }
+
+  #precisionCard .metric-label small {
+    color: #6d43bc;
+    font-weight: 600;
+  }
+
+  .metric-label { display: block; }
+
+  .metric-outline {
+    display: none;
+    position: absolute;
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: 2;
+  }
+
+  .metric-denominator {
+    inset: -3px;
+    border: 2px dashed #8056d9;
+  }
+
+  .metric-numerator {
+    inset: 3px;
+    border: 2px solid var(--tp);
+    border-radius: 9px;
+  }
+
+  .group.metric-excluded { opacity: 0.25; }
+  .plot .point.metric-excluded { opacity: 0.15; }
+  .key .formula-numerator { border-bottom: 2px solid var(--tp); }
+  .key .formula-denominator { border-bottom: 2px dashed #8056d9; }
+
+  .metric-label {
+    font-weight: 700;
+    font-size: var(--font-body);
+  }
+
+  .metric-label small {
+    display: block;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: var(--font-caption);
+    margin-top: 3px;
+  }
+
+  .metric strong {
+    font-size: var(--font-metric);
+    font-weight: 800;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .metric:nth-child(1) strong {
+    color: var(--tp);
+  }
+
+  .metric:nth-child(2) strong {
+    color: var(--fp);
+  }
+
+  .metric:nth-child(3) strong {
+    color: var(--blue);
+  }
+
+  .insight {
+    margin-top: 8px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+  }
+
+  .insight-text {
+    font-size: var(--font-body);
+  }
+
+  .insight-text strong {
+    font-weight: 700;
+  }
+
+  .insight-text em {
+    font-style: normal;
+    color: var(--blue);
+    font-weight: 800;
+  }
+
+  .group-top > span {
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .group-sub {
+    font-weight: 500;
+    opacity: 0.78;
+    font-size: var(--font-caption);
+  }
+
+  .summary-tp {
+    color: #087f59;
+    background: #e8f8f2;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .summary-fp {
+    color: #bf3148;
+    background: #fdecef;
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .prec-right {
+    display: flex;
+    flex-direction: column;
+    min-width: 240px;
+    max-width: 330px;
+    flex: 1 1 0%;
+    gap: 5px;
+  }
+
+  .precbar {
+    height: 15px;
+    background: rgb(233, 238, 245);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .precbar > span {
+    height: 100%;
+    display: block;
+  }
+
+  .precbar .tp {
+    background: var(--tp);
+  }
+
+  .precbar .fp {
+    background: var(--fp);
+  }
+
+  .prec-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-caption);
+    color: rgb(100, 116, 139);
+  }
+
+  .prec-labels b {
+    color: var(--ink);
+  }
+
+  .foot {
+    margin: 5px 2px 0px;
+    color: rgb(138, 153, 170);
+    font-size: var(--font-caption);
+  }
+
+  .author-credit {
+    display: none;
+    margin: 8px 2px 0;
+    color: #526886;
+    font-size: var(--font-caption);
+    text-align: center;
+  }
+
+  button:focus-visible, input:focus-visible {
+    outline: rgb(145, 183, 255) solid 3px;
+    outline-offset: 3px;
+  }
+
+  html {
+    text-size-adjust: 100%;
+  }
+
+  .control input[type="range"] {
+    appearance: none;
+    background: transparent;
+    border: 0px;
+    padding: 0px;
+    border-radius: 0px;
+    color: var(--blue);
+  }
+
+  .control input[type="range"]::-webkit-slider-runnable-track {
+    height: 5px;
+    background: rgb(212, 225, 245);
+    border-radius: 10px;
+  }
+
+  .control input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -8.5px;
+    border: 3px solid white;
+    border-radius: 50%;
+    background: currentcolor;
+    box-shadow: rgba(21, 36, 61, 0.25) 0px 1px 5px;
+  }
+
+  .control input[type="range"]::-moz-range-track {
+    height: 5px;
+    background: #d4e1f5;
+    border-radius: 10px;
+  }
+
+  .control input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 3px solid white;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 1px 5px #15243d40;
+  }
+
+  /* Reserve the largest matrix row at each width, so slider changes cannot resize either chart. */
+  @media (min-width: 1400px) {
+    .views { grid-template-columns: 0.84fr 1.16fr; }
+    .population { --matrix-row-height: 145px; }
+  }
+
+  @media (min-width: 1280px) and (max-width: 1399px) {
+    .views { grid-template-columns: 0.92fr 1.08fr; }
+    .population { --matrix-row-height: 160px; }
+  }
+
+  @media (min-width: 1280px) {
+    .insight { margin-top: 4px; }
+  }
+
+  @media (max-width: 1279px) {
+    .population { --matrix-row-height: 170px; }
+  }
+
+  @media (max-width: 1250px) {
+    .population { --matrix-row-height: 185px; }
+  }
+
+  @media (max-width: 1199px) {
+    .population { --matrix-row-height: 195px; }
+  }
+
+  @media (min-width: 1280px) and (max-height: 820px) {
+    .container { padding-bottom: 4px; }
+    .story { margin-bottom: 0; font-size: 13.5px; }
+    .views { grid-template-columns: 0.84fr 1.16fr; }
+    .population { --matrix-row-height: 145px; }
+    .insight { padding-top: 8px; padding-bottom: 8px; }
+    .foot { display: none; }
+  }
+
+  /* Tablet: stack the synchronized charts. */
+  @media (max-width: 1050px) {
+    :root { --font-metric: 32px; }
+    .population { --matrix-row-height: 140px; }
+    .controls {
+      gap: 16px;
+    }
+
+    .views {
+      grid-template-columns: 1fr;
+    }
+
+    .panel {
+      padding: 13px;
+    }
+
+    .plot {
+      max-height: 300px;
+    }
+
+  }
+
+  @media (max-width: 767px) {
+    :root { --font-metric: 28px; }
+    .population { --matrix-row-height: 155px; }
+    .brand-credit {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.2;
+    }
+    .top-right { gap: 6px; }
+    .reset { padding: 6px 10px; }
+  }
+
+  @media (max-width: 685px) {
+    .population { --matrix-row-height: 160px; }
+  }
+
+  /* Phone: compact controls, charts, and sticky metrics. */
+  @media (max-width: 650px) {
+    .mode-long { display: none; }
+    .mode-short { display: inline; }
+    .control:has(#prevalence), .control:has(#threshold) {
+      grid-template-columns: minmax(205px, 55%) minmax(0px, 1fr);
+    }
+    :root {
+      --font-caption: 11px;
+      --font-body: 12px;
+      --font-heading: 14px;
+      --font-count: 22px;
+      --font-metric: 22px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0px;
+      padding: 6px 8px 8px;
+      gap: 0px;
+    }
+
+    .top {
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .brand {
+      gap: 7px;
+      white-space: nowrap;
+      font-size: 16px;
+    }
+
+    .brand-credit {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.2;
+    }
+    .brand-credit a { letter-spacing: -0.2px; }
+
+    .controls {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .legend {
+      gap: 10px;
+    }
+
+    .legend span {
+      gap: 5px;
+    }
+
+    .legend-detail {
+      display: none;
+    }
+
+    .panel {
+      padding: 6px 8px;
+      border-radius: 10px;
+    }
+
+    .population {
+      --matrix-row-height: 112px;
+      grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
+      gap: 5px;
+    }
+
+    .population-header {
+      margin-bottom: 5px;
+      gap: 5px;
+      grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .group {
+      padding: 8px 6px;
+      gap: 8px;
+      border-radius: 9px;
+    }
+
+    .tile {
+      border-radius: 1.5px;
+      --tile-size: 7px;
+    }
+
+    .tiles {
+      gap: 2px;
+    }
+
+    .group-top {
+      font-size: var(--font-heading);
+      line-height: 1;
+    }
+
+    .row-label {
+      padding-right: 2px;
+    }
+
+    .row-label small {
+      font-size: var(--font-caption);
+      margin-top: 4px;
+    }
+
+    .metrics {
+      gap: 6px;
+      align-items: stretch;
+    }
+
+    .metric {
+      display: block;
+      min-width: 0px;
+      padding: 5px 8px 3px;
+      border-radius: 9px;
+    }
+
+    .metric-label {
+      font-size: var(--font-caption);
+      line-height: 1.1;
+    }
+
+    .metric-label small {
+      font-size: 10px;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    .metric strong {
+      display: block;
+      letter-spacing: -0.5px;
+      font-size: var(--font-metric);
+      line-height: 1.1;
+      margin-top: 2px;
+    }
+
+    .insight {
+      align-items: stretch;
+      flex-direction: column;
+      margin-top: 5px;
+      padding: 7px 9px;
+      gap: 5px;
+      border-radius: 10px;
+    }
+
+    .prec-right {
+      max-width: none;
+      gap: 3px;
+      width: 100%;
+      min-width: 0px;
+    }
+
+    .foot {
+      line-height: 1.45;
+      display: none;
+    }
+
+    .container > * {
+      order: 5;
+    }
+
+    .container > .top {
+      order: 0;
+      margin: 0px 0px 2px;
+      min-height: 28px;
+    }
+
+    .container > .story {
+      order: 1;
+      margin: 0 2px 4px;
+    }
+
+    .container > .metrics {
+      order: 1;
+      position: sticky;
+      top: 0px;
+      z-index: 20;
+      flex-shrink: 0;
+      background: var(--bg);
+      box-shadow: rgba(21, 36, 61, 0.043) 0px 5px 8px;
+      margin: 0;
+      padding: 3px 0px;
+      gap: 5px;
+    }
+
+    .container > .controls {
+      order: 2;
+      gap: 0px;
+      padding: 1px 8px;
+      margin: 0px;
+      border-radius: 10px;
+    }
+
+    .control {
+      display: grid;
+      align-items: center;
+      min-height: 36px;
+      grid-template-columns: minmax(135px, 43%) minmax(0px, 1fr);
+      gap: 10px;
+    }
+
+    .control + .control {
+      border-top: 1px solid var(--line);
+    }
+
+    .control-header {
+      gap: 6px;
+      line-height: 1.25;
+      font-size: var(--font-caption);
+    }
+
+    .val {
+      font-size: var(--font-caption);
+      min-width: 39px;
+      padding: 2px 4px;
+    }
+
+    .control input[type="range"] {
+      margin: 0px;
+      min-width: 0px;
+      touch-action: pan-y;
+      width: 100%;
+      height: 36px;
+    }
+
+    .control .endpoints {
+      display: none;
+    }
+
+    .container > .legend {
+      order: 3;
+      margin: 4px 0px;
+      gap: 18px;
+      min-height: 15px;
+    }
+
+    .container > .key {
+      order: 3;
+      margin: 2px 0 4px;
+      line-height: 1.25;
+    }
+
+    .container > .views {
+      order: 4;
+      gap: 5px;
+    }
+
+    .reset {
+      min-height: 28px;
+      padding: 3px 8px;
+      font-size: var(--font-caption);
+    }
+
+    .container > *, .views > *, .control-header > span {
+      min-width: 0px;
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .control-header .val {
+      flex-shrink: 0;
+    }
+
+    .plot {
+      max-height: none;
+      aspect-ratio: auto;
+      height: auto;
+    }
+
+    .logo {
+      grid-template-columns: repeat(3, 5px);
+      gap: 2px;
+    }
+
+    .logo i {
+      width: 5px;
+      height: 5px;
+    }
+
+    .legend .dot {
+      width: 9px;
+      height: 9px;
+    }
+
+    .population-header div:not(:first-child) {
+      padding: 8px 2px;
+      font-size: var(--font-heading);
+    }
+
+    .insight-text {
+      font-size: var(--font-caption);
+      line-height: 1.3;
+    }
+
+    .insight-text strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .precbar {
+      height: 12px;
+      border-radius: 4px;
+    }
+
+    .prec-labels {
+      font-size: 10px;
+    }
+  }
+
+  /* Fit the complete dashboard below the browser toolbars on portrait phones. */
+  @media (max-width: 650px) and (orientation: portrait) {
+    .container { padding-top: 4px; padding-bottom: 4px; }
+    .container > .story { margin: 0 2px 4px; font-size: var(--font-body); line-height: 1.25; }
+    .container > .legend { display: none; }
+    .container > .controls { margin-bottom: 5px; }
+    .control, .control input[type="range"] { min-height: 30px; height: 30px; }
+    .container > .metrics { padding: 2px 0; }
+    .metric { padding: 4px 8px 2px; }
+    .metric-label small { display: none; }
+    .panel { padding-top: 4px; padding-bottom: 4px; }
+    .population { --matrix-row-height: 53px; gap: 4px; }
+    .population-header { margin-bottom: 4px; gap: 4px; }
+    .population-header div:not(:first-child) { padding: 5px 2px; }
+    .group { padding: 3px 6px; gap: 2px; }
+    .group-top strong { font-size: 20px; }
+    .tile { --tile-size: 5.5px; }
+    .tiles { gap: 1px; }
+    .insight { padding: 5px 9px; gap: 2px; }
+    .insight-text strong { display: none; }
+  }
+
+  @media (max-width: 650px) and (max-height: 759px) and (orientation: portrait) {
+    .views > .panel:first-child { padding-top: 0; padding-bottom: 0; }
+    .insight { padding-top: 3px; padding-bottom: 3px; }
+  }
+
+  @media (max-width: 599px) and (orientation: portrait) {
+    .population { --matrix-row-height: 56px; }
+  }
+
+  @media (max-width: 499px) and (orientation: portrait) {
+    .population { --matrix-row-height: 63px; }
+  }
+
+  @media (max-width: 399px) and (orientation: portrait) {
+    .population { --matrix-row-height: 69px; }
+  }
+
+  @media (max-width: 359px) and (orientation: portrait) {
+    .population { --matrix-row-height: 76px; }
+  }
+
+  @media (max-width: 339px) and (orientation: portrait) {
+    .population { --matrix-row-height: 82px; }
+  }
+
+  @media (max-width: 390px) {
+    .brand-credit { display: none; }
+    .author-credit { display: block; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile {
+      transition: none;
+    }
+  }
+  /* Optional learning layer; the default dashboard stays compact. */
+  [hidden] { display: none !important; }
+  .learning-entry { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0; }
+  .learning-entry .key { margin: 0; }
+  .learn-toggle { color: #6d43bc; border-color: #ddd3f5; white-space: nowrap; }
+  .learn-toggle[aria-expanded="true"] { background: #f2edff; }
+  .metric-formula { display: none; font-size: var(--font-caption); color: #526886; font-weight: 500; margin-top: 5px; letter-spacing: 0; }
+  .learning .metric { flex-wrap: wrap; }
+  .learning .metric-formula { display: block; flex-basis: 100%; }
+  .learn-panel { margin-top: 18px; padding: 28px; font-size: 14px; line-height: 1.55; scroll-margin-top: 20px; border-color: #dedff0; background: linear-gradient(155deg, #faf9ff 0, #fff 320px); }
+  .learn-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+  .learn-panel h2 { margin: 0; font-size: 28px; line-height: 1.15; letter-spacing: -0.8px; max-width: 620px; }
+  .learn-panel h3 { margin: 0 0 8px; font-size: 16px; }
+  .learn-panel p { margin: 8px 0 16px; }
+  .learn-panel .eyebrow { color: #8056d9; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin: 0 0 8px; }
+  .learn-heading > .reset { white-space: nowrap; flex-shrink: 0; }
+  .learn-tabs { display: flex; gap: 6px; border-bottom: 1px solid #e4e8f0; padding-bottom: 12px; margin: 24px 0; }
+  .learn-tabs button { border: 1px solid transparent; border-radius: 10px; padding: 9px 16px; color: #526886; background: transparent; font: inherit; cursor: pointer; }
+  .learn-tabs button::before { content: attr(data-step); color: #8490a4; margin-right: 8px; font-size: 12px; }
+  .learn-tabs button[aria-selected="true"] { color: #6337b8; background: #f0eaff; border-color: #e1d5ff; font-weight: 700; }
+  .learn-panel button:focus-visible, .learn-toggle:focus-visible { outline: 2px solid #8056d9; outline-offset: 3px; }
+  .learn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .learn-card { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; min-width: 0; }
+  .learn-card p:last-child { margin-bottom: 0; }
+  .learn-note { color: #526886; font-size: 12px; }
+  .equation { display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; margin: 16px 0; font-size: 16px; }
+  .fraction { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; max-width: 100%; }
+  .fraction > :first-child { border-bottom: 1px solid #8795aa; padding: 4px 8px; }
+  .fraction > :last-child { padding: 4px 8px; }
+  .formula-term { appearance: none; border: 0; border-radius: 7px; background: #eefaf5; color: #087f59; font: inherit; padding: 7px 10px; cursor: pointer; border-bottom: 2px solid #0ea976; }
+  .formula-term[data-part="denominator"] { border-bottom: 2px dashed #8056d9; color: #6337b8; background: #f4f0fc; }
+  .formula-term[data-explain="fpr"][data-part="numerator"] { color: #bf3148; border-color: #e64b60; }
+  .formula-term:hover, .formula-term[aria-pressed="true"] { background: #eee8fb; }
+  .live-calculation { color: #263f65; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .learn-panel .live-calculation { background: #f2f5fa; border-radius: 9px; padding: 10px 12px; font-size: 12px; }
+  .learn-intro { max-width: 700px; margin-bottom: 20px; }
+  .learn-intro h3 { font-size: 22px; line-height: 1.3; letter-spacing: -0.4px; }
+  .learn-intro p { color: #526886; }
+  .basics-hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; margin-bottom: 24px; }
+  .basics-hero h3 { font-size: 28px; line-height: 1.2; letter-spacing: -0.7px; max-width: 430px; }
+  .learn-link { display: inline-block; color: #6337b8; background: transparent; border: 0; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; padding: 0; }
+  .odds-preview { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; background: #f1edfb; border: 1px solid #e1d8f7; padding: 22px; border-radius: 18px; text-align: center; }
+  .odds-preview strong { display: block; color: #663bb6; font-size: 36px; line-height: 1.2; letter-spacing: -1px; }
+  .odds-preview span { font-size: 12px; color: #526886; }
+  .odds-preview .odds-arrow { font-size: 22px; color: #9f80d5; }
+  .metric-detail { border-top: 3px solid var(--metric-color); }
+  .metric-detail .metric-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .metric-detail .metric-heading strong { font-size: 36px; line-height: 1.2; color: var(--metric-color); letter-spacing: -1px; }
+  .metric-detail h3 { color: var(--metric-color); }
+  .metric-detail .question { min-height: 44px; }
+  .rate-track { height: 6px; border-radius: 10px; background: #e9eef4; overflow: hidden; margin-top: 16px; }
+  .rate-track span { display: block; height: 100%; background: var(--metric-color, #0ea976); border-radius: inherit; }
+  .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 24px 0 12px; }
+  .outcome-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .outcome-card { border-radius: 12px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--outcome-color) 22%, white); background: color-mix(in srgb, var(--outcome-color) 6%, white); }
+  .outcome-card strong { display: block; color: var(--outcome-color); font-size: 22px; }
+  .outcome-card span { font-size: 12px; }
+  .balance-message { padding: 16px 20px; border-left: 3px solid #8056d9; background: #f7f4fd; border-radius: 0 12px 12px 0; margin: 20px 0; }
+  .balance-message p { margin: 4px 0; }
+  .learn-panel details { border-top: 1px solid #e4e8f0; padding: 14px 0; }
+  .learn-panel summary { cursor: pointer; font-weight: 700; color: #526886; }
+  .formula-card .equation { padding: 12px 0; margin: 12px 0; }
+  .formula-card .learn-note { min-height: 20px; }
+  .formula-feedback { display: none; margin: 8px 0 0; font-size: 12px; color: #6337b8; }
+  .formula-card:has(.formula-term[aria-pressed="true"]) .formula-feedback { display: block; }
+  .bayes-flow { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 20px; margin: 20px 0; }
+  .flow-step { position: relative; min-width: 0; padding: 18px; border: 1px solid #e4e8f0; border-radius: 16px; background: #fff; }
+  .flow-step + .flow-step::before { content: '→'; position: absolute; top: 50%; left: -19px; color: #a28bc8; font-size: 18px; }
+  .flow-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; }
+  .step-index { display: inline-grid; place-items: center; width: 24px; height: 24px; background: #f0eaff; border-radius: 7px; color: #7852b9; font-size: 12px; }
+  .count-row { padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #eef1f6; }
+  .count-row:last-of-type { border-bottom: 0; }
+  .count-row strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+  .count-row span { display: block; }
+  .count-row small { color: #526886; font-size: 12px; }
+  .count-row.true-result strong { color: #07845c; }
+  .count-row.false-result strong { color: #ce3c52; }
+  .evidence-bar { display: flex; height: 12px; border-radius: 8px; overflow: hidden; background: #e5eaf1; margin: 12px 0; }
+  .evidence-bar .correct { background: #0ea976; }
+  .evidence-bar .false-alarm { background: #e64b60; }
+  .result-step { border-color: #d8eae3; background: linear-gradient(135deg, #f1fbf6, #fff); }
+  .result-content { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+  .probability-ring { --probability: 0%; width: 136px; height: 136px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: conic-gradient(#0ea976 0 var(--probability), #e64b60 var(--probability) 100%); }
+  .probability-ring[data-value="na"] { background: #e1e6ed; }
+  .ring-center { width: 112px; height: 112px; background: white; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; }
+  .ring-center strong { color: #174f40; font-size: 28px; letter-spacing: -1px; line-height: 1.1; }
+  .ring-center span { font-size: 12px; color: #526886; margin-top: 5px; }
+  .result-caption { max-width: 220px; font-size: 12px; }
+  .bayes-math { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 20px; background: #f7f5fc; border: 1px solid #e6dff3; padding: 18px 22px; border-radius: 14px; margin: 20px 0; }
+  .bayes-math p { margin: 6px 0; }
+  .bayes-math .equation { margin: 0; }
+  .comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .comparison-card { text-align: left; background: white; border: 1px solid #dce3ee; border-radius: 14px; padding: 16px 18px; cursor: pointer; font: inherit; color: inherit; }
+  .comparison-card[aria-pressed="true"] { border-color: #8056d9; box-shadow: inset 0 0 0 1px #8056d9; background: #fbf9ff; }
+  .comparison-card:hover { border-color: #8056d9; }
+  .comparison-card .comparison-share { display: block; color: #6337b8; font-weight: 700; }
+  .comparison-card strong { display: block; font-size: 28px; letter-spacing: -0.5px; margin-top: 8px; }
+  .comparison-card small { display: block; color: #526886; font-size: 12px; }
+  .notation-list { display: grid; gap: 8px; margin: 16px 0; }
+  .notation-row { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 14px; padding: 10px 12px; background: #f7f9fc; border-radius: 9px; }
+  .notation-row p { margin: 0; }
+  .mini-matrix { width: 34px; height: 28px; display: inline-grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; border-radius: 6px; background: #f1f5f9; border: 1px solid #dce3ee; flex-shrink: 0; }
+  .mini-cell { border-radius: 2px; background: #e2e8f0; }
+  .mini-cell.denom { background: #ede6fc; box-shadow: inset 0 0 0 1px #9b78df; }
+  .mini-cell.num { background: var(--metric-color, var(--outcome-color, #0ea976)); box-shadow: none; }
+  .outcome-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .slice-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: #526886; font-weight: 600; background: #f7f9fc; padding: 3px 7px; border-radius: 7px; border: 1px solid #e6ecf5; }
+  .prior-bar { height: 5px; border-radius: 4px; background: #edf1f7; overflow: hidden; margin-top: 5px; }
+  .prior-bar span { display: block; height: 100%; border-radius: inherit; background: #8056d9; }
+  .prior-bar.neg span { background: #94a3b8; }
+  .math-pill { display: inline-block; padding: 1px 6px; border-radius: 5px; font-weight: 700; font-size: 0.92em; }
+  .math-pill.tpr { background: #e8f8f2; color: #087f59; }
+  .math-pill.fpr { background: #fdecef; color: #bf3148; }
+  .math-pill.prior { background: #f2edff; color: #6337b8; }
+  .odds-badge { grid-column: 1 / -1; background: #fff; border: 1px solid #dfd5f7; border-radius: 10px; padding: 7px 12px; font-size: 12px; color: #435572; margin-top: 2px; }
+  .odds-badge b { color: #6337b8; }
+  .outcome-pos { display: inline-block; font-size: 11px; font-weight: 700; color: #526886; background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(100, 116, 139, 0.2); border-radius: 6px; padding: 1px 6px; margin-bottom: 4px; }
+  .word-eq { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 12px; color: #526886; background: #f8fafd; border: 1px dashed #dce3ee; border-radius: 9px; padding: 6px 10px; margin: 0 0 12px; text-align: center; }
+  .word-eq .fraction > :first-child { border-bottom-color: #cbd5e1; padding: 2px 6px; font-weight: 600; color: #15243d; }
+  .word-eq .fraction > :last-child { padding: 2px 6px; }
+  .derivation-box { display: grid; gap: 10px; }
+  .derivation-step { background: #fff; border: 1px solid #e4dcf5; border-radius: 11px; padding: 10px 14px; }
+  .derivation-step small { display: block; font-size: 11px; font-weight: 700; color: #6337b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+  .bayes-controls { margin: 16px 0 20px; border-color: #dfd5f7; background: #fcfbff; }
+  .learning .metrics { position: static; }
+  @media (max-width: 1169px) {
+    .group-sub { display: none; }
+  }
+  @media (max-width: 767px) {
+    .summary-tp, .summary-fp { padding: 0 3px; }
+    .learn-grid, .basics-hero, .bayes-flow, .bayes-math { grid-template-columns: 1fr; }
+    .learn-panel { padding: 16px; }
+    .learn-panel h2 { font-size: 22px; }
+    .basics-hero h3 { font-size: 22px; }
+    .learn-heading { gap: 8px; }
+    .learn-heading > .reset { font-size: 11px; padding: 5px 8px; }
+    .learn-tabs { width: 100%; }
+    .learn-tabs button { flex: 1; padding: 8px; }
+    .learn-tabs button::before { display: none; }
+    .learn-card { padding: 16px; }
+    .metric-detail .question { min-height: 0; }
+    .metric-detail .metric-heading strong { font-size: 28px; }
+    .outcome-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .outcome-card { padding: 12px; }
+    .flow-step + .flow-step::before { content: '↓'; top: -23px; left: calc(50% - 6px); }
+    .flow-heading { margin-bottom: 8px; }
+    .result-content { flex-direction: row; text-align: left; }
+    .ring-center { text-align: center; }
+    .result-caption { min-width: 0; }
+    .comparison-card { padding: 12px; }
+    .comparison-card strong { font-size: 22px; }
+    .notation-row { grid-template-columns: 1fr; gap: 4px; }
+    .odds-preview { padding: 18px 14px; }
+    .odds-preview strong { font-size: 28px; }
+    .equation { font-size: 14px; }
+    .formula-term { min-height: 44px; }
+  }
+  @media (max-width: 650px) and (orientation: portrait) {
+    .container > .learning-entry { order: 3; gap: 6px; }
+    .learning-entry .key { font-size: 10px; }
+    .container > .controls { margin-bottom: 0; }
+    .container > .learn-panel { order: 6; }
+    .learning .metric-formula { font-size: 10px; }
+  }
+  @media (max-width: 480px) {
+    .top { gap: 4px; }
+    .brand { gap: 4px; font-size: 14px; }
+    .brand-credit { font-size: 9px; letter-spacing: -0.3px; }
+    .top-right { gap: 3px; }
+    .top-right .reset { padding: 3px 5px; font-size: 10px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .learn-panel:not([hidden]) { animation: learn-in 180ms ease-out; }
+    @keyframes learn-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  }
+  </style>
+</head>
+<body>
+<main class="container">
+ <header class="top">
+  <div class="brand">
+   <span aria-hidden="true" class="logo">
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+    <i>
+    </i>
+   </span>
+   <span>CMatrixLab</span>
+   <span class="brand-credit">by Martin Grossman <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></span>
+  </div>
+  <div class="top-right">
+   <button class="reset mode-toggle" id="modeToggle" type="button" aria-label="Switch to generic ML terminology" title="Switch to generic ML terminology"><span class="mode-long">Generic ML</span><span class="mode-short">ML</span></button>
+   <button class="reset learn-toggle" id="learnToggle" type="button" aria-expanded="false" aria-controls="learnPanel">Learn more</button>
+   <button class="reset" id="reset">
+    Reset ↺
+   </button>
+  </div>
+ </header>
+ <p class="story" id="intro"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.</p>
+ <section aria-live="polite" class="metrics">
+  <button class="card metric" id="tprCard" type="button" data-metric="tpr" aria-pressed="false" aria-description="Highlight TP out of all actual positives: TP divided by TP plus FN. Tap again to clear." title="TPR = TP / all actual positives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
+   <span class="metric-label">
+    TPR
+    <small>
+     <span data-term="fixedCaption">Fixed with sick portion</span>
+    </small>
+   </span>
+   <strong id="tpr">
+    —
+   </strong>
+  </button>
+  <button class="card metric" id="fprCard" type="button" data-metric="fpr" aria-pressed="false" aria-description="Highlight FP out of all actual negatives: FP divided by FP plus TN. Tap again to clear." title="FPR = FP / all actual negatives. Changing balance keeps this rate fixed when threshold and class separation stay fixed.">
+   <span class="metric-label">
+    FPR
+    <small>
+     <span data-term="fixedCaption">Fixed with sick portion</span>
+    </small>
+   </span>
+   <strong id="fpr">
+    —
+   </strong>
+  </button>
+  <button class="card metric" id="precisionCard" type="button" data-metric="precision" aria-pressed="false" aria-description="Highlight TP out of all predicted positives: TP divided by TP plus FP. Tap again to clear." title="Precision = TP / (TP + FP). Changing balance changes the mix of correct detections and false alarms among positive predictions.">
+   <span class="metric-label">
+    Precision
+    <small>
+     <span data-term="precisionCaption">Depends on sick portion</span>
+    </small>
+   </span>
+   <strong id="precision">
+    —
+   </strong>
+  </button>
+ </section>
+ <section aria-label="Flu test controls" class="card controls" id="controls">
+
+  <label class="control">
+   <span class="control-header">
+    <span>
+     <span data-term="thresholdLabel">Sensitivity to the flu signal</span>
+    </span>
+    <output class="val" id="thresholdOut">
+     50%
+    </output>
+   </span>
+   <input id="threshold" max="100" min="0" step="1" type="range" value="50"/>
+   <span class="endpoints">
+    <span>
+     <span data-term="thresholdLow">0% · Less sensitive</span>
+    </span>
+    <span>
+     <span data-term="thresholdHigh">100% · More sensitive</span>
+    </span>
+   </span>
+  </label>
+  <label class="control">
+   <span class="control-header">
+    <span>
+     <span data-term="separationLabel">How different the two groups are</span>
+    </span>
+    <output class="val" id="separationOut">
+     60%
+    </output>
+   </span>
+   <input id="separation" max="100" min="0" step="1" type="range" value="60"/>
+   <span class="endpoints">
+    <span>
+     <span data-term="separationLow">Hard to tell apart</span>
+    </span>
+    <span>
+     <span data-term="separationHigh">Easy to tell apart</span>
+    </span>
+   </span>
+  </label>
+
+ <div class="control">
+   <span class="control-header">
+    <label for="prevalence" id="shareLabel" title="Percentage of people who actually have flu">
+     Sick portion
+    </label>
+    <span class="balance-values">
+    <button class="balance-preset" id="balance10" type="button" aria-pressed="false" aria-label="Set sick portion to 10%">10%</button>
+    <button class="balance-preset" id="balance50" type="button" aria-pressed="true" aria-label="Set sick portion to 50%">50%</button>
+    <output class="val" id="prevalenceOut">
+     50%
+    </output>
+    </span>
+   </span>
+   <input id="prevalence" aria-describedby="footNote" max="100" min="0" step="1" type="range" value="50"/>
+   <span class="endpoints">
+    <span>
+     <span data-term="minimum">0% · no one has flu</span>
+    </span>
+    <span>
+     <span data-term="maximum">100% · everyone has flu</span>
+    </span>
+   </span>
+  </div>
+ </section>
+ <div aria-label="Classification outcome colors" class="legend">
+  <span>
+   <i class="dot tp">
+   </i>
+   TP<span class="legend-detail" data-term="tpLegend"> · Correct detection</span>
+  </span>
+  <span>
+   <i class="dot fp">
+   </i>
+   FP<span class="legend-detail" data-term="fpLegend"> · False alarm</span>
+  </span>
+  <span>
+   <i class="dot fn">
+   </i>
+   FN<span class="legend-detail" data-term="fnLegend"> · Missed</span>
+  </span>
+  <span>
+   <i class="dot tn">
+   </i>
+   TN<span class="legend-detail" data-term="tnLegend"> · Correctly ignored</span>
+  </span>
+ </div>
+ <div class="learning-entry">
+  <p class="key" id="markerKey">Full marker = 10 people; smaller = partial.</p>
+ </div>
+ <section class="views">
+  <div class="card panel" role="group" aria-label="Flu test score graph" id="scorePanel">
+   <svg aria-label="Flu test score threshold" aria-description="Drag the blue line left or right, or use the arrow keys." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="horizontal" tabindex="0" class="plot" id="plot" role="slider" viewBox="0 0 650 440">
+   </svg>
+  </div>
+  <div class="card panel" role="group" aria-label="Flu test results" id="matrixPanel">
+   <div class="population-header">
+    <div>
+    </div>
+    <div>
+     <span data-term="predictedNegative">Test −</span>
+    </div>
+    <div>
+     <span data-term="predictedPositive">Test +</span>
+    </div>
+   </div>
+   <div class="population">
+    <div class="metric-outline metric-denominator" id="matrixDenominator" aria-hidden="true"></div>
+    <div class="metric-outline metric-numerator" id="matrixNumerator" aria-hidden="true"></div>
+    <div class="row-label">
+     <span data-term="actualPositive">Actual flu</span>
+     <br/>
+     <small id="pCount">
+       500 cases
+     </small>
+    </div>
+    <div class="group fn">
+     <div class="group-top">
+      <span>
+       FN<small class="group-sub" data-term="fnLegend"> · Flu missed</small>
+      </span>
+      <strong id="fnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fnTiles">
+     </div>
+    </div>
+    <div class="group tp">
+     <div class="group-top">
+      <span>
+       TP<small class="group-sub" data-term="tpLegend"> · Flu detected</small>
+      </span>
+      <strong id="tpNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tpTiles">
+     </div>
+    </div>
+    <div class="row-label">
+     <span data-term="actualNegative">Actual no&nbsp;flu</span>
+     <br/>
+     <small id="nCount">
+       500 cases
+     </small>
+    </div>
+    <div class="group tn">
+     <div class="group-top">
+      <span>
+       TN<small class="group-sub" data-term="tnLegend"> · No flu, test −</small>
+      </span>
+      <strong id="tnNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="tnTiles">
+     </div>
+    </div>
+    <div class="group fp">
+     <div class="group-top">
+      <span>
+       FP<small class="group-sub" data-term="fpLegend"> · False alarm</small>
+      </span>
+      <strong id="fpNum">
+       0
+      </strong>
+     </div>
+     <div class="tiles" id="fpTiles">
+     </div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="card insight" title="Each full dot or square represents 10 people; smaller markers represent partial counts. Sick portion changes counts; TPR and FPR stay fixed.">
+  <div class="insight-text">
+   <strong>
+    <span data-term="amongPositive">Among positive tests:</span>
+   </strong>
+   <span id="summary">
+    —
+   </span>
+  </div>
+  <div class="prec-right">
+   <div aria-label="People with flu versus false alarms among positive tests" class="precbar" id="precbar" role="img">
+    <span class="tp" id="tpFill">
+    </span>
+    <span class="fp" id="fpFill">
+    </span>
+   </div>
+   <div class="prec-labels">
+    <span>
+     Green:
+     <b id="tpLabel">
+      0
+     </b>
+     <span data-term="correctLabel">have flu</span>
+    </span>
+    <span>
+     Red:
+     <b id="fpLabel">
+      0
+     </b>
+     <span data-term="falseLabel">false alarms</span>
+    </span>
+   </div>
+  </div>
+ </section>
+ <section class="card learn-panel" id="learnPanel" hidden aria-labelledby="learnTitle">
+  <div class="learn-heading">
+   <div><p class="eyebrow">A CLOSER LOOK</p><h2 id="learnTitle">From a result to a probability</h2></div>
+   <button class="reset" id="closeLearn" type="button">Simple view</button>
+  </div>
+  <div class="learn-tabs" role="tablist" aria-label="Learning topics">
+   <button id="tab-basics" data-step="01" type="button" role="tab" aria-controls="learn-basics" aria-selected="true">The basics</button>
+   <button id="tab-formulas" data-step="02" type="button" role="tab" aria-controls="learn-formulas" aria-selected="false" tabindex="-1">Formulas</button>
+   <button id="tab-bayes" data-step="03" type="button" role="tab" aria-controls="learn-bayes" aria-selected="false" tabindex="-1">Bayes</button>
+  </div>
+  <div id="learn-basics" role="tabpanel" aria-labelledby="tab-basics" tabindex="0"></div>
+  <div id="learn-formulas" role="tabpanel" aria-labelledby="tab-formulas" tabindex="0" hidden></div>
+  <div id="learn-bayes" role="tabpanel" aria-labelledby="tab-bayes" tabindex="0" hidden>
+   <div id="learn-bayes-intro"></div>
+   <div class="card controls bayes-controls" aria-label="Bayes interactive controls">
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="thresholdLabel">Sensitivity to the flu signal</span></span>
+      <output class="val" id="bayesThresholdOut">50%</output>
+     </span>
+     <input id="bayesThreshold" data-sync="threshold" max="100" min="0" step="1" type="range" value="50"/>
+     <span class="endpoints">
+      <span><span data-term="thresholdLow">0% · Less sensitive</span></span>
+      <span><span data-term="thresholdHigh">100% · More sensitive</span></span>
+     </span>
+    </label>
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="separationLabel">How different the two groups are</span></span>
+      <output class="val" id="bayesSeparationOut">60%</output>
+     </span>
+     <input id="bayesSeparation" data-sync="separation" max="100" min="0" step="1" type="range" value="60"/>
+     <span class="endpoints">
+      <span><span data-term="separationLow">Hard to tell apart</span></span>
+      <span><span data-term="separationHigh">Easy to tell apart</span></span>
+     </span>
+    </label>
+    <label class="control">
+     <span class="control-header">
+      <span><span data-term="share">Sick portion</span></span>
+      <output class="val" id="bayesPrevalenceOut">50%</output>
+     </span>
+     <input id="bayesPrevalence" data-sync="prevalence" max="100" min="0" step="1" type="range" value="50"/>
+     <span class="endpoints">
+      <span><span data-term="minimum">0% · no one has flu</span></span>
+      <span><span data-term="maximum">100% · everyone has flu</span></span>
+     </span>
+    </label>
+   </div>
+   <div id="learn-bayes-body"></div>
+  </div>
+ </section>
+ <p class="foot" id="footNote">
+  1,000 weighted cases. Counts are expected values and may be fractional. Sick portion changes counts and precision; TPR and FPR stay fixed at the same threshold and separation.
+ </p>
+ <footer class="author-credit">Created by Martin Grossman · <a href="mailto:martin.grossman@gmail.com">martin.grossman@gmail.com</a></footer>
+</main>
+
+
+  <script>
+/**
+ * CMatrixLab — Simple view
+ * ------------------------
+ * Single-file, dependency-free educational classifier demo.
+ *
+ * Read the code in this order:
+ *   1. CONFIG / state
+ *   2. MODEL: generate fixed, weighted class-score distributions
+ *   3. CLASSIFICATION: assign TP, FP, FN, TN and compute metrics
+ *   4. RENDERING: the 1D score plot and population grid
+ *   5. CONTROLS: update the UI when sliders move
+ *
+ * Fixed class distributions are weighted to a population of 1,000.
+ * Both charts use the same full/partial markers and expected counts.
+ * Representative markers are regrouped when outcomes change; underlying
+ * sample scores depend only on separation, never on balance or threshold.
+ */
+(() => {
+  'use strict';
+
+  // ============================================================
+  // 1. CONFIGURATION AND STATE
+  // ============================================================
+
+  const CONFIG = Object.freeze({
+    totalExamples: 1000,
+    caseUnit: 10,            // Cases per full dot/square
+    samplesPerClass: 50,
+    defaultPrevalence: 50,   // Percent of actual positives
+    defaultThreshold: 0.50,  // Score >= threshold -> predicted positive
+    defaultSeparation: 60,   // 0 = overlapping; 100 = perfectly separable
+    colors: {
+      tp: '#0ea976',
+      fp: '#e64b60',
+      fn: '#f2a527',
+      tn: '#a4afc0'
+    },
+    plot: {
+      left: 190,
+      width: 410,
+      top: 55,
+      bottom: 360,
+      positiveRow: 130,
+      negativeRow: 285
+    }
+  });
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const getElement = id => document.getElementById(id);
+
+  const elements = {
+    prevalence: getElement('prevalence'),
+    threshold: getElement('threshold'),
+    separation: getElement('separation'),
+    prevalenceOut: getElement('prevalenceOut'),
+    balance10: getElement('balance10'),
+    balance50: getElement('balance50'),
+    modeToggle: getElement('modeToggle'),
+    thresholdOut: getElement('thresholdOut'),
+    separationOut: getElement('separationOut'),
+    positiveCount: getElement('pCount'),
+    negativeCount: getElement('nCount'),
+    scorePlot: getElement('plot'),
+    tpr: getElement('tpr'),
+    fpr: getElement('fpr'),
+    precision: getElement('precision'),
+    truePositiveLabel: getElement('tpLabel'),
+    falsePositiveLabel: getElement('fpLabel'),
+    truePositiveFill: getElement('tpFill'),
+    falsePositiveFill: getElement('fpFill'),
+    precisionBar: getElement('precbar'),
+    summary: getElement('summary'),
+    reset: getElement('reset')
+  };
+
+  // Terminology is presentation state only; the model and slider state are shared.
+  let genericMode = false;
+  let learningMode = false;
+  let learningTab = 'basics';
+  let latestMetrics = null;
+  let formulaPreview = null;
+  let formulaPinned = null;
+  const metricGroups = {
+    tpr: { label: 'TPR', numerator: 'tp', denominator: ['tp', 'fn'], area: '1 / 2 / 2 / 4', numeratorArea: '1 / 3 / 2 / 4' },
+    fpr: { label: 'FPR', numerator: 'fp', denominator: ['fp', 'tn'], area: '2 / 2 / 3 / 4', numeratorArea: '2 / 3 / 3 / 4' },
+    precision: { label: 'Precision', numerator: 'tp', denominator: ['tp', 'fp'], area: '1 / 3 / 3 / 4', numeratorArea: '1 / 3 / 2 / 4' }
+  };
+  let hoveredMetric = null;
+  let focusedMetric = null;
+  let pinnedMetric = null;
+  let plotRegions = null;
+  const activeMetric = () => (formulaPreview || formulaPinned)?.metric || hoveredMetric || focusedMetric || pinnedMetric;
+  const terminology = {
+    flu: {
+      introduction: getElement('intro').innerHTML,
+      share: 'Sick portion', shareTitle: 'Percentage of people who actually have flu',
+      thresholdLabel: 'Sensitivity to the flu signal', thresholdLow: '0% · Less sensitive', thresholdHigh: '100% · More sensitive',
+      separationLabel: 'How different the two groups are', separationLow: 'Hard to tell apart', separationHigh: 'Easy to tell apart',
+      actualPositive: 'Actual flu', actualNegative: 'Actual no\u00a0flu',
+      predictedNegative: 'Test −', predictedPositive: 'Test +', scoreLabel: 'Flu test score →',
+      minimum: '0% · no one has flu', maximum: '100% · everyone has flu',
+      tpLegend: ' · Flu detected', fpLegend: ' · False alarm',
+      fnLegend: ' · Flu missed', tnLegend: ' · No flu, test −',
+      amongPositive: 'Among positive tests:', correctLabel: 'have flu', falseLabel: 'false alarms',
+      subject: 'people', cutoff: 'signal sensitivity',
+      separation: 'score separation', fixedCaption: 'Fixed with sick portion', precisionCaption: 'Depends on sick portion',
+      noPositives: 'No positive tests at this sensitivity setting.',
+      scorePanel: 'Flu test score graph', plot: 'Flu test score threshold',
+      matrixPanel: 'Flu test results', controls: 'Flu test controls',
+      bar: 'People with flu versus false alarms among positive tests'
+    },
+    generic: {
+      introduction: '<strong>The model predicts positive. How likely is the actual class to be positive?</strong> That’s precision—and it also depends on class prevalence (the positive portion).<br>Compare 10% and 50% positives with the same model and threshold. Precision changes, while the true positive rate (TPR, or recall) and false positive rate (FPR) stay the same.',
+      share: 'Positive portion', shareTitle: 'Class prevalence: percentage of actual positive cases',
+      thresholdLabel: 'Decision threshold', thresholdLow: '0% · More predicted +', thresholdHigh: '100% · Fewer predicted +',
+      separationLabel: 'Class separation', separationLow: 'Overlapping', separationHigh: 'Fully separated',
+      actualPositive: 'Actual +', actualNegative: 'Actual −',
+      predictedNegative: 'Predicted −', predictedPositive: 'Predicted +', scoreLabel: 'Positive class score →',
+      minimum: '0% · all negative', maximum: '100% · all positive',
+      tpLegend: ' · True positive', fpLegend: ' · False positive',
+      fnLegend: ' · False negative', tnLegend: ' · True negative',
+      amongPositive: 'Among predicted positives:', correctLabel: 'correct', falseLabel: 'false alarms',
+      subject: 'cases', cutoff: 'decision threshold',
+      separation: 'class separation', fixedCaption: 'Fixed with balance', precisionCaption: 'Depends on balance',
+      noPositives: 'No positive predictions at this threshold.',
+      scorePanel: 'Positive class score graph', plot: 'Decision threshold on the positive class score graph',
+      matrixPanel: 'Confusion matrix', controls: 'Model controls',
+      bar: 'Correct detections versus false alarms among positive predictions'
+    }
+  };
+
+  function renderTerminology() {
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    // Both introductions are trusted local copy, never user-supplied HTML.
+    getElement('intro').innerHTML = copy.introduction;
+    document.querySelectorAll('[data-term]').forEach(element => {
+      element.textContent = copy[element.dataset.term];
+    });
+    getElement('shareLabel').textContent = copy.share;
+    getElement('shareLabel').title = copy.shareTitle;
+    for (const [id, label] of [
+      ['controls', copy.controls], ['scorePanel', copy.scorePanel],
+      ['matrixPanel', copy.matrixPanel], ['plot', copy.plot], ['precbar', copy.bar]
+    ]) getElement(id).setAttribute('aria-label', label);
+    for (const share of [10, 50]) {
+      elements[`balance${share}`].setAttribute('aria-label', `Set ${copy.share.toLowerCase()} to ${share}%`);
+    }
+    getElement('footNote').textContent = `1,000 weighted ${copy.subject}. Counts are expected values and may be fractional. ${copy.share} changes counts and precision; TPR and FPR stay fixed at the same ${copy.cutoff} and ${copy.separation}.`;
+    getElement('markerKey').textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
+    document.querySelector('.insight').title = `Each full dot or square represents 10 ${copy.subject}; smaller markers represent partial counts. ${copy.share} changes counts; TPR and FPR stay fixed.`;
+    document.querySelectorAll('.metric')[0].title = genericMode
+      ? 'TPR = TP / all actual positives. Fixed when class balance changes at the same threshold and separation.'
+      : 'TPR = portion of people with flu who test positive. Fixed when sick portion changes with the same test settings.';
+    document.querySelectorAll('.metric')[1].title = genericMode
+      ? 'FPR = FP / all actual negatives. Fixed when class balance changes at the same threshold and separation.'
+      : 'FPR = portion of people without flu who get a positive test. Fixed when sick portion changes with the same test settings.';
+    document.querySelectorAll('.metric')[2].title = genericMode
+      ? 'Precision = TP / (TP + FP). Changes as the actual positive portion changes.'
+      : 'Precision = chance a person has flu after a positive test in this group.';
+    elements.modeToggle.querySelector('.mode-long').textContent = genericMode ? 'Flu example' : 'Generic ML';
+    elements.modeToggle.querySelector('.mode-short').textContent = genericMode ? 'Flu' : 'ML';
+    elements.modeToggle.title = genericMode ? 'Switch to the flu example' : 'Switch to generic ML terminology';
+    elements.modeToggle.setAttribute('aria-label', elements.modeToggle.title);
+  }
+
+  function readSettings() {
+    const prevalencePct = Number(elements.prevalence.value);
+    return {
+      prevalencePct,
+      positiveCount: Math.round(prevalencePct * CONFIG.totalExamples / 100),
+      // Flu sensitivity increases to the right; the equivalent ML cutoff decreases.
+      threshold: (genericMode ? Number(elements.threshold.value) : 100 - Number(elements.threshold.value)) / 100,
+      separation: Number(elements.separation.value) / 100
+    };
+  }
+
+  // ============================================================
+  // 2. MODEL: DETERMINISTIC SCORE DISTRIBUTIONS
+  // ============================================================
+
+  /** Approximate standard-normal cumulative distribution function Φ(z). */
+  function normalCdf(z) {
+    const absZ = Math.abs(z);
+    const t = 1 / (1 + 0.2316419 * absZ);
+    const polynomial = t * (
+      0.319381530 + t * (
+        -0.356563782 + t * (
+          1.781477937 + t * (-1.821255978 + t * 1.330274429)
+        )
+      )
+    );
+    const positiveCdf = 1 - 0.3989422804 * Math.exp(-absZ * absZ / 2) * polynomial;
+    return z >= 0 ? positiveCdf : 1 - positiveCdf;
+  }
+
+  /** Inverse of Φ, evaluated by binary search (no external libraries). */
+  function inverseNormalCdf(probability) {
+    let lower = -5;
+    let upper = 5;
+
+    for (let step = 0; step < 32; step++) {
+      const midpoint = (lower + upper) / 2;
+      if (normalCdf(midpoint) < probability) {
+        lower = midpoint;
+      } else {
+        upper = midpoint;
+      }
+    }
+    return (lower + upper) / 2;
+  }
+
+  /**
+   * Create a representative, evenly spaced set of scores from one class.
+   * Quantile sampling (rather than Math.random) means every slider position
+   * is reproducible: no jumping dots when you interact with the page.
+   */
+  function createClassExamples(count, mean, standardDeviation, isPositive, firstId) {
+    return Array.from({ length: count }, (_, index) => {
+      const quantile = (index + 0.5) / count;
+      const unboundedScore = mean + standardDeviation * inverseNormalCdf(quantile);
+      return {
+        id: firstId + index,
+        isPositive,
+        score: clamp(unboundedScore, 0.015, 0.985)
+      };
+    });
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  /**
+   * The class separation slider alters both mean distance and spread.
+   * At 100% the class score ranges don't overlap and threshold 0.50
+   * perfectly classifies the weighted population.
+   */
+  function generateExamples(positiveCount, separation) {
+    const meanOffset = 0.30 * separation;
+    const standardDeviation = 0.16 - 0.09 * separation;
+    const negativeCount = CONFIG.totalExamples - positiveCount;
+
+    // Balance changes sample weights, not the class score distributions.
+    const positiveExamples = createClassExamples(
+      CONFIG.samplesPerClass, 0.5 + meanOffset, standardDeviation, true, 0
+    );
+    const negativeExamples = createClassExamples(
+      CONFIG.samplesPerClass, 0.5 - meanOffset, standardDeviation, false, CONFIG.samplesPerClass
+    );
+
+    return [...positiveExamples, ...negativeExamples].map(example => ({
+      ...example,
+      weight: (example.isPositive ? positiveCount : negativeCount) / CONFIG.samplesPerClass
+    }));
+  }
+
+  // ============================================================
+  // 3. CLASSIFICATION AND METRICS
+  // ============================================================
+
+  function classifyExamples(examples, threshold) {
+    const groups = { tp: [], fp: [], fn: [], tn: [] };
+
+    for (const example of examples) {
+      const predictedPositive = example.score + 1e-9 >= threshold;
+      example.outcome = example.isPositive
+        ? (predictedPositive ? 'tp' : 'fn')
+        : (predictedPositive ? 'fp' : 'tn');
+      groups[example.outcome].push(example);
+    }
+    return groups;
+  }
+
+  function weightedCount(examples) {
+    return Math.round(examples.reduce((sum, example) => sum + example.weight, 0) * 1e8) / 1e8;
+  }
+
+  function formatCount(value) {
+    return Number(value.toFixed(2)).toString();
+  }
+
+  // Expected counts retain fractional cases so display rounding cannot alter
+  // the class-conditional rates when only the balance changes.
+  function calculateMetrics(groups) {
+    const tp = weightedCount(groups.tp);
+    const fp = weightedCount(groups.fp);
+    const fn = weightedCount(groups.fn);
+    const tn = weightedCount(groups.tn);
+    const predictedPositiveCount = tp + fp;
+
+    return {
+      tp, fp, fn, tn,
+      predictedPositiveCount,
+      tpr: tp + fn > 0 ? groups.tp.length / (groups.tp.length + groups.fn.length) : NaN,
+      fpr: fp + tn > 0 ? groups.fp.length / (groups.fp.length + groups.tn.length) : NaN,
+      precision: predictedPositiveCount ? tp / predictedPositiveCount : NaN
+    };
+  }
+
+  // Full markers represent caseUnit cases; the final marker holds the remainder.
+  // Anchoring full markers from the outer tails of each class keeps their scores
+  // stationary when the decision threshold moves.
+  function createCountGroups(groups) {
+    const result = { tp: [], fp: [], fn: [], tn: [] };
+    let nextId = 0;
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      const source = groups[outcome];
+      const count = weightedCount(source);
+      const whole = Math.floor(count / CONFIG.caseUnit + 1e-8);
+      const remainder = Math.round((count - whole * CONFIG.caseUnit) * 1e8) / 1e8;
+      const markerCount = whole + (remainder > 1e-8 ? 1 : 0);
+      const isUpperTail = outcome === 'tp' || outcome === 'fp';
+
+      for (let i = 0; i < markerCount; i++) {
+        const weight = i < whole ? CONFIG.caseUnit : remainder;
+        const midpointWeight = isUpperTail
+          ? (i < whole ? count - (i + 0.5) * CONFIG.caseUnit : remainder / 2)
+          : (i < whole ? (i + 0.5) * CONFIG.caseUnit : whole * CONFIG.caseUnit + remainder / 2);
+        const exactIndex = clamp(
+          (midpointWeight / count) * source.length - 0.5,
+          0,
+          source.length - 1
+        );
+        const lowIndex = Math.floor(exactIndex);
+        const highIndex = Math.ceil(exactIndex);
+        const fraction = exactIndex - lowIndex;
+        const score = source[lowIndex].score +
+          fraction * (source[highIndex].score - source[lowIndex].score);
+
+        result[outcome].push({
+          ...source[lowIndex],
+          id: nextId++,
+          score,
+          weight
+        });
+      }
+    }
+    return result;
+  }
+
+  function formatPercent(value) {
+    if (!Number.isFinite(value)) return 'N/A';
+    return (100 * value).toFixed(1).replace(/\.0$/, '') + '%';
+  }
+
+  // ============================================================
+  // 4. RENDERING HELPERS
+  // ============================================================
+
+  function createSvgElement(tagName, attributes = {}, text) {
+    const element = document.createElementNS(SVG_NS, tagName);
+    for (const [name, value] of Object.entries(attributes)) {
+      element.setAttribute(name, value);
+    }
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  function highlightExample(id) {
+    if (activeMetric()) id = null;
+    document.querySelectorAll('[data-id]').forEach(element => {
+      const matches = id !== null && Number(element.dataset.id) === id;
+      element.classList.toggle('focus', matches);
+      element.classList.toggle('muted', id !== null && !matches);
+    });
+  }
+
+  function addHoverLink(element, example) {
+    element.dataset.id = example.id;
+    element.dataset.outcome = example.outcome;
+    element.addEventListener('pointerenter', () => highlightExample(example.id));
+    element.addEventListener('pointerleave', () => highlightExample(null));
+  }
+
+  // ----- Plot: each score appears at the same x coordinate in its row. -----
+
+  function renderScorePlot(examples, threshold, positiveCount) {
+    const svg = elements.scorePlot;
+    svg.replaceChildren();
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+
+    const compact = window.matchMedia('(max-width: 650px) and (orientation: portrait)').matches;
+    const shortPhone = compact && window.matchMedia('(max-height: 759px)').matches;
+    const { left, width } = CONFIG.plot;
+    const top = compact ? 42 : CONFIG.plot.top;
+    const bottom = shortPhone ? 212 : compact ? 270 : CONFIG.plot.bottom;
+    const midY = shortPhone ? 128 : compact ? 154 : 205;
+    const positiveRow = shortPhone ? 86 : compact ? 98 : CONFIG.plot.positiveRow;
+    const negativeRow = shortPhone ? 170 : compact ? 214 : CONFIG.plot.negativeRow;
+    const headerY = compact ? 36 : 38;
+    const tickY = shortPhone ? 240 : compact ? 298 : 387;
+    const axisLabelY = shortPhone ? 270 : compact ? 328 : 430;
+    const dotRadius = compact ? 6.5 : 8;
+    const rowStep = shortPhone ? 9 : compact ? 12 : 16;
+    const minSpacingSquared = (dotRadius * 2 + 1) ** 2;
+    plotRegions = { left, width, top, bottom, midY, cutoff: left + width * threshold };
+
+    svg.setAttribute('viewBox', `0 0 650 ${shortPhone ? 280 : compact ? 340 : 440}`);
+    const scoreToX = score => left + width * score;
+    const draw = (tag, attributes, text) => {
+      const element = createSvgElement(tag, attributes, text);
+      svg.appendChild(element);
+      return element;
+    };
+
+    // Background: predicted-negative left, predicted-positive right.
+    draw('rect', {
+      x: left, y: top, width: width * threshold, height: bottom - top,
+      fill: '#eef4ff'
+    });
+    draw('rect', {
+      x: scoreToX(threshold), y: top,
+      width: width * (1 - threshold), height: bottom - top,
+      fill: '#fff1f3'
+    });
+
+    draw('text', {
+      x: left, y: headerY,
+      fill: '#3465b7', 'font-size': 32, 'font-weight': 700
+    }, copy.predictedNegative);
+    draw('text', {
+      x: left + width, y: headerY, 'text-anchor': 'end',
+      fill: '#c54757', 'font-size': 32, 'font-weight': 700
+    }, copy.predictedPositive);
+
+    draw('line', {
+      x1: left, y1: midY, x2: left + width, y2: midY,
+      stroke: '#dbe4ef', 'stroke-width': 1
+    });
+
+    function drawPopulationLabel(count, label, rowY) {
+      const labelY = rowY + (compact ? 6 : 8);
+      const attributes = {
+        x: left - 15, 'text-anchor': 'end',
+        'font-size': 28, 'font-weight': 700, fill: '#1f3556'
+      };
+      draw('text', { ...attributes, y: labelY - 12 }, label);
+      draw('text', {
+        ...attributes, y: labelY + 16,
+        'font-size': 20, 'font-weight': 500, fill: '#526886'
+      }, `${count} ${copy.subject}`);
+    }
+
+    drawPopulationLabel(positiveCount, copy.actualPositive, positiveRow);
+    drawPopulationLabel(CONFIG.totalExamples - positiveCount, copy.actualNegative, negativeRow);
+
+    // Draw smooth Gaussian density envelopes split at the threshold behind each dot row.
+    const { separation } = readSettings();
+    const meanOffset = 0.30 * separation;
+    const sigma = 0.16 - 0.09 * separation;
+    const envelopeHalfHeight = shortPhone ? 28 : compact ? 36 : 52;
+    function drawDensityEnvelope(mean, centerY, leftOutcome, rightOutcome, rowWeight) {
+      if (rowWeight <= 0) return;
+      const scale = envelopeHalfHeight * (0.45 + 0.55 * Math.sqrt(rowWeight / CONFIG.totalExamples));
+      const buildSide = (startS, endS, color) => {
+        if (endS - startS < 1e-4) return;
+        const steps = 28;
+        const upper = [];
+        const lower = [];
+        for (let i = 0; i <= steps; i++) {
+          const s = startS + (endS - startS) * (i / steps);
+          const x = scoreToX(s);
+          const density = Math.exp(-0.5 * ((s - mean) / sigma) ** 2);
+          const dy = scale * density;
+          upper.push(`${x.toFixed(1)} ${(centerY - dy).toFixed(1)}`);
+          lower.unshift(`${x.toFixed(1)} ${(centerY + dy).toFixed(1)}`);
+        }
+        draw('path', {
+          d: `M ${upper.join(' L ')} L ${lower.join(' L ')} Z`,
+          fill: color, 'fill-opacity': 0.12,
+          stroke: color, 'stroke-opacity': 0.28, 'stroke-width': 1,
+          'pointer-events': 'none', 'aria-hidden': 'true'
+        });
+      };
+      buildSide(0, threshold, CONFIG.colors[leftOutcome]);
+      buildSide(threshold, 1, CONFIG.colors[rightOutcome]);
+    }
+    drawDensityEnvelope(0.5 + meanOffset, positiveRow, 'fn', 'tp', positiveCount);
+    drawDensityEnvelope(0.5 - meanOffset, negativeRow, 'tn', 'fp', CONFIG.totalExamples - positiveCount);
+
+    // Distribute dots vertically only when neighboring scores overlap.
+    // Their HORIZONTAL position always corresponds to the actual score.
+    function renderScoreRow(rowExamples, centerY) {
+      const occupiedPositions = [];
+      const verticalOffsets = [
+        0,
+        -rowStep, rowStep,
+        -2 * rowStep, 2 * rowStep,
+        -3 * rowStep, 3 * rowStep,
+        -4 * rowStep, 4 * rowStep
+      ];
+
+      for (const example of rowExamples) {
+        const x = scoreToX(example.score);
+        let y = centerY;
+        let bestDistance = -1;
+
+        for (const offset of verticalOffsets) {
+          const proposedY = centerY + offset;
+          const closestDistanceSquared = occupiedPositions.reduce(
+            (closest, occupied) => Math.min(
+              closest,
+              (occupied.x - x) ** 2 + (occupied.y - proposedY) ** 2
+            ), Infinity
+          );
+          if (closestDistanceSquared > bestDistance) {
+            bestDistance = closestDistanceSquared;
+            y = proposedY;
+          }
+          if (closestDistanceSquared >= minSpacingSquared) break;
+        }
+
+        occupiedPositions.push({ x, y });
+        const dot = draw('circle', {
+          cx: x, cy: y, r: dotRadius * Math.sqrt(example.weight / CONFIG.caseUnit),
+          fill: CONFIG.colors[example.outcome],
+          stroke: '#fff', 'stroke-width': 1, class: 'point'
+        });
+        addHoverLink(dot, example);
+        dot.appendChild(createSvgElement('title', {},
+          `${example.outcome.toUpperCase()} · ${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(' →', '').toLowerCase()} ${example.score.toFixed(3)}`));
+      }
+    }
+
+    renderScoreRow(examples.filter(example => example.isPositive), positiveRow);
+    renderScoreRow(examples.filter(example => !example.isPositive), negativeRow);
+
+    draw('line', {
+      x1: scoreToX(threshold), x2: scoreToX(threshold),
+      y1: top, y2: bottom, stroke: '#246cf0',
+      'stroke-width': 2, 'stroke-dasharray': '6 5',
+      'pointer-events': 'none'
+    });
+    // A wide invisible target makes the line easy to grab with a finger.
+    // Pointer capture belongs to the persistent SVG, since its children redraw.
+    const dragTarget = draw('g', { class: 'threshold-drag', 'aria-hidden': 'true' });
+    dragTarget.appendChild(createSvgElement('title', {}, 'Drag left or right to change the threshold'));
+    dragTarget.appendChild(createSvgElement('line', {
+      x1: scoreToX(threshold), x2: scoreToX(threshold), y1: top, y2: bottom,
+      stroke: 'transparent', 'stroke-width': 44,
+      'vector-effect': 'non-scaling-stroke', 'pointer-events': 'stroke'
+    }));
+    dragTarget.appendChild(createSvgElement('rect', {
+      x: scoreToX(threshold) - 20, y: midY - 12, width: 40, height: 24,
+      rx: 7, fill: '#fff', stroke: '#246cf0', 'stroke-width': 2,
+      class: 'threshold-grip'
+    }));
+    dragTarget.appendChild(createSvgElement('path', {
+      d: `M ${scoreToX(threshold) - 6} ${midY - 5} l -5 5 l 5 5 M ${scoreToX(threshold) + 6} ${midY - 5} l 5 5 l -5 5`,
+      fill: 'none', stroke: '#246cf0', 'stroke-width': 2,
+      'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pointer-events': 'none'
+    }));
+    svg.setAttribute('aria-valuenow', Math.round(threshold * 100));
+    svg.setAttribute('aria-valuetext', `${threshold.toFixed(2)} score threshold`);
+    draw('line', {
+      x1: left, x2: left + width, y1: bottom, y2: bottom,
+      stroke: '#8c9bb0'
+    });
+
+    for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
+      draw('text', {
+        x: scoreToX(tick), y: tickY, 'text-anchor': 'middle',
+        'font-size': 28, fill: '#526886'
+      }, tick.toFixed(2));
+    }
+    draw('text', {
+      x: left + width / 2, y: axisLabelY, 'text-anchor': 'middle',
+      'font-size': 32, 'font-weight': 700, fill: '#526886'
+    }, copy.scoreLabel);
+  }
+
+  // ----- Population view: 2×2 outcome groups from the SAME examples. -----
+
+  function renderMetricHighlight() {
+    const selected = activeMetric();
+    const definition = metricGroups[selected];
+    const part = (formulaPreview || formulaPinned)?.part;
+    const included = part === 'numerator' && definition ? [definition.numerator] : definition?.denominator;
+    document.querySelectorAll('[data-explain]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.explain === formulaPinned?.metric && button.dataset.part === formulaPinned?.part));
+    });
+    for (const name of Object.keys(metricGroups)) {
+      const card = getElement(`${name}Card`);
+      card.classList.toggle('active', name === selected);
+      card.setAttribute('aria-pressed', String(name === pinnedMetric));
+    }
+    elements.scorePlot.querySelector('.metric-regions')?.remove();
+    elements.scorePlot.querySelectorAll('.point').forEach(dot => {
+      dot.classList.toggle('metric-excluded', Boolean(definition && !included.includes(dot.dataset.outcome)));
+    });
+    for (const outcome of ['tp', 'fp', 'fn', 'tn']) {
+      getElement(`${outcome}Tiles`).closest('.group').classList.toggle('metric-excluded',
+        Boolean(definition && !included.includes(outcome)));
+    }
+    const outer = getElement('matrixDenominator');
+    const inner = getElement('matrixNumerator');
+    outer.style.display = inner.style.display = definition ? 'block' : 'none';
+    if (part === 'numerator') outer.style.display = 'none';
+    if (part === 'denominator') inner.style.display = 'none';
+    const key = getElement('markerKey');
+    if (!definition) {
+      const copy = terminology[genericMode ? 'generic' : 'flu'];
+      key.textContent = `Full marker = 10 ${copy.subject}; smaller = partial.`;
+      return;
+    }
+    highlightExample(null);
+    const color = CONFIG.colors[definition.numerator];
+    outer.style.gridArea = definition.area;
+    inner.style.gridArea = definition.numeratorArea;
+    inner.style.borderColor = color;
+    const numerator = document.createElement('span');
+    numerator.className = 'formula-numerator';
+    numerator.style.borderColor = color;
+    numerator.textContent = definition.numerator.toUpperCase();
+    const denominator = document.createElement('span');
+    denominator.className = 'formula-denominator';
+    denominator.textContent = `(${definition.denominator.join(' + ').toUpperCase()})`;
+    key.replaceChildren(`${definition.label} = `, numerator, ' ÷ ', denominator);
+
+    const { left, width, top, bottom, midY, cutoff } = plotRegions;
+    const x = selected === 'precision' ? cutoff : left;
+    const y = selected === 'fpr' ? midY : top;
+    const endY = selected === 'tpr' ? midY : bottom;
+    const region = createSvgElement('g', { class: 'metric-regions', 'pointer-events': 'none', 'aria-hidden': 'true' });
+    const outline = (bounds, stroke, dashed) => region.appendChild(createSvgElement('rect', {
+      ...bounds, fill: 'none', stroke, 'stroke-width': 2,
+      'vector-effect': 'non-scaling-stroke', rx: 5,
+      ...(dashed ? { 'stroke-dasharray': '6 4', class: 'denominator-region' } : { class: 'numerator-region' })
+    }));
+    if (part !== 'numerator') outline({ x: x - 3, y: y - 3, width: left + width - x + 6, height: endY - y + 6 }, '#8056d9', true);
+    if (part !== 'denominator') outline({ x: cutoff + 3, y: y + 3, width: Math.max(0, left + width - cutoff - 6),
+      height: (selected === 'fpr' ? bottom : midY) - y - 6 }, color, false);
+    elements.scorePlot.insertBefore(region, elements.scorePlot.querySelector('.threshold-drag'));
+  }
+
+  function renderPopulationGrid(groups, metrics) {
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    for (const outcome of ['fn', 'tp', 'tn', 'fp']) {
+      const count = getElement(`${outcome}Num`);
+      const formattedCount = formatCount(metrics[outcome]);
+      const displayedCount = Math.round(metrics[outcome]);
+      count.textContent = displayedCount;
+      count.title = `Expected count: ${formattedCount} ${copy.subject}`;
+      count.setAttribute('aria-label', `${displayedCount} ${copy.subject}`);
+      const fragment = document.createDocumentFragment();
+
+      for (const example of groups[outcome]) {
+        const tile = document.createElement('span');
+        tile.className = 'tile';
+        tile.style.backgroundColor = CONFIG.colors[outcome];
+        tile.style.setProperty('--weight-scale', Math.sqrt(example.weight / CONFIG.caseUnit));
+        tile.title = `${example.isPositive ? copy.actualPositive : copy.actualNegative} · ` +
+          `${formatCount(example.weight)} ${copy.subject} · ${copy.scoreLabel.replace(' →', '').toLowerCase()} ${example.score.toFixed(3)} · ${outcome.toUpperCase()}`;
+        addHoverLink(tile, example);
+        fragment.appendChild(tile);
+      }
+      getElement(`${outcome}Tiles`).replaceChildren(fragment);
+    }
+  }
+
+  function renderMetrics(metrics) {
+    const { tp, fp, tpr, fpr, precision, predictedPositiveCount } = metrics;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+
+    elements.tpr.textContent = formatPercent(tpr);
+    elements.fpr.textContent = formatPercent(fpr);
+    elements.precision.textContent = formatPercent(precision);
+    elements.truePositiveLabel.textContent = formatCount(tp);
+    elements.falsePositiveLabel.textContent = formatCount(fp);
+
+    elements.truePositiveFill.style.width = predictedPositiveCount
+      ? `${100 * tp / predictedPositiveCount}%` : '0%';
+    elements.falsePositiveFill.style.width = predictedPositiveCount
+      ? `${100 * fp / predictedPositiveCount}%` : '0%';
+    elements.precisionBar.setAttribute('aria-label',
+      `${formatCount(tp)} ${genericMode ? 'correct detections' : 'people with flu'} and ${formatCount(fp)} false alarms`);
+
+    // Construct summary without injecting HTML strings.
+    if (predictedPositiveCount === 0) {
+      elements.summary.textContent = copy.noPositives;
+    } else {
+      const makePill = (cls, text) => {
+        const span = document.createElement('span');
+        span.className = cls;
+        span.textContent = text;
+        return span;
+      };
+      const emphasizedValue = document.createElement('em');
+      emphasizedValue.textContent = `${formatPercent(precision)} Precision`;
+      elements.summary.replaceChildren(
+        makePill('summary-tp', `${formatCount(tp)} TP`),
+        document.createTextNode(' ÷ ('),
+        makePill('summary-tp', `${formatCount(tp)} TP`),
+        document.createTextNode(' + '),
+        makePill('summary-fp', `${formatCount(fp)} FP`),
+        document.createTextNode(') = '),
+        emphasizedValue,
+        document.createTextNode('.')
+      );
+    }
+  }
+
+  // ============================================================
+  // 5. UI CONTROLS — SINGLE SOURCE OF TRUTH
+  // ============================================================
+
+  function renderLearning(metrics) {
+    latestMetrics = metrics;
+    for (const [name, rule] of Object.entries(metricGroups)) {
+      const card = getElement(`${name}Card`);
+      let formula = card.querySelector('.metric-formula');
+      if (!formula) {
+        formula = document.createElement('span');
+        formula.className = 'metric-formula';
+        card.appendChild(formula);
+      }
+      formula.textContent = `${rule.numerator.toUpperCase()} ÷ (${rule.denominator.join(' + ').toUpperCase()})`;
+    }
+    if (!learningMode) return;
+    const { tp, fp, fn, tn, tpr, fpr, precision } = metrics;
+    const { separation, threshold } = readSettings();
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    const p = Number(elements.prevalence.value) / 100;
+    const metricColors = { tpr: CONFIG.colors.tp, fpr: CONFIG.colors.fp, precision: '#246cf0' };
+    const questions = genericMode ? {
+      tpr: 'Given actual +, what fraction does the model predict as +?',
+      fpr: 'Given actual −, what fraction does the model mistakenly predict as +?',
+      precision: 'Given predicted +, what is the posterior probability of actual +?'
+    } : {
+      tpr: 'If a person really has the flu, what is the chance the test catches it?',
+      fpr: 'If a person does NOT have the flu, what is the chance of a false alarm?',
+      precision: 'If a person gets a positive test (Test +), what is the chance they truly have the flu?'
+    };
+    const meanings = genericMode ? {
+      fn: 'Missed positive (Type II error): true class is +, but model predicted −.',
+      tp: 'True hit: true class is +, and model correctly predicted +.',
+      tn: 'Correct rejection: true class is −, and model correctly predicted −.',
+      fp: 'False alarm (Type I error): true class is −, but model predicted +.'
+    } : {
+      fn: 'Flu missed: person really has the flu, but the test came back negative (Test −).',
+      tp: 'Flu caught: person really has the flu, and the test came back positive (Test +).',
+      tn: 'Correctly cleared: person does not have the flu, and the test came back negative (Test −).',
+      fp: 'False alarm: person does not have the flu, yet the test came back positive (Test +).'
+    };
+    const quadrantLabels = genericMode ? {
+      fn: 'Top-left · Actual +, Predicted −',
+      tp: 'Top-right · Actual +, Predicted +',
+      tn: 'Bottom-left · Actual −, Predicted −',
+      fp: 'Bottom-right · Actual −, Predicted +'
+    } : {
+      fn: 'Top-left · Sick, Test −',
+      tp: 'Top-right · Sick, Test +',
+      tn: 'Bottom-left · Healthy, Test −',
+      fp: 'Bottom-right · Healthy, Test +'
+    };
+    const wordFractions = genericMode ? {
+      tpr: ['True positives (TP)', 'All actual positives (TP + FN)'],
+      fpr: ['False positives (FP)', 'All actual negatives (FP + TN)'],
+      precision: ['True positives (TP)', 'All predicted positives (TP + FP)']
+    } : {
+      tpr: ['Sick people caught (TP)', 'All sick people (TP + FN)'],
+      fpr: ['Healthy false alarms (FP)', 'All healthy people (FP + TN)'],
+      precision: ['Sick people caught (TP)', 'All positive tests (TP + FP)']
+    };
+    const conditions = genericMode ? {
+      tpr: 'P(predicted + | actual +)', fpr: 'P(predicted + | actual −)', precision: 'P(actual + | predicted +)'
+    } : {
+      tpr: 'P(test + | flu)', fpr: 'P(test + | no flu)', precision: 'P(flu | test +)'
+    };
+    const aliases = {
+      tpr: 'Sensitivity / Recall',
+      fpr: 'False alarm rate (1 − Specificity)',
+      precision: 'Positive predictive value (PPV)'
+    };
+    const share = genericMode ? 'positive portion' : 'sick portion';
+    const total = name => metricGroups[name].denominator.reduce((sum, outcome) => sum + metrics[outcome], 0);
+    const calculation = name => {
+      const rule = metricGroups[name];
+      const sum = total(name);
+      return `${formatCount(metrics[rule.numerator])} ÷ (${rule.denominator.map(o => formatCount(metrics[o])).join(' + ')}) = ${formatPercent(metrics[name])}` +
+        (sum === 0 ? ' — no cases in this group.' : '');
+    };
+    const miniMatrix = (numOutcomes, denomOutcomes = []) => `
+      <span class="mini-matrix" aria-hidden="true">
+        ${['fn', 'tp', 'tn', 'fp'].map(cell => `<i class="mini-cell${numOutcomes.includes(cell) ? ' num' : denomOutcomes.includes(cell) ? ' denom' : ''}"></i>`).join('')}
+      </span>`;
+    const decimal = n => Number(n.toFixed(4)).toString();
+    const lrText = Number.isFinite(tpr) && Number.isFinite(fpr)
+      ? (fpr > 0 ? `${Number((tpr / fpr).toFixed(1))}×` : (tpr > 0 ? '∞ (0 false alarms)' : '0×'))
+      : 'N/A';
+    getElement('learnTitle').textContent = genericMode
+      ? 'From a class-conditional likelihood to a posterior probability'
+      : 'You tested positive. What is the chance you really have the flu?';
+    // All HTML below is trusted local copy plus numbers from the model.
+    getElement('learn-basics').innerHTML = `
+      <div class="basics-hero">
+        <div>
+          <h3>${genericMode ? 'Conditioning on the true class is not conditioning on the prediction.' : 'A test’s accuracy on sick people is not your chance of being sick.'}</h3>
+          <p>${genericMode
+            ? `<b>TPR (Recall)</b> and <b>FPR (Fall-out)</b> are class-conditional likelihoods: they normalize within each ground-truth row (<b>Actual +</b> or <b>Actual −</b>) and stay invariant when the class prior <b>p = ${formatPercent(p)}</b> changes. <b>Precision (PPV)</b> flips the condition to the <b>Predicted +</b> column, where true positives (${formatCount(tp)}) compete against false alarms (${formatCount(fp)}) from the negative class.`
+            : `When you get a <b>Test +</b>, you don’t know whether you came from the sick group or the healthy group. Right now, out of 1,000 people, <b>${formatCount(tp + fn)} have the flu</b> (yielding <b>${formatCount(tp)} true catches</b>) and <b>${formatCount(fp + tn)} are healthy</b> (yielding <b>${formatCount(fp)} false alarms</b>). Your actual chance of having the flu is <b>${formatCount(tp)} out of all ${formatCount(tp + fp)} positive tests (${formatPercent(precision)})</b>.`}</p>
+          <button class="learn-link" type="button" data-learn-tab="bayes">See the step-by-step Bayes proof →</button>
+        </div>
+        <div class="odds-preview" aria-label="Prior versus posterior probability">
+          <div>
+            <strong>${formatPercent(p)}</strong>
+            <span>Before · ${share} (p)</span>
+          </div>
+          <div class="odds-arrow" aria-hidden="true">→</div>
+          <div>
+            <strong>${formatPercent(precision)}</strong>
+            <span>After ${copy.predictedPositive} · Precision</span>
+          </div>
+          <div class="odds-badge">
+            <b>Likelihood Ratio (LR+ = TPR ÷ FPR): ${lrText}</b> · ${genericMode ? 'Multiplies prior odds p/(1−p) to yield posterior odds TP/FP' : 'How strongly a Test + boosts the odds of flu'}
+          </div>
+        </div>
+      </div>
+      <div class="learn-grid">
+        ${Object.entries(metricGroups).map(([name, rule]) => `
+          <article class="learn-card metric-detail" style="--metric-color:${metricColors[name]}">
+            <div class="metric-heading">
+              <h3>${rule.label}</h3>
+              <strong>${formatPercent(metrics[name])}</strong>
+            </div>
+            <p class="question">${questions[name]}</p>
+            <p class="learn-note"><b>${conditions[name]}</b> · ${name === 'precision' ? `Column rate · Changes with ${share}` : `Row rate · Fixed when ${share} changes`}</p>
+            <div class="rate-track" aria-hidden="true"><span style="width:${Number.isFinite(metrics[name]) ? 100 * metrics[name] : 0}%"></span></div>
+          </article>`).join('')}
+      </div>
+      <div class="section-heading">
+        <h3>Four possible outcomes (2×2 Confusion Matrix)</h3>
+        <span class="learn-note">1,000 weighted ${copy.subject} · arranged in the exact same 2×2 positions as the matrix above</span>
+      </div>
+      <div class="outcome-grid">
+        ${['fn', 'tp', 'tn', 'fp'].map(key => `
+          <div class="outcome-card" style="--outcome-color:${CONFIG.colors[key]}">
+            <span class="outcome-pos">${quadrantLabels[key]}</span>
+            <div class="outcome-head">
+              <strong>${key.toUpperCase()} · ${formatCount(metrics[key])}</strong>
+              ${miniMatrix([key])}
+            </div>
+            <span>${meanings[key]}</span>
+          </div>`).join('')}
+      </div>
+      <div class="balance-message">
+        <p><b>${genericMode ? 'Why class imbalance drives Precision (the Base-Rate Fallacy).' : 'Why a rare disease creates mostly false alarms.'}</b> ${genericMode ? 'Because TPR and FPR normalize within their own ground-truth rows, changing the class prior p scales each row uniformly without changing TPR or FPR. Precision slices vertically across both rows, so when p is small, even a low FPR on a large negative class produces many FP.' : 'When flu is rare (say 10% sick), 900 out of 1,000 people are healthy. Even a small 4% false-alarm rate on 900 healthy people creates 36 false alarms—diluting the 96 true catches down to 72.7% Precision.'}</p>
+        <p>With the ${copy.cutoff} and ${copy.separation} fixed, changing the ${share} changes <b>Precision</b> while <b>TPR</b> and <b>FPR</b> stay fixed wherever both rates are defined.</p>
+      </div>
+      <details><summary>How this demonstration works</summary><p>There are 1,000 weighted ${copy.subject}. Changing the ${share} changes how many belong to each actual row. Moving the ${copy.cutoff} changes which scores count as positive. Separation changes how much the two score distributions overlap.</p><p class="learn-note">These are simulated continuous scores. A score is a ranking signal used with a threshold; Precision is the calibrated posterior probability for the region above the threshold. Matrix counts are rounded for readability, while formulas use exact expected counts.</p></details>`;
+
+    getElement('learn-formulas').innerHTML = `
+      <div class="learn-intro">
+        <h3>${genericMode ? 'Row normalization (Likelihoods) vs. Column normalization (Posterior)' : 'Same top number (TP), different bottom group: why TPR ≠ Precision'}</h3>
+        <p>${genericMode
+          ? 'Notice that <b>TPR (Recall)</b> and <b>Precision (PPV)</b> share the exact same numerator (<b>TP</b>), but divide by perpendicular slices of the confusion matrix. <b>TPR</b> and <b>FPR</b> divide horizontally by a single ground-truth row (so the class prior <b>p</b> cancels out), whereas <b>Precision</b> divides vertically by the <b>Predicted +</b> column (mixing both rows). Hover or tap any part of a fraction below to outline its region above.'
+          : 'Look at <b>TPR</b> and <b>Precision</b> below: both have the <b>exact same top number (TP = sick people caught)</b>! The only difference is who you divide by. <b>TPR</b> divides horizontally by <b>all sick people</b> (top row), while <b>Precision</b> divides vertically by <b>all positive tests</b> (right column, which mixes sick catches with healthy false alarms). Hover or tap any part of a fraction below to outline it above.'}</p>
+      </div>
+      <div class="learn-grid">${Object.entries(metricGroups).map(([name, rule]) => `
+        <article class="learn-card formula-card metric-detail" style="--metric-color:${metricColors[name]}">
+          <div class="metric-heading">
+            <div>
+              <h3>${rule.label}</h3>
+              <span class="slice-badge">${miniMatrix([rule.numerator], rule.denominator)} ${name === 'precision' ? 'Column rate (vertical slice)' : 'Row rate (horizontal slice)'}</span>
+            </div>
+            <strong>${formatPercent(metrics[name])}</strong>
+          </div>
+          <p class="question">${questions[name]}</p>
+          <div class="equation" aria-label="${rule.label}: ${rule.numerator.toUpperCase()} divided by ${rule.denominator.join(' plus ').toUpperCase()}">
+            <span><b>${rule.label}</b> =</span>
+            <span class="fraction">
+              <span><button class="formula-term" data-explain="${name}" data-part="numerator" aria-pressed="false" type="button" aria-label="Highlight ${rule.numerator.toUpperCase()} for ${rule.label}">${rule.numerator.toUpperCase()}</button></span>
+              <span><button class="formula-term" data-explain="${name}" data-part="denominator" aria-pressed="false" type="button" aria-label="Highlight ${rule.denominator.join(' plus ').toUpperCase()} for ${rule.label}">${rule.denominator.join(' + ').toUpperCase()}</button></span>
+            </span>
+          </div>
+          <div class="word-eq" aria-hidden="true">
+            <span>In plain words =</span>
+            <span class="fraction">
+              <span>${wordFractions[name][0]}</span>
+              <span>${wordFractions[name][1]}</span>
+            </span>
+          </div>
+          <p class="live-calculation" id="calculation-${name}">${calculation(name)}</p>
+          <p class="learn-note"><b>${conditions[name]}</b> · ${aliases[name]}</p>
+          <p class="formula-feedback">Outlined in the graphs above · tap again or press Esc to clear.</p>
+        </article>`).join('')}</div>
+      <p class="learn-note" style="margin-top:14px">Solid underline: the numerator counted. Dashed underline: the denominator group it is divided by. A rate is N/A when its denominator is zero. Display rounding never changes a calculation.</p>`;
+
+    const numericBayes = Number.isFinite(tpr) && Number.isFinite(fpr)
+      ? `${decimal(tpr)} × ${decimal(p)} ÷ [${decimal(tpr)} × ${decimal(p)} + ${decimal(fpr)} × ${decimal(1 - p)}] = ${formatPercent(precision)}`
+      : `Using expected counts: ${formatCount(tp)} ÷ (${formatCount(tp)} + ${formatCount(fp)}) = ${formatPercent(precision)}.`;
+    const comparisonFor = sharePct => calculateMetrics(
+      classifyExamples(generateExamples(sharePct * 10, separation), threshold)
+    );
+    getElement('bayesThreshold').value = elements.threshold.value;
+    getElement('bayesThresholdOut').value = `${elements.threshold.value}%`;
+    getElement('bayesSeparation').value = elements.separation.value;
+    getElement('bayesSeparationOut').value = `${Math.round(separation * 100)}%`;
+    getElement('bayesPrevalence').value = elements.prevalence.value;
+    getElement('bayesPrevalenceOut').value = `${elements.prevalence.value}%`;
+    getElement('learn-bayes-intro').innerHTML = `
+      <div class="learn-intro">
+        <h3>${genericMode ? 'Bayes’ theorem: inverting P(predicted + | actual +) into P(actual + | predicted +)' : 'Bayes’ theorem in 3 natural steps: from 1,000 people to your chance of flu'}</h3>
+        <p>${genericMode
+          ? `Start with the class prior <b>p = ${formatPercent(p)}</b>. Weighting the positive likelihood (<b>TPR</b>) by <b>p</b> and the false-alarm likelihood (<b>FPR</b>) by <b>1 − p</b> yields the exact posterior probability <b>${conditions.precision}</b>.`
+          : `The easiest way to understand Bayes’ theorem is with <b>1,000 people</b>: first split them by how common flu is (<b>p = ${formatPercent(p)}</b>), next count how many from each row get a <b>Test +</b>, and finally take the sick share of all positive tests (<b>${conditions.precision}</b>).`}</p>
+      </div>`;
+    getElement('learn-bayes-body').innerHTML = `
+      <div class="bayes-flow">
+        <div class="flow-step">
+          <div class="flow-heading"><span class="step-index">1</span><span>${genericMode ? 'Prior · Class balance (N = 1,000)' : 'Prior · Start with 1,000 people'}</span></div>
+          <div class="count-row">
+            <div style="flex:1"><span>${copy.actualPositive}</span><small>1,000 × p (${formatPercent(p)})</small><div class="prior-bar" aria-hidden="true"><span style="width:${100 * p}%"></span></div></div>
+            <strong>${formatCount(tp + fn)}</strong>
+          </div>
+          <div class="count-row">
+            <div style="flex:1"><span>${copy.actualNegative}</span><small>1,000 × (1 − p) (${formatPercent(1 - p)})</small><div class="prior-bar neg" aria-hidden="true"><span style="width:${100 * (1 - p)}%"></span></div></div>
+            <strong>${formatCount(fp + tn)}</strong>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-heading"><span class="step-index">2</span><span>Evidence · <span id="bayesPositiveTotal">${formatCount(tp + fp)}</span> ${copy.predictedPositive}</span></div>
+          <div class="count-row true-result">
+            <div><span>${genericMode ? 'True positives (TP)' : 'Sick people caught (TP)'}</span><small>TPR (${formatPercent(tpr)}) × ${formatCount(tp + fn)}</small></div>
+            <strong data-evidence="tp">${formatCount(tp)}</strong>
+          </div>
+          <div class="count-row false-result">
+            <div><span>${genericMode ? 'False positives (FP)' : 'Healthy false alarms (FP)'}</span><small>FPR (${formatPercent(fpr)}) × ${formatCount(fp + tn)}</small></div>
+            <strong data-evidence="fp">${formatCount(fp)}</strong>
+          </div>
+          <div class="evidence-bar" aria-hidden="true">
+            <span class="correct" style="width:${tp + fp > 0 ? 100 * tp / (tp + fp) : 0}%"></span>
+            <span class="false-alarm" style="width:${tp + fp > 0 ? 100 * fp / (tp + fp) : 0}%"></span>
+          </div>
+        </div>
+        <div class="flow-step result-step">
+          <div class="flow-heading"><span class="step-index">3</span><span>Posterior · Precision</span></div>
+          <div class="result-content">
+            <div class="probability-ring" data-value="${Number.isFinite(precision) ? precision : 'na'}" style="--probability:${Number.isFinite(precision) ? 100 * precision : 0}%">
+              <div class="ring-center">
+                <strong id="bayesPosterior">${formatPercent(precision)}</strong>
+                <span>Precision</span>
+              </div>
+            </div>
+            <p class="result-caption">${!Number.isFinite(precision) ? copy.noPositives : `${formatCount(tp)} of ${formatCount(tp + fp)} positive ${genericMode ? 'predictions are actual +' : 'tests truly have flu'}.`}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bayes-math">
+        <div>
+          <h3>${genericMode ? 'Exact Bayesian derivation: Counts, Rates, and Odds' : 'Why the 1,000-person count formula equals Bayes’ formula'}</h3>
+          <p>The vertical bar <b>|</b> means <b>“given”</b> (which group we restrict our attention to). Because <b>TP = 1,000 × TPR × p</b> and <b>FP = 1,000 × FPR × (1 − p)</b>, the population size <b>1,000 cancels out</b> from top and bottom—turning expected counts into Bayes’ exact rate formula for <b>${conditions.precision}</b>.</p>
+          <p class="live-calculation" id="bayesCalculation">${numericBayes}</p>
+          <p class="learn-note" id="bayesEdge">${!Number.isFinite(precision) ? 'There are no positive predictions at these settings, so precision is N/A.' : !Number.isFinite(tpr) || !Number.isFinite(fpr) ? 'One actual group is empty, so its rate is N/A. The expected counts still give precision for the positive predictions that exist.' : `Positive Likelihood Ratio (LR+ = TPR ÷ FPR): ${lrText}. Dividing TP by FP gives Posterior Odds = LR+ × Prior Odds.`}</p>
+        </div>
+        <div class="derivation-box">
+          <div class="derivation-step">
+            <small>1. Conditional probability (Bayes’ rule)</small>
+            <div class="equation" aria-label="P of A given B equals P of B given A times P of A divided by P of B">
+              <span><b>P(A | B)</b> =</span>
+              <span class="fraction"><span>P(B | A) × P(A)</span><span>P(B | A) × P(A) + P(B | not A) × P(not A)</span></span>
+            </div>
+          </div>
+          <div class="derivation-step">
+            <small>2. Cancel N = 1,000 from TP ÷ (TP + FP)</small>
+            <div class="equation" aria-label="Precision equals TPR times p divided by TPR times p plus FPR times one minus p">
+              <span><b>Precision</b> =</span>
+              <span class="fraction">
+                <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span></span>
+                <span><span class="math-pill tpr">TPR</span> × <span class="math-pill prior">p</span> + <span class="math-pill fpr">FPR</span> × (1 − <span class="math-pill prior">p</span>)</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-heading">
+        <h3>Compare 10% vs. 50% ${share}</h3>
+        <span class="learn-note">Same ${copy.cutoff} and ${copy.separation} · tap a card to switch</span>
+      </div>
+      <div class="comparison-grid">
+        ${[10, 50].map(sharePct => {
+          const comp = comparisonFor(sharePct);
+          return `<button class="comparison-card" type="button" data-learn-share="${sharePct}" data-comparison-precision="${Number.isFinite(comp.precision) ? comp.precision : 'na'}" aria-pressed="${Math.round(p * 100) === sharePct}">
+            <span class="comparison-share">${sharePct}% ${share}</span>
+            <strong>${formatPercent(comp.precision)} Precision</strong>
+            <small>${formatCount(comp.tp)} TP vs. ${formatCount(comp.fp)} FP (${formatCount(comp.tp + comp.fp)} ${copy.predictedPositive})</small>
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="notation-list" aria-label="Probability notation">
+        <div class="notation-row"><p><b>Prior · p</b></p><p>${genericMode ? 'P(actual +)' : 'P(flu)'}</p><p>Base rate (${formatPercent(p)}) before seeing the ${genericMode ? 'prediction' : 'test result'}</p></div>
+        <div class="notation-row"><p><b>TPR</b></p><p>${conditions.tpr}</p><p>${questions.tpr} (${formatPercent(tpr)})</p></div>
+        <div class="notation-row"><p><b>FPR</b></p><p>${conditions.fpr}</p><p>${questions.fpr} (${formatPercent(fpr)})</p></div>
+        <div class="notation-row"><p><b>Precision</b></p><p>${conditions.precision}</p><p>${questions.precision} (${formatPercent(precision)})</p></div>
+      </div>`;
+  }
+
+  function setLearningMode(open) {
+    learningMode = open;
+    document.querySelector('main').classList.toggle('learning', open);
+    getElement('learnPanel').hidden = !open;
+    getElement('learnToggle').setAttribute('aria-expanded', String(open));
+    getElement('learnToggle').textContent = open ? 'Simple view' : 'Learn more';
+    if (!open) formulaPreview = formulaPinned = null;
+    renderLearning(latestMetrics);
+    renderMetricHighlight();
+  }
+
+  function selectLearningTab(tab, focus = false) {
+    learningTab = tab;
+    formulaPreview = formulaPinned = null;
+    for (const name of ['basics', 'formulas', 'bayes']) {
+      const button = getElement(`tab-${name}`);
+      button.setAttribute('aria-selected', String(name === tab));
+      button.tabIndex = name === tab ? 0 : -1;
+      getElement(`learn-${name}`).hidden = name !== tab;
+    }
+    if (focus) getElement(`tab-${tab}`).focus();
+    renderMetricHighlight();
+  }
+
+  let thresholdDrag = null;
+
+  function plotPointerX(event) {
+    const point = elements.scorePlot.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    return point.matrixTransform(elements.scorePlot.getScreenCTM().inverse()).x;
+  }
+
+  function setPlotThreshold(percent) {
+    const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+    const value = String(genericMode ? clamped : 100 - clamped);
+    if (elements.threshold.value === value) return;
+    elements.threshold.value = value;
+    update();
+  }
+
+  function moveThreshold(event) {
+    if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
+    event.preventDefault();
+    setPlotThreshold((plotPointerX(event) - thresholdDrag.offset - CONFIG.plot.left) / CONFIG.plot.width * 100);
+  }
+
+  function endThresholdDrag(event) {
+    if (!thresholdDrag || event.pointerId !== thresholdDrag.pointerId) return;
+    thresholdDrag = null;
+    elements.scorePlot.classList.remove('dragging');
+    if (elements.scorePlot.hasPointerCapture(event.pointerId)) {
+      elements.scorePlot.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  function update() {
+    renderTerminology();
+    const { prevalencePct, positiveCount, threshold, separation } = readSettings();
+
+    elements.prevalenceOut.value = `${prevalencePct}%`;
+    elements.balance10.setAttribute('aria-pressed', String(prevalencePct === 10));
+    elements.balance50.setAttribute('aria-pressed', String(prevalencePct === 50));
+    elements.thresholdOut.value = `${elements.threshold.value}%`;
+    elements.threshold.setAttribute('aria-valuetext', genericMode
+      ? `${threshold.toFixed(2)} decision threshold`
+      : `${elements.threshold.value}% sensitivity setting; signal cutoff ${threshold.toFixed(2)}`);
+    elements.threshold.title = genericMode
+      ? 'Scores at or above this threshold are predicted positive.'
+      : 'Move right to detect weaker flu signals: more flu detections and more false alarms.';
+    elements.separationOut.value = `${Math.round(separation * 100)}%`;
+    const copy = terminology[genericMode ? 'generic' : 'flu'];
+    elements.positiveCount.textContent = `${positiveCount} ${copy.subject}`;
+    elements.negativeCount.textContent =
+      `${CONFIG.totalExamples - positiveCount} ${copy.subject}`;
+
+    const examples = generateExamples(positiveCount, separation);
+    const groups = classifyExamples(examples, threshold);
+    const metrics = calculateMetrics(groups);
+    const countGroups = createCountGroups(groups);
+
+    renderScorePlot(Object.values(countGroups).flat(), threshold, positiveCount);
+    renderPopulationGrid(countGroups, metrics);
+    renderMetrics(metrics);
+    renderLearning(metrics);
+    highlightExample(null);
+    renderMetricHighlight();
+  }
+
+  function reset() {
+    formulaPreview = formulaPinned = null;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    elements.prevalence.value = CONFIG.defaultPrevalence;
+    elements.threshold.value = genericMode ? CONFIG.defaultThreshold * 100 : 100 - CONFIG.defaultThreshold * 100;
+    elements.separation.value = CONFIG.defaultSeparation;
+    update();
+  }
+
+  for (const slider of [
+    elements.prevalence, elements.threshold, elements.separation
+  ]) {
+    slider.addEventListener('input', update);
+  }
+  elements.reset.addEventListener('click', reset);
+  getElement('learnToggle').addEventListener('click', () => {
+    setLearningMode(!learningMode);
+    if (learningMode) getElement('learnPanel').scrollIntoView({ block: 'start' });
+  });
+  getElement('closeLearn').addEventListener('click', () => {
+    setLearningMode(false);
+    getElement('learnToggle').focus({ preventScroll: true });
+    getElement('learnToggle').scrollIntoView({ block: 'center' });
+  });
+  for (const [index, name] of ['basics', 'formulas', 'bayes'].entries()) {
+    const tab = getElement(`tab-${name}`);
+    tab.addEventListener('click', () => selectLearningTab(name));
+    tab.addEventListener('keydown', event => {
+      const names = ['basics', 'formulas', 'bayes'];
+      const next = { ArrowRight: (index + 1) % 3, ArrowLeft: (index + 2) % 3, Home: 0, End: 2 }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      selectLearningTab(names[next], true);
+    });
+  }
+  const learnPanel = getElement('learnPanel');
+  const previewFormula = event => {
+    if (event.pointerType === 'touch') return;
+    const term = event.target.closest('[data-explain]');
+    if (!term) return;
+    formulaPreview = { metric: term.dataset.explain, part: term.dataset.part };
+    renderMetricHighlight();
+  };
+  learnPanel.addEventListener('pointerover', previewFormula);
+  learnPanel.addEventListener('focusin', previewFormula);
+  const clearPreview = event => {
+    if (!event.target.closest('[data-explain]')) return;
+    formulaPreview = null;
+    renderMetricHighlight();
+  };
+  learnPanel.addEventListener('pointerout', clearPreview);
+  learnPanel.addEventListener('focusout', clearPreview);
+  learnPanel.addEventListener('click', event => {
+    const term = event.target.closest('[data-explain]');
+    if (term) {
+      const next = { metric: term.dataset.explain, part: term.dataset.part };
+      formulaPinned = formulaPinned?.metric === next.metric && formulaPinned?.part === next.part ? null : next;
+      formulaPreview = null;
+      hoveredMetric = focusedMetric = pinnedMetric = null;
+      renderMetricHighlight();
+    }
+    const preset = event.target.closest('[data-learn-share]');
+    if (preset) {
+      const share = preset.dataset.learnShare;
+      elements.prevalence.value = share;
+      update();
+      getElement('learnPanel').querySelector(`[data-learn-share="${share}"]`).focus({ preventScroll: true });
+    }
+    const tabLink = event.target.closest('[data-learn-tab]');
+    if (tabLink) {
+      selectLearningTab(tabLink.dataset.learnTab, true);
+    }
+  });
+  for (const [bayesId, topId] of [
+    ['bayesPrevalence', 'prevalence'],
+    ['bayesThreshold', 'threshold'],
+    ['bayesSeparation', 'separation']
+  ]) {
+    getElement(bayesId).addEventListener('input', event => {
+      elements[topId].value = event.target.value;
+      update();
+    });
+  }
+  for (const name of Object.keys(metricGroups)) {
+    const card = getElement(`${name}Card`);
+    card.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'touch') return;
+      formulaPreview = formulaPinned = null;
+      hoveredMetric = name;
+      renderMetricHighlight();
+    });
+    card.addEventListener('pointerleave', () => {
+      hoveredMetric = null;
+      renderMetricHighlight();
+    });
+    card.addEventListener('focus', () => {
+      if (!card.matches(':focus-visible')) return;
+      focusedMetric = name;
+      renderMetricHighlight();
+    });
+    card.addEventListener('blur', () => {
+      focusedMetric = null;
+      renderMetricHighlight();
+    });
+    card.addEventListener('click', () => {
+      formulaPreview = formulaPinned = null;
+      pinnedMetric = pinnedMetric === name ? null : name;
+      hoveredMetric = focusedMetric = null;
+      renderMetricHighlight();
+    });
+  }
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    formulaPreview = formulaPinned = null;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    renderMetricHighlight();
+  });
+  document.addEventListener('pointerdown', event => {
+    if (event.target.closest('.metric, #controls, .views, #modeToggle, #learnPanel, #learnToggle')) return;
+    formulaPreview = formulaPinned = null;
+    hoveredMetric = focusedMetric = pinnedMetric = null;
+    renderMetricHighlight();
+  });
+  elements.scorePlot.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0 || thresholdDrag ||
+        !event.target.closest('.threshold-drag')) return;
+    event.preventDefault();
+    thresholdDrag = {
+      pointerId: event.pointerId,
+      offset: plotPointerX(event) - CONFIG.plot.left - readSettings().threshold * CONFIG.plot.width
+    };
+    elements.scorePlot.setPointerCapture(event.pointerId);
+    elements.scorePlot.focus({ preventScroll: true });
+    elements.scorePlot.classList.add('dragging');
+    highlightExample(null);
+  });
+  elements.scorePlot.addEventListener('pointermove', moveThreshold);
+  elements.scorePlot.addEventListener('pointerup', event => {
+    moveThreshold(event);
+    endThresholdDrag(event);
+  });
+  elements.scorePlot.addEventListener('pointercancel', endThresholdDrag);
+  elements.scorePlot.addEventListener('lostpointercapture', endThresholdDrag);
+  elements.scorePlot.addEventListener('keydown', event => {
+    const current = readSettings().threshold * 100;
+    const next = {
+      ArrowLeft: current - 1, ArrowDown: current - 1,
+      ArrowRight: current + 1, ArrowUp: current + 1,
+      PageDown: current - 10, PageUp: current + 10, Home: 0, End: 100
+    }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    setPlotThreshold(next);
+  });
+  elements.modeToggle.addEventListener('click', () => {
+    // Preserve the effective cutoff and every prediction when changing terminology.
+    elements.threshold.value = 100 - Number(elements.threshold.value);
+    genericMode = !genericMode;
+    update();
+  });
+  for (const share of [10, 50]) {
+    elements[`balance${share}`].addEventListener('click', () => {
+      elements.prevalence.value = share;
+      update();
+    });
+  }
+  window.matchMedia('(max-width: 650px) and (orientation: portrait)')
+    .addEventListener('change', update);
+  window.matchMedia('(max-height: 759px)').addEventListener('change', update);
+
+  update();
+})();
+  </script>
+</body>
+</html>

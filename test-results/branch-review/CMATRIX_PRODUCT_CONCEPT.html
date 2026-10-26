@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>CMatrixLab — Product concept sketch</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #162b43;
+      --muted: #63748a;
+      --line: #dfe7ef;
+      --paper: #fff;
+      --canvas: #f3f6fa;
+      --blue: #246cf0;
+      --blue-soft: #eef4ff;
+      --green: #16815d;
+      --green-soft: #e8f6ef;
+      --red: #cf5261;
+      --red-soft: #fff0f1;
+      --amber: #c08317;
+      --amber-soft: #fff5df;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); }
+    button { font: inherit; }
+    .page { max-width: 1320px; margin: auto; padding: 28px 28px 72px; }
+    .eyebrow { color: var(--blue); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    h1 { margin: 7px 0 8px; font-size: clamp(27px, 4vw, 39px); letter-spacing: -.04em; }
+    .intro { max-width: 760px; margin: 0; color: var(--muted); line-height: 1.6; }
+    .concept-note { display: inline-flex; gap: 8px; align-items: center; margin: 18px 0 24px; padding: 8px 12px; border: 1px solid #d5e3fa; border-radius: 999px; background: #f7faff; color: #395c8b; font-size: 12px; font-weight: 650; }
+    .concept-note:before { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); content: ""; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin: 20px 0 12px; }
+    h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .screen-label { color: #718198; font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+    .desktop-shell { padding: 14px; border: 1px solid #dce4ed; border-radius: 18px; background: #e9eef5; box-shadow: 0 16px 40px #182e4612; }
+    .app { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+    .topbar { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 23px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; letter-spacing: -.04em; white-space: nowrap; }
+    .logo { display: grid; grid-template-columns: repeat(3, 6px); gap: 2px; transform: rotate(-8deg); }
+    .logo i { width: 6px; height: 6px; border-radius: 2px; background: var(--blue); }
+    .logo i:nth-child(3n) { background: #9ab9fa; }
+    .nav { display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 12px; }
+    .nav strong { color: var(--ink); }
+    .mode-chip { padding: 7px 10px; border: 1px solid #d9e4f5; border-radius: 8px; color: #315b99; background: #f5f8ff; font-size: 11px; font-weight: 750; white-space: nowrap; }
+    .workspace { padding: 21px 23px 24px; }
+    .welcome { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+    .welcome h2 { font-size: 22px; }
+    .welcome p { max-width: 630px; margin: 6px 0 16px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .step { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; color: #53667d; font-size: 11px; white-space: nowrap; }
+    .scenario-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 15px; }
+    .scenario-title { margin-right: 3px; color: #60728a; font-size: 11px; font-weight: 750; }
+    .scenario { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; color: #52657b; background: #fff; font-size: 11px; }
+    .scenario.active { border-color: #afc9ff; color: #1f5ed1; background: var(--blue-soft); font-weight: 750; }
+    .workgrid { display: grid; grid-template-columns: 252px minmax(0, 1fr); gap: 14px; align-items: stretch; }
+    .card { border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+    .controls { padding: 15px; }
+    .card-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; }
+    .tiny-tag { padding: 4px 7px; border-radius: 999px; color: #5f7390; background: #f0f3f7; font-size: 9px; font-weight: 700; }
+    .control { margin-top: 17px; }
+    .control-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: #52657b; font-size: 11px; }
+    .control-head b { color: var(--ink); }
+    input[type=range] { width: 100%; height: 5px; margin: 4px 0 7px; accent-color: var(--blue); }
+    .range-ends { display: flex; justify-content: space-between; color: #91a0b1; font-size: 9px; }
+    .helper { margin: 14px 0 0; padding: 10px; border-radius: 8px; color: #546a83; background: #f5f8fb; font-size: 10px; line-height: 1.45; }
+    .visuals { min-width: 0; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 10px; }
+    .metric { padding: 12px 13px; border: 1px solid var(--line); border-radius: 10px; }
+    .metric span { display: block; color: var(--muted); font-size: 10px; }
+    .metric strong { display: block; margin: 5px 0 2px; font-size: 24px; letter-spacing: -.04em; }
+    .metric small { color: #78889a; font-size: 9px; }
+    .metric.precision strong { color: var(--green); }
+    .metric.recall strong { color: var(--blue); }
+    .metric.base strong { color: var(--amber); }
+    .vizgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .viz { padding: 12px; }
+    .viz h3 { margin: 0 0 3px; font-size: 11px; }
+    .viz p { margin: 0 0 8px; color: #738297; font-size: 9px; }
+    .matrix { display: grid; grid-template-columns: 42px 1fr 1fr; grid-template-rows: 20px 58px 58px; gap: 4px; text-align: center; }
+    .matrix-label { display: grid; place-items: center; color: #8795a6; font-size: 8px; }
+    .cell { display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; }
+    .cell b { font-size: 19px; }
+    .cell span { font-size: 8px; }
+    .tp { color: #126747; background: var(--green-soft); }
+    .fp { color: #a93848; background: var(--red-soft); }
+    .fn { color: #97630c; background: var(--amber-soft); }
+    .tn { color: #51657d; background: #edf1f6; }
+    .chart { display: block; width: 100%; height: 137px; }
+    .lesson { display: flex; align-items: center; gap: 12px; margin-top: 10px; padding: 11px 13px; border: 1px solid #dbe7fa; border-radius: 10px; background: #f6f9ff; }
+    .lesson-icon { display: grid; flex: 0 0 28px; height: 28px; place-items: center; border-radius: 8px; color: var(--blue); background: #e5eeff; font-size: 15px; font-weight: 800; }
+    .lesson p { flex: 1; margin: 0; color: #51657d; font-size: 10px; line-height: 1.5; }
+    .lesson p strong { color: var(--ink); }
+    .lesson button { border: 0; color: #245db8; background: transparent; font-size: 10px; font-weight: 750; white-space: nowrap; }
+    .advanced { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 14px; padding: 12px 14px; border: 1px dashed #c9d4e1; border-radius: 10px; color: #52657b; }
+    .advanced strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 11px; }
+    .advanced span { font-size: 10px; }
+    .advanced button { padding: 7px 10px; border: 1px solid #d5dfe9; border-radius: 7px; color: #3f5876; background: white; font-size: 10px; white-space: nowrap; }
+    .notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0 35px; }
+    .note { padding: 12px 14px; border: 1px solid #e1e8ef; border-radius: 10px; background: #fbfcfe; }
+    .note b { display: block; margin-bottom: 4px; font-size: 11px; }
+    .note p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .phone-stage { display: grid; grid-template-columns: minmax(290px, 370px) minmax(260px, 1fr); gap: 32px; align-items: center; padding: 25px; border: 1px solid #dfe7ef; border-radius: 16px; background: #e9eef5; }
+    .phone { width: 100%; max-width: 340px; margin: auto; padding: 9px; border: 1px solid #cad4df; border-radius: 30px; background: #172a40; box-shadow: 0 14px 30px #172a4022; }
+    .phone-screen { overflow: hidden; min-height: 610px; border-radius: 22px; background: #f7f9fc; }
+    .phone-status { height: 22px; padding: 5px 14px 0; color: #50637a; background: white; font-size: 8px; font-weight: 700; }
+    .mobile-top { position: sticky; top: 0; z-index: 1; padding: 10px 13px 11px; border-bottom: 1px solid var(--line); background: #ffffffed; }
+    .mobile-brand-row { display: flex; justify-content: space-between; align-items: center; }
+    .mobile-brand { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 800; }
+    .menu { color: #586b82; font-size: 17px; }
+    .mobile-top small { display: block; margin-top: 8px; color: #66788d; font-size: 9px; }
+    .mobile-top small b { color: #263b54; }
+    .mobile-content { padding: 13px; }
+    .mobile-content h3 { margin: 0; font-size: 17px; letter-spacing: -.03em; }
+    .mobile-content > p { margin: 5px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .mobile-scenarios { display: flex; gap: 6px; overflow: hidden; margin: 0 -2px 12px; }
+    .mobile-scenarios span { padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; background: white; color: #62748a; font-size: 9px; white-space: nowrap; }
+    .mobile-scenarios span:first-child { border-color: #afc9ff; color: #1f5ed1; background: var(--blue-soft); font-weight: 750; }
+    .mobile-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .mobile-metrics .metric { padding: 8px 6px; text-align: center; }
+    .mobile-metrics .metric span { font-size: 8px; }
+    .mobile-metrics .metric strong { margin: 4px 0 0; font-size: 17px; }
+    .mobile-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 12px 0 8px; padding: 4px; border-radius: 9px; background: #eaf0f6; }
+    .mobile-tabs span { padding: 7px 2px; border-radius: 7px; color: #61738a; text-align: center; font-size: 9px; }
+    .mobile-tabs .selected { color: #245db8; background: white; box-shadow: 0 1px 4px #1c355014; font-weight: 750; }
+    .mobile-viz { padding: 10px; }
+    .mobile-viz .matrix { grid-template-rows: 18px 47px 47px; }
+    .mobile-viz .cell b { font-size: 16px; }
+    .mobile-sticky { position: sticky; bottom: 0; padding: 8px 12px 10px; border-top: 1px solid var(--line); background: #fff; }
+    .mobile-sticky button { width: 100%; padding: 9px; border: 0; border-radius: 8px; color: #fff; background: var(--blue); font-size: 10px; font-weight: 750; }
+    .phone-caption { max-width: 470px; }
+    .phone-caption h3 { margin: 0 0 8px; font-size: 20px; }
+    .phone-caption p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .phone-caption ul { padding-left: 18px; color: #51657d; font-size: 12px; line-height: 1.8; }
+    .branch-map { margin-top: 34px; padding: 17px 18px; border: 1px solid #dfe7ef; border-radius: 12px; background: white; }
+    .branch-map h2 { margin-bottom: 12px; }
+    .branch-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .branch { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; color: #53677f; background: #fbfcfe; font-size: 10px; }
+    .branch.primary { border-color: #aec8ff; color: #1e5ccc; background: var(--blue-soft); font-weight: 750; }
+    .branch-arrow { align-self: center; color: #90a0b2; font-size: 12px; }
+    .footnote { margin-top: 12px; color: #78899b; font-size: 10px; line-height: 1.5; }
+    .app-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; }
+    .app-header .brand-credit { color: #526886; font-size: 9px; font-weight: 500; letter-spacing: 0; }
+    .app-header .brand-credit a { color: inherit; }
+    .app-actions { display: flex; align-items: center; gap: 7px; color: #526886; font-size: 9px; }
+    .mock-select, .mock-action { min-height: 28px; padding: 6px 9px; border: 1px solid #dce5ef; border-radius: 7px; color: #263f65; background: #fff; font-size: 9px; }
+    .mock-action.primary { color: #1556be; border-color: #c8d9fb; background: #f4f8ff; }
+    .story-text { margin: 9px 0 10px; color: #526886; font-size: 10px; line-height: 1.45; }
+    .story-text strong { color: var(--ink); }
+    .top-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 5px; }
+    .top-metric { display: flex; min-height: 58px; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+    .top-metric span { display: block; font-size: 10px; font-weight: 800; }
+    .top-metric small { display: block; margin-top: 3px; color: #647995; font-size: 9px; font-weight: 400; }
+    .top-metric b { font-size: 29px; letter-spacing: -.04em; }
+    .top-metric.tpr b { color: #0ea976; }
+    .top-metric.fpr b { color: #e64b60; }
+    .top-metric.precision b { color: #246cf0; }
+    .sliders { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .slider-card { min-width: 0; padding: 9px 11px 7px; }
+    .slider-card .control { margin: 0; }
+    .quick-values { display: flex; align-items: center; gap: 4px; }
+    .quick-values span { padding: 3px 6px; border: 1px solid #e1d9f3; border-radius: 6px; color: #7650b6; background: #f8f5fd; font-size: 9px; }
+    .legend-line { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 7px 0 5px; color: #526886; font-size: 9px; }
+    .legend-line b { color: var(--ink); }
+    .viewbar { display: flex; justify-content: space-between; align-items: center; gap: 9px; }
+    .view-tabs { display: flex; gap: 2px; overflow: hidden; padding: 3px; border-radius: 7px; background: #edf2f8; }
+    .view-tabs span { padding: 5px 8px; border-radius: 5px; color: #526886; font-size: 9px; white-space: nowrap; }
+    .view-tabs span:first-child { color: #1556be; background: white; box-shadow: 0 1px 3px #1c355014; }
+    .view-hint { color: #718198; font-size: 8px; white-space: nowrap; }
+    .plot-card { position: relative; min-width: 0; min-height: 236px; padding: 10px; }
+    .plot-head { display: flex; justify-content: space-between; align-items: center; margin: 0 4px 4px; font-size: 11px; font-weight: 800; }
+    .plot-area { position: relative; height: 178px; overflow: hidden; border: 1px solid #e9eef5; border-radius: 8px; background: linear-gradient(90deg,#f1f5ff 0 60%,#fff0f2 60% 100%); }
+    .plot-area:before { position: absolute; top: 0; bottom: 0; left: 60%; border-left: 2px dashed #246cf0; content: ""; }
+    .plot-area:after { position: absolute; top: 50%; right: 0; left: 0; border-top: 1px solid #e2e8f0; content: ""; }
+    .plot-axis { position: absolute; right: 10px; bottom: 6px; left: 10px; display: flex; justify-content: space-between; color: #607795; font-size: 9px; }
+    .plot-label { position: absolute; top: 9px; left: 10px; color: #607795; font-size: 9px; }
+    .plot-label.right { right: 10px; left: auto; color: #cc4558; }
+    .score-dots { position: absolute; inset: 15px 11px 28px; }
+    .score-dots i { position: absolute; display: block; width: 8px; height: 8px; border-radius: 50%; background: #0ea976; }
+    .score-dots.neg i { width: 9px; height: 9px; background: #a4afc0; }
+    .score-dots.fp i { width: 9px; height: 9px; background: #e64b60; }
+    .score-dots.fn i { width: 7px; height: 7px; background: #f2a527; }
+    .mini-grid { min-height: 236px; padding: 10px; }
+    .mini-grid .matrix { grid-template-columns: 56px 1fr 1fr; grid-template-rows: 27px 74px 74px; }
+    .mini-grid .cell { align-items: start; justify-content: start; padding: 8px; }
+    .mini-grid .cell b { align-self: end; font-size: 23px; }
+    .mini-grid .cell span { font-size: 9px; }
+    .mini-grid .matrix-label { font-size: 9px; }
+    .formula-strip { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 8px; padding: 9px 12px; font-size: 10px; }
+    .formula-strip strong { color: #1556be; }
+    .formula-strip .math { color: #087f59; font-weight: 750; }
+    .balance-bar { width: 30%; min-width: 105px; }
+    .balance-bar div { display: flex; height: 9px; overflow: hidden; border-radius: 7px; }
+    .balance-bar span:first-child { width: 73%; background: #0ea976; }
+    .balance-bar span:last-child { flex: 1; background: #e64b60; }
+    .balance-bar small { display: block; margin-top: 4px; color: #647995; font-size: 8px; text-align: right; }
+    .app-foot { margin-top: 7px; color: #8293a8; font-size: 8px; }
+    .support-pages { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 10px; }
+    .support-card { padding: 13px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+    .support-card b { display: block; margin: 4px 0; font-size: 11px; }
+    .support-card p { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
+    .support-card .mini-link { color: #6337b8; font-size: 9px; font-weight: 750; }
+    .phone-app { width: 100%; }
+    .phone-app .app-header { min-height: 32px; }
+    .phone-app .brand { gap: 5px; font-size: 12px; }
+    .phone-app .brand-credit, .phone-app .app-actions > span:first-child { display: none; }
+    .phone-app .mock-select { max-width: 92px; }
+    .phone-app .story-text { margin: 7px 0; }
+    .phone-app .top-metrics { gap: 4px; }
+    .phone-app .top-metric { min-height: 48px; padding: 5px 6px; }
+    .phone-app .top-metric b { font-size: 19px; }
+    .phone-app .top-metric span { font-size: 8px; }
+    .phone-app .top-metric small { font-size: 7px; }
+    .phone-app .sliders { grid-template-columns: 1fr; gap: 4px; }
+    .phone-app .slider-card { display: grid; grid-template-columns: 1fr 42%; align-items: center; gap: 6px; padding: 6px 8px; }
+    .phone-app .slider-card .control-header { margin: 0; font-size: 9px; }
+    .phone-app .slider-card input { margin: 3px 0; }
+    .phone-app .slider-card .endpoints { font-size: 7px; }
+    .phone-app .viewbar { align-items: start; }
+    .phone-app .view-tabs { max-width: 100%; }
+    .phone-app .view-tabs span { padding: 5px 6px; font-size: 8px; }
+    .phone-app .view-hint { display: none; }
+    .phone-app .mobile-visuals { display: grid; grid-template-columns: 1fr; gap: 6px; }
+    .phone-app .plot-card, .phone-app .mini-grid { min-height: auto; padding: 8px; }
+    .phone-app .plot-area { height: 150px; }
+    .phone-app .mini-grid .matrix { grid-template-columns: 48px 1fr 1fr; grid-template-rows: 20px 54px 54px; }
+    .phone-app .mini-grid .cell { padding: 6px; }
+    .phone-app .mini-grid .cell b { font-size: 18px; }
+    .phone-app .formula-strip { align-items: start; flex-direction: column; gap: 6px; padding: 8px; font-size: 9px; }
+    .phone-app .balance-bar { width: 100%; }
+    .phone-app .balance-bar small { text-align: left; }
+    @media (max-width: 760px) {
+      .page { padding: 22px 14px 48px; }
+      .section-head { align-items: start; flex-direction: column; gap: 6px; }
+      .desktop-shell { padding: 7px; border-radius: 12px; }
+      .topbar { min-height: 49px; padding: 0 12px; }
+      .brand { font-size: 14px; }
+      .nav { display: none; }
+      .app-header { align-items: flex-start; flex-wrap: wrap; }
+      .app-actions { flex-wrap: wrap; }
+      .workspace { padding: 15px 12px; }
+      .welcome h2 { font-size: 18px; }
+      .welcome p { font-size: 11px; }
+      .step { font-size: 9px; }
+      .workgrid { grid-template-columns: 1fr; }
+      .controls { padding: 12px; }
+      .controls .control { display: inline-block; width: calc(50% - 9px); margin-right: 10px; vertical-align: top; }
+      .controls .control:nth-of-type(odd) { margin-right: 0; }
+      .helper { margin-top: 8px; }
+      .metrics { gap: 5px; }
+      .metric { padding: 9px 7px; }
+      .metric strong { font-size: 20px; }
+      .metric span { font-size: 9px; }
+      .vizgrid { grid-template-columns: 1fr; }
+      .chart { height: 145px; }
+      .notes { grid-template-columns: 1fr; }
+      .phone-stage { grid-template-columns: 1fr; padding: 16px; }
+      .phone-caption { order: -1; }
+    }
+    @media (max-width: 400px) {
+      .welcome { flex-direction: column; gap: 4px; }
+      .scenario { padding: 6px 8px; font-size: 10px; }
+      .mobile-stage { padding: 12px; }
+      .phone { max-width: 315px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="eyebrow">Product sketch · based on the current GemFixes app</div>
+      <h1>Keep the teaching experience you built</h1>
+      <p class="intro">This sketch follows the current branch’s actual teaching flow—medical-test example, TPR/FPR/precision, three controls, score plot, confusion matrix and six graph views. The branch review informs what to preserve and where supporting pages fit; this is not a replacement design or a proposed merge.</p>
+      <div class="concept-note">Concept sketch · values shown match the current medical-test example</div>
+    </header>
+
+    <section aria-labelledby="desktop-title">
+      <div class="section-head">
+        <div><h2 id="desktop-title">Current app · desktop layout</h2><p>A visual map of the implementation on the GemFixes branch, with the branch-review direction made explicit.</p></div>
+        <span class="screen-label">Based on 4ad5b18 · desktop</span>
+      </div>
+      <div class="desktop-shell">
+        <div class="app">
+          <div class="workspace">
+            <div class="app-header">
+              <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>CMatrixLab</span><span class="brand-credit">by Martin Grossman · martin.grossman@gmail.com</span></div>
+              <div class="app-actions"><span>Try an example</span><span class="mock-select">Medical test⌄</span><span class="mock-action primary">📋 Cheatsheet</span><span class="mock-action">Reset ↺</span></div>
+            </div>
+            <p class="story-text"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested.<br>Compare 10% and 50% sick using the same test. Precision changes, even though the portion of sick people correctly testing positive (TPR) and the portion of people without flu getting a false alarm (FPR) stay the same.</p>
+            <div class="top-metrics">
+              <div class="top-metric tpr"><span>TPR<small>Sick detected</small></span><b>96%</b></div>
+              <div class="top-metric fpr"><span>FPR<small>Healthy test +</small></span><b>4%</b></div>
+              <div class="top-metric precision"><span>Precision<small>Sick in test +</small></span><b>72.7%</b></div>
+            </div>
+            <div class="sliders">
+              <div class="card slider-card"><label class="control"><span class="control-header"><span>How easily the test says +</span><output class="val">50%</output></span><input aria-label="Threshold example" type="range" min="0" max="100" value="50"><span class="endpoints"><span>0% · Never says +</span><span>100% · Always says +</span></span></label></div>
+              <div class="card slider-card"><label class="control"><span class="control-header"><span>How different the two groups are</span><output class="val">60%</output></span><input aria-label="Separation example" type="range" min="0" max="100" value="60"><span class="endpoints"><span>Hard to tell apart</span><span>Easy to tell apart</span></span></label></div>
+              <div class="card slider-card"><label class="control"><span class="control-header"><span>Sick portion <span class="quick-values"><span>10%</span><span>50%</span><b>10%</b></span></span><input aria-label="Sick portion example" type="range" min="0" max="100" value="10"><span class="endpoints"><span>0% · no one has flu</span><span>100% · everyone has flu</span></span></label></div>
+            </div>
+            <div class="legend-line"><span><b style="color:#0ea976">■ TP</b> · Flu detected</span><span><b style="color:#e64b60">■ FP</b> · False alarm</span><span><b style="color:#f2a527">■ FN</b> · Flu missed</span><span><b style="color:#a4afc0">■ TN</b> · No flu, test −</span></div>
+            <div class="viewbar">
+              <div class="view-tabs" aria-label="Current graph views"><span>Default (Scores + Matrix)</span><span>4-Up Graph</span><span>Gaussians</span><span>ROC</span><span>PR</span><span>Bayes</span></div>
+              <span class="view-hint">Full marker = 10 people; smaller = partial.</span>
+            </div>
+            <div class="vizgrid mobile-visuals">
+              <section class="card plot-card">
+                <div class="plot-head"><span>Test −</span><span style="color:#cc4558">Test +</span></div>
+                <div class="plot-area" role="img" aria-label="Illustrative score plot with threshold at 0.50">
+                  <span class="plot-label">Actual flu · 100 people</span><span class="plot-label right">Threshold 0.50</span>
+                  <div class="score-dots">
+                    <i style="left:63%;top:17%"></i><i style="left:67%;top:13%"></i><i style="left:71%;top:17%"></i><i style="left:74%;top:13%"></i><i style="left:78%;top:18%"></i><i style="left:82%;top:14%"></i><i style="left:87%;top:20%"></i><i style="left:91%;top:24%"></i>
+                    <i style="left:66%;top:28%"></i><i style="left:73%;top:27%"></i><i style="left:80%;top:31%"></i><i style="left:88%;top:34%"></i><i style="left:59%;top:32%"></i><i style="left:62%;top:22%"></i><i style="left:96%;top:27%"></i>
+                  </div>
+                  <div class="score-dots fn"><i style="left:57%;top:25%"></i><i style="left:59%;top:30%"></i></div>
+                  <div class="score-dots neg"><i style="left:33%;top:64%"></i><i style="left:36%;top:69%"></i><i style="left:40%;top:64%"></i><i style="left:44%;top:72%"></i><i style="left:48%;top:67%"></i><i style="left:50%;top:76%"></i><i style="left:53%;top:64%"></i><i style="left:38%;top:81%"></i><i style="left:45%;top:84%"></i><i style="left:30%;top:75%"></i><i style="left:55%;top:82%"></i></div>
+                  <div class="score-dots fp"><i style="left:61%;top:68%"></i><i style="left:64%;top:76%"></i><i style="left:66%;top:70%"></i></div>
+                  <div class="plot-axis"><span>0.00</span><span>0.25</span><span>0.50</span><span>0.75</span><span>1.00</span></div>
+                </div>
+                <div class="plot-head"><span>Actual no flu · 900 people</span><span>Flu test score →</span></div>
+              </section>
+              <section class="card mini-grid">
+                <div class="matrix"><span></span><span class="matrix-label">Test −</span><span class="matrix-label">Test +</span>
+                  <span class="matrix-label">Actual flu<br>100 people</span><span class="cell fn"><span>FN · Flu missed</span><b>4</b></span><span class="cell tp"><span>TP · Flu detected</span><b>96</b></span>
+                  <span class="matrix-label">Actual no flu<br>900 people</span><span class="cell tn"><span>TN · No flu, test −</span><b>864</b></span><span class="cell fp"><span>FP · False alarm</span><b>36</b></span>
+                </div>
+              </section>
+            </div>
+            <div class="card formula-strip"><span>Among positive tests: <span class="math">96 TP</span> ÷ (<span class="math">96 TP</span> + <span style="color:#ce3c52;font-weight:750">36 FP</span>) = <strong>72.7% Precision.</strong></span><span class="balance-bar"><div><span></span><span></span></div><small>Green: 96 have flu &nbsp; Red: 36 false alarms</small></span></div>
+            <div class="app-foot">Numbers are averages for a group of 1,000 people. Sick portion changes the counts and Precision; TPR and FPR stay fixed at the same test cutoff and score separation.</div>
+          </div>
+        </div>
+      </div>
+      <div class="notes">
+        <div class="note"><b>Preserve this core</b><p>The current branch already places the scenario, key rates, controls, score plot and confusion matrix in one linked teaching view.</p></div>
+        <div class="note"><b>Keep the comparison visible</b><p>The 10%/50% balance shortcuts make the base-rate lesson immediate without hiding TPR or FPR.</p></div>
+        <div class="note"><b>Keep the six views</b><p>Default, 4-Up, Gaussians, ROC, PR and Bayes offer depth without replacing the default score-plus-matrix view.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="mobile-title">
+      <div class="section-head">
+        <div><h2 id="mobile-title">How the current page behaves on a phone</h2><p>This reflects the existing compact layout—not the selected-panel navigation from another branch.</p></div>
+        <span class="screen-label">Current mobile layout · 390 px</span>
+      </div>
+      <div class="phone-stage">
+        <div class="phone" aria-label="Mobile mockup based on the current branch">
+          <div class="phone-screen phone-app">
+            <div class="phone-status">9:41 <span style="float:right">● ● ●</span></div>
+            <div class="workspace">
+              <div class="app-header">
+                <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>CMatrixLab</span></div>
+                <div class="app-actions"><span>Try an example</span><span class="mock-select">Medical test⌄</span><span class="mock-action primary">📋</span><span class="mock-action">↺</span></div>
+              </div>
+              <p class="story-text"><strong>Your flu test is positive. What’s the chance you really have flu?</strong> That’s precision—and it also depends on how common flu is among the people tested. Compare 10% and 50% sick using the same test.</p>
+              <div class="top-metrics">
+                <div class="top-metric tpr"><span>TPR<small>Sick detected</small></span><b>96%</b></div>
+                <div class="top-metric fpr"><span>FPR<small>Healthy test +</small></span><b>4%</b></div>
+                <div class="top-metric precision"><span>Precision<small>Sick in test +</small></span><b>72.7%</b></div>
+              </div>
+              <div class="sliders">
+                <div class="card slider-card"><label class="control"><span class="control-header"><span>How easily the test says +</span><output class="val">50%</output></span><input aria-label="Mobile threshold" type="range" min="0" max="100" value="50"><span class="endpoints"><span>Never says +</span><span>Always says +</span></span></label></div>
+                <div class="card slider-card"><label class="control"><span class="control-header"><span>How different the two groups are</span><output class="val">60%</output></span><input aria-label="Mobile separation" type="range" min="0" max="100" value="60"><span class="endpoints"><span>Hard to tell apart</span><span>Easy to tell apart</span></span></label></div>
+                <div class="card slider-card"><label class="control"><span class="control-header"><span>Sick portion <span class="quick-values"><span>10%</span><span>50%</span><b>10%</b></span></span><input aria-label="Mobile sick portion" type="range" min="0" max="100" value="10"><span class="endpoints"><span>No one has flu</span><span>Everyone has flu</span></span></label></div>
+              </div>
+              <div class="viewbar"><div class="view-tabs"><span>Default</span><span>4-Up</span><span>Gauss</span><span>ROC</span><span>PR</span><span>Bayes</span></div></div>
+              <div class="mobile-visuals">
+                <section class="card plot-card"><div class="plot-head"><span>Test −</span><span style="color:#cc4558">Test +</span></div><div class="plot-area"><span class="plot-label">Actual flu · 100 people</span><span class="plot-label right">Threshold</span><div class="score-dots"><i style="left:65%;top:17%"></i><i style="left:70%;top:14%"></i><i style="left:76%;top:20%"></i><i style="left:82%;top:17%"></i><i style="left:90%;top:24%"></i></div><div class="score-dots fn"><i style="left:57%;top:25%"></i></div><div class="score-dots neg"><i style="left:34%;top:67%"></i><i style="left:42%;top:74%"></i><i style="left:49%;top:65%"></i><i style="left:54%;top:78%"></i><i style="left:39%;top:85%"></i></div><div class="score-dots fp"><i style="left:62%;top:71%"></i><i style="left:66%;top:79%"></i></div><div class="plot-axis"><span>0.00</span><span>0.25</span><span>0.50</span><span>0.75</span><span>1.00</span></div></div><div class="plot-head"><span>Actual no flu · 900 people</span><span>Flu test score →</span></div></section>
+                <section class="card mini-grid"><div class="matrix"><span></span><span class="matrix-label">Test −</span><span class="matrix-label">Test +</span><span class="matrix-label">Actual flu<br>100 people</span><span class="cell fn"><span>FN · Flu missed</span><b>4</b></span><span class="cell tp"><span>TP · Flu detected</span><b>96</b></span><span class="matrix-label">Actual no flu<br>900 people</span><span class="cell tn"><span>TN · No flu, test −</span><b>864</b></span><span class="cell fp"><span>FP · False alarm</span><b>36</b></span></div></section>
+              </div>
+              <div class="card formula-strip"><span><span class="math">96 TP</span> ÷ (<span class="math">96 TP</span> + <span style="color:#ce3c52">36 FP</span>) = <strong>72.7% Precision.</strong></span><span class="balance-bar"><div><span></span><span></span></div><small>96 have flu · 36 false alarms</small></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">
+          <div class="eyebrow">Current implementation</div>
+          <h3>Controls first, then both linked visuals</h3>
+          <p>The compact branch keeps the score plot and matrix together on mobile and stacks them for scrolling. The tabs switch the graph mode; they do not replace the page with a single selected panel. This sketch intentionally mirrors that existing behavior.</p>
+          <ul>
+            <li>Five examples are available: Medical test, Car braking, Spam filter, Fraud detection and Generic ML.</li>
+            <li>The 10% and 50% shortcuts sit beside the sick-portion slider.</li>
+            <li>The mobile screenshot in the branch review shows this stacked score-plus-matrix flow.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="pages-title">
+      <div class="section-head"><div><h2 id="pages-title">The rest of the site</h2><p>Current companion pages and branch-review priorities, without inventing new top-level app modes.</p></div></div>
+      <div class="support-pages">
+        <div class="support-card"><span class="eyebrow">Main simulator</span><b>index.html · GemFixes branch</b><p>Five examples, six graph views, linked metric highlights, matrix layouts, and the 10%/50% base-rate comparison.</p></div>
+        <div class="support-card"><span class="eyebrow">Learning</span><b>Learn the Bayes story</b><p>Separate learning page for guided explanation and natural-frequency reasoning, building on the inline lesson branch.</p><span class="mini-link">learn.html →</span></div>
+        <div class="support-card"><span class="eyebrow">Reference</span><b>Look up metric definitions</b><p>Cheatsheet and reference pages keep formulas and terminology available without crowding the simulator.</p><span class="mini-link">cheatsheet.html · reference.html →</span></div>
+      </div>
+    </section>
+
+    <section class="branch-map" aria-labelledby="branch-title">
+      <h2 id="branch-title">What the branch review recommends</h2>
+      <div class="branch-list">
+        <span class="branch primary">Keep GemFixes as teaching base</span>
+        <span class="branch">Preserve 10% / 50% lesson + five presets</span>
+        <span class="branch">Study mobile_view_rework for mobile navigation only</span>
+        <span class="branch">Keep real data as a distinct future advanced mode</span>
+        <span class="branch">Use refactor_big as a math/testing reference</span>
+      </div>
+      <p class="footnote">This sketch is grounded in index.html on featursimple_bayes_story_overall_visual_GemFixes and the findings in CMATRIX_BRANCH_REVIEW.html. It is a visualization of the current implementation and a direction for discussion—not an implementation proposal to replace your current design. Existing displayed values are from the recorded screenshot and shown for visual context.</p>
+    </section>
+  </main>
+</body>
+</html>

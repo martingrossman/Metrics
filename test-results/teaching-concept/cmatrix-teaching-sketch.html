@@ -1,0 +1,338 @@
+<div id="cmatrix-teaching-sketch" aria-label="CMatrixLab teaching website concept">
+  <style>
+    #cmatrix-teaching-sketch {
+      --cm-bg: light-dark(#f2f5fa,#111923); --cm-surface: light-dark(#ffffff,#1a2532);
+      --cm-text: light-dark(#172b43,#e9eff8); --cm-secondary: light-dark(#53667e,#b4c3d7);
+      --cm-border: light-dark(#dce4ef,#344458); --cm-soft: light-dark(#eaf0f8,#243448);
+      --cm-blue: light-dark(#225be0,#8fb4ff); --cm-blue-soft: light-dark(#edf3ff,#253c60);
+      --cm-positive: light-dark(#177c70,#70d7c0); --cm-positive-soft: light-dark(#e9f7f2,#173e38);
+      --cm-warning: light-dark(#966019,#edc17b); --cm-warning-soft: light-dark(#fff4df,#473921);
+      --cm-missed: light-dark(#b33e57,#ffa0b3); --cm-missed-soft: light-dark(#fff0f3,#482633);
+      --cm-neutral: light-dark(#ccd7e7,#52637a);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px;
+      line-height: 1.5; color: var(--cm-text); background: var(--cm-bg); border: 1px solid var(--cm-border);
+      border-radius: 18px; overflow: clip; width: 100%; box-sizing: border-box;
+    }
+    #cmatrix-teaching-sketch * { box-sizing: border-box; }
+    #cmatrix-teaching-sketch [hidden] { display: none !important; }
+    #cmatrix-teaching-sketch button, #cmatrix-teaching-sketch input { font: inherit; }
+    #cmatrix-teaching-sketch button { min-height: 44px; color: inherit; }
+    #cmatrix-teaching-sketch button:disabled { opacity: .55; }
+    #cmatrix-teaching-sketch .cm-header { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; padding: 17px 104px 17px 22px; background: var(--cm-surface); border-bottom: 1px solid var(--cm-border); }
+    #cmatrix-teaching-sketch .cm-brand { display: flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 750; letter-spacing: -.7px; }
+    #cmatrix-teaching-sketch .cm-logo { display: grid; grid-template-columns: repeat(2,7px); gap: 3px; }
+    #cmatrix-teaching-sketch .cm-logo span { width: 7px; height: 7px; border-radius: 2px; background: var(--cm-blue); }
+    #cmatrix-teaching-sketch .cm-logo span:last-child { opacity: .3; }
+    #cmatrix-teaching-sketch .cm-nav { display: flex; gap: 4px; margin-left: auto; }
+    #cmatrix-teaching-sketch .cm-nav button { padding: 7px 14px; border: 0; border-radius: 8px; background: transparent; color: var(--cm-secondary); font-weight: 600; }
+    #cmatrix-teaching-sketch .cm-nav button[aria-pressed="true"] { color: var(--cm-blue); background: var(--cm-blue-soft); }
+    #cmatrix-teaching-sketch .cm-layout { display: grid; grid-template-columns: 190px minmax(0,1fr); }
+    #cmatrix-teaching-sketch .cm-sidebar { padding: 28px 17px; border-right: 1px solid var(--cm-border); }
+    #cmatrix-teaching-sketch .cm-eyebrow { font-size: 11px; font-weight: 750; letter-spacing: 1.3px; text-transform: uppercase; color: var(--cm-secondary); margin: 0 0 14px; }
+    #cmatrix-teaching-sketch .cm-steps { display: grid; gap: 7px; }
+    #cmatrix-teaching-sketch .cm-step { display: flex; align-items: center; text-align: left; gap: 9px; border: 0; background: transparent; border-radius: 9px; padding: 10px 7px; font-size: 12px; }
+    #cmatrix-teaching-sketch .cm-step[aria-current="step"] { background: var(--cm-surface); color: var(--cm-blue); box-shadow: 0 2px 8px #00000006; }
+    #cmatrix-teaching-sketch .cm-step span { display: grid; place-items: center; flex: 0 0 23px; height: 23px; border-radius: 50%; background: var(--cm-soft); font-variant-numeric: tabular-nums; font-size: 11px; }
+    #cmatrix-teaching-sketch .cm-step[aria-current="step"] span { background: var(--cm-blue); color: light-dark(#fff,#112343); }
+    #cmatrix-teaching-sketch .cm-next-lessons { margin-top: 32px; border-top: 1px solid var(--cm-border); padding-top: 23px; }
+    #cmatrix-teaching-sketch .cm-next-lessons p { margin: 13px 0; font-size: 12px; color: var(--cm-secondary); }
+    #cmatrix-teaching-sketch .cm-course-note { margin-top: 38px; font-size: 12px; color: var(--cm-secondary); }
+    #cmatrix-teaching-sketch .cm-main { min-width: 0; padding: 25px 26px 22px; }
+    #cmatrix-teaching-sketch .cm-breadcrumb { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; color: var(--cm-secondary); font-size: 12px; }
+    #cmatrix-teaching-sketch .cm-tag { display: inline-flex; background: var(--cm-blue-soft); color: var(--cm-blue); padding: 4px 9px; border-radius: 5px; font-size: 11px; font-weight: 650; }
+    #cmatrix-teaching-sketch h1 { font-size: clamp(25px,3.4vw,36px); line-height: 1.15; letter-spacing: -1.1px; font-weight: 750; margin: 0 0 13px; }
+    #cmatrix-teaching-sketch h2 { font-size: 16px; font-weight: 650; letter-spacing: -.2px; margin: 0; }
+    #cmatrix-teaching-sketch p { margin: 0; }
+    #cmatrix-teaching-sketch .cm-intro { font-size: 14px; color: var(--cm-secondary); max-width: 590px; margin-bottom: 21px; }
+    #cmatrix-teaching-sketch .cm-stage { border: 1px solid var(--cm-border); border-radius: 14px; background: var(--cm-surface); }
+    #cmatrix-teaching-sketch .cm-stage-head { padding: 17px 20px; border-bottom: 1px solid var(--cm-border); display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    #cmatrix-teaching-sketch .cm-stage-body { padding: 21px; }
+    #cmatrix-teaching-sketch .cm-muted { color: var(--cm-secondary); font-size: 12px; }
+    #cmatrix-teaching-sketch .cm-claim { display: grid; grid-template-columns: 125px minmax(0,1fr); align-items: center; gap: 24px; }
+    #cmatrix-teaching-sketch .cm-big-number { font-size: 48px; line-height: 1.1; letter-spacing: -2.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    #cmatrix-teaching-sketch .cm-claim-description { display: block; font-size: 12px; color: var(--cm-secondary); margin-top: 6px; }
+    #cmatrix-teaching-sketch .cm-cohort { display: grid; grid-template-columns: repeat(50,minmax(0,1fr)); gap: 2px; }
+    #cmatrix-teaching-sketch .cm-cohort i { display: block; aspect-ratio: 1; border-radius: 1px; background: var(--cm-neutral); min-width: 0; }
+    #cmatrix-teaching-sketch .cm-cohort i.cm-defect { background: var(--cm-missed); }
+    #cmatrix-teaching-sketch .cm-cohort-caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px; margin-top: 9px; color: var(--cm-secondary); font-size: 11px; }
+    #cmatrix-teaching-sketch .cm-question { font-size: 15px; font-weight: 650; margin: 22px 0 12px; }
+    #cmatrix-teaching-sketch .cm-choice-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    #cmatrix-teaching-sketch .cm-choice { border: 1px solid var(--cm-border); border-radius: 8px; padding: 10px 15px; background: var(--cm-surface); text-align: left; }
+    #cmatrix-teaching-sketch .cm-choice[aria-pressed="true"] { background: var(--cm-blue-soft); border-color: var(--cm-blue); color: var(--cm-blue); }
+    #cmatrix-teaching-sketch .cm-feedback { margin-top: 17px; padding: 13px 15px; background: var(--cm-blue-soft); border-radius: 9px; color: var(--cm-text); font-size: 13px; }
+    #cmatrix-teaching-sketch .cm-footer { display: flex; gap: 14px; justify-content: space-between; align-items: center; margin-top: 19px; }
+    #cmatrix-teaching-sketch .cm-primary { background: var(--cm-blue); color: light-dark(#fff,#112343); border: 0; border-radius: 8px; padding: 11px 17px; font-weight: 650; white-space: nowrap; }
+    #cmatrix-teaching-sketch .cm-text-button { background: transparent; border: 0; padding: 8px 0; color: var(--cm-blue); font-size: 12px; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
+    #cmatrix-teaching-sketch .cm-alert-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(145px,.75fr); gap: 25px; align-items: center; }
+    #cmatrix-teaching-sketch .cm-alert-grid { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 5px; max-width: 320px; }
+    #cmatrix-teaching-sketch .cm-alert-grid i { aspect-ratio: 1; background: var(--cm-warning); border-radius: 2px; position: relative; }
+    #cmatrix-teaching-sketch .cm-alert-grid i.cm-real { background: var(--cm-positive); border-radius: 50%; }
+    #cmatrix-teaching-sketch .cm-alert-grid[data-highlight="true"] .cm-real { outline: 2px solid var(--cm-blue); outline-offset: 1px; }
+    #cmatrix-teaching-sketch .cm-legend { display: flex; gap: 13px; flex-wrap: wrap; margin-top: 13px; color: var(--cm-secondary); font-size: 11px; }
+    #cmatrix-teaching-sketch .cm-swatch { display: inline-block; vertical-align: middle; width: 8px; height: 8px; margin-right: 4px; border-radius: 1px; background: var(--cm-warning); }
+    #cmatrix-teaching-sketch .cm-swatch.cm-real { background: var(--cm-positive); border-radius: 50%; }
+    #cmatrix-teaching-sketch .cm-alert-side { padding-left: 22px; border-left: 1px solid var(--cm-border); }
+    #cmatrix-teaching-sketch .cm-small-number { font-size: 33px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; margin-bottom: 3px; }
+    #cmatrix-teaching-sketch .cm-alert-side hr { border: 0; border-top: 1px solid var(--cm-border); margin: 17px 0; }
+    #cmatrix-teaching-sketch .cm-formula { background: var(--cm-soft); padding: 13px 15px; margin-top: 13px; border-radius: 8px; font-size: 12px; }
+    #cmatrix-teaching-sketch .cm-formula code { font-family: ui-monospace, "Cascadia Mono", monospace; font-size: 12px; color: inherit; }
+    #cmatrix-teaching-sketch .cm-policy-strip { display: flex; gap: 8px; margin: 0 0 20px; }
+    #cmatrix-teaching-sketch .cm-policy-strip button { flex: 1; padding: 11px 8px; border: 1px solid var(--cm-border); background: var(--cm-surface); border-radius: 8px; }
+    #cmatrix-teaching-sketch .cm-policy-strip button[aria-pressed="true"] { background: var(--cm-blue-soft); color: var(--cm-blue); border-color: var(--cm-blue); }
+    #cmatrix-teaching-sketch .cm-policy-strip small { display: block; font-size: 11px; margin-top: 3px; color: var(--cm-secondary); }
+    #cmatrix-teaching-sketch .cm-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    #cmatrix-teaching-sketch .cm-cell { border-radius: 9px; padding: 13px 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; background: var(--cm-soft); }
+    #cmatrix-teaching-sketch .cm-cell strong { font-size: 25px; font-variant-numeric: tabular-nums; font-weight: 650; }
+    #cmatrix-teaching-sketch .cm-cell.cm-caught { background: var(--cm-positive-soft); }
+    #cmatrix-teaching-sketch .cm-cell.cm-unnecessary { background: var(--cm-warning-soft); }
+    #cmatrix-teaching-sketch .cm-cell.cm-missed { background: var(--cm-missed-soft); }
+    #cmatrix-teaching-sketch .cm-workload { margin-top: 22px; }
+    #cmatrix-teaching-sketch .cm-bar-heading { display: flex; flex-wrap: wrap; gap: 4px; justify-content: space-between; font-size: 12px; margin-bottom: 8px; }
+    #cmatrix-teaching-sketch .cm-capacity-bar { height: 10px; position: relative; background: var(--cm-soft); border-radius: 5px; }
+    #cmatrix-teaching-sketch .cm-capacity-fill { height: 100%; border-radius: 5px; background: var(--cm-blue); }
+    #cmatrix-teaching-sketch .cm-limit { position: absolute; left: 33.3333%; top: -4px; height: 18px; border-left: 2px solid var(--cm-text); }
+    #cmatrix-teaching-sketch .cm-capacity-label { margin-left: 33.3333%; padding-top: 7px; font-size: 11px; color: var(--cm-secondary); }
+    #cmatrix-teaching-sketch .cm-capacity-label span { display: inline-block; transform: translateX(-50%); }
+    #cmatrix-teaching-sketch .cm-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    #cmatrix-teaching-sketch .cm-comparison { padding: 18px; background: var(--cm-soft); border-radius: 10px; }
+    #cmatrix-teaching-sketch .cm-comparison:last-child { background: var(--cm-blue-soft); }
+    #cmatrix-teaching-sketch .cm-comparison h2 { font-size: 13px; margin-bottom: 12px; }
+    #cmatrix-teaching-sketch .cm-stacked { display: flex; height: 12px; border-radius: 4px; overflow: hidden; margin: 15px 0 10px; }
+    #cmatrix-teaching-sketch .cm-stacked span:first-child { background: var(--cm-positive); }
+    #cmatrix-teaching-sketch .cm-stacked span:last-child { background: var(--cm-warning); }
+    #cmatrix-teaching-sketch .cm-range-label { display: flex; justify-content: space-between; margin: 22px 0 10px; font-size: 13px; }
+    #cmatrix-teaching-sketch input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--cm-blue); margin: -9px 0 0; }
+    #cmatrix-teaching-sketch .cm-assumption { margin-top: 14px; font-size: 12px; color: var(--cm-secondary); }
+    #cmatrix-teaching-sketch .cm-technical { display: none; }
+    #cmatrix-teaching-sketch[data-technical="true"] .cm-technical { display: inline; font-size: 11px; color: var(--cm-secondary); }
+    #cmatrix-teaching-sketch[data-sidebar="false"] .cm-sidebar { display: none; }
+    #cmatrix-teaching-sketch[data-sidebar="false"] .cm-layout { grid-template-columns: minmax(0,1fr); }
+    #cmatrix-teaching-sketch .cm-number { font-variant-numeric: tabular-nums; }
+    #cmatrix-teaching-sketch .cm-bottom-note { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; font-size: 11px; color: var(--cm-secondary); margin-top: 22px; }
+    @media (max-width:760px) {
+      #cmatrix-teaching-sketch .cm-header { padding: 14px 18px; gap: 12px; }
+      #cmatrix-teaching-sketch .cm-brand { margin-right: 90px; }
+      #cmatrix-teaching-sketch .cm-nav { margin-left: 0; width: 100%; }
+      #cmatrix-teaching-sketch .cm-nav button { flex: 1; }
+      #cmatrix-teaching-sketch .cm-layout { grid-template-columns: minmax(0,1fr); }
+      #cmatrix-teaching-sketch .cm-sidebar { display: none; }
+      #cmatrix-teaching-sketch .cm-main { padding: 20px 17px; }
+      #cmatrix-teaching-sketch .cm-stage-body { padding: 17px; }
+      #cmatrix-teaching-sketch .cm-stage-head { padding: 14px 17px; align-items: start; flex-wrap: wrap; gap: 5px; }
+      #cmatrix-teaching-sketch .cm-claim { grid-template-columns: 1fr; gap: 18px; }
+      #cmatrix-teaching-sketch .cm-claim-stat { display: flex; align-items: center; gap: 14px; }
+      #cmatrix-teaching-sketch .cm-big-number { font-size: 42px; }
+      #cmatrix-teaching-sketch .cm-cohort { gap: 2px; }
+      #cmatrix-teaching-sketch .cm-footer { align-items: start; flex-direction: column; gap: 8px; }
+      #cmatrix-teaching-sketch .cm-primary { width: 100%; }
+      #cmatrix-teaching-sketch .cm-alert-layout { gap: 16px; grid-template-columns: minmax(0,1fr) 95px; }
+      #cmatrix-teaching-sketch .cm-alert-side { padding-left: 14px; }
+      #cmatrix-teaching-sketch .cm-alert-grid { gap: 3px; }
+      #cmatrix-teaching-sketch .cm-small-number { font-size: 28px; }
+      #cmatrix-teaching-sketch .cm-compare { gap: 8px; }
+      #cmatrix-teaching-sketch .cm-comparison { padding: 12px; }
+      #cmatrix-teaching-sketch .cm-policy-strip { gap: 5px; }
+      #cmatrix-teaching-sketch .cm-policy-strip button { font-size: 12px; }
+      #cmatrix-teaching-sketch .cm-cell { padding: 11px; align-items: start; flex-direction: column; gap: 2px; }
+      #cmatrix-teaching-sketch .cm-choice-row .cm-choice { flex: 1; }
+    }
+  </style>
+  <header class="cm-header">
+    <div class="cm-brand"><span class="cm-logo" aria-hidden="true"><span></span><span></span><span></span><span></span></span>CMatrixLab</div>
+    <nav class="cm-nav" aria-label="Learning experiences">
+      <button class="cursor-interaction" data-mode="understand" aria-pressed="true">Understand</button>
+      <button class="cursor-interaction" data-mode="decide" aria-pressed="false">Decide</button>
+      <button class="cursor-interaction" data-mode="explore" aria-pressed="false">Explore</button>
+    </nav>
+  </header>
+  <div class="cm-layout">
+    <aside class="cm-sidebar">
+      <p class="cm-eyebrow">Your decision path</p>
+      <div class="cm-steps" aria-label="Factory inspection lesson steps">
+        <button class="cm-step cursor-interaction" data-step="claim" aria-current="step"><span>1</span>A convincing number</button>
+        <button class="cm-step cursor-interaction" data-step="alerts"><span>2</span>Behind the flags</button>
+        <button class="cm-step cursor-interaction" data-step="policy"><span>3</span>Make the decision</button>
+      </div>
+      <div class="cm-next-lessons">
+        <div class="cm-eyebrow">Planned lessons</div>
+        <p>Same camera, new batch</p><p>What mistakes cost</p><p>Evidence before launch</p>
+      </div>
+      <p class="cm-course-note">A short path from a promising number to an informed decision.</p>
+    </aside>
+    <main class="cm-main">
+      <div class="cm-breadcrumb"><span>Automotive / Factory inspection</span><span class="cm-tag" id="cm-step-label">Step 1 of 3</span></div>
+      <div id="cm-screen"></div>
+      <div class="cm-bottom-note"><span>Illustrative scenario · all numbers are hypothetical</span><span id="cm-progress-label">Understand the claim</span></div>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const root = document.getElementById('cmatrix-teaching-sketch');
+      const screen = root.querySelector('#cm-screen');
+      const policies = [
+        {name:'Selective',tp:6,fp:14,cutoff:0.8},
+        {name:'Balanced',tp:8,fp:32,cutoff:0.5},
+        {name:'Broad',tp:9,fp:99,cutoff:0.2}
+      ];
+      const state = {mode:'understand',step:'claim',claimChoice:null,alertChoice:null,formula:false,policy:1,submitted:false,prevalence:1};
+      const design = {technical:false,sidebar:true};
+      const number = value => value.toLocaleString('en-US');
+      const save = () => {
+        if (window.openai && typeof window.openai.setWidgetState === 'function') {
+          window.openai.setWidgetState({
+            modelContent:{scenario:'factory-inspection-v1',experience:state.mode,lessonStep:state.step,policy:policies[state.policy].name,defectRatePercent:state.prevalence},
+            privateContent:{scenario:'factory-inspection-v1',...state}
+          }).catch(() => {});
+        }
+      };
+      function restore(value) {
+        const s = value && value.privateContent;
+        if (!s || typeof s !== 'object' || s.scenario!=='factory-inspection-v1') return;
+        if (['understand','decide','explore'].includes(s.mode)) state.mode=s.mode;
+        if (['claim','alerts','policy'].includes(s.step)) state.step=s.step;
+        if (['approve','evidence'].includes(s.claimChoice)) state.claimChoice=s.claimChoice;
+        if ([9,90,99].includes(s.alertChoice)) state.alertChoice=s.alertChoice;
+        if (Number.isInteger(s.policy) && s.policy>=0 && s.policy<=2) state.policy=s.policy;
+        if (Number.isInteger(s.prevalence) && s.prevalence>=1 && s.prevalence<=10) state.prevalence=s.prevalence;
+        state.formula=s.formula===true; state.submitted=s.submitted===true;
+      }
+      function claimView() {
+        const revealed = !!state.claimChoice;
+        const dots = Array.from({length:1000},(_,i) => '<i'+(revealed && i<10?' class="cm-defect"':'')+'></i>').join('');
+        return '<h1>99% accurate.<br>Good enough?</h1>'+
+          '<p class="cm-intro">A supplier offers a camera to spot defective automotive brackets. Before you approve it for your production line, look closer at its accuracy claim.</p>'+
+          '<section class="cm-stage" aria-label="Investigate the camera supplier claim"><div class="cm-stage-head"><h2>The camera supplier’s headline</h2><span class="cm-muted">1,000 parts per shift</span></div>'+
+          '<div class="cm-stage-body"><div class="cm-claim"><div class="cm-claim-stat"><div class="cm-big-number">99%</div><span class="cm-claim-description">reported accuracy</span></div>'+
+          '<div><div class="cm-cohort" role="img" aria-label="'+(revealed?'1000 automotive parts: 10 defective and 990 good.':'1000 automotive parts. The defect rate has not yet been revealed.')+'">'+dots+'</div>'+
+          '<div class="cm-cohort-caption"><span>Each square = 1 part</span><span>'+(revealed?'10 defective · 990 good':'Look beyond the headline')+'</span></div></div></div>'+
+          '<div class="cm-question">What would you do next?</div><div class="cm-choice-row">'+
+          '<button class="cm-choice cursor-interaction" data-claim="approve" aria-pressed="'+(state.claimChoice==='approve')+'">Approve the system</button>'+
+          '<button class="cm-choice cursor-interaction" data-claim="evidence" aria-pressed="'+(state.claimChoice==='evidence')+'">Ask what it misses</button></div>'+
+          (revealed?'<div class="cm-feedback" role="status"><strong>'+(state.claimChoice==='approve'?'The headline leaves something out.':'That is the useful next question.')+'</strong> Only 10 parts are defective. A camera that passes every part gets 990 right — <strong>99% accuracy, but all 10 defective parts slip through.</strong></div>':'')+
+          '</div></section><div class="cm-footer"><span class="cm-muted">'+(revealed?'Accuracy alone cannot answer the decision.':'Make a prediction, then reveal the evidence.')+'</span>'+
+          '<button class="cm-primary cursor-interaction" data-action="alerts" '+(!revealed?'disabled':'')+'>Inspect the flagged parts →</button></div>';
+      }
+      function alertView() {
+        const dots=Array.from({length:108},(_,i)=>'<i'+(i<9?' class="cm-real"':'')+'></i>').join('');
+        return '<h1>Flagged by the camera.<br>Actually defective?</h1><p class="cm-intro">Another camera catches 9 of the 10 defective parts. It also flags 99 good parts. All 108 go to manual reinspection, not automatic rejection.</p>'+
+          '<section class="cm-stage" aria-label="Inspect the flagged parts"><div class="cm-stage-head"><h2>Inside the reinspection queue</h2><span class="cm-muted">One shape = one flagged part</span></div>'+
+          '<div class="cm-stage-body"><div class="cm-alert-layout"><div><div class="cm-alert-grid" data-highlight="'+state.formula+'" role="img" aria-label="108 flagged parts: 9 round markers are defective parts, 99 square markers are good parts flagged by mistake">'+dots+'</div>'+
+          '<div class="cm-legend"><span><i class="cm-swatch cm-real"></i>Defective part</span><span><i class="cm-swatch"></i>Good part flagged</span></div></div>'+
+          '<div class="cm-alert-side"><div class="cm-small-number">108</div><p class="cm-muted">parts to recheck</p><hr><div class="cm-small-number">9</div><p class="cm-muted">are defective</p></div></div>'+
+          '<div class="cm-question">Roughly what share of flagged parts is defective?</div><div class="cm-choice-row">'+
+          [9,90,99].map(n=>'<button class="cm-choice cursor-interaction" data-answer="'+n+'" aria-pressed="'+(state.alertChoice===n)+'">'+n+'%</button>').join('')+'</div>'+
+          (state.alertChoice!==null?'<div class="cm-feedback" role="status"><strong>'+(state.alertChoice===9?'Yes — about 8.3%.':'The denominator is all 108 flagged parts.')+'</strong> Of 108 flagged parts, 9 are defective. This is <strong>precision</strong>. Catching 9 of the 10 defective parts is a different question: <strong>recall</strong>.</div>':'')+
+          '<button class="cm-text-button cursor-interaction" data-action="formula" aria-expanded="'+state.formula+'">'+(state.formula?'Hide calculation':'Show which cases count')+'</button>'+
+          (state.formula?'<div class="cm-formula"><code>Precision = 9 ÷ (9 + 99) = 8.3%</code><br>The circles are defective parts correctly flagged. Every shape belongs in the denominator.</div>':'')+
+          '</div></section><div class="cm-footer"><button class="cm-text-button cursor-interaction" data-action="claim">← Back to the claim</button>'+
+          '<button class="cm-primary cursor-interaction" data-action="policy">Choose an inspection policy →</button></div>';
+      }
+      function policyView() {
+        const p=policies[state.policy], alerts=p.tp+p.fp, missed=10-p.tp, fits=alerts<=40;
+        return '<h1>Your team can recheck<br>40 parts per shift.</h1><p class="cm-intro">Choose how broadly the camera flags parts. Compare defects caught, defects missed, and the extra inspections your team takes on.</p>'+
+          '<section class="cm-stage" aria-label="Decision workshop"><div class="cm-stage-head"><h2>Choose an inspection policy</h2><span class="cm-muted">1,000 parts · 10 defective</span></div>'+
+          '<div class="cm-stage-body"><div class="cm-policy-strip">'+policies.map((q,i)=>'<button class="cursor-interaction" data-policy="'+i+'" aria-pressed="'+(i===state.policy)+'">'+q.name+'<small>'+number(q.tp+q.fp)+' rechecks</small></button>').join('')+'</div>'+
+          '<div class="cm-matrix" aria-label="Outcomes of the selected policy">'+
+          '<div class="cm-cell cm-caught"><span>Defective parts caught <span class="cm-technical">TP</span></span><strong>'+p.tp+'</strong></div>'+
+          '<div class="cm-cell cm-unnecessary"><span>Good parts flagged <span class="cm-technical">FP</span></span><strong>'+p.fp+'</strong></div>'+
+          '<div class="cm-cell cm-missed"><span>Defective parts missed <span class="cm-technical">FN</span></span><strong>'+missed+'</strong></div>'+
+          '<div class="cm-cell"><span>Good parts passed <span class="cm-technical">TN</span></span><strong>'+(990-p.fp)+'</strong></div></div>'+
+          '<div class="cm-workload"><div class="cm-bar-heading"><span>Reinspection workload per shift</span><strong class="cm-number">'+alerts+' rechecks / 40 available</strong></div>'+
+          '<div class="cm-capacity-bar" role="img" aria-label="'+alerts+' parts need reinspection; capacity 40 per shift; scale 0 to 120"><div class="cm-capacity-fill" style="width:'+(alerts/120*100)+'%"></div><div class="cm-limit"></div></div>'+
+          '<div class="cm-capacity-label"><span>Team capacity: 40</span></div></div>'+
+          '<p class="cm-assumption">'+(fits?'This policy fits the reinspection capacity.':(alerts-40)+' rechecks exceed the shift’s capacity.')+' Flagged parts are rechecked, not automatically scrapped. Policies are illustrative.</p>'+
+          (state.submitted?'<div class="cm-feedback" role="status"><strong>'+p.name+' selected.</strong> The camera catches '+p.tp+' of 10 defective parts and misses '+missed+'. '+(fits?'The '+alerts+' rechecks fit the 40-part limit.':'The '+alerts+' rechecks exceed the 40-part limit. More capacity or another policy is needed.')+' Capacity alone does not make a policy acceptable: the consequences of missed defects matter too.</div>':'')+
+          '</div></section><div class="cm-footer"><button class="cm-text-button cursor-interaction" data-action="explore">Try the broad policy on a different batch</button>'+
+          '<button class="cm-primary cursor-interaction" data-action="submit">Choose '+p.name.toLowerCase()+' policy →</button></div>';
+      }
+      function exploreView() {
+        const positives=state.prevalence*10, tp=positives*.9, fp=(1000-positives)*.1, total=tp+fp, precision=tp/total*100;
+        return '<h1>Same camera.<br>A different batch.</h1><p class="cm-intro">Use the Broad policy from the flagged-parts lesson: it catches 90% of defective parts and flags 10% of good parts. Change only the defect rate.</p>'+
+          '<section class="cm-stage" aria-label="Explore defect prevalence"><div class="cm-stage-head"><h2>What does a flag mean now?</h2><span class="cm-muted">Broad policy · 1,000 parts</span></div>'+
+          '<div class="cm-stage-body"><div class="cm-compare">'+
+          '<div class="cm-comparison"><h2>Starting batch · 1% defective</h2><div class="cm-small-number">8.3%</div><p class="cm-muted">of flagged parts are defective</p><div class="cm-stacked" role="img" aria-label="9 of 108 flagged parts are defective"><span style="width:8.3333%"></span><span style="width:91.6667%"></span></div><p class="cm-muted">9 defective / 108 flagged</p></div>'+
+          '<div class="cm-comparison"><h2>Your batch · <span id="cm-current-percent">'+state.prevalence+'%</span> defective</h2><div class="cm-small-number" id="cm-precision">'+precision.toFixed(1)+'%</div><p class="cm-muted">of flagged parts are defective</p><div class="cm-stacked" id="cm-current-bar" role="img" aria-label="'+tp+' of '+total+' flagged parts are defective"><span style="width:'+precision+'%"></span><span style="width:'+(100-precision)+'%"></span></div><p class="cm-muted" id="cm-current-counts">'+tp+' defective / '+total+' flagged</p></div></div>'+
+          '<div class="cm-legend"><span><i class="cm-swatch cm-real"></i>Defective part</span><span><i class="cm-swatch"></i>Good part flagged</span></div>'+
+          '<label class="cm-range-label" for="cm-prevalence"><span>What share of parts is defective?</span><strong id="cm-prevalence-value" class="cm-number">'+state.prevalence+'%</strong></label>'+
+          '<input type="range" id="cm-prevalence" min="1" max="10" step="1" value="'+state.prevalence+'" aria-valuetext="'+state.prevalence+' percent of parts are defective">'+
+          '<div class="cm-feedback" id="cm-explore-feedback" role="status">'+(state.prevalence===1?'Start at 1%, then increase the defect rate. Watch what happens to the flagged parts.':'Only the defect rate changed. '+precision.toFixed(1)+'% of flagged parts are now defective; detection and false-alarm rates stayed fixed.')+'</div>'+
+          '<p class="cm-assumption">This isolates a base-rate change. On a real production line, detection and false-alarm rates can change too.</p>'+
+          '</div></section><div class="cm-footer"><button class="cm-text-button cursor-interaction" data-action="policy">← Return to the decision</button><button class="cm-primary cursor-interaction" data-action="restart">Start the story again</button></div>';
+      }
+      function applyDesign() {
+        root.dataset.technical=String(design.technical);
+        root.dataset.sidebar=String(design.sidebar);
+      }
+      function render() {
+        root.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));
+        root.querySelectorAll('[data-step]').forEach(b=>{
+          if(state.mode!=='explore'&&b.dataset.step===state.step)b.setAttribute('aria-current','step');
+          else b.removeAttribute('aria-current');
+        });
+        const step=state.mode==='explore'?'explore':state.step;
+        root.querySelector('#cm-step-label').textContent=step==='explore'?'Free exploration':'Step '+({claim:1,alerts:2,policy:3}[step])+' of 3';
+        root.querySelector('#cm-progress-label').textContent={claim:'Understand the claim',alerts:'Inspect the evidence',policy:'Explain your trade-off',explore:'Change one assumption'}[step];
+        screen.innerHTML=step==='claim'?claimView():step==='alerts'?alertView():step==='policy'?policyView():exploreView();
+        applyDesign();
+      }
+      function go(step) {state.step=step;state.mode=step==='policy'?'decide':'understand';}
+      root.addEventListener('click',event=>{
+        const button=event.target.closest('button');
+        if(!button||!root.contains(button)||button.disabled)return;
+        if(button.dataset.mode) {
+          state.mode=button.dataset.mode;
+          if(state.mode==='decide')state.step='policy';
+          if(state.mode==='understand'&&state.step==='policy')state.step='claim';
+        } else if(button.dataset.step) go(button.dataset.step);
+        else if(button.dataset.claim) state.claimChoice=button.dataset.claim;
+        else if(button.dataset.answer) state.alertChoice=Number(button.dataset.answer);
+        else if(button.dataset.policy) {state.policy=Number(button.dataset.policy);state.submitted=false;}
+        else {
+          const action=button.dataset.action;
+          if(['claim','alerts','policy'].includes(action))go(action);
+          else if(action==='explore')state.mode='explore';
+          else if(action==='formula')state.formula=!state.formula;
+          else if(action==='submit')state.submitted=true;
+          else if(action==='restart'){Object.assign(state,{mode:'understand',step:'claim',claimChoice:null,alertChoice:null,formula:false,policy:1,submitted:false,prevalence:1});}
+          else return;
+        }
+        const selector = button.dataset.mode ? '[data-mode="'+button.dataset.mode+'"]' :
+          button.dataset.step ? '[data-step="'+button.dataset.step+'"]' :
+          button.dataset.claim ? '[data-claim="'+button.dataset.claim+'"]' :
+          button.dataset.answer ? '[data-answer="'+button.dataset.answer+'"]' :
+          button.dataset.policy ? '[data-policy="'+button.dataset.policy+'"]' :
+          '[data-action="'+button.dataset.action+'"]';
+        render(); save();
+        const replacement=root.querySelector(selector);
+        if(replacement && replacement.getClientRects().length)replacement.focus({preventScroll:true});
+        else { const first=screen.querySelector('button:not(:disabled),input'); if(first)first.focus({preventScroll:true}); }
+      });
+      root.addEventListener('input',event=>{
+        if(event.target.id!=='cm-prevalence')return;
+        state.prevalence=Number(event.target.value);
+        const tp=state.prevalence*9,fp=100-state.prevalence,total=tp+fp,pct=tp/total*100;
+        root.querySelector('#cm-current-percent').textContent=state.prevalence+'%';
+        root.querySelector('#cm-prevalence-value').textContent=state.prevalence+'%';
+        root.querySelector('#cm-precision').textContent=pct.toFixed(1)+'%';
+        root.querySelector('#cm-current-counts').textContent=tp+' defective / '+total+' flagged';
+        const bar=root.querySelector('#cm-current-bar');
+        bar.setAttribute('aria-label',tp+' of '+total+' flagged parts are defective');
+        bar.children[0].style.width=pct+'%';bar.children[1].style.width=(100-pct)+'%';
+        root.querySelector('#cm-explore-feedback').textContent='Only the defect rate changed. '+pct.toFixed(1)+'% of flagged parts are now defective; detection and false-alarm rates stayed fixed.';
+        event.target.setAttribute('aria-valuetext',state.prevalence+' percent of parts are defective');
+      });
+      root.addEventListener('change',event=>{if(event.target.id==='cm-prevalence')save();});
+      restore(window.openai && window.openai.widgetState);
+      window.addEventListener('openai:set_globals',event=>{
+        const incoming=event.detail&&event.detail.globals&&event.detail.globals.widgetState;
+        if(incoming){restore(incoming);render();}
+      });
+      render();
+      if(globalThis.Tweak) {
+        const tweak=new Tweak({container:root,onChange:applyDesign});
+        tweak.addToggle(design,'technical',{label:'Show metric abbreviations'});
+        tweak.addToggle(design,'sidebar',{label:'Show lesson navigation'});
+      }
+    })();
+  </script>
+</div>

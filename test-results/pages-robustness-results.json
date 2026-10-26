@@ -1,0 +1,713 @@
+{
+  "tests": [
+    {
+      "id": "M05",
+      "name": "Learn formula values (corrected test locator) for eight metrics",
+      "status": "PASS",
+      "evidence": {
+        "counts": {
+          "tp": 355.2,
+          "fp": 25.2,
+          "fn": 14.8,
+          "tn": 604.8
+        },
+        "expected": {
+          "tpr": 0.96,
+          "fpr": 0.04,
+          "precision": 0.9337539432176657,
+          "tnr": 0.96,
+          "npv": 0.9761136216914139,
+          "fnr": 0.04,
+          "accuracy": 0.96,
+          "f1": 0.9466950959488273
+        },
+        "actual": {
+          "tpr": "355.2 ÷ (355.2 + 14.8) = 96%",
+          "fpr": "25.2 ÷ (25.2 + 604.8) = 4%",
+          "precision": "355.2 ÷ (355.2 + 25.2) = 93.4%",
+          "tnr": "604.8 ÷ (604.8 + 25.2) = 96%",
+          "npv": "604.8 ÷ (604.8 + 14.8) = 97.6%",
+          "fnr": "14.8 ÷ (355.2 + 14.8) = 4%",
+          "accuracy": "96%",
+          "f1": "0.947"
+        },
+        "note": "Initial attempt used nonexistent #calculation-accuracy; harness corrected to #liveAccuracyTop. Initial timeout is not an application defect."
+      }
+    },
+    {
+      "id": "F15",
+      "name": "Cheatsheet search, category, collapse/expand, no results and reset",
+      "status": "PASS",
+      "evidence": {
+        "all": "32 of 32 metrics",
+        "search": "12 of 32 metrics",
+        "category": "5 of 32 metrics"
+      }
+    },
+    {
+      "id": "F16",
+      "name": "Reference search, five categories, folding, related links and empty reset",
+      "status": "FAIL",
+      "error": "collapse groups"
+    },
+    {
+      "id": "F17",
+      "name": "Industry examples and linked calculator scenarios",
+      "status": "PASS",
+      "evidence": {
+        "controls": [
+          {
+            "tag": "A",
+            "value": "medical",
+            "text": "Medical example"
+          },
+          {
+            "tag": "A",
+            "value": "aeb",
+            "text": "AEB example"
+          },
+          {
+            "tag": "A",
+            "value": "blocking",
+            "text": "Automatic-blocking example"
+          },
+          {
+            "tag": "A",
+            "value": "factory",
+            "text": "Factory example"
+          },
+          {
+            "tag": "A",
+            "value": "fraud",
+            "text": "Review-queue example"
+          },
+          {
+            "tag": "A",
+            "value": "vision",
+            "text": "Object-detection example"
+          },
+          {
+            "tag": "A",
+            "value": "probability",
+            "text": "Risk-score example"
+          },
+          {
+            "tag": "A",
+            "value": "aeb",
+            "text": "Driving-hours example"
+          },
+          {
+            "tag": "A",
+            "value": "safety",
+            "text": "Rare-hazard example"
+          },
+          {
+            "tag": "A",
+            "value": "factory",
+            "text": "See which metric to choose, with a worked example →"
+          }
+        ],
+        "rows": [
+          {
+            "value": "medical",
+            "hash": "#scenario-medical",
+            "text": ""
+          },
+          {
+            "value": "aeb",
+            "hash": "#scenario-aeb",
+            "text": ""
+          },
+          {
+            "value": "blocking",
+            "hash": "#scenario-blocking",
+            "text": ""
+          },
+          {
+            "value": "factory",
+            "hash": "#scenario-factory",
+            "text": ""
+          },
+          {
+            "value": "fraud",
+            "hash": "#scenario-fraud",
+            "text": ""
+          },
+          {
+            "value": "vision",
+            "hash": "#scenario-vision",
+            "text": ""
+          },
+          {
+            "value": "probability",
+            "hash": "#scenario-probability",
+            "text": ""
+          },
+          {
+            "value": "safety",
+            "hash": "#scenario-safety",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "F18",
+      "name": "Simulator, cheatsheet, reference and learning navigation",
+      "status": "PASS",
+      "evidence": {
+        "paths": [
+          "http://localhost:8080/cheatsheet.html",
+          "http://localhost:8080/reference.html",
+          "http://localhost:8080/index.html",
+          "http://localhost:8080/index.html"
+        ],
+        "note": "Learn is intentionally unlinked; opened directly as documented."
+      }
+    },
+    {
+      "id": "F19",
+      "name": "Reference print control invokes print and restores disclosure state",
+      "status": "PASS",
+      "evidence": {
+        "before": 1,
+        "during": 48,
+        "after": 1,
+        "note": "Print invocation and before/after hooks exercised; OS print dialog and physical/PDF output not tested."
+      }
+    },
+    {
+      "id": "A01",
+      "name": "Accessible names for simulator range controls",
+      "status": "FAIL",
+      "error": "[{\"id\":\"threshold\",\"ariaLabel\":null,\"labelledby\":null,\"labels\":[],\"title\":\"Move right to detect weaker flu signals: more flu detections and more false alarms.\"},{\"id\":\"separation\",\"ariaLabel\":null,\"labelledby\":null,\"labels\":[],\"title\":\"\"},{\"id\":\"prevalence\",\"ariaLabel\":null,\"labelledby\":null,\"labels\":[\"Sick portion\"],\"title\":\"\"}]"
+    },
+    {
+      "id": "A02",
+      "name": "Keyboard graph tabs and visible focus behavior",
+      "status": "PASS",
+      "evidence": {
+        "before": "tabGraphScores",
+        "after": "tabGraphScores",
+        "active": "tabGraphScores",
+        "focus": {
+          "id": "tabGraphSplit",
+          "outline": "rgb(145, 183, 255) solid 2.4px",
+          "boxShadow": "none"
+        },
+        "note": "Tab/Enter works; ArrowRight does not select or move to the next dashboard tab (ARIA tab-pattern gap)."
+      }
+    },
+    {
+      "id": "A03",
+      "name": "ROC decision pills can be reached and activated by keyboard",
+      "status": "FAIL",
+      "error": "{\"pills\":[{\"value\":\"80\",\"role\":null,\"tabindex\":null,\"text\":\"🚨 Screening (80%)\"},{\"value\":\"50\",\"role\":null,\"tabindex\":null,\"text\":\"⚖️ Balanced (50%)\"}],\"visited\":[{\"id\":\"tabGraphPr\",\"cost\":null},{\"id\":\"tabGraphBayes\",\"cost\":null},{\"id\":\"matrixLayoutBtn\",\"cost\":null},{\"id\":\"\",\"cost\":null},{\"id\":\"\",\"cost\":null},{\"id\":\"presetSelect\",\"cost\":null},{\"id\":\"refTopBtn\",\"cost\":null},{\"id\":\"reset\",\"cost\":null},{\"id\":\"tprCard\",\"cost\":null},{\"id\":\"fprCard\",\"cost\":null},{\"id\":\"precisionCard\",\"cost\":null},{\"id\":\"threshold\",\"cost\":null},{\"id\":\"separation\",\"cost\":null},{\"id\":\"balance10\",\"cost\":null},{\"id\":\"balance50\",\"cost\":null},{\"id\":\"prevalence\",\"cost\":null},{\"id\":\"tabGraphScores\",\"cost\":null},{\"id\":\"tabGraphSplit\",\"cost\":null},{\"id\":\"tabGraphGauss\",\"cost\":null},{\"id\":\"tabGraphRoc\",\"cost\":null},{\"id\":\"tabGraphPr\",\"cost\":null},{\"id\":\"tabGraphBayes\",\"cost\":null},{\"id\":\"matrixLayoutBtn\",\"cost\":null},{\"id\":\"\",\"cost\":null},{\"id\":\"\",\"cost\":null}]}"
+    },
+    {
+      "id": "G01",
+      "name": "ROC cost pills and conventional cutoff label agree",
+      "status": "FAIL",
+      "error": "[{\"repeat\":0,\"slider\":\"80\",\"shown\":\"Cutoff: 80%\",\"actualScoreCutoff\":null},{\"repeat\":1,\"slider\":\"80\",\"shown\":\"Cutoff: 80%\",\"actualScoreCutoff\":null}]"
+    },
+    {
+      "id": "R01",
+      "name": "Rapid slider/preset/view changes and redraw robustness",
+      "status": "PASS",
+      "evidence": {
+        "updates": 150,
+        "presetViewSwitches": 20,
+        "invalidSvgAttributes": 0,
+        "totalMs": 2564.2999999970198
+      }
+    },
+    {
+      "id": "R02",
+      "name": "Resize preserves model; switching view during captured drag is safe",
+      "status": "PASS",
+      "evidence": {
+        "before": "100 TP ÷ (100 TP + 612 FP) = 14% Precision.",
+        "after": "100 TP ÷ (100 TP + 612 FP) = 14% Precision."
+      }
+    },
+    {
+      "id": "P01",
+      "name": "Initial load timing on five warm localhost navigations",
+      "status": "PASS",
+      "evidence": [
+        {
+          "domContentLoaded": 117,
+          "load": 118.79999999701977,
+          "transferSize": 173062,
+          "domNodes": 713,
+          "paint": []
+        },
+        {
+          "domContentLoaded": 71.09999999403954,
+          "load": 80,
+          "transferSize": 173062,
+          "domNodes": 713,
+          "paint": []
+        },
+        {
+          "domContentLoaded": 66,
+          "load": 76.90000000596046,
+          "transferSize": 173062,
+          "domNodes": 713,
+          "paint": []
+        },
+        {
+          "domContentLoaded": 81.59999999403954,
+          "load": 97.69999998807907,
+          "transferSize": 173062,
+          "domNodes": 713,
+          "paint": []
+        },
+        {
+          "domContentLoaded": 102.70000000298023,
+          "load": 119.40000000596046,
+          "transferSize": 173062,
+          "domNodes": 713,
+          "paint": [
+            {
+              "name": "first-paint",
+              "time": 156
+            },
+            {
+              "name": "first-contentful-paint",
+              "time": 156
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T01",
+      "name": "Real Chromium touch events: threshold drag, tap-to-pin and vertical 4-Up swipe",
+      "status": "PASS",
+      "evidence": {
+        "thresholdAfterDrag": "34",
+        "pinned": "true",
+        "scrollBefore": 0,
+        "scrollAfter": 138.39999389648438,
+        "errors": []
+      }
+    }
+  ],
+  "navigation": [
+    "http://localhost:8080/cheatsheet.html",
+    "http://localhost:8080/reference.html",
+    "http://localhost:8080/index.html",
+    "http://localhost:8080/index.html"
+  ],
+  "education": [
+    {
+      "id": "cutoff-label",
+      "rows": [
+        {
+          "repeat": 0,
+          "slider": "80",
+          "shown": "Cutoff: 80%",
+          "actualScoreCutoff": null
+        },
+        {
+          "repeat": 1,
+          "slider": "80",
+          "shown": "Cutoff: 80%",
+          "actualScoreCutoff": null
+        }
+      ]
+    }
+  ],
+  "a11y": {
+    "ranges": [
+      {
+        "id": "threshold",
+        "ariaLabel": null,
+        "labelledby": null,
+        "labels": [],
+        "title": "Move right to detect weaker flu signals: more flu detections and more false alarms."
+      },
+      {
+        "id": "separation",
+        "ariaLabel": null,
+        "labelledby": null,
+        "labels": [],
+        "title": ""
+      },
+      {
+        "id": "prevalence",
+        "ariaLabel": null,
+        "labelledby": null,
+        "labels": [
+          "Sick portion"
+        ],
+        "title": ""
+      }
+    ],
+    "tabs": {
+      "before": "tabGraphScores",
+      "after": "tabGraphScores",
+      "active": "tabGraphScores",
+      "focus": {
+        "id": "tabGraphSplit",
+        "outline": "rgb(145, 183, 255) solid 2.4px",
+        "boxShadow": "none"
+      }
+    },
+    "pills": [
+      {
+        "value": "80",
+        "role": null,
+        "tabindex": null,
+        "text": "🚨 Screening (80%)"
+      },
+      {
+        "value": "50",
+        "role": null,
+        "tabindex": null,
+        "text": "⚖️ Balanced (50%)"
+      }
+    ],
+    "visited": [
+      {
+        "id": "tabGraphPr",
+        "cost": null
+      },
+      {
+        "id": "tabGraphBayes",
+        "cost": null
+      },
+      {
+        "id": "matrixLayoutBtn",
+        "cost": null
+      },
+      {
+        "id": "",
+        "cost": null
+      },
+      {
+        "id": "",
+        "cost": null
+      },
+      {
+        "id": "presetSelect",
+        "cost": null
+      },
+      {
+        "id": "refTopBtn",
+        "cost": null
+      },
+      {
+        "id": "reset",
+        "cost": null
+      },
+      {
+        "id": "tprCard",
+        "cost": null
+      },
+      {
+        "id": "fprCard",
+        "cost": null
+      },
+      {
+        "id": "precisionCard",
+        "cost": null
+      },
+      {
+        "id": "threshold",
+        "cost": null
+      },
+      {
+        "id": "separation",
+        "cost": null
+      },
+      {
+        "id": "balance10",
+        "cost": null
+      },
+      {
+        "id": "balance50",
+        "cost": null
+      },
+      {
+        "id": "prevalence",
+        "cost": null
+      },
+      {
+        "id": "tabGraphScores",
+        "cost": null
+      },
+      {
+        "id": "tabGraphSplit",
+        "cost": null
+      },
+      {
+        "id": "tabGraphGauss",
+        "cost": null
+      },
+      {
+        "id": "tabGraphRoc",
+        "cost": null
+      },
+      {
+        "id": "tabGraphPr",
+        "cost": null
+      },
+      {
+        "id": "tabGraphBayes",
+        "cost": null
+      },
+      {
+        "id": "matrixLayoutBtn",
+        "cost": null
+      },
+      {
+        "id": "",
+        "cost": null
+      },
+      {
+        "id": "",
+        "cost": null
+      }
+    ]
+  },
+  "performance": {
+    "stress": {
+      "latencies": [
+        11.200000002980232,
+        10.899999991059303,
+        9,
+        11.100000008940697,
+        6.899999991059303,
+        11.799999997019768,
+        9.600000008940697,
+        7.0999999940395355,
+        8.599999994039536,
+        7.800000011920929,
+        8.599999994039536,
+        7.199999988079071,
+        11.399999991059303,
+        7.9000000059604645,
+        8.700000002980232,
+        9.599999994039536,
+        8.300000011920929,
+        6.299999997019768,
+        9.700000002980232,
+        11.699999988079071,
+        9.800000011920929,
+        20.899999991059303,
+        10.600000008940697,
+        14.5,
+        9,
+        9.200000002980232,
+        15.799999997019768,
+        10.299999997019768,
+        9.600000008940697,
+        8.399999991059303,
+        8.299999997019768,
+        10,
+        11.299999997019768,
+        12.5,
+        9,
+        8.5,
+        16.5,
+        9.300000011920929,
+        7.699999988079071,
+        10.5,
+        7.299999997019768,
+        7,
+        6.699999988079071,
+        8.099999994039536,
+        6.600000008940697,
+        15.699999988079071,
+        39.099999994039536,
+        8.200000002980232,
+        9.799999997019768,
+        14.900000005960464,
+        12.299999997019768,
+        14.599999994039536,
+        10.900000005960464,
+        10,
+        9.900000005960464,
+        17.599999994039536,
+        14.5,
+        18.299999997019768,
+        21.5,
+        12,
+        9.700000002980232,
+        9.200000002980232,
+        9.899999991059303,
+        9.400000005960464,
+        9,
+        11,
+        13.700000002980232,
+        17.600000008940697,
+        12.799999997019768,
+        9.399999991059303,
+        8.700000002980232,
+        12.399999991059303,
+        9.600000008940697,
+        10,
+        11.5,
+        10.600000008940697,
+        14.700000002980232,
+        14.900000005960464,
+        11,
+        15.699999988079071,
+        12.799999997019768,
+        15.299999997019768,
+        12.700000002980232,
+        24.700000002980232,
+        11.900000005960464,
+        13.699999988079071,
+        16.5,
+        12.200000002980232,
+        14.5,
+        14.599999994039536,
+        11.599999994039536,
+        12.5,
+        13.700000002980232,
+        13,
+        11.200000002980232,
+        13.699999988079071,
+        12.5,
+        11.5,
+        14.199999988079071,
+        16,
+        11.700000002980232,
+        12.100000008940697,
+        20.19999998807907,
+        13.700000002980232,
+        20.299999997019768,
+        10.300000011920929,
+        14.400000005960464,
+        14.799999997019768,
+        17.700000002980232,
+        16.799999997019768,
+        13.200000002980232,
+        25.5,
+        17.899999991059303,
+        16.200000002980232,
+        20.200000002980232,
+        15.799999997019768,
+        18,
+        20.80000001192093,
+        16.399999991059303,
+        14.5,
+        16.5,
+        13.400000005960464,
+        25.599999994039536,
+        16,
+        13.200000002980232,
+        15.599999994039536,
+        27.099999994039536,
+        13.700000002980232,
+        14,
+        15.700000002980232,
+        13.099999994039536,
+        64.20000000298023,
+        16.599999994039536,
+        14.400000005960464,
+        23.5,
+        16.899999991059303,
+        20.400000005960464,
+        17.19999998807907,
+        15.300000011920929,
+        14.599999994039536,
+        20.600000008940697,
+        13,
+        19.400000005960464,
+        15.400000005960464,
+        15.099999994039536,
+        12.400000005960464,
+        16.5,
+        14.699999988079071,
+        19.400000005960464,
+        15.799999997019768
+      ],
+      "frames": [
+        7.297999988079027,
+        66.50199999999995,
+        49.90000000000009,
+        50.200000000000045,
+        66.39999999999986,
+        66.60000000000014,
+        66.70000000000005,
+        50.399999999999864,
+        66.10000000000014,
+        66.69999999999982,
+        99.80000000000018,
+        83.19999999999982,
+        100.20000000000005,
+        67.00000000000023,
+        82.69999999999982,
+        66.59999999999991,
+        83.20000000000027,
+        100,
+        100,
+        83.5,
+        83,
+        99.89999999999964,
+        99.90000000000009,
+        116.80000000000018,
+        99.79999999999973,
+        99.70000000000027,
+        116.59999999999991,
+        149.9000000000001,
+        99.90000000000009,
+        101.09999999999991
+      ],
+      "total": 2564.2999999970198,
+      "memoryBefore": 22019090,
+      "memoryAfter": 18603012
+    },
+    "loads": [
+      {
+        "domContentLoaded": 117,
+        "load": 118.79999999701977,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 71.09999999403954,
+        "load": 80,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 66,
+        "load": 76.90000000596046,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 81.59999999403954,
+        "load": 97.69999998807907,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": []
+      },
+      {
+        "domContentLoaded": 102.70000000298023,
+        "load": 119.40000000596046,
+        "transferSize": 173062,
+        "domNodes": 713,
+        "paint": [
+          {
+            "name": "first-paint",
+            "time": 156
+          },
+          {
+            "name": "first-contentful-paint",
+            "time": 156
+          }
+        ]
+      }
+    ]
+  },
+  "errors": []
+}
