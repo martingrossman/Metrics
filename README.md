@@ -1,5 +1,10 @@
 # CMatrixLab
 
+New computer? Follow the [Windows setup guide](SETUP_WINDOWS.md) for Git,
+Node.js, VS Code and Codex, local serving, Playwright tests, optional ngrok sharing,
+and Playwright MCP.
+The guide targets the current `predev` branch.
+
 An interactive explanation of how decision threshold, class separation, and
 positive-class prevalence affect classifier metrics. Open `index.html` in a
 browser; the demo has no build step or runtime dependencies.
@@ -60,8 +65,11 @@ Wi-Fi adapter. Keep the terminal open; press **Ctrl+C** to stop sharing.
 If Windows asks about firewall access, allow Node.js on your **private** home
 network. If the other device cannot connect, check that both devices use the
 same network; guest Wi-Fi or a VPN may prevent device-to-device connections.
-The server listens on all IPv4 network adapters and serves only `index.html`.
-This shares the demo locally while your computer is running.
+The server listens on all IPv4 network adapters and serves the simulator,
+learning, reference, and cheatsheet pages, plus additional existing HTML paths.
+It also attempts to listen on port 80; use the explicit `:8080` address unless
+the terminal confirms port 80 is active. This shares the pages locally while
+your computer is running.
 
 To use another port:
 
